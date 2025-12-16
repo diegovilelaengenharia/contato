@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dicas do Engenheiro | Vilela Engenharia</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+</head>
+
+<body>
+    <div class="page">
+        <header class="hero" style="padding-bottom: 20px;">
+            <div class="heading">
+                <h1>Dicas do Engenheiro</h1>
+                <p class="tagline">Conteúdo exclusivo para você valorizar seu imóvel</p>
+            </div>
+        </header>
+
+        <main class="content" style="margin-top: 32px;">
+            <div id="tips-grid" class="tips-grid">
+                <!-- Renderizado pelo JS -->
+            </div>
+
+            <div class="cta-container">
+                <a href="index.html" class="cta-button">
+                    &larr; Voltar para o Início
+                </a>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <small>&copy; 2025 Vilela Engenharia.</small>
+        </footer>
+    </div>
+
+    <!-- Reusing main app logic but initializing tips specifically if needed -->
+    <script type="module">
+        import { data } from './data.js';
+
+        const container = document.getElementById('tips-grid');
+        if (container) {
+            container.innerHTML = data.tips.map(tip => `
+                <article class="tip-card">
+                    <div class="tip-header">
+                        <span class="tip-badge">Dica</span>
+                        <h3>${tip.title}</h3>
+                    </div>
+                    <p>${tip.content}</p>
+                </article>
+            `).join('');
+        }
+    </script>
+</body>
+
+</html>

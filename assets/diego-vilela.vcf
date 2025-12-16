@@ -1,0 +1,12 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Vilela;Diego;;Engenheiro;
+FN:Engenheiro Diego Vilela
+ORG:Vilela Engenharia
+TITLE:Engenheiro Civil
+TEL;TYPE=CELL,VOICE:+55 35 98452-9577
+EMAIL;TYPE=INTERNET:diegonunesvilela@gmail.com
+URL:https://vilela.eng.br/contato
+ADR;TYPE=WORK:;;Oliveira;MG;;Brasil
+NOTE:CREA 235.474/D
+END:VCARD

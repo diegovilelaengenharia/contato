@@ -1,0 +1,22 @@
+{
+    "name": "Vilela Engenharia - Contato",
+    "short_name": "Vilela Contato",
+    "start_url": "./",
+    "scope": "./",
+    "display": "standalone",
+    "background_color": "#0f6f5c",
+    "theme_color": "#0f6f5c",
+    "description": "Contatos oficiais e atalhos da Vilela Engenharia.",
+    "icons": [
+        {
+            "src": "assets/lgo.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "assets/lgo.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
