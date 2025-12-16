@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vilela-links-v8';
+const CACHE_NAME = 'vilela-links-v2';
 const ASSETS = [
     './',
     './index.html',
