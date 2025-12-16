@@ -1,8 +1,10 @@
-const CACHE_NAME = 'vilela-links-v4';
+const CACHE_NAME = 'vilela-links-v5';
 const ASSETS = [
     './',
     './index.html',
     './style.css',
+    './app.js',
+    './data.js',
     './assets/lgo.png',
     './assets/diego-vilela.vcf',
     './manifest.json'
