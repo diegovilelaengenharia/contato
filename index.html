@@ -374,9 +374,9 @@
 
                         let message = '';
                         if (selectedServices.length > 0) {
-                            message = `Oi, Diego! Gostaria de mais detalhes sobre os servi&ccedil;os de *${currentCategory}*:\n\n- ${selectedServices.join('\n- ')}`;
+                            message = `Oi, Diego! Gostaria de mais detalhes sobre os serviços de *${currentCategory}*:\n\n- ${selectedServices.join('\n- ')}`;
                         } else {
-                            message = `Oi, Diego! Gostaria de mais detalhes sobre os servi&ccedil;os de *${currentCategory}*.`;
+                            message = `Oi, Diego! Gostaria de mais detalhes sobre os serviços de *${currentCategory}*.`;
                         }
 
                         const url = `https://wa.me/${myPhoneNumber}?text=${encodeURIComponent(message)}`;
