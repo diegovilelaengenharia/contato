@@ -1112,3 +1112,6 @@ body.animations-ready .links-grid li:nth-child(6) {
 .btn-whatsapp-longo:hover { background-color: #128C7E; transform: translateY(-2px); box-shadow: 0 7px 14px rgba(37, 211, 102, 0.3); }
 .btn-whatsapp-longo svg { flex-shrink: 0; }
 
+
+/* --- MODERN BOX BUTTON --- */
+.btn-whatsapp-longo { border-radius: 12px !important; box-shadow: 0 10px 30px -10px rgba(37, 211, 102, 0.6) !important; background: linear-gradient(135deg, #1fa855 0%, #128c7e 100%) !important; }
