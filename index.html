@@ -38,13 +38,7 @@
     <div class="page">
         <header class="hero" role="banner">
             <div class="hero-top">
-                <button class="theme-toggle" id="theme-toggle" aria-label="Alternar modo escuro">
-                    <svg viewBox="0 0 24 24" role="presentation">
-                        <path
-                            d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-5.4-5.4c0-1.64.73-3.11 1.9-4.11C12.9 3.06 12.46 3 12 3zm0 16a7 7 0 1 1 7-7c0 .19-.01.37-.03.56a7.35 7.35 0 0 0-4.66-2.5 7.41 7.41 0 0 0-7.39-7.4c-.67 0-1.31.11-1.92.31A6.98 6.98 0 0 1 12 19z">
-                        </path>
-                    </svg>
-                </button>
+
                 <a class="client-area-button" href="https://vilela.eng.br/portal" target="_blank"
                     rel="noopener">&Aacute;rea do Cliente</a>
             </div>
@@ -223,22 +217,7 @@
         </div>
         <script>
             (function () {
-                const themeToggle = document.getElementById('theme-toggle');
-                const body = document.body;
-                const savedTheme = localStorage.getItem('theme');
-                const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-                if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
-                    body.classList.add('dark-mode');
-                }
-
-                if (themeToggle) {
-                    themeToggle.addEventListener('click', () => {
-                        body.classList.toggle('dark-mode');
-                        const isDark = body.classList.contains('dark-mode');
-                        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-                    });
-                }
 
                 const yearSpan = document.getElementById('year');
                 if (yearSpan) {
