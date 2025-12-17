@@ -208,9 +208,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <label class="select-all-container">
-                        <input type="checkbox" id="selectAllServices"> Selecionar todos
-                    </label>
+
                     <button id="whatsappSubmit" class="btn-whatsapp-longo">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -328,7 +326,6 @@
                     currentCategory = category;
                     modalTitle.textContent = `${category}`;
                     serviceListContainer.innerHTML = '';
-                    selectAllCheckbox.checked = false;
 
                     if (servicesData[category]) {
                         servicesData[category].forEach((service, index) => {
@@ -341,7 +338,7 @@
                             checkbox.id = `service-${index}`;
 
                             const span = document.createElement('span');
-                            span.textContent = `${index + 1}. ${service}`;
+                            span.textContent = service;
 
                             label.appendChild(checkbox);
                             label.appendChild(span);
@@ -367,12 +364,7 @@
                 });
 
                 // Selecionar todos
-                if (selectAllCheckbox) {
-                    selectAllCheckbox.addEventListener('change', (e) => {
-                        const checkboxes = serviceListContainer.querySelectorAll('input[type="checkbox"]');
-                        checkboxes.forEach(cb => cb.checked = e.target.checked);
-                    });
-                }
+
 
                 // Enviar para WhatsApp
                 if (whatsappSubmitBtn) {
