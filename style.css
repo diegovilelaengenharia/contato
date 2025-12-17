@@ -1,5 +1,5 @@
 :root {
-    --color-bg: #e3f2ed;
+    --color-bg: #f9fcfb;
     --color-surface: #ffffff;
     --color-surface-soft: #e6ede9;
     --color-primary: #136f5c;
@@ -36,7 +36,7 @@ body {
     min-height: 100vh;
     font-family: var(--font-base);
     line-height: 1.6;
-    background: radial-gradient(circle at top, rgba(19, 111, 92, 0.15), transparent 55%), var(--color-bg);
+    background: radial-gradient(circle at top, rgba(19, 111, 92, 0.06), transparent 55%), var(--color-bg);
     color: var(--color-text);
     display: flex;
     align-items: center;
