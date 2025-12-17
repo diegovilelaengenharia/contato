@@ -1106,3 +1106,9 @@ body.animations-ready .links-grid li:nth-child(6) {
 /* --- USER REQUESTED BUTTON STYLE --- */
 .whatsapp-submit-btn { display: inline-flex !important; align-items: center; justify-content: center; padding: 10px 20px !important; border-radius: 999px !important; background: linear-gradient(135deg, #4fb09b, #136f5c) !important; color: #ffffff !important; font-weight: 600 !important; letter-spacing: 0.02em; text-decoration: none; box-shadow: 0 8px 24px -6px rgba(19, 111, 92, 0.4) !important; transition: transform 0.25s ease, box-shadow 0.25s ease !important; width: auto !important; max-width: 100% !important; margin-top: 0 !important; font-size: 1rem !important; text-transform: none !important; }
 .whatsapp-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px -6px rgba(19, 111, 92, 0.5) !important; }
+
+/* --- USER REQUESTED 'LONGO' BUTTON --- */
+.btn-whatsapp-longo { display: flex; width: 100%; box-sizing: border-box; align-items: center; justify-content: center; gap: 12px; background-color: #25D366; color: white; text-decoration: none; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-weight: 600; font-size: 18px; padding: 16px 24px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: all 0.3s ease; border: none; cursor: pointer; }
+.btn-whatsapp-longo:hover { background-color: #128C7E; transform: translateY(-2px); box-shadow: 0 7px 14px rgba(37, 211, 102, 0.3); }
+.btn-whatsapp-longo svg { flex-shrink: 0; }
+
