@@ -537,13 +537,20 @@ body {
 
 .badge {
     display: inline-block;
-    padding: 4px 10px;
+    padding: 6px 14px;
     border-radius: 999px;
-    background: rgba(239, 181, 36, 0.18);
-    color: var(--color-accent);
-    font-size: 0.78rem;
+    background: rgba(19, 111, 92, 0.1);
+    color: var(--color-primary-strong);
+    font-size: 0.8rem;
     font-weight: 600;
     letter-spacing: 0.04em;
+    transition: transform 0.2s ease, background 0.2s ease;
+    cursor: default;
+}
+
+.badge:hover {
+    transform: scale(1.05);
+    background: rgba(19, 111, 92, 0.18);
 }
 
 .floating-buttons {
