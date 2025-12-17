@@ -82,9 +82,7 @@
                 <h2 class="section-heading">Regularizações de Imóveis</h2>
                 <ul class="links-grid">
                     <li>
-                        <a class="link-card link-card--city"
-                            href="https://wa.me/5535984529577?text=Ola%20Diego,%20preciso%20de%20ajuda%20com%20a%20Prefeitura"
-                            aria-label="Falar sobre regularização na Prefeitura" target="_blank" rel="noopener">
+                        <button class="link-card link-card--city" onclick="openModal('Prefeitura')">
                             <span class="icon" aria-hidden="true">
                                 <img src="assets/icon-prefeitura.png" alt="" width="28" height="28">
                             </span>
@@ -92,12 +90,10 @@
                                 <span class="title">Prefeitura</span>
                                 <span class="subtitle">Projetos de Regularização</span>
                             </span>
-                        </a>
+                        </button>
                     </li>
                     <li>
-                        <a class="link-card link-card--federal"
-                            href="https://wa.me/5535984529577?text=Ola%20Diego,%20preciso%20de%20ajuda%20com%20a%20Receita%20Federal"
-                            aria-label="Falar sobre regularização na Receita Federal" target="_blank" rel="noopener">
+                        <button class="link-card link-card--federal" onclick="openModal('Receita Federal')">
                             <span class="icon" aria-hidden="true">
                                 <img src="assets/icon-receita.png" alt="" width="28" height="28">
                             </span>
@@ -105,12 +101,10 @@
                                 <span class="title">Receita Federal</span>
                                 <span class="subtitle">CND e regularização de obras</span>
                             </span>
-                        </a>
+                        </button>
                     </li>
                     <li>
-                        <a class="link-card link-card--registry"
-                            href="https://wa.me/5535984529577?text=Ola%20Diego,%20preciso%20de%20ajuda%20com%20o%20Cartorio"
-                            aria-label="Falar sobre regularização no Cartório" target="_blank" rel="noopener">
+                        <button class="link-card link-card--registry" onclick="openModal('Cartório de Imóveis')">
                             <span class="icon" aria-hidden="true">
                                 <img src="assets/icon-cartorio.png" alt="" width="28" height="28">
                             </span>
@@ -118,7 +112,7 @@
                                 <span class="title">Cartório de Imóveis</span>
                                 <span class="subtitle">Averbação e escritura</span>
                             </span>
-                        </a>
+                        </button>
                     </li>
                 </ul>
             </section>
@@ -198,6 +192,37 @@
             <small>&copy; <span id="year">2025</span> Vilela Engenharia. Todos os direitos reservados.</small>
         </footer>
 
+        <!-- Modal de Servi&ccedil;os -->
+        <div id="serviceModal" class="modal" aria-hidden="true">
+            <div class="modal__overlay" tabindex="-1" data-micromodal-close></div>
+            <div class="modal__content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+                <button class="modal__close" aria-label="Fechar modal" data-micromodal-close></button>
+
+                <header class="modal__header">
+                    <h2 id="modalTitle">Selecione os servi&ccedil;os</h2>
+                    <p class="modal__subtitle">Marque os itens que voc&ecirc; precisa de ajuda:</p>
+                </header>
+
+                <div id="serviceListContainer" class="service-list">
+                    <!-- JavaScript will populate this -->
+                </div>
+
+                <div class="modal-footer">
+                    <label class="select-all-container">
+                        <input type="checkbox" id="selectAllServices"> Selecionar todos
+                    </label>
+                    <button id="whatsappSubmit" class="whatsapp-submit-btn">
+                        <svg viewBox="0 0 24 24" role="presentation">
+                            <path
+                                d="M12 2a10 10 0 0 0-8.66 15.14L2 22l5-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.08-1.13l-.29-.18-3 .79.8-2.91-.19-.3A8 8 0 1 1 12 20zm4.37-5.73-.52-.26a1.32 1.32 0 0 0-1.15.04l-.4.21a.5.5 0 0 1-.49 0 8.14 8.14 0 0 1-2.95-2.58.5.5 0 0 1 0-.49l.21-.4a1.32 1.32 0 0 0 .04-1.15l-.26-.52a1.32 1.32 0 0 0-1.18-.73h-.37a1 1 0 0 0-1 .86 3.47 3.47 0 0 0 .18 1.52A10.2 10.2 0 0 0 13 15.58a3.47 3.47 0 0 0 1.52.18 1 1 0 0 0 .86-1v-.37a1.32 1.32 0 0 0-.73-1.18z">
+                            </path>
+                        </svg>
+                        Falar no WhatsApp
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <div class="floating-buttons">
             <a href="https://wa.me/5535984529577?text=Ola%20Vilela%20Engenharia"
                 class="floating-btn floating-btn--whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp">
@@ -251,6 +276,120 @@
                         navigator.serviceWorker.register('service-worker.js').catch(() => {
                             // Ignora falhas de registro do service worker.
                         });
+                    });
+                }
+                // Dados dos Servi&ccedil;os
+                const servicesData = {
+                    'Prefeitura': [
+                        "Alvará de Construção (Obra Nova)",
+                        "Regularização de Obra (Anistia/Lei de Uso do Solo)",
+                        "Habite-se (Certificado de Conclusão de Obra)",
+                        "Alvará de Reforma e Ampliação",
+                        "Alvará e Certidão de Demolição",
+                        "Certificado de Averbação",
+                        "Certidão de Decadência",
+                        "Certidão de Número / Nome de Rua",
+                        "Certidão de Localização",
+                        "Renovação de Alvará de Construção",
+                        "Substituição de Projeto",
+                        "Desmembramento e Membramento (Topografia)",
+                        "Certidão de Unificação ou Divisão",
+                        "Certidão de Retificação de Área",
+                        "Processo de Usucapião (Fase Municipal)"
+                    ],
+                    'Receita Federal': [
+                        "CNO (Cadastro Nacional de Obras)",
+                        "SERO (Serviço Eletrônico para Aferição de Obras)",
+                        "CND de Obra (Certidão Negativa de Débitos)",
+                        "Regularização de CPF/CNPJ vinculado à obra",
+                        "Retificação de dados cadastrais de imóveis"
+                    ],
+                    'Cartório de Imóveis': [
+                        "Averbação de Construção na Matrícula",
+                        "Instituição de Condomínio",
+                        "Retificação de Área (Georreferenciada)",
+                        "Registro de Usucapião Extrajudicial",
+                        "Unificação e Desmembramento de Lotes",
+                        "Averbação de Demolição"
+                    ]
+                };
+
+                const myPhoneNumber = "5535984529577";
+                const modal = document.getElementById('serviceModal');
+                const modalTitle = document.getElementById('modalTitle');
+                const serviceListContainer = document.getElementById('serviceListContainer');
+                const selectAllCheckbox = document.getElementById('selectAllServices');
+                const whatsappSubmitBtn = document.getElementById('whatsappSubmit');
+
+                let currentCategory = '';
+
+                // Fun&ccedil;&atilde;o global para abrir o modal
+                window.openModal = function (category) {
+                    currentCategory = category;
+                    modalTitle.textContent = `${category}`;
+                    serviceListContainer.innerHTML = '';
+                    selectAllCheckbox.checked = false;
+
+                    if (servicesData[category]) {
+                        servicesData[category].forEach((service, index) => {
+                            const label = document.createElement('label');
+                            label.className = 'service-option';
+
+                            const checkbox = document.createElement('input');
+                            checkbox.type = 'checkbox';
+                            checkbox.value = service;
+                            checkbox.id = `service-${index}`;
+
+                            const span = document.createElement('span');
+                            span.textContent = service;
+
+                            label.appendChild(checkbox);
+                            label.appendChild(span);
+                            serviceListContainer.appendChild(label);
+                        });
+                    }
+
+                    modal.classList.add('is-open');
+                    document.body.classList.add('modal-open');
+                    modal.removeAttribute('aria-hidden');
+                };
+
+                // Fechar modal
+                function closeModal() {
+                    modal.classList.remove('is-open');
+                    document.body.classList.remove('modal-open');
+                    modal.setAttribute('aria-hidden', 'true');
+                }
+
+                // Event Listeners para o Modal
+                document.querySelectorAll('[data-micromodal-close]').forEach(btn => {
+                    btn.addEventListener('click', closeModal);
+                });
+
+                // Selecionar todos
+                if (selectAllCheckbox) {
+                    selectAllCheckbox.addEventListener('change', (e) => {
+                        const checkboxes = serviceListContainer.querySelectorAll('input[type="checkbox"]');
+                        checkboxes.forEach(cb => cb.checked = e.target.checked);
+                    });
+                }
+
+                // Enviar para WhatsApp
+                if (whatsappSubmitBtn) {
+                    whatsappSubmitBtn.addEventListener('click', () => {
+                        const selectedServices = Array.from(serviceListContainer.querySelectorAll('input[type="checkbox"]:checked'))
+                            .map(cb => cb.value);
+
+                        let message = '';
+                        if (selectedServices.length > 0) {
+                            message = `Oi, Diego! Gostaria de mais detalhes sobre os servi&ccedil;os de *${currentCategory}*:\n\n- ${selectedServices.join('\n- ')}`;
+                        } else {
+                            message = `Oi, Diego! Gostaria de mais detalhes sobre os servi&ccedil;os de *${currentCategory}*.`;
+                        }
+
+                        const url = `https://wa.me/${myPhoneNumber}?text=${encodeURIComponent(message)}`;
+                        window.open(url, '_blank');
+                        closeModal();
                     });
                 }
             }());
