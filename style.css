@@ -401,6 +401,12 @@ body.dark-mode .hero-vcard {
     z-index: 1;
 }
 
+#acesso-rapido .icon svg {
+    /* Aumentando zoom em 150% (24px * 1.5 = 36px) */
+    width: 36px;
+    height: 36px;
+}
+
 .link-card:hover .icon,
 .link-card:focus-visible .icon {
     transform: scale(1.08);
