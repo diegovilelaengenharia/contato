@@ -295,15 +295,10 @@ body.dark-mode .hero-vcard {
 }
 
 .link-card--whatsapp {
-    --icon-bg: linear-gradient(135deg, #2bd36d, #128c7e);
-    --icon-glow: rgba(37, 211, 102, 0.55);
-}
-
-.link-card--whatsapp {
-    /* Background neutro para destacar o ícone verde */
-    --icon-bg: rgba(37, 211, 102, 0.15);
-    --icon-glow: rgba(37, 211, 102, 0.4);
-    --icon-border: rgba(37, 211, 102, 0.3);
+    /* Background sólido gradiente para ícone branco */
+    --icon-bg: linear-gradient(135deg, #25d366, #128c7e);
+    --icon-glow: rgba(37, 211, 102, 0.5);
+    --icon-border: rgba(255, 255, 255, 0.2);
 }
 
 .link-card--whatsapp .icon,
@@ -314,21 +309,21 @@ body.dark-mode .hero-vcard {
 }
 
 .link-card--phone {
-    --icon-bg: rgba(79, 176, 155, 0.15);
-    --icon-glow: rgba(79, 176, 155, 0.4);
-    --icon-border: rgba(79, 176, 155, 0.3);
+    --icon-bg: linear-gradient(135deg, #4fb09b, #0f6f5c);
+    --icon-glow: rgba(79, 176, 155, 0.55);
+    --icon-border: rgba(255, 255, 255, 0.2);
 }
 
 .link-card--email {
-    --icon-bg: rgba(252, 74, 26, 0.15);
-    --icon-glow: rgba(252, 74, 26, 0.4);
-    --icon-border: rgba(252, 74, 26, 0.3);
+    --icon-bg: linear-gradient(135deg, #f7b733, #fc4a1a);
+    --icon-glow: rgba(252, 74, 26, 0.45);
+    --icon-border: rgba(255, 255, 255, 0.2);
 }
 
 .link-card--instagram {
-    --icon-bg: rgba(221, 42, 123, 0.15);
-    --icon-glow: rgba(221, 42, 123, 0.4);
-    --icon-border: rgba(221, 42, 123, 0.3);
+    --icon-bg: linear-gradient(135deg, #f58529, #dd2a7b 45%, #8134af 70%, #515bd4);
+    --icon-glow: rgba(221, 42, 123, 0.5);
+    --icon-border: rgba(255, 255, 255, 0.2);
 }
 
 .link-card--city {
@@ -403,8 +398,8 @@ body.dark-mode .hero-vcard {
 
 .icon svg,
 .icon img {
-    width: 28px;
-    height: 28px;
+    width: 36px;
+    height: 36px;
     fill: currentColor;
     object-fit: contain;
     position: relative;
