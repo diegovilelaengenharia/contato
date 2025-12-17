@@ -71,7 +71,7 @@
                 <div class="about-container">
                     <div class="about-image">
                         <!-- Placeholder: Substituir src por foto do Diego -->
-                        <img src="assets/foto-diego.jpg" alt="Foto de Diego Vilela" width="140" height="140"
+                        <img src="assets/foto-diego-new.jpg" alt="Foto de Diego Vilela" width="140" height="140"
                             loading="lazy">
                     </div>
                     <div class="about-content">
@@ -226,8 +226,9 @@
                 const themeToggle = document.getElementById('theme-toggle');
                 const body = document.body;
                 const savedTheme = localStorage.getItem('theme');
+                const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-                if (savedTheme === 'dark') {
+                if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
                     body.classList.add('dark-mode');
                 }
 

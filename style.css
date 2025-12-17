@@ -1,5 +1,5 @@
 :root {
-    --color-bg: #fafafa;
+    --color-bg: #f2f8f6;
     --color-surface: #ffffff;
     --color-surface-soft: #e6ede9;
     --color-primary: #136f5c;
@@ -13,19 +13,7 @@
     --font-base: "Outfit", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --color-bg: #101a18;
-        --color-surface: #162521;
-        --color-surface-soft: #1f362f;
-        --color-primary: #4fb09b;
-        --color-primary-strong: #398874;
-        --color-accent: #f2c45b;
-        --color-text: #edf3f1;
-        --color-text-subtle: #a1b5ae;
-        --shadow-soft: 0 20px 52px -30px rgba(18, 61, 53, 0.85);
-    }
-}
+
 
 body.dark-mode {
     --color-bg: #101a18;
