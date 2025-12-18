@@ -243,16 +243,16 @@ body {
 }
 
 .hero-whatsapp {
-    background: linear-gradient(135deg, #25d366, #128c7e);
+    background: linear-gradient(135deg, #4fb09b, #136f5c);
     color: #ffffff;
-    box-shadow: 0 12px 32px -10px rgba(37, 211, 102, 0.5);
+    box-shadow: 0 8px 24px -6px rgba(19, 111, 92, 0.4);
 }
 
 .hero-whatsapp:hover,
 .hero-whatsapp:focus-visible {
     transform: translateY(-3px);
-    box-shadow: 0 16px 40px -12px rgba(37, 211, 102, 0.6);
-    background: linear-gradient(135deg, #2cf576, #15a594);
+    box-shadow: 0 12px 32px -8px rgba(19, 111, 92, 0.5);
+    background: linear-gradient(135deg, #5ccbb0, #16806a);
 }
 
 .hero-whatsapp:focus-visible {
