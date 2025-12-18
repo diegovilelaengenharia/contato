@@ -183,14 +183,29 @@ body {
 
 .tagline {
     margin: 0;
-    font-size: 1rem;
-    color: var(--color-text-subtle);
+    font-size: 1.25rem;
+    color: var(--color-primary-strong);
+    font-weight: 600;
+    font-style: italic;
+    position: relative;
+    display: inline-block;
+}
+
+.tagline::before {
+    content: '“';
+    margin-right: 4px;
+}
+
+.tagline::after {
+    content: '”';
+    margin-left: 4px;
 }
 
 .hero-name {
     margin: 0;
-    font-size: 1.1rem;
-    font-weight: 600;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--color-text);
 }
 
 .hero-role {
@@ -208,7 +223,8 @@ body {
 }
 
 .hero-whatsapp,
-.hero-vcard {
+.hero-vcard,
+.hero-email {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -242,24 +258,26 @@ body {
     outline-offset: 4px;
 }
 
-.hero-vcard {
+.hero-vcard,
+.hero-email {
     background: #ffffff;
     color: var(--color-primary-strong);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     border: 1px solid rgba(19, 111, 92, 0.15);
 }
 
-
-
 .hero-vcard:hover,
-.hero-vcard:focus-visible {
+.hero-vcard:focus-visible,
+.hero-email:hover,
+.hero-email:focus-visible {
     transform: translateY(-3px);
     box-shadow: 0 12px 32px -10px rgba(0, 0, 0, 0.1);
     background: #fafafa;
     border-color: var(--color-primary);
 }
 
-.hero-vcard:focus-visible {
+.hero-vcard:focus-visible,
+.hero-email:focus-visible {
     outline: 3px solid var(--color-accent);
     outline-offset: 4px;
 }
