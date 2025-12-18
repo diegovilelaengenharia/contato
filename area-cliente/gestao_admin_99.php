@@ -1,5 +1,5 @@
 <?php
-// gestao_admin_99.php
+// gestao_admin_99.php - Painel Administrativo
 session_start();
 require 'db.php';
 
