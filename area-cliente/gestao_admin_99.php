@@ -70,12 +70,20 @@ if (isset($_POST['novo_doc'])) {
 // 4. Excluir Itens (Progresso ou Documento)
 if (isset($_GET['delete_progresso'])) {
     $pdo->prepare("DELETE FROM progresso WHERE id = ?")->execute([$_GET['delete_progresso']]);
-    header("Location: ?cliente_id=" . $_GET['cid']); // Recarrega a página mantendo o cliente
+    header("Location: ?cliente_id=" . $_GET['cid']);
     exit;
 }
 if (isset($_GET['delete_doc'])) {
     $pdo->prepare("DELETE FROM documentos WHERE id = ?")->execute([$_GET['delete_doc']]);
     header("Location: ?cliente_id=" . $_GET['cid']);
+    exit;
+}
+
+// 5. Excluir Cliente Completo
+if (isset($_GET['delete_cliente'])) {
+    // Apaga o cliente (graças à Foreign Key com DELETE CASCADE, os movimentos e docs devem sumir junto)
+    $pdo->prepare("DELETE FROM clientes WHERE id = ?")->execute([$_GET['delete_cliente']]);
+    header("Location: ?"); // Volta para a home do admin
     exit;
 }
 
@@ -332,8 +340,11 @@ if (isset($_GET['cliente_id'])) {
             <?php elseif($cliente_ativo): ?>
                 
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h1 style="margin: 0; color: var(--color-primary-strong);"><?= htmlspecialchars($cliente_ativo['nome']) ?></h1>
-                    <span style="background: #e6f2ee; padding: 5px 10px; border-radius: 5px; color: #555;">Usuário: <strong><?= htmlspecialchars($cliente_ativo['usuario']) ?></strong></span>
+                    <div>
+                        <h1 style="margin: 0; color: var(--color-primary-strong);"><?= htmlspecialchars($cliente_ativo['nome']) ?></h1>
+                        <span style="background: #e6f2ee; padding: 5px 10px; border-radius: 5px; color: #555;">Usuário: <strong><?= htmlspecialchars($cliente_ativo['usuario']) ?></strong></span>
+                    </div>
+                    <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" onclick="return confirm('TEM CERTEZA? Isso apagará TODO o histórico e documentos deste cliente!')" style="color: #dc3545; font-size: 0.85rem; text-decoration: none; border: 1px solid #dc3545; padding: 5px 10px; border-radius: 6px;">Excluir Cliente</a>
                 </div>
 
                 <div class="card">
