@@ -64,18 +64,83 @@ $documentos = $stmtDoc->fetchAll();
             <a href="logout.php" class="btn-logout">Sair</a>
         </header>
 
-        <section class="card">
-            <h2 class="section-heading" style="margin-top:0;">Andamento do Processo</h2>
-            <?php if(count($progresso) > 0): ?>
-                <?php foreach($progresso as $fase): ?>
-                    <div class="timeline-item">
-                        <span class="timeline-date"><?= date('d/m/Y', strtotime($fase['data_fase'])) ?></span>
-                        <h3 class="timeline-title"><?= htmlspecialchars($fase['fase']) ?></h3>
-                        <p style="margin:0; color: var(--color-text-subtle);"><?= nl2br(htmlspecialchars($fase['descricao'])) ?></p>
+        <section class="timeline-section">
+            <h2 class="section-heading" style="margin-top:0; margin-bottom: 30px; margin-left: 20px;">Linha do Tempo do Processo</h2>
+            
+            <?php 
+            // Buscar Movimentos da Timeline (Nova Tabela)
+            // Se não houver dados na tabela nova, tenta buscar na antiga 'progresso' para compatibilidade
+            $stmt = $pdo->prepare("SELECT * FROM processo_movimentos WHERE cliente_id = ? ORDER BY data_movimento DESC");
+            $stmt->execute([$cliente_id]);
+            $timeline = $stmt->fetchAll();
+
+            // Fallback para tabela antiga se a nova estiver vazia
+            if(count($timeline) == 0 && count($progresso) > 0) {
+                // Adaptador simples para exibir dados antigos no formato novo
+                foreach($progresso as $p) {
+                    $timeline[] = [
+                        'data_movimento' => $p['data_fase'],
+                        'titulo_fase' => $p['fase'],
+                        'descricao' => $p['descricao'],
+                        'status_tipo' => 'tramite',
+                        'departamento_origem' => '',
+                        'departamento_destino' => '',
+                        'anexo_url' => ''
+                    ];
+                }
+            }
+            ?>
+
+            <?php if(count($timeline) > 0): ?>
+                <?php foreach($timeline as $mov): ?>
+                    <div class="timeline-card">
+                        <!-- Ícone Dinâmico conforme Status -->
+                        <?php
+                            $icon = "🔄"; // Default
+                            $bgClass = "status-tramite";
+                            switch($mov['status_tipo']) {
+                                case 'inicio': $icon = "🚩"; $bgClass = "status-inicio"; break;
+                                case 'pendencia': $icon = "⚠️"; $bgClass = "status-pendencia"; break;
+                                case 'documento': $icon = "📄"; $bgClass = "status-documento"; break;
+                                case 'conclusao': $icon = "✅"; $bgClass = "status-conclusao"; break;
+                            }
+                        ?>
+                        <div class="timeline-icon <?= $bgClass ?>"><?= $icon ?></div>
+
+                        <div class="timeline-header">
+                            <span class="timeline-date"><?= date('d/m/Y \à\s H:i', strtotime($mov['data_movimento'])) ?></span>
+                            <?php if(!empty($mov['prazo_previsto'])): ?>
+                                <span style="font-size:0.8rem; color:#d97706; font-weight:600;">Previsão: <?= date('d/m/Y', strtotime($mov['prazo_previsto'])) ?></span>
+                            <?php endif; ?>
+                        </div>
+
+                        <h3 class="timeline-title"><?= htmlspecialchars($mov['titulo_fase']) ?></h3>
+                        
+                        <?php if(!empty($mov['departamento_origem']) || !empty($mov['departamento_destino'])): ?>
+                            <div class="timeline-flow">
+                                <span><?= htmlspecialchars($mov['departamento_origem'] ?: 'Início') ?></span>
+                                <span class="flow-arrow">➜</span>
+                                <strong><?= htmlspecialchars($mov['departamento_destino'] ?: 'Conclusão') ?></strong>
+                            </div>
+                        <?php endif; ?>
+
+                        <p class="timeline-desc"><?= nl2br(htmlspecialchars($mov['descricao'])) ?></p>
+
+                        <?php if(!empty($mov['anexo_url'])): ?>
+                            <a href="<?= htmlspecialchars($mov['anexo_url']) ?>" target="_blank" class="timeline-attachment">
+                                📎 <?= htmlspecialchars($mov['anexo_nome'] ?: 'Visualizar Anexo') ?>
+                            </a>
+                        <?php endif; ?>
+                        
+                        <?php if(!empty($mov['usuario_responsavel'])): ?>
+                            <div style="margin-top:12px; font-size:0.8rem; color:#999;">
+                                Resp: <?= htmlspecialchars($mov['usuario_responsavel']) ?>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
-                <p style="color: var(--color-text-subtle);">Nenhuma atualização recente encontrada para o seu processo.</p>
+                <p style="color: var(--color-text-subtle); margin-left: 20px;">Nenhuma atualização recente encontrada para o seu processo.</p>
             <?php endif; ?>
         </section>
 

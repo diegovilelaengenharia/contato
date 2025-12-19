@@ -71,10 +71,27 @@ if (isset($_POST['novo_cliente'])) {
 }
 
 // 2. Adicionar Progresso
-if (isset($_POST['novo_progresso'])) {
-    $stmt = $pdo->prepare("INSERT INTO progresso (cliente_id, fase, data_fase, descricao) VALUES (?, ?, ?, ?)");
-    $stmt->execute([$_POST['cliente_id'], $_POST['fase'], $_POST['data'], $_POST['desc']]);
-    $sucesso = "Progresso atualizado!";
+if (isset($_POST['novo_movimento'])) {
+    $sql = "INSERT INTO processo_movimentos (cliente_id, titulo_fase, data_movimento, descricao, status_tipo, departamento_origem, departamento_destino, usuario_responsavel, anexo_url, anexo_nome) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $pdo->prepare($sql)->execute([
+        $_POST['cliente_id'], 
+        $_POST['titulo'], 
+        $_POST['data'], 
+        $_POST['descricao'], 
+        $_POST['status_tipo'],
+        $_POST['origem'],
+        $_POST['destino'],
+        $_POST['responsavel'],
+        $_POST['anexo_url'],
+        $_POST['anexo_nome']
+    ]);
+    $sucesso = "Movimento registrado na timeline!";
+}
+
+// 2. Exclusões
+if (isset($_GET['del_mov'])) {
+    $pdo->prepare("DELETE FROM processo_movimentos WHERE id=?")->execute([$_GET['del_mov']]);
+    header("Location: ?cid=".$_GET['cid']); exit;
 }
 
 // 3. Adicionar Documento
@@ -311,38 +328,90 @@ if (isset($_GET['cliente_id'])) {
                 </div>
 
                 <div class="card">
-                    <h2>Linha do Tempo / Progresso</h2>
+                    <h2>📅 Atualizar Timeline do Processo</h2>
                     
-                    <form method="POST" style="background: #f9f9f9; padding: 15px; border-radius: 8px;">
-                        <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
-                        <div class="form-row" style="margin-top: 0;">
-                            <div class="form-group" style="flex: 2;">
-                                <label>Nome da Fase</label>
-                                <input type="text" name="fase" placeholder="Ex: Protocolo na Prefeitura" required>
+                    <!-- Formulário Expandido para Processos -->
+                    <form method="POST" style="background:#fafafa; padding:20px; border-radius:8px; margin-bottom:25px; border: 1px solid #eee;">
+                        <input type="hidden" name="cliente_id" value="<?= $ativo['id'] ?>">
+                        
+                        <!-- Linha 1: Título e Data -->
+                        <div class="flex-row">
+                            <div class="form-group" style="flex:2">
+                                <label>Título da Fase</label>
+                                <input type="text" name="titulo" placeholder="Ex: Protocolo na Prefeitura" required>
                             </div>
-                            <div class="form-group">
-                                <label>Data</label>
-                                <input type="date" name="data" required>
+                            <div class="form-group" style="flex:1">
+                                <label>Data/Hora</label>
+                                <input type="datetime-local" name="data" required value="<?= date('Y-m-d\TH:i') ?>">
+                            </div>
+                            <div class="form-group" style="flex:1">
+                                <label>Status</label>
+                                <select name="status_tipo">
+                                    <option value="tramite">🔄 Trâmite</option>
+                                    <option value="inicio">🚩 Início</option>
+                                    <option value="pendencia">⚠️ Pendência</option>
+                                    <option value="documento">📄 Documento</option>
+                                    <option value="conclusao">✅ Conclusão</option>
+                                </select>
                             </div>
                         </div>
-                        <div class="form-group" style="margin-top: 10px;">
-                            <label>Descrição (Opcional)</label>
-                            <input type="text" name="desc" placeholder="Detalhes sobre esta etapa...">
+
+                        <!-- Linha 2: Fluxo de Departamentos -->
+                        <div class="flex-row">
+                            <div class="form-group" style="flex:1">
+                                <label>De (Origem)</label>
+                                <input type="text" name="origem" placeholder="Ex: Protocolo">
+                            </div>
+                            <div class="form-group" style="flex:1">
+                                <label>Para (Destino)</label>
+                                <input type="text" name="destino" placeholder="Ex: Engenharia">
+                            </div>
+                            <div class="form-group" style="flex:1">
+                                <label>Responsável</label>
+                                <input type="text" name="responsavel" placeholder="Ex: João">
+                            </div>
                         </div>
-                        <div style="margin-top: 10px; text-align: right;">
-                            <button type="submit" name="novo_progresso" class="btn-submit">Adicionar Fase</button>
+
+                        <!-- Linha 3: Detalhes e Anexo -->
+                        <div class="form-group" style="margin-bottom: 10px;">
+                            <label>Descrição Detalhada</label>
+                            <textarea name="descricao" rows="2" placeholder="Descreva o que aconteceu nesta etapa..."></textarea>
+                        </div>
+
+                        <div class="flex-row" style="align-items: flex-end;">
+                            <div class="form-group" style="flex:2">
+                                <label>Link de Anexo (Opcional)</label>
+                                <input type="url" name="anexo_url" placeholder="https://drive.google.com/...">
+                            </div>
+                            <div class="form-group" style="flex:1">
+                                <label>Nome do Anexo</label>
+                                <input type="text" name="anexo_nome" placeholder="Ex: Comprovante.pdf">
+                            </div>
+                            <button type="submit" name="novo_movimento" class="save" style="height: 42px;">Adicionar à Timeline</button>
                         </div>
                     </form>
 
-                    <table class="data-table">
-                        <thead><tr><th>Data</th><th>Fase</th><th>Descrição</th><th>Ação</th></tr></thead>
+                    <!-- Tabela de Movimentos -->
+                    <table style="font-size: 0.85rem;">
+                        <thead><tr><th>Data</th><th>Fase / Detalhes</th><th>Fluxo</th><th>Status</th><th></th></tr></thead>
                         <tbody>
-                            <?php foreach($progresso_ativo as $p): ?>
+                            <?php 
+                            // Busca na tabela nova
+                            $movs = $pdo->prepare("SELECT * FROM processo_movimentos WHERE cliente_id = ? ORDER BY data_movimento DESC");
+                            $movs->execute([$ativo['id']]);
+                            $lista_movs = $movs->fetchAll();
+                            
+                            foreach($lista_movs as $m): ?>
                             <tr>
-                                <td><?= date('d/m/Y', strtotime($p['data_fase'])) ?></td>
-                                <td><strong><?= htmlspecialchars($p['fase']) ?></strong></td>
-                                <td><?= htmlspecialchars($p['descricao']) ?></td>
-                                <td><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&delete_progresso=<?= $p['id'] ?>&cid=<?= $cliente_ativo['id'] ?>" class="btn-delete" onclick="return confirm('Excluir?')">Excluir</a></td>
+                                <td style="width:100px;"><?= date('d/m/y H:i', strtotime($m['data_movimento'])) ?></td>
+                                <td>
+                                    <strong><?= htmlspecialchars($m['titulo_fase']) ?></strong><br>
+                                    <span style="color:#666; font-size:0.8rem;"><?= htmlspecialchars(substr($m['descricao'],0,50)) ?>...</span>
+                                    <?php if($m['anexo_url']): ?><br><a href="<?= $m['anexo_url'] ?>" target="_blank" style="color:#136f5c;">📎 Ver Anexo</a><?php endif; ?>
+                                </td>
+                                <td><?= $m['departamento_origem'] ?> ➝ <?= $m['departamento_destino'] ?></td>
+                                <td><span style="padding:2px 6px; border-radius:4px; font-size:10px; text-transform:uppercase; background:#eee;"><?= $m['status_tipo'] ?></span></td>
+                                <td style="text-align:right;"><a href="?cid=<?= $ativo['id'] ?>&del_mov=<?= $m['id'] ?>" class="del" onclick="return confirm('Apagar este movimento?')">Apagar</a></td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>

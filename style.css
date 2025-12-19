@@ -659,6 +659,155 @@ body {
     transform: scale(0.95);
 }
 
+/* =========================================
+   Timeline Vertical (Área do Cliente)
+   ========================================= */
+.timeline-section {
+    position: relative;
+    padding-left: 20px;
+}
+
+.timeline-card {
+    position: relative;
+    background: white;
+    border-radius: var(--radius-medium);
+    padding: 24px;
+    margin-bottom: 32px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    /* Sombra suave */
+    border: 1px solid #f0f0f0;
+    margin-left: 20px;
+    /* Espaço para a linha */
+}
+
+/* Linha Vertical Connecting Dots */
+.timeline-section::before {
+    content: '';
+    position: absolute;
+    left: 14px;
+    /* Ajustar posição central */
+    top: 15px;
+    bottom: 0;
+    width: 2px;
+    background: #e0e0e0;
+}
+
+/* Ícones da Timeline (As "bolinhas") */
+.timeline-icon {
+    position: absolute;
+    left: -42px;
+    /* Posição relativa ao card */
+    top: 24px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+    z-index: 2;
+    /* Ficar acima da linha */
+    box-shadow: 0 0 0 4px #f4f7f6;
+    /* Borda branca falsa para "cortar" a linha */
+}
+
+/* Cores por Status */
+.status-inicio {
+    background-color: var(--color-primary);
+}
+
+/* Verde padrão */
+.status-tramite {
+    background-color: #3b82f6;
+}
+
+/* Azul */
+.status-pendencia {
+    background-color: #f59e0b;
+}
+
+/* Laranja */
+.status-documento {
+    background-color: #8b5cf6;
+}
+
+/* Roxo */
+.status-conclusao {
+    background-color: var(--color-primary-strong);
+}
+
+/* Verde Escuro */
+
+/* Conteúdo do Card */
+.timeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.timeline-date {
+    font-size: 0.85rem;
+    color: #666;
+    background: #f5f5f5;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.timeline-title {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.timeline-desc {
+    color: var(--color-text-subtle);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 16px;
+}
+
+/* Depto Flow (De -> Para) */
+.timeline-flow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: #555;
+    background: #eef2ff;
+    /* Azul bem clarinho */
+    padding: 8px 12px;
+    border-radius: 6px;
+    width: fit-content;
+    margin-bottom: 16px;
+}
+
+.flow-arrow {
+    color: #aaa;
+}
+
+/* Botão de Anexo */
+.timeline-attachment {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--color-primary-strong);
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.timeline-attachment:hover {
+    background: #f0fdf9;
+    border-color: var(--color-primary);
+}
+
 /* Tooltip on hover */
 .floating-btn::before {
     content: attr(aria-label);
