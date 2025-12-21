@@ -166,40 +166,69 @@ $fases_padrao = [
     <link rel="stylesheet" href="../style.css">
     <link rel="icon" href="../assets/logo.png" type="image/png">
     <style>
-        body { background-color: #f4f7f6; display: block; padding: 0; }
-        .admin-header { background: var(--color-primary-strong); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top:0; z-index: 100; }
+        /* CSS Variables & Theme */
+        :root {
+            --color-bg: #f4f7f6;
+            --color-surface: #ffffff;
+            --color-text: #333333;
+            --color-text-subtle: #555555;
+            --color-border: #e0e0e0;
+            --color-primary: #198754;
+            --color-primary-strong: #146c43;
+            --shadow: 0 4px 20px rgba(0,0,0,0.05);
+            --header-bg: #146c43;
+        }
+
+        body.dark-mode {
+            --color-bg: #121212;
+            --color-surface: #1e1e1e;
+            --color-text: #e0e0e0;
+            --color-text-subtle: #a0a0a0;
+            --color-border: #333333;
+            --shadow: 0 4px 20px rgba(0,0,0,0.3);
+            --header-bg: #0b3d26;
+        }
+
+        body { background-color: var(--color-bg); color: var(--color-text); font-family: 'Outfit', sans-serif; display: block; padding: 0; transition: background-color 0.3s, color 0.3s; }
+        
+        .admin-header { background: var(--header-bg); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top:0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
         .admin-container { display: grid; grid-template-columns: 260px 1fr; gap: 20px; max-width: 1600px; margin: 20px auto; padding: 0 20px; align-items: start; }
         
-        .sidebar { background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); padding: 15px; position: sticky; top: 80px; }
+        .sidebar { background: var(--color-surface); border-radius: 8px; box-shadow: var(--shadow); padding: 15px; position: sticky; top: 80px; border: 1px solid var(--color-border); }
+        
         .client-list { list-style: none; padding: 0; margin: 0; max-height: 70vh; overflow-y: auto; }
-        .client-list li a { display: block; padding: 10px; border-radius: 6px; text-decoration: none; color: #333; border-bottom: 1px solid #f0f0f0; font-size: 0.9rem; }
-        .client-list li a:hover { background: #e6f2ee; }
+        .client-list li a { display: block; padding: 10px; border-radius: 6px; text-decoration: none; color: var(--color-text); border-bottom: 1px solid var(--color-border); font-size: 0.9rem; transition: 0.2s; }
+        .client-list li a:hover { background: rgba(0,0,0,0.05); }
         .client-list li a.active { background: var(--color-primary); color: white; border-color: transparent; }
 
         .tabs-header { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: none; overflow-x: auto; white-space: nowrap; padding-bottom: 5px; }
-        .tab-btn { padding: 12px 24px; background: white; border: 1px solid #ddd; border-radius: 50px; cursor: pointer; font-weight: 600; color: #555; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .tab-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .tab-btn { padding: 12px 24px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 50px; cursor: pointer; font-weight: 600; color: var(--color-text-subtle); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .tab-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); filter: brightness(0.95); }
         .tab-btn.active { background: var(--color-primary); color: white; border-color: var(--color-primary); }
 
-        .tab-content { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); min-height: 500px; animation: fadeIn 0.3s ease; }
+        .tab-content { background: var(--color-surface); padding: 30px; border-radius: 12px; box-shadow: var(--shadow); min-height: 500px; border: 1px solid var(--color-border);animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .form-card { background: #f8f9fa; border: 1px solid #eee; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
-        .form-card h3 { margin-top: 0; color: var(--color-primary-strong); font-size: 1.1rem; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 15px; }
+        .form-card { background: rgba(0,0,0,0.02); border: 1px solid var(--color-border); border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+        .form-card h3 { margin-top: 0; color: var(--color-primary-strong); font-size: 1.1rem; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid var(--color-border); padding-bottom: 10px; margin-bottom: 15px; }
+        body.dark-mode .form-card h3 { color: #4ade80; } /* Ajuste cor titulo no dark */
         
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
-        .form-group label { display: block; font-size: 0.8rem; font-weight: bold; color: #666; margin-bottom: 4px; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; transition: 0.2s; }
+        .form-group label { display: block; font-size: 0.8rem; font-weight: bold; color: var(--color-text-subtle); margin-bottom: 4px; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid var(--color-border); background: var(--color-surface); color: var(--color-text); border-radius: 6px; box-sizing: border-box; transition: 0.2s; }
         .form-group input:focus { border-color: var(--color-primary); outline: none; box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.1); }
 
         .btn-save { background: var(--color-primary); color: white; padding: 14px 30px; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: bold; width: 100%; transition: 0.2s; }
         .btn-save:hover { background: var(--color-primary-strong); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
 
-        .stepper-list { list-style: none; padding: 0; margin-bottom: 30px; border: 1px solid #eee; border-radius: 8px; overflow: hidden; }
-        .stepper-item { display: flex; align-items: center; justify-content: space-between; padding: 15px; border-bottom: 1px solid #eee; background: #fff; }
-        .stepper-item.current { background: #e8f5e9; border-left: 4px solid var(--color-primary); }
+        .stepper-list { list-style: none; padding: 0; margin-bottom: 30px; border: 1px solid var(--color-border); border-radius: 8px; overflow: hidden; }
+        .stepper-item { display: flex; align-items: center; justify-content: space-between; padding: 15px; border-bottom: 1px solid var(--color-border); background: var(--color-surface); }
+        .stepper-item.current { background: rgba(25, 135, 84, 0.1); border-left: 4px solid var(--color-primary); }
         .stepper-btn { background: #ddd; color: #555; border: none; padding: 6px 15px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; }
         .stepper-btn.active { background: var(--color-primary); color: white; }
+
+        .btn-toggle-theme { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 6px 12px; border-radius: 50px; cursor: pointer; display: flex; align-items: center; gap: 5px; font-family: inherit; font-size: 0.85rem; margin-right: 15px; transition:0.2s; }
+        .btn-toggle-theme:hover { background: rgba(255,255,255,0.3); }
 
         @media (max-width: 768px) {
             .admin-container { grid-template-columns: 1fr; display: block; }
@@ -219,13 +248,17 @@ $fases_padrao = [
             <span style="font-size:0.8rem; opacity: 0.8;">Gestão Administrativa</span>
         </div>
     </div>
-    <a href="?sair=true" style="color: white; text-decoration: underline;">Sair</a>
+    
+    <div style="display:flex; align-items:center;">
+        <button class="btn-toggle-theme" onclick="toggleTheme()">🌓 Tema</button>
+        <a href="?sair=true" style="color: white; text-decoration: underline; font-size:0.9rem;">Sair</a>
+    </div>
 </header>
 
 <div class="admin-container">
     <aside class="sidebar">
         <a href="?novo=true" style="display:block; text-align:center; background:#efb524; padding:12px; border-radius:6px; color:black; font-weight:bold; text-decoration:none; margin-bottom:20px; box-shadow:0 3px 6px rgba(0,0,0,0.1);">+ Novo Cliente</a>
-        <h4 style="margin: 10px 0; font-size: 0.8rem; color: #999; text-transform: uppercase; letter-spacing: 1px;">Meus Clientes</h4>
+        <h4 style="margin: 10px 0; font-size: 0.8rem; color: var(--color-text-subtle); text-transform: uppercase; letter-spacing: 1px;">Meus Clientes</h4>
         <ul class="client-list">
             <?php foreach($clientes as $c): ?>
                 <li>
@@ -261,8 +294,8 @@ $fases_padrao = [
             <div style="margin-bottom: 25px;"> 
                 <div style="display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 15px;">
                     <div>
-                        <h1 style="margin: 0; color: #333; font-size: 1.8rem;"><?= htmlspecialchars($cliente_ativo['nome']) ?></h1>
-                        <span style="color:#777; font-size:0.9rem;">Gerenciando dados do processo</span>
+                        <h1 style="margin: 0; color: var(--color-text); font-size: 1.8rem;"><?= htmlspecialchars($cliente_ativo['nome']) ?></h1>
+                        <span style="color:var(--color-text-subtle); font-size:0.9rem;">Gerenciando dados do processo</span>
                     </div>
                     
                     <div style="display:flex; gap:10px; flex-wrap:wrap;">
@@ -273,7 +306,7 @@ $fases_padrao = [
                             </a>
                         <?php endif; ?>
 
-                        <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" onclick="return confirm('ATENÇÃO: Confirmar exclusão?')" style="color:#d32f2f; font-size:0.9rem; background: #fdecea; padding: 10px 16px; border-radius: 6px; text-decoration:none; font-weight:600; display:flex; align-items:center;">Excluir Cliente</a>
+                        <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" onclick="return confirm('ATENÇÃO: Confirmar exclusão?')" style="color:#d32f2f; font-size:0.9rem; background: rgba(253, 236, 234, 0.5); border: 1px solid #d32f2f; padding: 10px 16px; border-radius: 6px; text-decoration:none; font-weight:600; display:flex; align-items:center;">Excluir Cliente</a>
                     </div>
                 </div>
             </div>
@@ -386,14 +419,14 @@ $fases_padrao = [
                             <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
                             <div class="form-group">
                                 <label style="font-size:1rem; color:#d97706;">Link da Pasta de Pendências (Drive)</label>
-                                <input type="url" name="link_doc_pendencias" value="<?= $detalhes['link_doc_pendencias']??'' ?>" placeholder="Link da pasta para o cliente..." style="border: 2px solid #ffc107; background:#fffbf2;">
+                                <input type="url" name="link_doc_pendencias" value="<?= $detalhes['link_doc_pendencias']??'' ?>" placeholder="Link da pasta para o cliente..." style="border: 2px solid #ffc107; background:#fffbf2; color: #333;">
                             </div>
                             <div style="text-align:right; margin-top:5px;">
                                 <button type="submit" name="salvar_detalhes" style="background:#d97706; color:white; border:none; padding:8px 15px; border-radius:4px; cursor:pointer;">Salvar Link</button>
                             </div>
                         </form>
                         
-                        <hr style="border:0; border-top:1px solid #eee; margin:20px 0;">
+                        <hr style="border:0; border-top:1px solid var(--color-border); margin:20px 0;">
 
                         <!-- Timeline Stepper -->
                         <h4>Fase Atual (Stepper)</h4>
@@ -403,7 +436,7 @@ $fases_padrao = [
                                 $is_current = (($detalhes['etapa_atual']??'') === $fase);
                             ?>
                                 <li class="stepper-item <?= $is_current ? 'current' : '' ?>">
-                                    <span style="font-weight: 500; font-size: 1rem;"><?= $fase ?></span>
+                                    <span style="font-weight: 500; font-size: 1rem; color: var(--color-text);"><?= $fase ?></span>
                                     <?php if($is_current): ?>
                                         <button class="stepper-btn active">✅ Atual</button>
                                     <?php else: ?>
@@ -420,15 +453,20 @@ $fases_padrao = [
 
                     <h4>Histórico de Movimentos</h4>
                     <table style="width:100%; font-size:0.9rem; border-collapse:collapse;">
-                        <thead style="background:#f0f0f0;"><tr><th>Data</th><th>Fase</th></tr></thead>
+                        <thead style="background:rgba(0,0,0,0.05);">
+                            <tr>
+                                <th style="padding:10px; color:var(--color-text);">Data</th>
+                                <th style="padding:10px; color:var(--color-text);">Fase</th>
+                            </tr>
+                        </thead>
                         <tbody>
                             <?php 
                             $movs = $pdo->prepare("SELECT * FROM processo_movimentos WHERE cliente_id = ? ORDER BY data_movimento DESC");
                             $movs->execute([$cliente_ativo['id']]);
                             foreach($movs->fetchAll() as $m): ?>
-                            <tr style="border-bottom:1px solid #eee;">
-                                <td style="padding:10px;"><?= date('d/m/y H:i', strtotime($m['data_movimento'])) ?></td>
-                                <td style="padding:10px;"><strong><?= htmlspecialchars($m['titulo_fase']) ?></strong></td>
+                            <tr style="border-bottom:1px solid var(--color-border);">
+                                <td style="padding:10px; color: var(--color-text);"><?= date('d/m/y H:i', strtotime($m['data_movimento'])) ?></td>
+                                <td style="padding:10px; color: var(--color-text);"><strong><?= htmlspecialchars($m['titulo_fase']) ?></strong></td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -458,7 +496,7 @@ $fases_padrao = [
                     </form>
                     
                     <!-- Lista de Uploads Individuais -->
-                    <div class="card" style="margin-top:30px; border:1px dashed #ccc; padding:20px;">
+                    <div class="card" style="margin-top:30px; border:1px dashed var(--color-border); padding:20px;">
                         <h4>Anexos Avulsos (Lista)</h4>
                         <form method="POST" style="display:flex; gap:10px; margin-bottom:15px;">
                             <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
@@ -468,7 +506,7 @@ $fases_padrao = [
                         </form>
                         <?php foreach($docs_ativo as $d): ?>
                             <div style="padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between;">
-                                <span>📄 <?= htmlspecialchars($d['titulo']) ?> (<?= htmlspecialchars($d['link_drive']) ?>)</span>
+                                <span style="color: var(--color-text);">📄 <?= htmlspecialchars($d['titulo']) ?> (<?= htmlspecialchars($d['link_drive']) ?>)</span>
                             </div>
                         <?php endforeach; ?>
                     </div>
@@ -479,5 +517,16 @@ $fases_padrao = [
         <?php endif; ?>
     </main>
 </div>
+<script>
+    function toggleTheme() {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        localStorage.setItem('admin_theme', isDark ? 'dark' : 'light');
+    }
+    const savedTheme = localStorage.getItem('admin_theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
+</script>
 </body>
 </html>

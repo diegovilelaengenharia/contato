@@ -19,29 +19,21 @@ $stmt = $pdo->prepare("SELECT * FROM processo_movimentos WHERE cliente_id = ? OR
 $stmt->execute([$cliente_id]);
 $timeline = $stmt->fetchAll();
 
-// Fallback para tabela antiga se timeline vazia... (mantido do código anterior se necessário, mas simplificado aqui)
-if(count($timeline) == 0) {
-    $stmtOld = $pdo->prepare("SELECT * FROM progresso WHERE cliente_id = ? ORDER BY data_fase DESC");
-    $stmtOld->execute([$cliente_id]);
-    $progresso = $stmtOld->fetchAll();
-    
-    foreach($progresso as $p) {
-        $timeline[] = [
-            'data_movimento' => $p['data_fase'],
-            'titulo_fase' => $p['fase'],
-            'descricao' => $p['descricao'],
-            'status_tipo' => 'tramite',
-            'departamento_origem' => '',
-            'departamento_destino' => '',
-            'anexo_url' => ''
-        ];
+// Função Auxiliar para Extrair ID do Drive
+function getDriveFolderId($url) {
+    if (preg_match('/folders\/([a-zA-Z0-9-_]+)/', $url, $matches)) {
+        return $matches[1];
     }
+    if (preg_match('/id=([a-zA-Z0-9-_]+)/', $url, $matches)) {
+        return $matches[1];
+    }
+    return null;
 }
 
-// Buscar Documentos
-$stmtDoc = $pdo->prepare("SELECT * FROM documentos WHERE cliente_id = ?");
-$stmtDoc->execute([$cliente_id]);
-$documentos = $stmtDoc->fetchAll();
+$drive_folder_id = null;
+if (!empty($detalhes['link_drive_pasta'])) {
+    $drive_folder_id = getDriveFolderId($detalhes['link_drive_pasta']);
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -81,19 +73,6 @@ $documentos = $stmtDoc->fetchAll();
         
         .card { background: var(--color-surface); padding: 32px; border-radius: 12px; box-shadow: var(--shadow); margin-bottom: 30px; border: 1px solid var(--color-border); }
         
-        /* Timeline style */
-        .timeline-item { border-left: 3px solid var(--color-primary); padding-left: 24px; margin-bottom: 32px; position: relative; }
-        .timeline-item:last-child { margin-bottom: 0; }
-        .timeline-item::before { content: ''; width: 14px; height: 14px; background: var(--color-primary); border-radius: 50%; position: absolute; left: -8.5px; top: 0; }
-        .timeline-date { font-size: 0.9rem; color: var(--color-text-subtle); margin-bottom: 4px; display: block; }
-        .timeline-title { font-weight: 700; color: var(--color-primary); margin: 0 0 8px; font-size: 1.2rem; }
-        .timeline-desc { color: var(--color-text); opacity: 0.9; }
-
-        /* Doc Links */
-        .links-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-        .doc-link { display: flex; align-items: center; gap: 16px; padding: 20px; border: 1px solid var(--color-border); border-radius: 8px; text-decoration: none; color: var(--color-text); transition: all 0.2s ease; background: var(--color-surface); }
-        .doc-link:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--color-primary); }
-        
         h1 { margin: 0; font-size: clamp(1.5rem, 3vw, 2rem); color: var(--color-text); }
         .badge-panel { background: var(--color-primary); color: white; padding: 4px 12px; border-radius: 99px; font-size: 0.85rem; font-weight: 700; display: inline-block; margin-top: 5px; }
         
@@ -119,11 +98,23 @@ $documentos = $stmtDoc->fetchAll();
         .s-item.active .s-label { color: var(--color-primary); font-weight: 700; }
         .s-item.completed .s-circle { border-color: var(--color-primary); background: var(--color-primary); color: white; opacity: 0.7; }
         .s-item.completed .s-label { color: var(--color-primary); opacity: 0.8; }
+
+        /* Tabela Histórico */
+        .history-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .history-table th, .history-table td { padding: 12px; text-align: left; border-bottom: 1px solid var(--color-border); }
+        .history-table th { font-weight: 600; color: var(--color-text-subtle); font-size: 0.85rem; text-transform: uppercase; }
+        .history-table td { color: var(--color-text); font-size: 0.95rem; }
+        .history-table tr:last-child td { border-bottom: none; }
+        
+        /* Iframe Drive */
+        .drive-embed-container { width: 100%; height: 600px; background: var(--color-surface); border-radius: 8px; border: 1px solid var(--color-border); overflow: hidden; margin-top: 20px; }
+        iframe { border: 0; width: 100%; height: 100%; }
+
     </style>
 </head>
 <body>
     <div class="container">
-        <header class="header-panel">
+        <header class="card">
             <div style="width:100%;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                     <div>
@@ -138,38 +129,31 @@ $documentos = $stmtDoc->fetchAll();
 
                 <!-- Botões Customizados -->
                 <div style="display:flex; gap:15px; flex-wrap:wrap; margin-top:20px;">
-                    
-                    <!-- 1. Cadastro Inicial (Cinza) -->
-                    <!-- Mapeado para Iniciais ou Pasta Geral se Iniciais vazio -->
                     <?php 
                         $link1 = !empty($detalhes['link_doc_iniciais']) ? $detalhes['link_doc_iniciais'] : ($detalhes['link_drive_pasta'] ?? '');
                         if(!empty($link1)): 
                     ?>
                         <a href="<?= htmlspecialchars($link1) ?>" target="_blank" class="btn-drive" style="background-color:#6c757d;">
-                             Cadastro Inicial
+                             📄 Cadastro Inicial
                         </a>
                     <?php endif; ?>
 
-                    <!-- 2. Status e Pendências (Amarelo) -->
                     <?php if(!empty($detalhes['link_doc_pendencias'])): ?>
                         <a href="<?= htmlspecialchars($detalhes['link_doc_pendencias']) ?>" target="_blank" class="btn-drive" style="background-color:#ffc107; color: #333;">
                             ⚠️ Status e Pendências
                         </a>
                     <?php endif; ?>
 
-                    <!-- 3. Links e Documentos Finais (Verde) -->
                     <?php if(!empty($detalhes['link_doc_finais'])): ?>
                         <a href="<?= htmlspecialchars($detalhes['link_doc_finais']) ?>" target="_blank" class="btn-drive" style="background-color:#198754;">
                             ✅ Links e Documentos Finais
                         </a>
                     <?php endif; ?>
-
                 </div>
 
                 <!-- Stepper -->
                 <?php 
                 $etapa_atual = $detalhes['etapa_atual'] ?? '';
-                // Mapa simples para highlight
                 $mapa_fases = [
                     "Abertura de Processo (Guichê)" => "Guichê",
                     "Fiscalização (Parecer Fiscal)" => "Fiscalização",
@@ -185,7 +169,6 @@ $documentos = $stmtDoc->fetchAll();
                 $found_index = array_search($etapa_atual, $keys);
                 if($found_index === false) $found_index = -1;
                 ?>
-
                 <div class="client-stepper">
                     <?php 
                     $i = 0;
@@ -200,44 +183,55 @@ $documentos = $stmtDoc->fetchAll();
                         </div>
                     <?php $i++; endforeach; ?>
                 </div>
-
             </div>
         </header>
 
-        <section class="timeline-section">
-            <h2 style="color:var(--color-text); margin-bottom:20px;">Histórico Detalhado</h2>
+        <!-- Histórico (Tabela Simples) -->
+        <section class="card">
+            <h2 style="margin-top:0; color:var(--color-text);">Histórico do Processo</h2>
             <?php if(count($timeline) > 0): ?>
-                <?php foreach($timeline as $t): ?>
-                    <div class="card timeline-item">
-                        <span class="timeline-date"><?= date('d/m/Y \à\s H:i', strtotime($t['data_movimento'])) ?></span>
-                        <h3 class="timeline-title"><?= htmlspecialchars($t['titulo_fase']) ?></h3>
-                        <div class="timeline-desc"><?= nl2br(htmlspecialchars($t['descricao'])) ?></div>
-                    </div>
-                <?php endforeach; ?>
+                <div style="overflow-x:auto;">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Fase</th>
+                                <th>Descrição/Detalhes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach($timeline as $t): ?>
+                            <tr>
+                                <td style="white-space:nowrap;"><?= date('d/m/Y H:i', strtotime($t['data_movimento'])) ?></td>
+                                <td><strong><?= htmlspecialchars($t['titulo_fase']) ?></strong></td>
+                                <td><?= nl2br(htmlspecialchars($t['descricao'])) ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             <?php else: ?>
-                <div class="card">
-                    <p style="color:var(--color-text-subtle);">Nenhuma movimentação registrada ainda.</p>
+                <p style="color:var(--color-text-subtle);">Nenhuma movimentação registrada.</p>
+            <?php endif; ?>
+        </section>
+
+        <!-- Área de Documentos (Google Drive Embed) -->
+        <section class="card">
+            <h2 style="margin-top:0; color:var(--color-text);">Arquivos e Documentos</h2>
+            <p style="color:var(--color-text-subtle); margin-bottom:15px;">Abaixo você visualiza diretamente sua pasta de documentos no sistema.</p>
+            
+            <?php if ($drive_folder_id): ?>
+                <div class="drive-embed-container">
+                    <iframe src="https://drive.google.com/embeddedfolderview?id=<?= htmlspecialchars($drive_folder_id) ?>#list" allowfullscreen></iframe>
+                </div>
+            <?php else: ?>
+                <div style="padding: 30px; text-align:Center; background: rgba(0,0,0,0.02); border-radius: 8px;">
+                    <p>A pasta de documentos ainda não foi vinculada a este processo.</p>
+                    <p style="font-size:0.9rem; color:#666;">Entre em contato com a administração.</p>
                 </div>
             <?php endif; ?>
         </section>
 
-        <section class="docs-section">
-            <h2 style="color:var(--color-text); margin-bottom:20px;">Outros Anexos</h2>
-            <div class="links-grid">
-                <?php foreach($documentos as $doc): ?>
-                    <a href="<?= htmlspecialchars($doc['link_drive']) ?>" target="_blank" class="doc-link">
-                        <div class="doc-icon">📄</div>
-                        <div>
-                            <div style="font-weight:600;"><?= htmlspecialchars($doc['titulo']) ?></div>
-                            <div style="font-size:0.8rem; color:var(--color-text-subtle);">Clique para abrir</div>
-                        </div>
-                    </a>
-                <?php endforeach; ?>
-            </div>
-            <?php if(count($documentos) == 0): ?>
-                <p style="color:var(--color-text-subtle);">Nenhum documento avulso anexado.</p>
-            <?php endif; ?>
-        </section>
     </div>
 
     <script>
@@ -246,142 +240,10 @@ $documentos = $stmtDoc->fetchAll();
             const isDark = document.body.classList.contains('dark-mode');
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
         }
-
-        // Carregar Tema Salvo
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark') {
             document.body.classList.add('dark-mode');
         }
     </script>
-</body>
-</html>
-                <?php 
-                $fases_padrao = [
-                    "Guichê", "Fiscalização", "Triagem", "Pendências", "Engenharia", "Taxas", "Docs", "Avaliação", "Finalizado"
-                ]; 
-                // Mapa simples para índices (pois o nome completo no banco é longo)
-                // Vamos tentar achar 'like' ou correspondência exata
-                // Para simplificar, vamos assumir que a ordem é fixa.
-                // Mas o banco tem o texto inteiro. Vamos usar busca de substring pra "highlight"
-                
-                $etapa_atual = $detalhes['etapa_atual'] ?? '';
-                $found_index = -1;
-               
-                // Tenta achar o index da etapa atual baseada nos nomes curtos vs longos
-                // Mapeamento Longo -> Curto (Key -> Label)
-                $mapa_fases = [
-                    "Abertura de Processo (Guichê)" => "Guichê",
-                    "Fiscalização (Parecer Fiscal)" => "Fiscalização",
-                    "Triagem (Documentos Necessários)" => "Triagem",
-                    "Comunicado de Pendências (Triagem)" => "Pendências",
-                    "Análise Técnica (Engenharia)" => "Engenharia",
-                    "Comunicado (Pendências e Taxas)" => "Taxas",
-                    "Confecção de Documentos" => "Docs",
-                    "Avaliação (ITBI/Averbação)" => "Avaliação",
-                    "Processo Finalizado (Documentos Prontos)" => "Finalizado"
-                ];
-                
-                $keys = array_keys($mapa_fases);
-                $found_index = array_search($etapa_atual, $keys);
-                if($found_index === false) $found_index = -1;
-                ?>
-
-                <div class="client-stepper">
-                    <?php 
-                    $i = 0;
-                    foreach($mapa_fases as $full => $label): 
-                        $status_class = '';
-                        if ($i < $found_index) $status_class = 'completed';
-                        else if ($i === $found_index) $status_class = 'active';
-                    ?>
-                        <div class="s-item <?= $status_class ?>">
-                            <div class="s-circle"><?= ($i < $found_index) ? '✔' : ($i + 1) ?></div>
-                            <span class="s-label"><?= $label ?></span>
-                        </div>
-                    <?php $i++; endforeach; ?>
-                </div>
-
-            </div>
-        </header>
-
-        <section class="timeline-section">
-            <h2 class="section-heading" style="margin-top:0; margin-bottom: 30px; margin-left: 20px;">Linha do Tempo do Processo</h2>
-            
-            <?php 
-            // Os dados já foram preparados no início do arquivo (variável $timeline)
-            ?>
-
-            <?php if(count($timeline) > 0): ?>
-                <?php foreach($timeline as $mov): ?>
-                    <div class="timeline-card">
-                        <!-- Ícone Dinâmico conforme Status -->
-                        <?php
-                            $icon = "🔄"; // Default
-                            $bgClass = "status-tramite";
-                            switch($mov['status_tipo']) {
-                                case 'inicio': $icon = "🚩"; $bgClass = "status-inicio"; break;
-                                case 'pendencia': $icon = "⚠️"; $bgClass = "status-pendencia"; break;
-                                case 'documento': $icon = "📄"; $bgClass = "status-documento"; break;
-                                case 'conclusao': $icon = "✅"; $bgClass = "status-conclusao"; break;
-                            }
-                        ?>
-                        <div class="timeline-icon <?= $bgClass ?>"><?= $icon ?></div>
-
-                        <div class="timeline-header">
-                            <span class="timeline-date"><?= date('d/m/Y \à\s H:i', strtotime($mov['data_movimento'])) ?></span>
-                            <?php if(!empty($mov['prazo_previsto'])): ?>
-                                <span style="font-size:0.8rem; color:#d97706; font-weight:600;">Previsão: <?= date('d/m/Y', strtotime($mov['prazo_previsto'])) ?></span>
-                            <?php endif; ?>
-                        </div>
-
-                        <h3 class="timeline-title"><?= htmlspecialchars($mov['titulo_fase']) ?></h3>
-                        
-                        <?php if(!empty($mov['departamento_origem']) || !empty($mov['departamento_destino'])): ?>
-                            <div class="timeline-flow">
-                                <span><?= htmlspecialchars($mov['departamento_origem'] ?: 'Início') ?></span>
-                                <span class="flow-arrow">➜</span>
-                                <strong><?= htmlspecialchars($mov['departamento_destino'] ?: 'Conclusão') ?></strong>
-                            </div>
-                        <?php endif; ?>
-
-                        <p class="timeline-desc"><?= nl2br(htmlspecialchars($mov['descricao'])) ?></p>
-
-                        <?php if(!empty($mov['anexo_url'])): ?>
-                            <a href="<?= htmlspecialchars($mov['anexo_url']) ?>" target="_blank" class="timeline-attachment">
-                                📎 <?= htmlspecialchars($mov['anexo_nome'] ?: 'Visualizar Anexo') ?>
-                            </a>
-                        <?php endif; ?>
-                        
-                        <?php if(!empty($mov['usuario_responsavel'])): ?>
-                            <div style="margin-top:12px; font-size:0.8rem; color:#999;">
-                                Resp: <?= htmlspecialchars($mov['usuario_responsavel']) ?>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <p style="color: var(--color-text-subtle); margin-left: 20px;">Nenhuma atualização recente encontrada para o seu processo.</p>
-            <?php endif; ?>
-        </section>
-
-        <section class="card">
-            <h2 class="section-heading" style="margin-top:0;">Documentos e Arquivos</h2>
-            <div class="links-grid">
-                <?php if(count($documentos) > 0): ?>
-                    <?php foreach($documentos as $doc): ?>
-                        <a href="<?= htmlspecialchars($doc['link_drive']) ?>" target="_blank" class="doc-link">
-                            <span class="doc-icon">📄</span>
-                            <div>
-                                <strong style="display:block; margin-bottom:4px;"><?= htmlspecialchars($doc['titulo']) ?></strong>
-                                <small style="color: var(--color-text-subtle);">Clique para acessar</small>
-                            </div>
-                        </a>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <p style="color: var(--color-text-subtle);">Nenhum documento disponível ainda.</p>
-                <?php endif; ?>
-            </div>
-        </section>
-    </div>
 </body>
 </html>
