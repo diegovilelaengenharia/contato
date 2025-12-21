@@ -94,7 +94,6 @@ if (isset($_POST['btn_salvar_pendencias'])) {
 }
 
 // 4. Salvar Arquivos/Links (Aba Arquivos)
-// [REMOVIDO: link_doc_iniciais e link_doc_finais a pedido do usuário]
 if (isset($_POST['btn_salvar_arquivos'])) {
     $cid = $_POST['cliente_id'];
     try {
@@ -106,14 +105,19 @@ if (isset($_POST['btn_salvar_arquivos'])) {
 
 // 5. Novo Cliente
 if (isset($_POST['novo_cliente'])) {
-    $nome = $_POST['nome'];
+    $nome_original = $_POST['nome'];
     $user = $_POST['usuario'];
     $pass = password_hash($_POST['senha'], PASSWORD_DEFAULT);
     try {
-        $pdo->prepare("INSERT INTO clientes (nome, usuario, senha) VALUES (?, ?, ?)")->execute([$nome, $user, $pass]);
+        $pdo->prepare("INSERT INTO clientes (nome, usuario, senha) VALUES (?, ?, ?)")->execute([$nome_original, $user, $pass]);
         $nid = $pdo->lastInsertId();
+        
+        // ROTINA DE AUTO-RENOMEAÇÃO (Cliente 00X - Nome)
+        $nome_final = sprintf("Cliente %03d - %s", $nid, $nome_original);
+        $pdo->prepare("UPDATE clientes SET nome = ? WHERE id = ?")->execute([$nome_final, $nid]);
+        
         $pdo->prepare("INSERT INTO processo_detalhes (cliente_id) VALUES (?)")->execute([$nid]);
-        $sucesso = "Cliente criado com sucesso!";
+        $sucesso = "Cliente criado com sucesso: $nome_final";
     } catch (PDOException $e) { $erro = "Erro ao criar cliente."; }
 }
 
@@ -221,6 +225,9 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             .admin-container { grid-template-columns: 1fr; }
             .sidebar { position: static; margin-bottom: 20px; }
         }
+        
+        .iframe-container { width:100%; height:600px; border:1px solid var(--color-border); border-radius:8px; display:none; margin-top:15px; }
+        .iframe-container.visible { display:block; }
     </style>
 </head>
 <body>
@@ -423,8 +430,18 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
             <?php elseif($active_tab == 'arquivos'): ?>
                 <div class="form-card" style="border-left: 6px solid #2196f3;">
-                    <h3 style="color:#1976d2;">📂 Arquivos do Cliente</h3>
-                    <p style="margin-bottom:20px; color:var(--color-text-subtle);">Central de links e pastas do Google Drive.</p>
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div>
+                            <h3 style="color:#1976d2;">📂 Arquivos do Cliente</h3>
+                            <p style="margin-bottom:20px; color:var(--color-text-subtle);">Central de links e pastas do Google Drive.</p>
+                        </div>
+                        <?php if(!empty($detalhes['link_drive_pasta'])): ?>
+                            <button onclick="document.getElementById('drive-frame').classList.toggle('visible')" 
+                                    style="background:#1976d2; color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;">
+                                👁️ Visualizar/Recolher Pasta
+                            </button>
+                        <?php endif; ?>
+                    </div>
                     
                     <form method="POST">
                         <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
@@ -434,6 +451,12 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         </div>
                         <button type="submit" name="btn_salvar_arquivos" class="btn-save" style="background:#1976d2;">Salvar Links</button>
                     </form>
+
+                    <?php if(!empty($detalhes['link_drive_pasta'])): ?>
+                        <div id="drive-frame" class="iframe-container">
+                            <iframe src="<?= htmlspecialchars($detalhes['link_drive_pasta']) ?>" width="100%" height="100%" frameborder="0" style="border:0;"></iframe>
+                        </div>
+                    <?php endif; ?>
                 </div>
             <?php endif; ?>
 
