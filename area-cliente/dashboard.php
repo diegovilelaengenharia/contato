@@ -93,12 +93,38 @@ $documentos = $stmtDoc->fetchAll();
                     <a href="logout.php" class="btn-logout">Sair</a>
                 </div>
 
-                <!-- Drive Button -->
-                <?php if(!empty($detalhes['link_drive_pasta'])): ?>
-                    <a href="<?= htmlspecialchars($detalhes['link_drive_pasta']) ?>" target="_blank" class="btn-drive">
-                        📂 Acessar Pasta de Documentos
-                    </a>
-                <?php endif; ?>
+                <!-- Drive Buttons Group -->
+                <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:15px;">
+                    
+                    <!-- 1. Pasta Geral -->
+                    <?php if(!empty($detalhes['link_drive_pasta'])): ?>
+                        <a href="<?= htmlspecialchars($detalhes['link_drive_pasta']) ?>" target="_blank" class="btn-drive" style="background-color:#555;">
+                            📂 Pasta Geral
+                        </a>
+                    <?php endif; ?>
+
+                    <!-- 2. Pendências (Destaque Amarelo) -->
+                    <?php if(!empty($detalhes['link_doc_pendencias'])): ?>
+                        <a href="<?= htmlspecialchars($detalhes['link_doc_pendencias']) ?>" target="_blank" class="btn-drive" style="background-color:#d97706;">
+                            ⚠️ Resolver Pendências
+                        </a>
+                    <?php endif; ?>
+
+                    <!-- 3. Iniciais -->
+                    <?php if(!empty($detalhes['link_doc_iniciais'])): ?>
+                        <a href="<?= htmlspecialchars($detalhes['link_doc_iniciais']) ?>" target="_blank" class="btn-drive" style="background-color:#0288d1;">
+                            📄 Docs Iniciais
+                        </a>
+                    <?php endif; ?>
+
+                    <!-- 4. Finais (Destaque Verde) -->
+                    <?php if(!empty($detalhes['link_doc_finais'])): ?>
+                        <a href="<?= htmlspecialchars($detalhes['link_doc_finais']) ?>" target="_blank" class="btn-drive" style="background-color:#2e7d32;">
+                            ✅ Docs Finais/Entregáveis
+                        </a>
+                    <?php endif; ?>
+
+                </div>
 
                 <!-- Visual Stepper Client -->
                 <style>
