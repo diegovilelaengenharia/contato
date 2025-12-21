@@ -234,10 +234,13 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
 <header class="admin-header">
     <div style="display: flex; align-items: center; gap: 15px;">
-        <img src="../assets/logo.png" alt="Logo" style="height: 40px;">
-        <div>
-            <h1 style="margin:0; font-size:1.2rem;">Sistema de Regularização</h1>
-            <span style="font-size:0.8rem; opacity: 0.8;">Gestão Administrativa</span>
+        <img src="../assets/logo.png" alt="Logo" style="height: 50px;">
+        <div style="display:flex; flex-direction:column; gap:4px;">
+            <h1 style="margin:0; font-size:1.3rem; font-weight:700;">Gestão Administrativa (Vilela Engenharia)</h1>
+            <div style="font-size:0.8rem; opacity: 0.9; line-height:1.4;">
+                <strong>Eng. Diego Vilela</strong><br>
+                CREA-MG: (Inserir) &nbsp;|&nbsp; Email: (Inserir) &nbsp;|&nbsp; Tel: (Inserir)
+            </div>
         </div>
     </div>
     <div style="display:flex; align-items:center;">
@@ -452,9 +455,25 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         <button type="submit" name="btn_salvar_arquivos" class="btn-save" style="background:#1976d2;">Salvar Links</button>
                     </form>
 
-                    <?php if(!empty($detalhes['link_drive_pasta'])): ?>
+                    <?php 
+                    if(!empty($detalhes['link_drive_pasta'])): 
+                        // Tenta extrair o ID da pasta para formato embed correto
+                        $drive_url = $detalhes['link_drive_pasta'];
+                        $embed_url = $drive_url; // fallback
+                        
+                        // Padrão: /folders/ID ou ?id=ID
+                        if (preg_match('/folders\/([a-zA-Z0-9_-]+)/', $drive_url, $matches)) {
+                            $embed_url = "https://drive.google.com/embeddedfolderview?id=" . $matches[1] . "#grid";
+                        } elseif (preg_match('/id=([a-zA-Z0-9_-]+)/', $drive_url, $matches)) {
+                             $embed_url = "https://drive.google.com/embeddedfolderview?id=" . $matches[1] . "#grid";
+                        }
+                    ?>
                         <div id="drive-frame" class="iframe-container">
-                            <iframe src="<?= htmlspecialchars($detalhes['link_drive_pasta']) ?>" width="100%" height="100%" frameborder="0" style="border:0;"></iframe>
+                            <!-- Aviso sobre permissões -->
+                            <div style="background:#e3f2fd; color:#0d47a1; padding:10px; font-size:0.85rem; text-align:center; border-bottom:1px solid #bbdefb;">
+                                💡 Se aparecer erro 403/Recusado, verifique se a pasta está compartilhada como "Qualquer pessoa com o link" ou se você está logado nesta conta.
+                            </div>
+                            <iframe src="<?= htmlspecialchars($embed_url) ?>" width="100%" height="100%" frameborder="0" style="border:0;"></iframe>
                         </div>
                     <?php endif; ?>
                 </div>
