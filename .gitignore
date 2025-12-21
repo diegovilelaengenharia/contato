@@ -2,7 +2,7 @@
 /node_modules
 /.pnp
 .pnp.js
-/area-cliente/db.php
+
 .DS_Store
 thumbs.db
 
