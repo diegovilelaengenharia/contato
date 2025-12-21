@@ -9,7 +9,7 @@ if (!isset($_SESSION['cliente_id'])) {
 
 $cliente_id = $_SESSION['cliente_id'];
 
-// Buscar Detalhes e Link do Drive
+// Buscar Detalhes
 $stmtDet = $pdo->prepare("SELECT * FROM processo_detalhes WHERE cliente_id = ?");
 $stmtDet->execute([$cliente_id]);
 $detalhes = $stmtDet->fetch();
@@ -19,14 +19,10 @@ $stmt = $pdo->prepare("SELECT * FROM processo_movimentos WHERE cliente_id = ? OR
 $stmt->execute([$cliente_id]);
 $timeline = $stmt->fetchAll();
 
-// Função Auxiliar para Extrair ID do Drive
+// Função ID Drive
 function getDriveFolderId($url) {
-    if (preg_match('/folders\/([a-zA-Z0-9-_]+)/', $url, $matches)) {
-        return $matches[1];
-    }
-    if (preg_match('/id=([a-zA-Z0-9-_]+)/', $url, $matches)) {
-        return $matches[1];
-    }
+    if (preg_match('/folders\/([a-zA-Z0-9-_]+)/', $url, $matches)) return $matches[1];
+    if (preg_match('/id=([a-zA-Z0-9-_]+)/', $url, $matches)) return $matches[1];
     return null;
 }
 
@@ -47,14 +43,16 @@ if (!empty($detalhes['link_drive_pasta'])) {
     <link rel="icon" href="../assets/logo.png" type="image/png">
     <style>
         :root {
-            --color-bg: #f4f7f6;
+            /* Tema Verde Claro */
+            --color-bg: #f0f8f5; 
             --color-surface: #ffffff;
-            --color-text: #333333;
-            --color-text-subtle: #666666;
-            --color-border: #e0e0e0;
-            --color-primary: #198754;
-            --color-primary-strong: #146c43;
-            --shadow: 0 4px 20px rgba(0,0,0,0.05);
+            --color-text: #2f3e36;
+            --color-text-subtle: #5f7a6c;
+            --color-border: #dbece5;
+            --color-primary: #146c43;
+            --color-primary-light: #d1e7dd;
+            --shadow: 0 4px 20px rgba(20, 108, 67, 0.08);
+            --header-bg: #146c43;
         }
 
         body.dark-mode {
@@ -69,15 +67,11 @@ if (!empty($detalhes['link_drive_pasta'])) {
         body { background-color: var(--color-bg); color: var(--color-text); font-family: 'Outfit', sans-serif; margin: 0; padding: 0; transition: background-color 0.3s, color 0.3s; }
         .container { width: min(1000px, 95%); margin: 40px auto; }
         
-        .header-panel { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 20px; }
+        .header-panel { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .card { background: var(--color-surface); padding: 30px; border-radius: 16px; box-shadow: var(--shadow); margin-bottom: 30px; border: 1px solid var(--color-border); }
         
-        .card { background: var(--color-surface); padding: 32px; border-radius: 12px; box-shadow: var(--shadow); margin-bottom: 30px; border: 1px solid var(--color-border); }
-        
-        h1 { margin: 0; font-size: clamp(1.5rem, 3vw, 2rem); color: var(--color-text); }
-        .badge-panel { background: var(--color-primary); color: white; padding: 4px 12px; border-radius: 99px; font-size: 0.85rem; font-weight: 700; display: inline-block; margin-top: 5px; }
-        
-        .btn-drive { color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor:pointer; border:none; font-size:1rem; font-family:inherit; }
-        .btn-drive:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        h1 { margin: 0; font-size: clamp(1.5rem, 3vw, 2rem); color: var(--color-text); letter-spacing: -1px; }
+        .badge-panel { background: var(--color-primary-light); color: var(--color-primary); padding: 5px 15px; border-radius: 99px; font-size: 0.85rem; font-weight: 700; display: inline-block; margin-top: 5px; }
         
         .btn-logout { color: #d32f2f; text-decoration: none; font-weight: 600; padding: 8px 16px; border: 1px solid #d32f2f; border-radius: 12px; transition: 0.2s; }
         .btn-logout:hover { background: #fee; }
@@ -85,139 +79,118 @@ if (!empty($detalhes['link_drive_pasta'])) {
         .btn-toggle-theme { background: none; border: 1px solid var(--color-border); color: var(--color-text); padding: 8px 12px; border-radius: 50px; cursor: pointer; display: flex; align-items: center; gap: 5px; font-family: inherit; font-size: 0.9rem; margin-right: 10px; }
         .btn-toggle-theme:hover { background: var(--color-border); }
 
-        /* Stepper Client */
-        .client-stepper { display: flex; align-items: center; justify-content: space-between; margin-top: 30px; position: relative; overflow-x: auto; padding-bottom: 10px; }
-        .client-stepper::-webkit-scrollbar { height: 6px; }
-        .client-stepper::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+        /* Modern Stepper */
+        .client-stepper { display: flex; justify-content: space-between; margin-top: 10px; padding-bottom: 20px; position: relative; overflow-x: auto; gap:20px; }
         .client-stepper::before { content: ''; position: absolute; top: 15px; left: 0; right: 0; height: 3px; background: var(--color-border); z-index: 0; }
+        
         .s-item { position: relative; z-index: 1; text-align: center; min-width: 80px; display: flex; flex-direction: column; align-items: center; }
-        .s-circle { width: 32px; height: 32px; background: var(--color-surface); border: 3px solid var(--color-border); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--color-text-subtle); font-size: 14px; transition: 0.3s; }
+        .s-circle { width: 32px; height: 32px; background: var(--color-surface); border: 2px solid var(--color-border); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--color-text-subtle); font-size: 14px; transition: 0.3s; }
         .s-label { margin-top: 8px; font-size: 0.75rem; color: var(--color-text-subtle); max-width: 100px; line-height: 1.2; font-weight: 500; transition: 0.3s;}
         
-        .s-item.active .s-circle { border-color: var(--color-primary); background: var(--color-primary); color: white; }
-        .s-item.active .s-label { color: var(--color-primary); font-weight: 700; }
-        .s-item.completed .s-circle { border-color: var(--color-primary); background: var(--color-primary); color: white; opacity: 0.7; }
+        .s-item.active .s-circle { background: white; border-color: var(--color-primary); color: var(--color-primary); box-shadow: 0 0 0 4px rgba(20,108,67,0.2); transform: scale(1.1); }
+        .s-item.active .s-label { color: var(--color-primary); font-weight: 700; transform: scale(1.05); }
+        .s-item.completed .s-circle { background: var(--color-primary); border-color: var(--color-primary); color: white; }
         .s-item.completed .s-label { color: var(--color-primary); opacity: 0.8; }
 
-        /* Tabela Histórico */
+        /* Nav Buttons */
+        .nav-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .nav-btn { padding: 20px; border-radius: 12px; border: none; font-size: 1rem; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; align-items: center; gap: 10px; color: var(--color-text); background: var(--color-surface); box-shadow: var(--shadow); border: 1px solid var(--color-border); }
+        .nav-btn:hover { transform: translateY(-3px); border-color: var(--color-primary); }
+        .nav-btn.active { background: var(--color-primary); color: white; border-color: var(--color-primary); }
+        .nav-icon { font-size: 1.5rem; }
+
+        /* Views */
+        .view-section { display: none; animation: fadeIn 0.3s ease; }
+        .view-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Table & Grid */
         .history-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        .history-table th, .history-table td { padding: 12px; text-align: left; border-bottom: 1px solid var(--color-border); }
-        .history-table th { font-weight: 600; color: var(--color-text-subtle); font-size: 0.85rem; text-transform: uppercase; }
-        .history-table td { color: var(--color-text); font-size: 0.95rem; }
-        .history-table tr:last-child td { border-bottom: none; }
+        .history-table th, .history-table td { padding: 15px; text-align: left; border-bottom: 1px solid var(--color-border); }
+        .history-table th { font-weight: 700; color: var(--color-text-subtle); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
         
-        /* Iframe Drive */
-        .drive-embed-container { width: 100%; height: 600px; background: var(--color-surface); border-radius: 8px; border: 1px solid var(--color-border); overflow: hidden; margin-top: 20px; }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; }
+        .info-item label { font-size: 0.8rem; color: var(--color-text-subtle); font-weight: 700; display: block; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .info-item div { font-size: 1.05rem; color: var(--color-text); border-bottom: 1px solid var(--color-border); padding-bottom: 8px; font-weight: 500; }
+        
+        .section-header { grid-column: 1 / -1; font-size: 1.2rem; color: var(--color-primary); margin: 20px 0 10px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        
+        /* Pendency Board */
+        .pendency-board { background: #fffbf2; border: 2px solid #ffc107; border-radius: 12px; padding: 30px; color: #5c4b1e; }
+        .pendency-text { white-space: pre-wrap; line-height: 1.6; font-size: 1.05rem; }
+
+        .drive-embed-container { width: 100%; height: 600px; background: var(--color-surface); border-radius: 12px; border: 1px solid var(--color-border); overflow: hidden; margin-top: 20px; }
         iframe { border: 0; width: 100%; height: 100%; }
-
-        /* Cadastro View Grid */
-        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
-        .info-item label { font-size: 0.8rem; color: var(--color-text-subtle); font-weight: bold; display: block; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .info-item div { font-size: 1rem; color: var(--color-text); border-bottom: 1px solid var(--color-border); padding-bottom: 5px; }
-        .divider { grid-column: 1 / -1; height: 1px; background: var(--color-border); margin: 20px 0; }
-        .section-title { font-size: 1.1rem; color: var(--color-primary); grid-column: 1 / -1; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-
     </style>
 </head>
 <body>
     <div class="container">
-        <header class="card">
-            <div style="width:100%;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                    <div>
-                        <h1>Olá, <?= htmlspecialchars($_SESSION['cliente_nome']) ?></h1>
-                        <span class="badge-panel">Acompanhamento Online</span>
-                    </div>
-                    <div style="display:flex; align-items:center;">
-                        <button class="btn-toggle-theme" onclick="toggleTheme()">🌓 Tema</button>
-                        <a href="logout.php" class="btn-logout">Sair</a>
-                    </div>
+        <header class="card" style="padding-bottom: 10px;">
+            <div class="header-panel">
+                <div>
+                    <h1>Olá, <?= htmlspecialchars($_SESSION['cliente_nome']) ?></h1>
+                    <span class="badge-panel">Acompanhamento Online</span>
                 </div>
-
-                <!-- Botões de Ação e Navegação -->
-                <div style="display:flex; gap:15px; flex-wrap:wrap; margin-top:20px;">
-                    
-                    <!-- Botão Toggle Cadastro -->
-                    <button onclick="showCadastro()" id="btn-cadastro" class="btn-drive" style="background-color:#2196f3;">
-                        📋 Meus Dados Cadastrais
-                    </button>
-
-                    <!-- Botão Toggle Processo (Voltar) -->
-                    <button onclick="showProcesso()" id="btn-processo" class="btn-drive" style="background-color:#6c757d; display:none;">
-                        ⬅️ Voltar para Processo
-                    </button>
-
-                    <?php 
-                        $link1 = !empty($detalhes['link_doc_iniciais']) ? $detalhes['link_doc_iniciais'] : ($detalhes['link_drive_pasta'] ?? '');
-                        if(!empty($link1)): 
-                    ?>
-                        <a href="<?= htmlspecialchars($link1) ?>" target="_blank" class="btn-drive" style="background-color:#555;">
-                             📄 Docs Iniciais (Drive)
-                        </a>
-                    <?php endif; ?>
-
-                    <?php if(!empty($detalhes['link_doc_pendencias'])): ?>
-                        <a href="<?= htmlspecialchars($detalhes['link_doc_pendencias']) ?>" target="_blank" class="btn-drive" style="background-color:#ffc107; color: #333;">
-                            ⚠️ Resolver Pendências
-                        </a>
-                    <?php endif; ?>
-
-                    <?php if(!empty($detalhes['link_doc_finais'])): ?>
-                        <a href="<?= htmlspecialchars($detalhes['link_doc_finais']) ?>" target="_blank" class="btn-drive" style="background-color:#198754;">
-                            ✅ Entregáveis Finais
-                        </a>
-                    <?php endif; ?>
+                <div style="display:flex; align-items:center;">
+                    <button class="btn-toggle-theme" onclick="toggleTheme()">🌓 Tema</button>
+                    <a href="logout.php" class="btn-logout">Sair</a>
                 </div>
+            </div>
 
-                <!-- Stepper GLOBAL (Sempre Visível) -->
-                <?php 
+            <!-- Stepper -->
+            <?php 
                 $etapa_atual = $detalhes['etapa_atual'] ?? '';
                 $mapa_fases = [
-                    "Abertura de Processo (Guichê)" => "Guichê",
-                    "Fiscalização (Parecer Fiscal)" => "Fiscalização",
-                    "Triagem (Documentos Necessários)" => "Triagem",
-                    "Comunicado de Pendências (Triagem)" => "Pendências",
-                    "Análise Técnica (Engenharia)" => "Engenharia",
-                    "Comunicado (Pendências e Taxas)" => "Taxas",
-                    "Confecção de Documentos" => "Docs",
-                    "Avaliação (ITBI/Averbação)" => "Avaliação",
+                    "Abertura de Processo (Guichê)" => "Guichê", "Fiscalização (Parecer Fiscal)" => "Fiscalização",
+                    "Triagem (Documentos Necessários)" => "Triagem", "Comunicado de Pendências (Triagem)" => "Pendências",
+                    "Análise Técnica (Engenharia)" => "Engenharia", "Comunicado (Pendências e Taxas)" => "Taxas",
+                    "Confecção de Documentos" => "Docs", "Avaliação (ITBI/Averbação)" => "Avaliação",
                     "Processo Finalizado (Documentos Prontos)" => "Finalizado"
                 ];
                 $keys = array_keys($mapa_fases);
                 $found_index = array_search($etapa_atual, $keys);
                 if($found_index === false) $found_index = -1;
+                $i = 0;
+            ?>
+            <div class="client-stepper">
+                <?php foreach($mapa_fases as $full => $label): 
+                    $status_class = '';
+                    if ($i < $found_index) $status_class = 'completed';
+                    else if ($i === $found_index) $status_class = 'active';
                 ?>
-                <div class="client-stepper">
-                    <?php 
-                    $i = 0;
-                    foreach($mapa_fases as $full => $label): 
-                        $status_class = '';
-                        if ($i < $found_index) $status_class = 'completed';
-                        else if ($i === $found_index) $status_class = 'active';
-                    ?>
-                        <div class="s-item <?= $status_class ?>">
-                            <div class="s-circle"><?= ($i < $found_index) ? '✔' : ($i + 1) ?></div>
-                            <span class="s-label"><?= $label ?></span>
-                        </div>
-                    <?php $i++; endforeach; ?>
-                </div>
+                    <div class="s-item <?= $status_class ?>">
+                        <div class="s-circle"><?= ($i < $found_index) ? '✔' : ($i + 1) ?></div>
+                        <span class="s-label"><?= $label ?></span>
+                    </div>
+                <?php $i++; endforeach; ?>
             </div>
         </header>
 
-        <!-- VIEW 1: PROCESSO (Histórico + Drive) -->
-        <div id="view-processo">
-            <!-- Histórico -->
+        <!-- Navegação Principal (3 Botões) -->
+        <div class="nav-grid">
+            <button class="nav-btn active" onclick="switchView('timeline', this)">
+                <span class="nav-icon">📊</span>
+                Linha do Tempo & Arquivos
+            </button>
+            <button class="nav-btn" onclick="switchView('dados', this)">
+                <span class="nav-icon">📋</span>
+                Meus Dados Cadastrais
+            </button>
+            <button class="nav-btn" onclick="switchView('pendencias', this)">
+                <span class="nav-icon">⚠️</span>
+                Quadro de Pendências
+            </button>
+        </div>
+
+        <!-- VIEW 1: TIMELINE (Histórico + Drive) -->
+        <div id="view-timeline" class="view-section active">
             <section class="card">
-                <h2 style="margin-top:0; color:var(--color-text);">Histórico do Processo</h2>
+                <h2 style="margin-top:0;">Histórico do Processo</h2>
                 <?php if(count($timeline) > 0): ?>
                     <div style="overflow-x:auto;">
                         <table class="history-table">
                             <thead>
-                                <tr>
-                                    <th>Data</th>
-                                    <th>Fase</th>
-                                    <th>Descrição/Detalhes</th>
-                                </tr>
+                                <tr><th>Data</th><th>Fase</th><th>Descrição/Detalhes</th></tr>
                             </thead>
                             <tbody>
                                 <?php foreach($timeline as $t): ?>
@@ -235,61 +208,65 @@ if (!empty($detalhes['link_drive_pasta'])) {
                 <?php endif; ?>
             </section>
 
-            <!-- Drive -->
             <section class="card">
-                <h2 style="margin-top:0; color:var(--color-text);">Arquivos e Documentos</h2>
-                <p style="color:var(--color-text-subtle); margin-bottom:15px;">Abaixo você visualiza diretamente sua pasta de documentos no sistema.</p>
-                
+                <h2 style="margin-top:0;">Arquivos e Documentos</h2>
                 <?php if ($drive_folder_id): ?>
                     <div class="drive-embed-container">
                         <iframe src="https://drive.google.com/embeddedfolderview?id=<?= htmlspecialchars($drive_folder_id) ?>#list" allowfullscreen></iframe>
                     </div>
                 <?php else: ?>
-                    <div style="padding: 30px; text-align:Center; background: rgba(0,0,0,0.02); border-radius: 8px;">
-                        <p>A pasta de documentos ainda não foi vinculada a este processo.</p>
-                        <p style="font-size:0.9rem; color:#666;">Entre em contato com a administração.</p>
-                    </div>
+                    <p style="color:var(--color-text-subtle);">A pasta de documentos ainda não foi vinculada.</p>
                 <?php endif; ?>
             </section>
         </div>
-        
-        <!-- VIEW 2: CADASTRO COMPLETO -->
-        <div id="view-cadastro" style="display:none;">
+
+        <!-- VIEW 2: DADOS CADASTRAIS -->
+        <div id="view-dados" class="view-section">
             <section class="card">
-                <h2 style="margin-top:0; color:var(--color-text); border-bottom:1px solid var(--color-border); padding-bottom:15px; margin-bottom:20px;">📋 Dados Cadastrais Unificados</h2>
+                <h2 style="margin-top:0; border-bottom:1px solid var(--color-border); padding-bottom:15px;">Dados do Processo</h2>
                 
                 <div class="info-grid">
-                    <div class="section-title">👤 Dados do Requerente</div>
+                    <div class="section-header">👤 Requerente</div>
                     <div class="info-item"><label>Nome / Razão Social</label><div><?= htmlspecialchars($_SESSION['cliente_nome']) ?></div></div>
-                    <div class="info-item"><label>Tipo de Pessoa</label><div><?= htmlspecialchars($detalhes['tipo_pessoa']??'-') ?></div></div>
                     <div class="info-item"><label>CPF / CNPJ</label><div><?= htmlspecialchars($detalhes['cpf_cnpj']??'-') ?></div></div>
-                    <div class="info-item"><label>RG / Inscrição</label><div><?= htmlspecialchars($detalhes['rg_ie']??'-') ?></div></div>
-                    <div class="info-item"><label>Estado Civil</label><div><?= htmlspecialchars($detalhes['estado_civil']??'-') ?></div></div>
-                    <div class="info-item"><label>Profissão</label><div><?= htmlspecialchars($detalhes['profissao']??'-') ?></div></div>
                     <div class="info-item"><label>Email</label><div><?= htmlspecialchars($detalhes['contato_email']??'-') ?></div></div>
                     <div class="info-item"><label>Telefone</label><div><?= htmlspecialchars($detalhes['contato_tel']??'-') ?></div></div>
-                    <div class="info-item"><label>Endereço</label><div><?= htmlspecialchars($detalhes['endereco_residencial']??'-') ?></div></div>
 
-                    <div class="divider"></div>
-
-                    <div class="section-title">🏠 Dados do Imóvel</div>
-                    <div class="info-item"><label>Endereço do Imóvel</label><div><?= htmlspecialchars($detalhes['endereco_imovel']??'-') ?></div></div>
+                    <div class="section-header">🏠 Imóvel</div>
+                    <div class="info-item"><label>Endereço</label><div><?= htmlspecialchars($detalhes['endereco_imovel']??'-') ?></div></div>
                     <div class="info-item"><label>Inscrição Imob.</label><div><?= htmlspecialchars($detalhes['inscricao_imob']??'-') ?></div></div>
-                    <div class="info-item"><label>Matrícula</label><div><?= htmlspecialchars($detalhes['num_matricula']??'-') ?></div></div>
-                    <div class="info-item"><label>Área Terreno</label><div><?= htmlspecialchars($detalhes['area_terreno']??'-') ?> m²</div></div>
-                    <div class="info-item"><label>Área Construída</label><div><?= htmlspecialchars($detalhes['area_construida']??'-') ?> m²</div></div>
-
-                    <div class="divider"></div>
-
-                    <div class="section-title">📐 Responsável Técnico</div>
+                    
+                    <div class="section-header">👷 Responsável Técnico</div>
                     <div class="info-item"><label>Profissional</label><div><?= htmlspecialchars($detalhes['resp_tecnico']??'-') ?></div></div>
-                    <div class="info-item"><label>Tipo</label><div><?= htmlspecialchars($detalhes['tipo_responsavel']??'-') ?></div></div>
-                    <div class="info-item"><label>Registro (CAU/CREA)</label><div><?= htmlspecialchars($detalhes['registro_prof']??'-') ?></div></div>
-                    <div class="info-item"><label>ART / RRT</label><div><?= htmlspecialchars($detalhes['num_art_rrt']??'-') ?></div></div>
+                    <div class="info-item"><label>Registro</label><div><?= htmlspecialchars($detalhes['registro_prof']??'-') ?></div></div>
                 </div>
             </section>
         </div>
 
+        <!-- VIEW 3: PENDÊNCIAS -->
+        <div id="view-pendencias" class="view-section">
+            <section class="card">
+                <h2 style="margin-top:0;">Quadro de Avisos e Pendências</h2>
+                <?php if(!empty($detalhes['texto_pendencias'])): ?>
+                    <div class="pendency-board">
+                        <div class="pendency-text"><?= nl2br(htmlspecialchars($detalhes['texto_pendencias'])) ?></div>
+                    </div>
+                <?php else: ?>
+                    <div style="padding:40px; text-align:center; color:var(--color-text-subtle); background:rgba(0,0,0,0.02); border-radius:12px;">
+                        <div style="font-size:2rem;">✅</div>
+                        <p>Não há pendências registradas no momento.</p>
+                    </div>
+                <?php endif; ?>
+
+                <?php if(!empty($detalhes['link_doc_pendencias'])): ?>
+                    <div style="margin-top:20px;">
+                        <a href="<?= htmlspecialchars($detalhes['link_doc_pendencias']) ?>" target="_blank" class="nav-btn active" style="text-decoration:none; display:inline-flex; flex-direction:row; padding:15px 30px;">
+                             📂 Acessar Pasta de Pendências no Drive
+                        </a>
+                    </div>
+                <?php endif; ?>
+            </section>
+        </div>
     </div>
 
     <script>
@@ -303,19 +280,15 @@ if (!empty($detalhes['link_drive_pasta'])) {
             document.body.classList.add('dark-mode');
         }
 
-        // Simples troca de visualização
-        function showCadastro() {
-            document.getElementById('view-processo').style.display = 'none';
-            document.getElementById('view-cadastro').style.display = 'block';
-            document.getElementById('btn-cadastro').style.display = 'none';
-            document.getElementById('btn-processo').style.display = 'inline-flex';
-        }
+        function switchView(viewName, btn) {
+            // Hide all views
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.getElementById('view-' + viewName).classList.add('active');
 
-        function showProcesso() {
-            document.getElementById('view-processo').style.display = 'block';
-            document.getElementById('view-cadastro').style.display = 'none';
-            document.getElementById('btn-processo').style.display = 'none';
-            document.getElementById('btn-cadastro').style.display = 'inline-flex';
+            // Deactivate all buttons
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+            // Activate clicked button
+            btn.classList.add('active');
         }
     </script>
 </body>
