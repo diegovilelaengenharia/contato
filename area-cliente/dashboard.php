@@ -9,10 +9,34 @@ if (!isset($_SESSION['cliente_id'])) {
 
 $cliente_id = $_SESSION['cliente_id'];
 
-// Buscar Progresso
-$stmt = $pdo->prepare("SELECT * FROM progresso WHERE cliente_id = ? ORDER BY data_fase DESC");
+// Buscar Detalhes e Link do Drive
+$stmtDet = $pdo->prepare("SELECT * FROM processo_detalhes WHERE cliente_id = ?");
+$stmtDet->execute([$cliente_id]);
+$detalhes = $stmtDet->fetch();
+
+// Buscar Movimentos (Timeline)
+$stmt = $pdo->prepare("SELECT * FROM processo_movimentos WHERE cliente_id = ? ORDER BY data_movimento DESC");
 $stmt->execute([$cliente_id]);
-$progresso = $stmt->fetchAll();
+$timeline = $stmt->fetchAll();
+
+// Fallback para tabela antiga se timeline vazia... (mantido do código anterior se necessário, mas simplificado aqui)
+if(count($timeline) == 0) {
+    $stmtOld = $pdo->prepare("SELECT * FROM progresso WHERE cliente_id = ? ORDER BY data_fase DESC");
+    $stmtOld->execute([$cliente_id]);
+    $progresso = $stmtOld->fetchAll();
+    
+    foreach($progresso as $p) {
+        $timeline[] = [
+            'data_movimento' => $p['data_fase'],
+            'titulo_fase' => $p['fase'],
+            'descricao' => $p['descricao'],
+            'status_tipo' => 'tramite',
+            'departamento_origem' => '',
+            'departamento_destino' => '',
+            'anexo_url' => ''
+        ];
+    }
+}
 
 // Buscar Documentos
 $stmtDoc = $pdo->prepare("SELECT * FROM documentos WHERE cliente_id = ?");
@@ -50,6 +74,8 @@ $documentos = $stmtDoc->fetchAll();
         
         h1 { margin: 0; font-size: clamp(1.5rem, 3vw, 2rem); color: var(--color-primary-strong); }
         .badge-panel { background: var(--color-accent); color: #1f2521; padding: 4px 12px; border-radius: 99px; font-size: 0.85rem; font-weight: 700; display: inline-block; margin-top: 5px; }
+        .btn-drive { background-color: #1f2521; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .btn-drive:hover { background-color: #444; transform: translateY(-2px); }
         .btn-logout { color: #d32f2f; text-decoration: none; font-weight: 600; padding: 8px 16px; border: 1px solid #d32f2f; border-radius: 12px; transition: 0.2s; }
         .btn-logout:hover { background: #fdecea; }
     </style>
@@ -60,6 +86,13 @@ $documentos = $stmtDoc->fetchAll();
             <div>
                 <h1>Olá, <?= htmlspecialchars($_SESSION['cliente_nome']) ?></h1>
                 <span class="badge-panel">Acompanhamento Online</span>
+                <?php if(!empty($detalhes['link_drive_pasta'])): ?>
+                    <div style="margin-top: 15px;">
+                        <a href="<?= htmlspecialchars($detalhes['link_drive_pasta']) ?>" target="_blank" class="btn-drive">
+                            📂 Acessar Pasta de Documentos
+                        </a>
+                    </div>
+                <?php endif; ?>
             </div>
             <a href="logout.php" class="btn-logout">Sair</a>
         </header>
@@ -68,27 +101,7 @@ $documentos = $stmtDoc->fetchAll();
             <h2 class="section-heading" style="margin-top:0; margin-bottom: 30px; margin-left: 20px;">Linha do Tempo do Processo</h2>
             
             <?php 
-            // Buscar Movimentos da Timeline (Nova Tabela)
-            // Se não houver dados na tabela nova, tenta buscar na antiga 'progresso' para compatibilidade
-            $stmt = $pdo->prepare("SELECT * FROM processo_movimentos WHERE cliente_id = ? ORDER BY data_movimento DESC");
-            $stmt->execute([$cliente_id]);
-            $timeline = $stmt->fetchAll();
-
-            // Fallback para tabela antiga se a nova estiver vazia
-            if(count($timeline) == 0 && count($progresso) > 0) {
-                // Adaptador simples para exibir dados antigos no formato novo
-                foreach($progresso as $p) {
-                    $timeline[] = [
-                        'data_movimento' => $p['data_fase'],
-                        'titulo_fase' => $p['fase'],
-                        'descricao' => $p['descricao'],
-                        'status_tipo' => 'tramite',
-                        'departamento_origem' => '',
-                        'departamento_destino' => '',
-                        'anexo_url' => ''
-                    ];
-                }
-            }
+            // Os dados já foram preparados no início do arquivo (variável $timeline)
             ?>
 
             <?php if(count($timeline) > 0): ?>

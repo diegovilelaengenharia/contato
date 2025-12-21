@@ -314,6 +314,13 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'requerente';
 
                         <?php if($active_tab == 'requerente'): ?>
                             <h3>📂 Dados do Requerente</h3>
+                            
+                            <div style="background: #e3f2fd; padding:15px; border-radius:6px; margin-bottom:20px; border:1px solid #bbdefb;">
+                                <label style="font-weight:bold; display:block; margin-bottom:5px; color:#0d47a1;">📂 Link da Pasta no Google Drive (Cliente)</label>
+                                <input type="url" name="link_drive_pasta" value="<?= $detalhes['link_drive_pasta']??'' ?>" placeholder="https://drive.google.com/drive/folders/..." style="width:100%; padding:10px; border:1px solid #90caf9; border-radius:4px;">
+                                <small style="color:#555;">Se preenchido, um botão "Acessar Pasta" aparecerá no painel do cliente.</small>
+                            </div>
+
                             <div class="form-grid">
                                 <div class="form-group">
                                     <label>Tipo de Pessoa</label>
