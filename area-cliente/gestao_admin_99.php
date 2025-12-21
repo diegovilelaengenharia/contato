@@ -3,7 +3,7 @@ session_start();
 require 'db.php';
 
 // --- Configuração e Segurança ---
-$minha_senha_mestra = "VilelaAdmin2025"; // Mantida para referência ou dupla checagem futura
+$minha_senha_mestra = "VilelaAdmin2025"; 
 
 // Verifica Sessão
 if (!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true) {
@@ -26,16 +26,11 @@ if (isset($_POST['atualizar_etapa'])) {
     $cid = $_POST['cliente_id'];
     
     try {
-        // Atualiza Fase no Detalhes
         $pdo->prepare("UPDATE processo_detalhes SET etapa_atual = ? WHERE cliente_id = ?")->execute([$nova_etapa, $cid]);
         
-        // Registra no Histórico
         $titulo = "Atualização de Fase: " . $nova_etapa;
         $desc = "Processo avançou para a fase de " . $nova_etapa;
         
-        // FIX: Inserção compatível com colunas que existem
-        // Verifica se a tabela já foi atualizada com colunas extras ou não. 
-        // Por segurança, usamos apenas as colunas básicas garantidas pelo setup_update_db_v2
         $sql = "INSERT INTO processo_movimentos (cliente_id, titulo_fase, data_movimento, descricao, status_tipo) VALUES (?, ?, NOW(), ?, 'conclusao')";
         $pdo->prepare($sql)->execute([$cid, $titulo, $desc]);
 
@@ -53,7 +48,6 @@ if (isset($_POST['salvar_detalhes'])) {
     $check->execute([$cid]);
     $exists = $check->fetch();
 
-    // Campos atualizados conforme pedido (sem zoneamento, com tipo_responsavel)
     $campos = [
         'tipo_pessoa', 'cpf_cnpj', 'rg_ie', 'estado_civil', 'profissao', 'endereco_residencial', 'contato_email', 'contato_tel',
         'inscricao_imob', 'num_matricula', 'endereco_imovel', 'area_terreno', 'area_construida', 
@@ -102,16 +96,14 @@ if (isset($_POST['novo_cliente'])) {
         $stmt = $pdo->prepare("INSERT INTO clientes (nome, usuario, senha) VALUES (?, ?, ?)");
         $stmt->execute([$nome, $user, $pass]);
         $novo_id = $pdo->lastInsertId();
-        
         $pdo->prepare("INSERT INTO processo_detalhes (cliente_id) VALUES (?)")->execute([$novo_id]);
-        
         $sucesso = "Cliente $nome cadastrado!";
     } catch (PDOException $e) {
         $erro = "Erro: Usuário já existe ou dados inválidos.";
     }
 }
 
-// 3. Adicionar Documento
+// 3. Adicionar Documento Avulso
 if (isset($_POST['novo_doc'])) {
     $stmt = $pdo->prepare("INSERT INTO documentos (cliente_id, titulo, link_drive) VALUES (?, ?, ?)");
     $stmt->execute([$_POST['cliente_id'], $_POST['titulo'], $_POST['link']]);
@@ -166,7 +158,6 @@ $fases_padrao = [
     <link rel="stylesheet" href="../style.css">
     <link rel="icon" href="../assets/logo.png" type="image/png">
     <style>
-        /* CSS Variables & Theme */
         :root {
             --color-bg: #f4f7f6;
             --color-surface: #ffffff;
@@ -195,7 +186,6 @@ $fases_padrao = [
         .admin-container { display: grid; grid-template-columns: 260px 1fr; gap: 20px; max-width: 1600px; margin: 20px auto; padding: 0 20px; align-items: start; }
         
         .sidebar { background: var(--color-surface); border-radius: 8px; box-shadow: var(--shadow); padding: 15px; position: sticky; top: 80px; border: 1px solid var(--color-border); }
-        
         .client-list { list-style: none; padding: 0; margin: 0; max-height: 70vh; overflow-y: auto; }
         .client-list li a { display: block; padding: 10px; border-radius: 6px; text-decoration: none; color: var(--color-text); border-bottom: 1px solid var(--color-border); font-size: 0.9rem; transition: 0.2s; }
         .client-list li a:hover { background: rgba(0,0,0,0.05); }
@@ -211,7 +201,7 @@ $fases_padrao = [
         
         .form-card { background: rgba(0,0,0,0.02); border: 1px solid var(--color-border); border-radius: 8px; padding: 20px; margin-bottom: 20px; }
         .form-card h3 { margin-top: 0; color: var(--color-primary-strong); font-size: 1.1rem; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid var(--color-border); padding-bottom: 10px; margin-bottom: 15px; }
-        body.dark-mode .form-card h3 { color: #4ade80; } /* Ajuste cor titulo no dark */
+        body.dark-mode .form-card h3 { color: #4ade80; }
         
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
         .form-group label { display: block; font-size: 0.8rem; font-weight: bold; color: var(--color-text-subtle); margin-bottom: 4px; }
@@ -221,8 +211,10 @@ $fases_padrao = [
         .btn-save { background: var(--color-primary); color: white; padding: 14px 30px; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: bold; width: 100%; transition: 0.2s; }
         .btn-save:hover { background: var(--color-primary-strong); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
 
-        .stepper-list { list-style: none; padding: 0; margin-bottom: 30px; border: 1px solid var(--color-border); border-radius: 8px; overflow: hidden; }
-        .stepper-item { display: flex; align-items: center; justify-content: space-between; padding: 15px; border-bottom: 1px solid var(--color-border); background: var(--color-surface); }
+        .stepper-container { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 8px; margin-bottom: 25px; padding: 15px; box-shadow: var(--shadow); }
+        .stepper-list { list-style: none; padding: 0; margin: 0; display:flex; flex-direction: column; gap: 0;}
+        .stepper-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid var(--color-border); background: var(--color-surface); }
+        .stepper-item:last-child { border-bottom: none; }
         .stepper-item.current { background: rgba(25, 135, 84, 0.1); border-left: 4px solid var(--color-primary); }
         .stepper-btn { background: #ddd; color: #555; border: none; padding: 6px 15px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; }
         .stepper-btn.active { background: var(--color-primary); color: white; }
@@ -311,17 +303,41 @@ $fases_padrao = [
                 </div>
             </div>
 
-            <!-- Navegação de Abas -->
+            <!-- GLOBAL STEPPER (Timeline Fixa) -->
+            <div class="stepper-container">
+                <h4 style="margin:0 0 10px 0; color:var(--color-text);">Linha do Tempo (Fase Atual)</h4>
+                <ul class="stepper-list">
+                    <?php 
+                    foreach($fases_padrao as $fase): 
+                        $is_current = (($detalhes['etapa_atual']??'') === $fase);
+                    ?>
+                        <li class="stepper-item <?= $is_current ? 'current' : '' ?>">
+                            <span style="font-weight: 500; font-size: 0.95rem; color: var(--color-text);"><?= $fase ?></span>
+                            <?php if($is_current): ?>
+                                <button class="stepper-btn active">✅ Atual</button>
+                            <?php else: ?>
+                                <form method="POST" style="margin:0;">
+                                    <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
+                                    <input type="hidden" name="nova_etapa" value="<?= $fase ?>">
+                                    <button type="submit" name="atualizar_etapa" class="stepper-btn">Definir</button>
+                                </form>
+                            <?php endif; ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+
+            <!-- Navegação de Abas (Modificado) -->
             <div class="tabs-header">
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=cadastro" class="tab-btn <?= $active_tab=='cadastro'?'active':'' ?>">📝 Cadastro Unificado</a>
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=status" class="tab-btn <?= $active_tab=='status'?'active':'' ?>">⚠️ Status e Pendências</a>
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=links" class="tab-btn <?= $active_tab=='links'?'active':'' ?>">📂 Links e Anexos</a>
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=status" class="tab-btn <?= $active_tab=='status'?'active':'' ?>">⚠️ Histórico e Pendências</a>
+                <!-- Aba Links REMOVIDA -->
             </div>
 
             <div class="tab-content">
                 
                 <?php if($active_tab == 'cadastro'): ?>
-                    <!-- ABA 1: CADASTRO UNIFICADO -->
+                    <!-- ABA 1: CADASTRO UNIFICADO (COM LINKS INTEGRADOS) -->
                     <form method="POST">
                         <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
 
@@ -405,14 +421,47 @@ $fases_padrao = [
                             </div>
                         </div>
 
+                        <!-- Section D: Links do Processo (MIGRADO) -->
+                        <div class="form-card" style="border-left: 5px solid #2196f3;">
+                            <h3>📂 Links e Pastas do Processo</h3>
+                            <div class="form-group" style="margin-bottom:15px;">
+                                <label>📁 Link: Documentos Iniciais</label>
+                                <input type="url" name="link_doc_iniciais" value="<?= $detalhes['link_doc_iniciais']??'' ?>" placeholder="https://drive...">
+                            </div>
+                            <div class="form-group" style="margin-bottom:15px;">
+                                <label>📁 Link: Documentos Finais (Entregáveis)</label>
+                                <input type="url" name="link_doc_finais" value="<?= $detalhes['link_doc_finais']??'' ?>" placeholder="https://drive...">
+                            </div>
+                            <div class="form-group">
+                                <label>📁 Link: Pasta Geral do Processo (Backup)</label>
+                                <input type="url" name="link_drive_pasta" value="<?= $detalhes['link_drive_pasta']??'' ?>" placeholder="https://drive...">
+                            </div>
+                        </div>
+
                         <button type="submit" name="salvar_detalhes" class="btn-save">Salvar Cadastro Unificado</button>
                     </form>
+                    
+                    <!-- UPLOAD AVULSO MIGRADO -->
+                    <div class="card" style="margin-top:30px; border:1px dashed var(--color-border); padding:20px;">
+                        <h4>Anexos Avulsos (Lista)</h4>
+                        <form method="POST" style="display:flex; gap:10px; margin-bottom:15px;">
+                            <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
+                            <input type="text" name="titulo" placeholder="Nome do Arquivo" required style="flex:1; padding:8px;">
+                            <input type="url" name="link" placeholder="Link Drive" required style="flex:2; padding:8px;">
+                            <button type="submit" name="novo_doc" style="background:#555; color:white; border:none; padding:0 20px; border-radius:4px; cursor:pointer;">+ Adicionar</button>
+                        </form>
+                        <?php foreach($docs_ativo as $d): ?>
+                            <div style="padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between;">
+                                <span style="color: var(--color-text);">📄 <?= htmlspecialchars($d['titulo']) ?> (<?= htmlspecialchars($d['link_drive']) ?>)</span>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
 
                 <?php elseif($active_tab == 'status'): ?>
                     <!-- ABA 2: STATUS E PENDENCIAS -->
                     
                     <div class="form-card" style="border-left: 5px solid #ffc107;">
-                        <h3>⚠️ Gestão de Pendências e Status</h3>
+                        <h3>⚠️ Gestão de Pendências</h3>
                         
                         <!-- Link Pendências -->
                         <form method="POST" style="margin-bottom:30px;">
@@ -425,33 +474,9 @@ $fases_padrao = [
                                 <button type="submit" name="salvar_detalhes" style="background:#d97706; color:white; border:none; padding:8px 15px; border-radius:4px; cursor:pointer;">Salvar Link</button>
                             </div>
                         </form>
-                        
-                        <hr style="border:0; border-top:1px solid var(--color-border); margin:20px 0;">
-
-                        <!-- Timeline Stepper -->
-                        <h4>Fase Atual (Stepper)</h4>
-                        <ul class="stepper-list">
-                            <?php 
-                            foreach($fases_padrao as $fase): 
-                                $is_current = (($detalhes['etapa_atual']??'') === $fase);
-                            ?>
-                                <li class="stepper-item <?= $is_current ? 'current' : '' ?>">
-                                    <span style="font-weight: 500; font-size: 1rem; color: var(--color-text);"><?= $fase ?></span>
-                                    <?php if($is_current): ?>
-                                        <button class="stepper-btn active">✅ Atual</button>
-                                    <?php else: ?>
-                                        <form method="POST" style="margin:0;">
-                                            <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
-                                            <input type="hidden" name="nova_etapa" value="<?= $fase ?>">
-                                            <button type="submit" name="atualizar_etapa" class="stepper-btn">Definir</button>
-                                        </form>
-                                    <?php endif; ?>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
                     </div>
 
-                    <h4>Histórico de Movimentos</h4>
+                    <h4>Histórico de Movimentos (Automático)</h4>
                     <table style="width:100%; font-size:0.9rem; border-collapse:collapse;">
                         <thead style="background:rgba(0,0,0,0.05);">
                             <tr>
@@ -471,45 +496,6 @@ $fases_padrao = [
                             <?php endforeach; ?>
                         </tbody>
                     </table>
-
-                <?php elseif($active_tab == 'links'): ?>
-                    <!-- ABA 3: LINKS E ANEXOS -->
-                    
-                    <form method="POST">
-                        <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
-                        <div class="form-card" style="border-left: 5px solid #2196f3;">
-                            <h3>📂 Links Específicos do Drive</h3>
-                            <div class="form-group" style="margin-bottom:15px;">
-                                <label>📁 Link: Documentos Iniciais</label>
-                                <input type="url" name="link_doc_iniciais" value="<?= $detalhes['link_doc_iniciais']??'' ?>" placeholder="https://drive...">
-                            </div>
-                            <div class="form-group" style="margin-bottom:15px;">
-                                <label>📁 Link: Documentos Finais (Entregáveis)</label>
-                                <input type="url" name="link_doc_finais" value="<?= $detalhes['link_doc_finais']??'' ?>" placeholder="https://drive...">
-                            </div>
-                            <div class="form-group">
-                                <label>📁 Link: Pasta Geral do Processo (Backup)</label>
-                                <input type="url" name="link_drive_pasta" value="<?= $detalhes['link_drive_pasta']??'' ?>" placeholder="https://drive...">
-                            </div>
-                        </div>
-                        <button type="submit" name="salvar_detalhes" class="btn-save">Salvar Links</button>
-                    </form>
-                    
-                    <!-- Lista de Uploads Individuais -->
-                    <div class="card" style="margin-top:30px; border:1px dashed var(--color-border); padding:20px;">
-                        <h4>Anexos Avulsos (Lista)</h4>
-                        <form method="POST" style="display:flex; gap:10px; margin-bottom:15px;">
-                            <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
-                            <input type="text" name="titulo" placeholder="Nome do Arquivo" required style="flex:1; padding:8px;">
-                            <input type="url" name="link" placeholder="Link Drive" required style="flex:2; padding:8px;">
-                            <button type="submit" name="novo_doc" style="background:#555; color:white; border:none; padding:0 20px; border-radius:4px; cursor:pointer;">+ Adicionar</button>
-                        </form>
-                        <?php foreach($docs_ativo as $d): ?>
-                            <div style="padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between;">
-                                <span style="color: var(--color-text);">📄 <?= htmlspecialchars($d['titulo']) ?> (<?= htmlspecialchars($d['link_drive']) ?>)</span>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
 
                 <?php endif; ?>
             </div>

@@ -76,7 +76,7 @@ if (!empty($detalhes['link_drive_pasta'])) {
         h1 { margin: 0; font-size: clamp(1.5rem, 3vw, 2rem); color: var(--color-text); }
         .badge-panel { background: var(--color-primary); color: white; padding: 4px 12px; border-radius: 99px; font-size: 0.85rem; font-weight: 700; display: inline-block; margin-top: 5px; }
         
-        .btn-drive { color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .btn-drive { color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor:pointer; border:none; font-size:1rem; font-family:inherit; }
         .btn-drive:hover { transform: translateY(-2px); filter: brightness(1.1); }
         
         .btn-logout { color: #d32f2f; text-decoration: none; font-weight: 600; padding: 8px 16px; border: 1px solid #d32f2f; border-radius: 12px; transition: 0.2s; }
@@ -110,6 +110,13 @@ if (!empty($detalhes['link_drive_pasta'])) {
         .drive-embed-container { width: 100%; height: 600px; background: var(--color-surface); border-radius: 8px; border: 1px solid var(--color-border); overflow: hidden; margin-top: 20px; }
         iframe { border: 0; width: 100%; height: 100%; }
 
+        /* Cadastro View Grid */
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
+        .info-item label { font-size: 0.8rem; color: var(--color-text-subtle); font-weight: bold; display: block; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .info-item div { font-size: 1rem; color: var(--color-text); border-bottom: 1px solid var(--color-border); padding-bottom: 5px; }
+        .divider { grid-column: 1 / -1; height: 1px; background: var(--color-border); margin: 20px 0; }
+        .section-title { font-size: 1.1rem; color: var(--color-primary); grid-column: 1 / -1; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+
     </style>
 </head>
 <body>
@@ -127,31 +134,42 @@ if (!empty($detalhes['link_drive_pasta'])) {
                     </div>
                 </div>
 
-                <!-- Botões Customizados -->
+                <!-- Botões de Ação e Navegação -->
                 <div style="display:flex; gap:15px; flex-wrap:wrap; margin-top:20px;">
+                    
+                    <!-- Botão Toggle Cadastro -->
+                    <button onclick="showCadastro()" id="btn-cadastro" class="btn-drive" style="background-color:#2196f3;">
+                        📋 Meus Dados Cadastrais
+                    </button>
+
+                    <!-- Botão Toggle Processo (Voltar) -->
+                    <button onclick="showProcesso()" id="btn-processo" class="btn-drive" style="background-color:#6c757d; display:none;">
+                        ⬅️ Voltar para Processo
+                    </button>
+
                     <?php 
                         $link1 = !empty($detalhes['link_doc_iniciais']) ? $detalhes['link_doc_iniciais'] : ($detalhes['link_drive_pasta'] ?? '');
                         if(!empty($link1)): 
                     ?>
-                        <a href="<?= htmlspecialchars($link1) ?>" target="_blank" class="btn-drive" style="background-color:#6c757d;">
-                             📄 Cadastro Inicial
+                        <a href="<?= htmlspecialchars($link1) ?>" target="_blank" class="btn-drive" style="background-color:#555;">
+                             📄 Docs Iniciais (Drive)
                         </a>
                     <?php endif; ?>
 
                     <?php if(!empty($detalhes['link_doc_pendencias'])): ?>
                         <a href="<?= htmlspecialchars($detalhes['link_doc_pendencias']) ?>" target="_blank" class="btn-drive" style="background-color:#ffc107; color: #333;">
-                            ⚠️ Status e Pendências
+                            ⚠️ Resolver Pendências
                         </a>
                     <?php endif; ?>
 
                     <?php if(!empty($detalhes['link_doc_finais'])): ?>
                         <a href="<?= htmlspecialchars($detalhes['link_doc_finais']) ?>" target="_blank" class="btn-drive" style="background-color:#198754;">
-                            ✅ Links e Documentos Finais
+                            ✅ Entregáveis Finais
                         </a>
                     <?php endif; ?>
                 </div>
 
-                <!-- Stepper -->
+                <!-- Stepper GLOBAL (Sempre Visível) -->
                 <?php 
                 $etapa_atual = $detalhes['etapa_atual'] ?? '';
                 $mapa_fases = [
@@ -186,51 +204,91 @@ if (!empty($detalhes['link_drive_pasta'])) {
             </div>
         </header>
 
-        <!-- Histórico (Tabela Simples) -->
-        <section class="card">
-            <h2 style="margin-top:0; color:var(--color-text);">Histórico do Processo</h2>
-            <?php if(count($timeline) > 0): ?>
-                <div style="overflow-x:auto;">
-                    <table class="history-table">
-                        <thead>
-                            <tr>
-                                <th>Data</th>
-                                <th>Fase</th>
-                                <th>Descrição/Detalhes</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach($timeline as $t): ?>
-                            <tr>
-                                <td style="white-space:nowrap;"><?= date('d/m/Y H:i', strtotime($t['data_movimento'])) ?></td>
-                                <td><strong><?= htmlspecialchars($t['titulo_fase']) ?></strong></td>
-                                <td><?= nl2br(htmlspecialchars($t['descricao'])) ?></td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-            <?php else: ?>
-                <p style="color:var(--color-text-subtle);">Nenhuma movimentação registrada.</p>
-            <?php endif; ?>
-        </section>
+        <!-- VIEW 1: PROCESSO (Histórico + Drive) -->
+        <div id="view-processo">
+            <!-- Histórico -->
+            <section class="card">
+                <h2 style="margin-top:0; color:var(--color-text);">Histórico do Processo</h2>
+                <?php if(count($timeline) > 0): ?>
+                    <div style="overflow-x:auto;">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Fase</th>
+                                    <th>Descrição/Detalhes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach($timeline as $t): ?>
+                                <tr>
+                                    <td style="white-space:nowrap;"><?= date('d/m/Y H:i', strtotime($t['data_movimento'])) ?></td>
+                                    <td><strong><?= htmlspecialchars($t['titulo_fase']) ?></strong></td>
+                                    <td><?= nl2br(htmlspecialchars($t['descricao'])) ?></td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php else: ?>
+                    <p style="color:var(--color-text-subtle);">Nenhuma movimentação registrada.</p>
+                <?php endif; ?>
+            </section>
 
-        <!-- Área de Documentos (Google Drive Embed) -->
-        <section class="card">
-            <h2 style="margin-top:0; color:var(--color-text);">Arquivos e Documentos</h2>
-            <p style="color:var(--color-text-subtle); margin-bottom:15px;">Abaixo você visualiza diretamente sua pasta de documentos no sistema.</p>
-            
-            <?php if ($drive_folder_id): ?>
-                <div class="drive-embed-container">
-                    <iframe src="https://drive.google.com/embeddedfolderview?id=<?= htmlspecialchars($drive_folder_id) ?>#list" allowfullscreen></iframe>
+            <!-- Drive -->
+            <section class="card">
+                <h2 style="margin-top:0; color:var(--color-text);">Arquivos e Documentos</h2>
+                <p style="color:var(--color-text-subtle); margin-bottom:15px;">Abaixo você visualiza diretamente sua pasta de documentos no sistema.</p>
+                
+                <?php if ($drive_folder_id): ?>
+                    <div class="drive-embed-container">
+                        <iframe src="https://drive.google.com/embeddedfolderview?id=<?= htmlspecialchars($drive_folder_id) ?>#list" allowfullscreen></iframe>
+                    </div>
+                <?php else: ?>
+                    <div style="padding: 30px; text-align:Center; background: rgba(0,0,0,0.02); border-radius: 8px;">
+                        <p>A pasta de documentos ainda não foi vinculada a este processo.</p>
+                        <p style="font-size:0.9rem; color:#666;">Entre em contato com a administração.</p>
+                    </div>
+                <?php endif; ?>
+            </section>
+        </div>
+        
+        <!-- VIEW 2: CADASTRO COMPLETO -->
+        <div id="view-cadastro" style="display:none;">
+            <section class="card">
+                <h2 style="margin-top:0; color:var(--color-text); border-bottom:1px solid var(--color-border); padding-bottom:15px; margin-bottom:20px;">📋 Dados Cadastrais Unificados</h2>
+                
+                <div class="info-grid">
+                    <div class="section-title">👤 Dados do Requerente</div>
+                    <div class="info-item"><label>Nome / Razão Social</label><div><?= htmlspecialchars($_SESSION['cliente_nome']) ?></div></div>
+                    <div class="info-item"><label>Tipo de Pessoa</label><div><?= htmlspecialchars($detalhes['tipo_pessoa']??'-') ?></div></div>
+                    <div class="info-item"><label>CPF / CNPJ</label><div><?= htmlspecialchars($detalhes['cpf_cnpj']??'-') ?></div></div>
+                    <div class="info-item"><label>RG / Inscrição</label><div><?= htmlspecialchars($detalhes['rg_ie']??'-') ?></div></div>
+                    <div class="info-item"><label>Estado Civil</label><div><?= htmlspecialchars($detalhes['estado_civil']??'-') ?></div></div>
+                    <div class="info-item"><label>Profissão</label><div><?= htmlspecialchars($detalhes['profissao']??'-') ?></div></div>
+                    <div class="info-item"><label>Email</label><div><?= htmlspecialchars($detalhes['contato_email']??'-') ?></div></div>
+                    <div class="info-item"><label>Telefone</label><div><?= htmlspecialchars($detalhes['contato_tel']??'-') ?></div></div>
+                    <div class="info-item"><label>Endereço</label><div><?= htmlspecialchars($detalhes['endereco_residencial']??'-') ?></div></div>
+
+                    <div class="divider"></div>
+
+                    <div class="section-title">🏠 Dados do Imóvel</div>
+                    <div class="info-item"><label>Endereço do Imóvel</label><div><?= htmlspecialchars($detalhes['endereco_imovel']??'-') ?></div></div>
+                    <div class="info-item"><label>Inscrição Imob.</label><div><?= htmlspecialchars($detalhes['inscricao_imob']??'-') ?></div></div>
+                    <div class="info-item"><label>Matrícula</label><div><?= htmlspecialchars($detalhes['num_matricula']??'-') ?></div></div>
+                    <div class="info-item"><label>Área Terreno</label><div><?= htmlspecialchars($detalhes['area_terreno']??'-') ?> m²</div></div>
+                    <div class="info-item"><label>Área Construída</label><div><?= htmlspecialchars($detalhes['area_construida']??'-') ?> m²</div></div>
+
+                    <div class="divider"></div>
+
+                    <div class="section-title">📐 Responsável Técnico</div>
+                    <div class="info-item"><label>Profissional</label><div><?= htmlspecialchars($detalhes['resp_tecnico']??'-') ?></div></div>
+                    <div class="info-item"><label>Tipo</label><div><?= htmlspecialchars($detalhes['tipo_responsavel']??'-') ?></div></div>
+                    <div class="info-item"><label>Registro (CAU/CREA)</label><div><?= htmlspecialchars($detalhes['registro_prof']??'-') ?></div></div>
+                    <div class="info-item"><label>ART / RRT</label><div><?= htmlspecialchars($detalhes['num_art_rrt']??'-') ?></div></div>
                 </div>
-            <?php else: ?>
-                <div style="padding: 30px; text-align:Center; background: rgba(0,0,0,0.02); border-radius: 8px;">
-                    <p>A pasta de documentos ainda não foi vinculada a este processo.</p>
-                    <p style="font-size:0.9rem; color:#666;">Entre em contato com a administração.</p>
-                </div>
-            <?php endif; ?>
-        </section>
+            </section>
+        </div>
 
     </div>
 
@@ -243,6 +301,21 @@ if (!empty($detalhes['link_drive_pasta'])) {
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark') {
             document.body.classList.add('dark-mode');
+        }
+
+        // Simples troca de visualização
+        function showCadastro() {
+            document.getElementById('view-processo').style.display = 'none';
+            document.getElementById('view-cadastro').style.display = 'block';
+            document.getElementById('btn-cadastro').style.display = 'none';
+            document.getElementById('btn-processo').style.display = 'inline-flex';
+        }
+
+        function showProcesso() {
+            document.getElementById('view-processo').style.display = 'block';
+            document.getElementById('view-cadastro').style.display = 'none';
+            document.getElementById('btn-processo').style.display = 'none';
+            document.getElementById('btn-cadastro').style.display = 'inline-flex';
         }
     </script>
 </body>
