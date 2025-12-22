@@ -259,6 +259,15 @@ if (isset($_GET['toggle_pend'])) {
     exit;
 }
 
+// 6.7 Excluir Histórico (Movimentação)
+if (isset($_GET['del_hist'])) {
+    $hid = $_GET['del_hist'];
+    $cid = $_GET['cliente_id'];
+    $pdo->prepare("DELETE FROM processo_movimentos WHERE id=? AND cliente_id=?")->execute([$hid, $cid]);
+    header("Location: ?cliente_id=$cid&tab=andamento&msg=hist_deleted");
+    exit;
+}
+
 // 6.5 Salvar Dados Gerais Financeiro (Link da Pasta)
 if (isset($_POST['btn_salvar_dados_financeiros'])) {
     $cid = $_POST['cliente_id'];
@@ -904,7 +913,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     <h3>📜 Histórico de Movimentações</h3>
                     <div class="table-responsive">
                         <table style="width:100%; border-collapse:collapse;">
-                            <thead><tr style="background:rgba(0,0,0,0.03);"><th style="padding:10px; text-align:left;">Data</th><th style="padding:10px; text-align:left;">Descrição</th></tr></thead>
+                            <thead><tr style="background:rgba(0,0,0,0.03);"><th style="padding:10px; text-align:left;">Data</th><th style="padding:10px; text-align:left;">Descrição</th><th style="padding:10px; text-align:center;">Ação</th></tr></thead>
                             <tbody>
                                 <?php 
                                 $hist = $pdo->prepare("SELECT * FROM processo_movimentos WHERE cliente_id=? ORDER BY data_movimento DESC");
@@ -932,6 +941,11 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                                 }
                                             ?>
                                         </td>
+                                            ?>
+                                        </td>
+                                        <td style="padding:15px; text-align:center; vertical-align:top;">
+                                            <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento&del_hist=<?= $h['id'] ?>" onclick="return confirm('ATENÇÃO: Deseja realmente apagar este histórico? Essa ação é irreversível.')" style="text-decoration:none; color:#dc3545; font-size:1.1rem; padding:5px;" title="Excluir Histórico">🗑️</a>
+                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -957,11 +971,10 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             <!-- Fix CKEditor Layout & Logic -->
                             <style>
                                 :root { --ck-z-default: 10050; --ck-z-modal: 10050; }
-                                /* Ensure toolbar is above everything else in modal and sticky */
+                                /* Fix Toolbar Overlap - Remove sticky to prevent covering header */
                                 .ck-editor__top { 
-                                    z-index: 10060 !important; 
-                                    position: sticky !important; 
-                                    top: 0; 
+                                    z-index: 100 !important; 
+                                    position: relative !important; 
                                 }
                                 .ck.ck-editor__main > .ck-editor__editable {
                                     max-height: 300px; 
@@ -1561,6 +1574,8 @@ document.addEventListener('DOMContentLoaded', function() {
         showSuccessModal('Pendência Emitida!', 'A pendência foi publicada na lista e o quadro foi limpo com sucesso.');
     } else if (msg === 'pendencia_updated') {
         showSuccessModal('Pendência Atualizada!', 'As alterações foram salvas com sucesso.');
+    } else if (msg === 'hist_deleted') {
+        showSuccessModal('Histórico Apagado!', 'O item de histórico foi removido com sucesso.');
     }
     
     // Clean URL
