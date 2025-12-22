@@ -374,13 +374,16 @@ if (!empty($detalhes['link_pasta_pagamentos'])) {
                                      $badge_class = $is_resolved ? 'st-pago' : 'st-pend'; // st-pago is usually green
                                      $status_text = $is_resolved ? 'RESOLVIDO' : 'PENDENTE';
                                      $desc_style = $is_resolved ? "color:var(--text-success); opacity:0.8; cursor:pointer;" : "color:var(--text-warning); font-weight:500; cursor:pointer; text-decoration:underline;";
+                                     
+                                     // Safe preview for table (no html tags)
+                                     $preview_text = mb_strimwidth(strip_tags(htmlspecialchars_decode($p['descricao'])), 0, 60, "...");
                                 ?>
                                 <tr style="background:<?= $row_bg ?>;">
                                     <td style="white-space:nowrap; color:<?= $text_color ?>;"><?= $data ?></td>
                                     <td><span class="status-badge <?= $badge_class ?>"><?= $status_text ?></span></td>
                                     <td style="<?= $desc_style ?>" 
                                         onclick="openPendencyModal('<?= addslashes(htmlspecialchars_decode($p['descricao'])) ?>')">
-                                        <?= htmlspecialchars($p['descricao']) ?>
+                                        <?= htmlspecialchars($preview_text) ?>
                                     </td>
                                 </tr>
                                 <?php endforeach; ?>

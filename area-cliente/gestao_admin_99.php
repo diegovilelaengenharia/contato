@@ -213,21 +213,25 @@ if (isset($_POST['btn_salvar_financeiro'])) {
 
 // 6.6 Nova Lógica de Pendências (Lista Individual)
 // Adicionar ou Editar
-if (isset($_POST['btn_save_pendencia'])) {
+// 8. Pendências - Emitir (Do Quadro para a Lista) e Editar
+if (isset($_POST['btn_emitir_pendencia'])) {
     $cid = $_POST['cliente_id'];
-    $desc = $_POST['nova_pendencia'];
+    $texto = trim($_POST['texto_pendencias']);
     $pid = $_POST['pendencia_id'] ?? '';
 
-    if(!empty($desc)) {
+    if(!empty($texto)) {
         if(!empty($pid)) {
-            // Update
-            $pdo->prepare("UPDATE processo_pendencias SET descricao=? WHERE id=? AND cliente_id=?")->execute([$desc, $pid, $cid]);
-            $sucesso = "Pendência atualizada!";
+            // EDITAR existente
+            $pdo->prepare("UPDATE processo_pendencias SET descricao=? WHERE id=? AND cliente_id=?")->execute([$texto, $pid, $cid]);
+            $sucesso = "Pendência atualizada com sucesso!";
         } else {
-            // Insert
-            $pdo->prepare("INSERT INTO processo_pendencias (cliente_id, descricao) VALUES (?, ?)")->execute([$cid, $desc]);
-            $sucesso = "Pendência adicionada!";
+            // CRIAR nova (Do quadro)
+            $pdo->prepare("INSERT INTO processo_pendencias (cliente_id, descricao, status, data_criacao) VALUES (?, ?, 'pendente', NOW())")->execute([$cid, $texto]);
+            $sucesso = "Pendência publicada!";
         }
+        
+        // Limpar o texto do quadro (banco de dados) para garantir que não fique "salvo" como rascunho persistente antigo
+        $pdo->prepare("UPDATE clientes SET texto_pendencias = NULL WHERE id = ?")->execute([$cid]);
     }
 }
 // Delete Pendencia
@@ -932,35 +936,24 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             <?php elseif($active_tab == 'pendencias'): ?>
                 <div class="form-card" style="border-left: 6px solid #ffc107;">
                     <h3>Gestão de Pendências do Projeto</h3>
-                    <p style="color:#666; margin-bottom:15px;">Utilize os campos abaixo para comunicar pendências, seja via texto livre ou lista estruturada. Tudo será exibido no quadro do cliente.</p>
+                    <p style="color:#666; margin-bottom:15px;">Escreva o comunicado abaixo e clique em <b>Emitir Pendência</b>. O texto será publicado na lista abaixo e o quadro será limpo.</p>
 
                     <form method="POST">
-                        <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
-                        <div class="form-group">
-                            <label>Observações Gerais / Introdução (Texto Livre)</label>
-                            <textarea name="texto_pendencias" id="editor_pendencias" rows="4" style="background:#fffbf2; border:1px solid #ffeeba;"><?= htmlspecialchars($detalhes['texto_pendencias']??'') ?></textarea>
-                        </div>
-                        <button type="submit" name="btn_salvar_pendencias" class="btn-save btn-warning" style="color:#000; margin-bottom:20px; width:auto;">Salvar Texto</button>
-                    </form>
-                    
-                    <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-
-                    <label style="display:block; margin-bottom:10px; font-weight:bold;">Itens de Pendência (Checklist)</label>
-
-                    <!-- Adicionar/Editar Pendência -->
-                    <form method="POST" id="form-pendencia" style="margin-bottom:25px; padding-bottom:20px; border-bottom:1px solid #eee;">
                         <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
                         <input type="hidden" name="pendencia_id" id="pendencia_id_input">
                         
                         <div class="form-group">
-                            <label>Publique as pendências</label>
-                            <div style="display:flex; gap:10px;">
-                                <input type="text" name="nova_pendencia" id="nova_pendencia_input" placeholder="Descreva a pendência aqui..." style="flex:1;">
-                                <button type="submit" name="btn_save_pendencia" id="btn_save_pend_submit" class="btn-save btn-warning" style="width:auto; color:black; margin:0;">Emitir Pendências</button>
-                                <button type="button" onclick="resetPendenciaForm()" id="btn_cancel_edit" style="display:none; padding:10px; border:none; background:#ccc; border-radius:8px; cursor:pointer;">Cancelar</button>
-                            </div>
+                            <label>Descrição da Pendência (Texto Rico)</label>
+                            <textarea name="texto_pendencias" id="editor_pendencias" rows="4" style="background:#fffbf2; border:1px solid #ffeeba;"><?= htmlspecialchars($detalhes['texto_pendencias']??'') ?></textarea>
+                        </div>
+                        
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <button type="submit" name="btn_emitir_pendencia" class="btn-save btn-warning" style="color:#000; margin-bottom:0; width:auto;">Emitir Pendência</button>
+                            <button type="button" onclick="resetPendenciaFormText()" id="btn_cancel_edit_text" style="display:none; padding:10px 15px; border:none; background:#ccc; border-radius:8px; cursor:pointer; font-weight:bold;">Cancelar Edição</button>
                         </div>
                     </form>
+                    
+                    <hr style="margin: 30px 0; border: 0; border-top: 1px solid #eee;">
 
                     <!-- Lista de Pendências -->
                     <table style="width:100%; border-collapse:collapse; margin-top:10px;">
@@ -1437,6 +1430,46 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
         </div>
     </div>
 </div>
+
+<script>
+function editPendencia(id, texto) {
+    // Populate the form ID
+    document.getElementById('pendencia_id_input').value = id;
+    
+    // Populate the Text Editor
+    if (typeof ClassicEditor !== 'undefined' && document.querySelector('#editor_pendencias').nextSibling) {
+        // If CKEditor is active
+        const editorInstance = document.querySelector('#editor_pendencias').nextSibling.ckeditorInstance;
+        if(editorInstance) editorInstance.setData(texto);
+    } else {
+        // Fallback for textarea
+        document.getElementById('editor_pendencias').value = texto;
+    }
+    
+    // Change Button Text (Visual Feedback)
+    document.querySelector("button[name='btn_emitir_pendencia']").innerHTML = "Salvar Alteração (Editar)";
+    
+    // Show Cancel Button
+    document.getElementById('btn_cancel_edit_text').style.display = 'inline-block';
+    
+    // Scroll to Top
+    document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetPendenciaFormText() {
+    document.getElementById('pendencia_id_input').value = '';
+    
+    if (typeof ClassicEditor !== 'undefined' && document.querySelector('#editor_pendencias').nextSibling) {
+        const editorInstance = document.querySelector('#editor_pendencias').nextSibling.ckeditorInstance;
+        if(editorInstance) editorInstance.setData('');
+    } else {
+        document.getElementById('editor_pendencias').value = '';
+    }
+    
+    document.querySelector("button[name='btn_emitir_pendencia']").innerHTML = "Emitir Pendência";
+    document.getElementById('btn_cancel_edit_text').style.display = 'none';
+}
+</script>
 
 </body>
 <!-- Welcome Popup -->
