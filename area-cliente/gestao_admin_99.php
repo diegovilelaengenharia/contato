@@ -921,20 +921,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
             <?php elseif($active_tab == 'financeiro'): ?>
 
-                <!-- ConfigFinanceiro -->
-                <div class="form-card" style="border-left: 6px solid #28a745; background:#f0fff4;">
-                    <h3 style="color:#28a745;">📂 Pasta de Comprovantes/Pagamentos</h3>
-                    <form method="POST">
-                        <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
-                        <div class="form-group">
-                            <label>Link da Pasta (Google Drive) para Cliente ver Boletos/Comprovantes</label>
-                            <div style="display:flex; gap:10px;">
-                                <input type="text" name="link_pasta_pagamentos" value="<?= $detalhes['link_pasta_pagamentos']??'' ?>" placeholder="https://drive.google.com/..." style="flex:1;">
-                                <button type="submit" name="btn_salvar_dados_financeiros" class="btn-save btn-success" style="margin:0;">Salvar Link</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+
 
                 <!-- Form de Adição -->
                 <div class="form-card">
