@@ -608,7 +608,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
             <div class="tabs-header">
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=cadastro" class="tab-btn <?= $active_tab=='cadastro'?'active':'' ?>">📝 Cadastro</a>
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="tab-btn <?= $active_tab=='andamento'?'active':'' ?>">📊 Andamento</a>
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="tab-btn <?= $active_tab=='andamento'?'active':'' ?>">📊 Linha do Tempo</a>
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias" class="tab-btn <?= $active_tab=='pendencias'?'active':'' ?>">⚠️ Pendências</a>
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=financeiro" class="tab-btn <?= $active_tab=='financeiro'?'active':'' ?>">💰 Financeiro</a>
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=arquivos" class="tab-btn <?= $active_tab=='arquivos'?'active':'' ?>">📂 Arquivos</a>
@@ -766,22 +766,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     }
                 </script>
             
-            <?php elseif($active_tab == 'financeiro'): ?>
-                <div class="form-card">
-                    <h3>📂 Configurações Financeiras</h3>
-                    <form method="POST" style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 20px;">
-                        <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
-                        <div class="form-group">
-                            <label>Link da Pasta de Comprovantes/Boletos (Drive)</label>
-                            <input type="text" name="link_pasta_pagamentos" value="<?= $detalhes['link_pasta_pagamentos']??'' ?>" placeholder="https://drive.google.com/..." style="width: 100%;">
-                            <small style="color: grey;">Cole o link da pasta do Google Drive onde estão os boletos e comprovantes.</small>
-                        </div>
-                        <button type="submit" name="btn_salvar_dados_financeiros" class="btn-save btn-secondary">💾 Salvar Link da Pasta</button>
-                    </form>
-                </div>
-
-                <div class="form-card">
-                    <h3>💰 Lançamentos Financeiros</h3>
+            <?php elseif($active_tab == 'andamento'): ?>
                 <div class="form-card">
                     <h3>🔄 Atualizar Fase do Processo</h3>
                     <form method="POST">
