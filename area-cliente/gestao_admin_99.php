@@ -944,8 +944,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                                 }
                                             ?>
                                         </td>
-                                            ?>
-                                        </td>
+
                                         <td style="padding:15px; text-align:center; vertical-align:top;">
                                             <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento&del_hist=<?= $h['id'] ?>" onclick="confirmAction(event, 'ATENÇÃO: Deseja realmente apagar este histórico? Essa ação é irreversível.')" style="text-decoration:none; color:#dc3545; font-size:1.1rem; padding:5px;" title="Excluir Histórico">🗑️</a>
                                         </td>
