@@ -11,6 +11,13 @@ if (!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true) {
     exit;
 }
 
+// Lógica do Popup de Boas Vindas (Apenas 1x por sessão)
+$show_welcome_popup = false;
+if (!isset($_SESSION['welcome_shown'])) {
+    $show_welcome_popup = true;
+    $_SESSION['welcome_shown'] = true;
+}
+
 // Logout
 if (isset($_GET['sair'])) {
     session_destroy();
@@ -729,4 +736,35 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
     </main>
 </div>
 </body>
+<!-- Welcome Popup -->
+<?php if($show_welcome_popup): ?>
+<div id="welcomeRunning" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; display:flex; justify-content:center; align-items:center; opacity:0; pointer-events:none; transition: opacity 0.5s ease;">
+    <div style="background:white; padding:40px; border-radius:16px; width:90%; max-width:400px; text-align:center; box-shadow:0 10px 40px rgba(0,0,0,0.2); transform: translateY(20px); transition: transform 0.5s ease;">
+        <div style="font-size:3rem; margin-bottom:15px;">👷‍♂️</div>
+        <h2 style="color:var(--color-primary); margin:0 0 10px 0;">Bem-vindo, Eng. Diego!</h2>
+        <p style="color:var(--color-text-subtle); margin-bottom:25px; line-height:1.5;">O Painel Administrativo está pronto para uso.<br>Bom trabalho hoje!</p>
+        <button onclick="closeWelcome()" class="btn-save" style="margin:0; width:100%;">Iniciar Gestão</button>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const popup = document.getElementById('welcomeRunning');
+        const card = popup.querySelector('div');
+        
+        // Show
+        setTimeout(() => {
+            popup.style.opacity = '1';
+            popup.style.pointerEvents = 'all';
+            card.style.transform = 'translateY(0)';
+        }, 100);
+
+        window.closeWelcome = function() {
+            popup.style.opacity = '0';
+            popup.style.pointerEvents = 'none';
+            card.style.transform = 'translateY(20px)';
+            setTimeout(() => { popup.remove(); }, 500);
+        }
+    });
+</script>
+<?php endif; ?>
 </html>
