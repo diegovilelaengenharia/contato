@@ -212,13 +212,22 @@ if (isset($_POST['btn_salvar_financeiro'])) {
 }
 
 // 6.6 Nova Lógica de Pendências (Lista Individual)
-// Adicionar
-if (isset($_POST['btn_add_pendencia'])) {
+// Adicionar ou Editar
+if (isset($_POST['btn_save_pendencia'])) {
     $cid = $_POST['cliente_id'];
     $desc = $_POST['nova_pendencia'];
+    $pid = $_POST['pendencia_id'] ?? '';
+
     if(!empty($desc)) {
-        $pdo->prepare("INSERT INTO processo_pendencias (cliente_id, descricao) VALUES (?, ?)")->execute([$cid, $desc]);
-        $sucesso = "Pendência adicionada!";
+        if(!empty($pid)) {
+            // Update
+            $pdo->prepare("UPDATE processo_pendencias SET descricao=? WHERE id=? AND cliente_id=?")->execute([$desc, $pid, $cid]);
+            $sucesso = "Pendência atualizada!";
+        } else {
+            // Insert
+            $pdo->prepare("INSERT INTO processo_pendencias (cliente_id, descricao) VALUES (?, ?)")->execute([$cid, $desc]);
+            $sucesso = "Pendência adicionada!";
+        }
     }
 }
 // Delete Pendencia
@@ -924,14 +933,17 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 <div class="form-card" style="border-left: 6px solid #ffc107;">
                     <h3>⚠️ Quadro de Pendências</h3>
 
-                    <!-- Adicionar Pendência -->
-                    <form method="POST" style="margin-bottom:25px; padding-bottom:20px; border-bottom:1px solid #eee;">
+                    <!-- Adicionar/Editar Pendência -->
+                    <form method="POST" id="form-pendencia" style="margin-bottom:25px; padding-bottom:20px; border-bottom:1px solid #eee;">
                         <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
+                        <input type="hidden" name="pendencia_id" id="pendencia_id_input">
+                        
                         <div class="form-group">
-                            <label>Nova Pendência (Descrição)</label>
+                            <label>Nova Pendência / Edição</label>
                             <div style="display:flex; gap:10px;">
-                                <input type="text" name="nova_pendencia" placeholder="Ex: Enviar comprovante de endereço..." style="flex:1;">
-                                <button type="submit" name="btn_add_pendencia" class="btn-save btn-warning" style="width:auto; color:black; margin:0;">Adicionar</button>
+                                <input type="text" name="nova_pendencia" id="nova_pendencia_input" placeholder="Ex: Enviar comprovante de endereço..." style="flex:1;">
+                                <button type="submit" name="btn_save_pendencia" id="btn_save_pend_submit" class="btn-save btn-warning" style="width:auto; color:black; margin:0;">Adicionar</button>
+                                <button type="button" onclick="resetPendenciaForm()" id="btn_cancel_edit" style="display:none; padding:10px; border:none; background:#ccc; border-radius:8px; cursor:pointer;">Cancelar</button>
                             </div>
                         </div>
                     </form>
@@ -943,7 +955,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                 <th style="padding:10px; text-align:center; width:140px;">Data</th>
                                 <th style="padding:10px; text-align:left;">Descrição</th>
                                 <th style="padding:10px; text-align:center; width:120px;">Status</th>
-                                <th style="padding:10px; text-align:center; width:80px;">Ação</th>
+                                <th style="padding:10px; text-align:center; width:100px;">Ação</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -975,13 +987,29 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                         </a>
                                     </td>
                                     <td style="padding:12px; text-align:center;">
-                                        <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias&del_pend=<?= $p['id'] ?>" onclick="return confirm('Excluir esta pendência?')" style="text-decoration:none;">🗑️</a>
+                                        <button type="button" onclick="editPendencia(<?= $p['id'] ?>, '<?= addslashes($p['descricao']) ?>')" style="border:none; background:none; cursor:pointer;" title="Editar">✏️</button>
+                                        <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias&del_pend=<?= $p['id'] ?>" onclick="return confirm('Excluir esta pendência?')" style="text-decoration:none; margin-left:5px;">🗑️</a>
                                     </td>
                                 </tr>
                             <?php endforeach; endif; ?>
                         </tbody>
                     </table>
                 </div>
+
+                <script>
+                    function editPendencia(id, text) {
+                        document.getElementById('pendencia_id_input').value = id;
+                        document.getElementById('nova_pendencia_input').value = text;
+                        document.getElementById('btn_save_pend_submit').innerText = 'Salvar Alteração';
+                        document.getElementById('btn_cancel_edit').style.display = 'block';
+                    }
+                    function resetPendenciaForm() {
+                        document.getElementById('pendencia_id_input').value = '';
+                        document.getElementById('nova_pendencia_input').value = '';
+                        document.getElementById('btn_save_pend_submit').innerText = 'Adicionar';
+                        document.getElementById('btn_cancel_edit').style.display = 'none';
+                    }
+                </script>
 
             <?php elseif($active_tab == 'arquivos'): ?>
                 <div class="form-card" style="border-left: 6px solid #2196f3;">

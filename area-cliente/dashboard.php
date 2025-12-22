@@ -353,7 +353,7 @@ if (!empty($detalhes['link_pasta_pagamentos'])) {
                 $stmtPend->execute([$cliente_id]);
                 $pendencias = $stmtPend->fetchAll();
                 
-                if(count($pendencias) > 0): ?>
+                <?php if(count($pendencias) > 0): ?>
                     <div style="overflow-x:auto;">
                         <table class="history-table">
                             <thead>
@@ -366,7 +366,10 @@ if (!empty($detalhes['link_pasta_pagamentos'])) {
                                 <tr style="background:var(--bg-warning);">
                                     <td style="white-space:nowrap; color:var(--text-warning);"><?= $data ?></td>
                                     <td><span class="status-badge st-pend">PENDENTE</span></td>
-                                    <td style="color:var(--text-warning); font-weight:500;"><?= htmlspecialchars($p['descricao']) ?></td>
+                                    <td style="color:var(--text-warning); font-weight:500; cursor:pointer; text-decoration:underline;" 
+                                        onclick="openPendencyModal('<?= addslashes(htmlspecialchars_decode($p['descricao'])) ?>')">
+                                        <?= htmlspecialchars($p['descricao']) ?>
+                                    </td>
                                 </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -378,6 +381,31 @@ if (!empty($detalhes['link_pasta_pagamentos'])) {
                         <p>Não há pendências registradas no momento.</p>
                     </div>
                 <?php endif; ?>
+
+                <!-- PENDENCY MODAL -->
+                <div id="pendency-modal" class="modal-overlay">
+                    <div class="modal-content" style="height:auto; max-height:80vh;">
+                        <div class="modal-header" style="background:var(--bg-warning); color:var(--text-warning);">
+                            <h3 style="margin:0;">⚠️ Detalhes da Pendência</h3>
+                            <button class="modal-close" onclick="closePendencyModal()">×</button>
+                        </div>
+                        <div class="modal-body" style="padding:30px; overflow-y:auto;">
+                            <p id="pendency-modal-text" style="font-size:1.1rem; line-height:1.6; color:var(--color-text); white-space: pre-wrap;"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    function openPendencyModal(text) {
+                        document.getElementById('pendency-modal-text').innerText = text;
+                        document.getElementById('pendency-modal').classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                    }
+                    function closePendencyModal() {
+                        document.getElementById('pendency-modal').classList.remove('active');
+                        document.body.style.overflow = '';
+                    }
+                </script>
 
 
             </section>
