@@ -494,17 +494,11 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="admin_style.css?v=mobile_v2">
     <link rel="icon" href="../assets/logo.png" type="image/png">
-    <!-- TinyMCE -->
-    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-    <script>
-      tinymce.init({
-        selector: 'textarea[name="texto_pendencias"]',
-        menubar: false,
-        plugins: 'lists link',
-        toolbar: 'undo redo | bold italic underline | fontsizeselect | forecolor | alignleft aligncenter alignright | bullist numlist',
-        height: 300
-      });
-    </script>
+    <!-- CKEditor 5 -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
+    <style>
+        .ck-editor__editable { min-height: 200px; }
+    </style>
 </head>
 <body>
 
@@ -864,13 +858,23 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
                         <div class="form-group">
                             <label>Texto descritivo das pendências (Cliente visualizará isso)</label>
-                            <textarea name="texto_pendencias" rows="12" style="background:#fffbf2; border:1px solid #ffeeba;"><?= htmlspecialchars($detalhes['texto_pendencias']??'') ?></textarea>
+                            <textarea name="texto_pendencias" id="editor_pendencias" rows="12" style="background:#fffbf2; border:1px solid #ffeeba;"><?= htmlspecialchars($detalhes['texto_pendencias']??'') ?></textarea>
                         </div>
-
 
                         <button type="submit" name="btn_salvar_pendencias" class="btn-save btn-warning" style="color:#000;">Salvar Pendências</button>
                     </form>
                 </div>
+                
+                <script>
+                    ClassicEditor
+                        .create( document.querySelector( '#editor_pendencias' ), {
+                            toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|', 'undo', 'redo' ],
+                            language: 'pt-br'
+                        } )
+                        .catch( error => {
+                            console.error( error );
+                        } );
+                </script>
 
             <?php elseif($active_tab == 'arquivos'): ?>
                 <div class="form-card" style="border-left: 6px solid #2196f3;">
