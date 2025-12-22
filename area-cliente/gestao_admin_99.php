@@ -32,6 +32,25 @@ $fases_padrao = [
     "Confecção de Documentos", "Avaliação (ITBI/Averbação)", "Processo Finalizado (Documentos Prontos)"
 ];
 
+// --- Taxas e Multas Padrão ---
+$taxas_padrao = [
+    'taxas' => [
+        ['titulo' => 'Taxa de Aprovação de Projeto', 'lei' => 'Código de Obras', 'desc' => 'Análise e aprovação de projeto arquitetônico.'],
+        ['titulo' => 'Emissão de Alvará de Construção', 'lei' => 'Código de Posturas', 'desc' => 'Licença para execução de obra.'],
+        ['titulo' => 'Taxa de Habite-se', 'lei' => 'Lei Comp. Municipal', 'desc' => 'Vistoria para certificado de conclusão.'],
+        ['titulo' => 'ISSQN de Obra', 'lei' => 'Código Tributário', 'desc' => 'Imposto Sobre Serviços relativo à construção.'],
+        ['titulo' => 'Taxa de Numeração Predial', 'lei' => 'Lei Municipal', 'desc' => 'Atribuição oficial de número.'],
+        ['titulo' => 'Averbação em Cartório', 'lei' => 'Lei 6.015/73', 'desc' => 'Custo de registro de averbação da construção.']
+    ],
+    'multas' => [
+        ['titulo' => 'Início de Obra sem Alvará', 'lei' => 'Art. 35 Cód. Obras', 'desc' => 'Multa por iniciar construção sem licença prévia.'],
+        ['titulo' => 'Ausência de Placa na Obra', 'lei' => 'Art. 42 Lei Fed. 5.194', 'desc' => 'Falta de identificação de responsabilidade técnica.'],
+        ['titulo' => 'Obra em Desacordo com Projeto', 'lei' => 'Art. 50 Cód. Obras', 'desc' => 'Execução diferente do aprovado.'],
+        ['titulo' => 'Obstrução de Passeio Público', 'lei' => 'Cód. Posturas Art. 12', 'desc' => 'Materiais depositados na calçada.'],
+        ['titulo' => 'Falta de Limpeza/Tapume', 'lei' => 'Lei Mun. 123/20', 'desc' => 'Falta de proteção ou sujeira na via pública.']
+    ]
+];
+
 // --- Processamento ---
 
 // 1. Atualizar Etapa (Aba Andamento)
@@ -907,7 +926,10 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
                 <!-- Form de Adição -->
                 <div class="form-card">
-                    <h3>➕ Novo Lançamento Financeiro</h3>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                        <h3 style="margin:0;">➕ Novo Lançamento Financeiro</h3>
+                        <button type="button" onclick="openTaxasModal()" class="btn-save btn-info" style="width:auto; padding:8px 15px; font-size:0.9rem;">📋 Selecionar Padrão</button>
+                    </div>
                     <form method="POST">
                         <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
                         <div class="form-grid">
@@ -1158,7 +1180,96 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             style: { background: "linear-gradient(to right, #ff5f6d, #ffc371)" }
         }).showToast();
     <?php endif; ?>
+
+    // --- Modal e Lógica de Taxas ---
+    function openTaxasModal() {
+        document.getElementById('modalTaxas').style.display = 'flex';
+    }
+    function closeTaxasModal() {
+        document.getElementById('modalTaxas').style.display = 'none';
+    }
+    function selectTaxa(titulo, lei, tipo) {
+        // Preenche campos
+        const form = document.querySelector('form[action=""] div.form-grid') ? document.querySelector('form[action=""] div.form-grid').parentElement : document.forms[2]; // Busca o form de financeiro (hack simples baseada na ordem, melhor usar ID)
+        
+        // Melhor abordagem: usar IDs nos inputs do Financeiro
+        const inpDesc = document.querySelector('input[name="descricao"]');
+        const semCateg = document.querySelector('select[name="categoria"]');
+        
+        if(inpDesc) {
+            let texto = titulo;
+            if(lei) texto += " (Ref: " + lei + ")";
+            inpDesc.value = texto;
+        }
+        
+        if(semCateg) {
+            semCateg.value = 'taxas'; // Força categoria taxas para ambos, ou muda se for honorarios
+        }
+        
+        closeTaxasModal();
+        
+        Toastify({
+             text: "Item selecionado! Complete o valor e salve.",
+             duration: 3000,
+             style: { background: "#4caf50" }
+        }).showToast();
+    }
 </script>
+
+<!-- MODAL DE SELEÇÃO DE TAXAS -->
+<div id="modalTaxas" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
+    <div style="background:white; width:90%; max-width:800px; max-height:90vh; overflow-y:auto; border-radius:12px; padding:0; display:flex; flex-direction:column; box-shadow:0 10px 40px rgba(0,0,0,0.3);">
+        
+        <div style="padding:20px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center; background:#f8f9fa;">
+            <h3 style="margin:0; color:var(--color-primary);">📋 Selecionar Taxa ou Multa Padrão</h3>
+            <button onclick="closeTaxasModal()" style="border:none; background:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+        </div>
+        
+        <div style="padding:20px; overflow-y:auto;">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:30px;">
+                
+                <!-- Coluna Taxas -->
+                <div>
+                    <h4 style="color:#0f5132; border-bottom:2px solid #d1e7dd; padding-bottom:10px; margin-top:0;">🏛️ Taxas Administrativas</h4>
+                    <div style="display:flex; flex-direction:column; gap:10px;">
+                        <?php foreach($taxas_padrao['taxas'] as $t): ?>
+                            <div onclick="selectTaxa('<?= $t['titulo'] ?>', '<?= $t['lei'] ?>', 'taxa')" 
+                                 style="padding:15px; border:1px solid #e9ecef; border-radius:8px; cursor:pointer; transition:0.2s; background:#fff;">
+                                <div style="font-weight:bold; color:#146c43;"><?= $t['titulo'] ?></div>
+                                <div style="font-size:0.85rem; color:#666; margin:4px 0;"><?= $t['desc'] ?></div>
+                                <div style="font-size:0.8rem; background:#e9ecef; display:inline-block; padding:2px 6px; border-radius:4px; color:#555;">Eg: <?= $t['lei'] ?></div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
+                <!-- Coluna Multas -->
+                <div>
+                    <h4 style="color:#842029; border-bottom:2px solid #f8d7da; padding-bottom:10px; margin-top:0;">🚨 Infrações e Multas</h4>
+                    <div style="display:flex; flex-direction:column; gap:10px;">
+                        <?php foreach($taxas_padrao['multas'] as $t): ?>
+                            <div onclick="selectTaxa('<?= $t['titulo'] ?>', '<?= $t['lei'] ?>', 'multa')" 
+                                 style="padding:15px; border:1px solid #ffebe9; border-radius:8px; cursor:pointer; transition:0.2s; background:#fff;">
+                                <div style="font-weight:bold; color:#a50e0e;"><?= $t['titulo'] ?></div>
+                                <div style="font-size:0.85rem; color:#666; margin:4px 0;"><?= $t['desc'] ?></div>
+                                <div style="font-size:0.8rem; background:#fff3cd; display:inline-block; padding:2px 6px; border-radius:4px; color:#666;">Eg: <?= $t['lei'] ?></div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            
+            </div>
+            
+            <!-- Mobile Fix css -->
+            <style>
+                @media(max-width: 700px) {
+                    #modalTaxas > div > div:nth-child(2) > div { grid-template-columns: 1fr !important; }
+                }
+                #modalTaxas div[onclick]:hover { transform:translateY(-2px); box-shadow:0 4px 10px rgba(0,0,0,0.08); border-color:var(--color-primary); }
+            </style>
+        </div>
+    </div>
+</div>
 
 </body>
 <!-- Welcome Popup -->
