@@ -944,7 +944,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                             ?>
                                         </td>
                                         <td style="padding:15px; text-align:center; vertical-align:top;">
-                                            <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento&del_hist=<?= $h['id'] ?>" onclick="return confirm('ATENÇÃO: Deseja realmente apagar este histórico? Essa ação é irreversível.')" style="text-decoration:none; color:#dc3545; font-size:1.1rem; padding:5px;" title="Excluir Histórico">🗑️</a>
+                                            <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento&del_hist=<?= $h['id'] ?>" onclick="confirmAction(event, 'ATENÇÃO: Deseja realmente apagar este histórico? Essa ação é irreversível.')" style="text-decoration:none; color:#dc3545; font-size:1.1rem; padding:5px;" title="Excluir Histórico">🗑️</a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -1044,7 +1044,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                     </td>
                                     <td style="padding:12px; text-align:center;">
                                         <button type="button" onclick="editPendencia(<?= $p['id'] ?>, '<?= addslashes(htmlspecialchars_decode($p['descricao'])) ?>')" style="border:none; background:none; cursor:pointer;" title="Editar">✏️</button>
-                                        <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias&del_pend=<?= $p['id'] ?>" onclick="return confirm('Excluir esta pendência?')" style="text-decoration:none; margin-left:5px;">🗑️</a>
+                                        <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias&del_pend=<?= $p['id'] ?>" onclick="confirmAction(event, 'Excluir esta pendência?')" style="text-decoration:none; margin-left:5px;">🗑️</a>
                                     </td>
                                 </tr>
                             <?php endforeach; endif; ?>
@@ -1217,7 +1217,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                         </td>
                                         <td style='padding:12px; text-align:center;'>{$link}</td>
                                         <td style='padding:12px; text-align:right;'>
-                                            <a href='?cliente_id={$cid}&tab=financeiro&del_fin={$r['id']}' onclick='return confirm(\"Tem certeza que deseja EXCLUIR este lançamento financeiro?\")' style='color:#dc3545; text-decoration:none; font-size:1.1rem;'>🗑️</a>
+                                            <a href='?cliente_id={$cid}&tab=financeiro&del_fin={$r['id']}' onclick='confirmAction(event, \"Tem certeza que deseja EXCLUIR este lançamento financeiro?\")' style='color:#dc3545; text-decoration:none; font-size:1.1rem;'>🗑️</a>
                                         </td>
                                       </tr>";
                             }
@@ -1333,27 +1333,32 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
         });
     });
 
-    // 2. SweetAlert nos deletes
+    // 2. SweetAlert nos deletes (Generalizado)
+    function confirmAction(e, message) {
+        e.preventDefault();
+        const url = e.currentTarget.href;
+        
+        Swal.fire({
+            title: 'Tem certeza?',
+            text: message,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Sim, confirmar!',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = url;
+            }
+        });
+    }
+
     document.querySelectorAll('.btn-delete-confirm').forEach(btn => {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
-            const href = this.getAttribute('href');
             const text = this.getAttribute('data-confirm-text') || 'Tem certeza?';
-            
-            Swal.fire({
-                title: 'Atenção!',
-                text: text,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#dc3545',
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Sim, excluir!',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = href;
-                }
-            });
+            confirmAction(e, text); // Reuses the same logic
         });
     });
 
@@ -1381,10 +1386,10 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
     // --- Modal e Lógica de Taxas ---
     function openTaxasModal() {
-        document.getElementById('modalTaxas').style.display = 'flex';
+        document.getElementById('modalTaxas').showModal();
     }
     function closeTaxasModal() {
-        document.getElementById('modalTaxas').style.display = 'none';
+        document.getElementById('modalTaxas').close();
     }
     function selectTaxa(titulo, lei, tipo, valor) {
         // Preenche campos
@@ -1420,15 +1425,13 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 </script>
 
 <!-- MODAL DE SELEÇÃO DE TAXAS -->
-<div id="modalTaxas" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
-    <div style="background:white; width:90%; max-width:800px; max-height:90vh; overflow-y:auto; border-radius:12px; padding:0; display:flex; flex-direction:column; box-shadow:0 10px 40px rgba(0,0,0,0.3);">
-        
-        <div style="padding:20px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center; background:#f8f9fa;">
-            <h3 style="margin:0; color:var(--color-primary);">📋 Selecionar Taxa ou Multa Padrão</h3>
-            <button onclick="closeTaxasModal()" style="border:none; background:none; font-size:1.5rem; cursor:pointer;">&times;</button>
-        </div>
-        
-        <div style="padding:20px; overflow-y:auto;">
+<dialog id="modalTaxas" style="border:none; border-radius:12px; padding:0; width:90%; max-width:800px; max-height:90vh; box-shadow:0 10px 40px rgba(0,0,0,0.3);">
+    <div style="padding:20px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center; background:#f8f9fa;">
+        <h3 style="margin:0; color:var(--color-primary);">📋 Selecionar Taxa ou Multa Padrão</h3>
+        <button onclick="closeTaxasModal()" style="border:none; background:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+    </div>
+    
+    <div style="padding:20px; overflow-y:auto;">
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:30px;">
                 
                 <!-- Coluna Taxas -->
@@ -1469,16 +1472,17 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             
             </div>
             
-            <!-- Mobile Fix css -->
-            <style>
-                @media(max-width: 700px) {
-                    #modalTaxas > div > div:nth-child(2) > div { grid-template-columns: 1fr !important; }
-                }
-                #modalTaxas div[onclick]:hover { transform:translateY(-2px); box-shadow:0 4px 10px rgba(0,0,0,0.08); border-color:var(--color-primary); }
-            </style>
-        </div>
+        <!-- Mobile Fix css -->
+        <style>
+            @media(max-width: 700px) {
+                #modalTaxas > div > div:nth-child(2) > div { grid-template-columns: 1fr !important; }
+            }
+            #modalTaxas div[onclick]:hover { transform:translateY(-2px); box-shadow:0 4px 10px rgba(0,0,0,0.08); border-color:var(--color-primary); }
+            /* Dialog backdrop */
+            dialog::backdrop { background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(3px); }
+        </style>
     </div>
-</div>
+</dialog>
 
 <script>
 function openPendenciaModal() {
