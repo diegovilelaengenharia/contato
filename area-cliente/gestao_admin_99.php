@@ -395,14 +395,14 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             <div class="form-card">
                                 <h3>👤 Detalhes do Requerente</h3>
                             <div class="form-grid">
-                                <div class="form-group"><label>Tipo</label><select name="tipo_pessoa"><option value="Fisica">Física</option><option value="Juridica">Jurídica</option></select></div>
-                                <div class="form-group"><label>CPF/CNPJ</label><input type="text" name="cpf_cnpj" value="<?= $detalhes['cpf_cnpj']??'' ?>"></div>
+                                <div class="form-group"><label>Tipo</label><select name="tipo_pessoa" disabled style="background:var(--color-bg);"><option value="Fisica">Física</option><option value="Juridica">Jurídica</option></select></div>
+                                <div class="form-group"><label>CPF/CNPJ</label><input type="text" name="cpf_cnpj" value="<?= $detalhes['cpf_cnpj']??'' ?>" readonly style="background:var(--color-bg);"></div>
                             </div>
-                            <div class="form-group"><label>Identidade (RG)</label><input type="text" name="rg_ie" value="<?= $detalhes['rg_ie']??'' ?>"></div>
-                            <div class="form-group"><label>Email</label><input type="text" name="contato_email" value="<?= $detalhes['contato_email']??'' ?>"></div>
-                            <div class="form-group"><label>Telefone</label><input type="text" name="contato_tel" value="<?= $detalhes['contato_tel']??'' ?>"></div>
+                            <div class="form-group"><label>Identidade (RG)</label><input type="text" name="rg_ie" value="<?= $detalhes['rg_ie']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                            <div class="form-group"><label>Email</label><input type="text" name="contato_email" value="<?= $detalhes['contato_email']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                            <div class="form-group"><label>Telefone</label><input type="text" name="contato_tel" value="<?= $detalhes['contato_tel']??'' ?>" readonly style="background:var(--color-bg);"></div>
 
-                            <div class="form-group"><label>Endereço</label><input type="text" name="endereco_residencial" value="<?= $detalhes['endereco_residencial']??'' ?>"></div>
+                            <div class="form-group"><label>Endereço</label><input type="text" name="endereco_residencial" value="<?= $detalhes['endereco_residencial']??'' ?>" readonly style="background:var(--color-bg);"></div>
                         </div>
                         </div> <!-- Fim Coluna 1 -->
                         
@@ -410,20 +410,20 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         <div>
                             <div class="form-card">
                                 <h3>🏠 Imóvel</h3>
-                                <div class="form-group"><label>Endereço da Obra</label><input type="text" name="endereco_imovel" value="<?= $detalhes['endereco_imovel']??'' ?>"></div>
+                                <div class="form-group"><label>Endereço da Obra</label><input type="text" name="endereco_imovel" value="<?= $detalhes['endereco_imovel']??'' ?>" readonly style="background:var(--color-bg);"></div>
                                 <div class="form-grid">
-                                    <div class="form-group"><label>Inscrição</label><input type="text" name="inscricao_imob" value="<?= $detalhes['inscricao_imob']??'' ?>"></div>
-                                    <div class="form-group"><label>Matrícula</label><input type="text" name="num_matricula" value="<?= $detalhes['num_matricula']??'' ?>"></div>
-                                    <div class="form-group"><label>Área Terreno</label><input type="text" name="area_terreno" value="<?= $detalhes['area_terreno']??'' ?>"></div>
-                                    <div class="form-group"><label>Área Constr.</label><input type="text" name="area_construida" value="<?= $detalhes['area_construida']??'' ?>"></div>
+                                    <div class="form-group"><label>Inscrição</label><input type="text" name="inscricao_imob" value="<?= $detalhes['inscricao_imob']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                                    <div class="form-group"><label>Matrícula</label><input type="text" name="num_matricula" value="<?= $detalhes['num_matricula']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                                    <div class="form-group"><label>Área Terreno</label><input type="text" name="area_terreno" value="<?= $detalhes['area_terreno']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                                    <div class="form-group"><label>Área Constr.</label><input type="text" name="area_construida" value="<?= $detalhes['area_construida']??'' ?>" readonly style="background:var(--color-bg);"></div>
                                 </div>
                             </div>
                             <div class="form-card">
                                 <h3>👷 Técnico</h3>
-                                <div class="form-group"><label>Nome Responsável</label><input type="text" name="resp_tecnico" value="<?= $detalhes['resp_tecnico']??'' ?>"></div>
+                                <div class="form-group"><label>Nome Responsável</label><input type="text" name="resp_tecnico" value="<?= $detalhes['resp_tecnico']??'' ?>" readonly style="background:var(--color-bg);"></div>
                                 <div class="form-grid">
-                                    <div class="form-group"><label>CAU/CREA</label><input type="text" name="registro_prof" value="<?= $detalhes['registro_prof']??'' ?>"></div>
-                                    <div class="form-group"><label>ART/RRT</label><input type="text" name="num_art_rrt" value="<?= $detalhes['num_art_rrt']??'' ?>"></div>
+                                    <div class="form-group"><label>CAU/CREA</label><input type="text" name="registro_prof" value="<?= $detalhes['registro_prof']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                                    <div class="form-group"><label>ART/RRT</label><input type="text" name="num_art_rrt" value="<?= $detalhes['num_art_rrt']??'' ?>" readonly style="background:var(--color-bg);"></div>
                                 </div>
                             </div>
                             </div>
@@ -432,9 +432,44 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 </form>
                 
                 <!-- Botão Salvar Geral (Cadastrais) -->
-                <div style="margin-top: -20px; margin-bottom: 40px;">
-                     <button type="submit" form="form_dados_detalhados" name="btn_salvar_cadastro" class="btn-save">Salvar Detalhes Cadastrais (Abaixo)</button>
+                <div style="margin-top: -20px; margin-bottom: 40px; display:flex; gap:15px; align-items:center;">
+                     <button type="button" onclick="toggleEditMode()" class="btn-save" style="background:#6c757d; width:auto;">🔓 Liberar Edição</button>
+                     <button type="submit" form="form_dados_detalhados" name="btn_salvar_cadastro" id="btn_salvar_dados" class="btn-save" style="display:none;">Salvar Detalhes Cadastrais</button>
                 </div>
+
+                <script>
+                    function toggleEditMode() {
+                        const form = document.getElementById('form_dados_detalhados');
+                        const inputs = form.querySelectorAll('input, select');
+                        const btnSalvar = document.getElementById('btn_salvar_dados');
+                        const btnUnlock = document.querySelector('button[onclick="toggleEditMode()"]');
+                        
+                        inputs.forEach(input => {
+                            if (input.hasAttribute('readonly') || input.hasAttribute('disabled')) {
+                                input.removeAttribute('readonly');
+                                input.removeAttribute('disabled');
+                                input.style.background = '#ffffff';
+                                input.style.borderColor = 'var(--color-primary)';
+                            } else {
+                                input.setAttribute('readonly', 'true');
+                                // Selects need disabled instead of readonly
+                                if(input.tagName === 'SELECT') input.setAttribute('disabled', 'true');
+                                input.style.background = 'var(--color-bg)';
+                                input.style.borderColor = 'var(--color-border)';
+                            }
+                        });
+
+                        if (btnSalvar.style.display === 'none') {
+                            btnSalvar.style.display = 'block';
+                            btnUnlock.innerText = '🔒 Bloquear Edição';
+                            btnUnlock.style.background = '#dc3545';
+                        } else {
+                            btnSalvar.style.display = 'none';
+                            btnUnlock.innerText = '🔓 Liberar Edição';
+                            btnUnlock.style.background = '#6c757d';
+                        }
+                    }
+                </script>
             
             <?php elseif($active_tab == 'andamento'): ?>
                 <div class="form-card">
