@@ -420,7 +420,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                     <div class="form-group" style="margin-bottom:0;"><label>Nome (Sistema)</label><input type="text" name="nome" value="<?= htmlspecialchars($cliente_ativo['nome']) ?>" required></div>
                                     <div class="form-group" style="margin-bottom:0;"><label>Usuário</label><input type="text" name="usuario" value="<?= htmlspecialchars($cliente_ativo['usuario']) ?>" required></div>
                                     <div class="form-group" style="margin-bottom:0;"><label>Nova Senha</label><input type="text" name="nova_senha" placeholder="Opcional"></div>
-                                    <div class="form-group" style="margin-bottom:0;"><label>Nova Senha</label><input type="text" name="nova_senha" placeholder="Opcional"></div>
+
                                     <button type="submit" name="btn_salvar_acesso" class="btn-save btn-warning" style="color:black; margin:0; padding: 10px 20px; white-space:nowrap; width:auto; height:auto;">Salvar Acesso</button>
                                 </div>
                             </div>
@@ -576,10 +576,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             <label>Link Pasta Pendências (Drive)</label>
                             <input type="text" name="link_doc_pendencias" value="<?= $detalhes['link_doc_pendencias']??'' ?>">
                         </div>
-                        <div class="form-group">
-                            <label>Link Pasta Pendências (Drive)</label>
-                            <input type="text" name="link_doc_pendencias" value="<?= $detalhes['link_doc_pendencias']??'' ?>">
-                        </div>
+
                         <button type="submit" name="btn_salvar_pendencias" class="btn-save btn-warning" style="color:#000;">Salvar Pendências</button>
                     </form>
                 </div>
@@ -599,10 +596,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             <label>🔗 Link da Pasta Geral (Backup/Drive)</label>
                             <input type="text" name="link_drive_pasta" value="<?= $detalhes['link_drive_pasta']??'' ?>" placeholder="https://drive.google.com/...">
                         </div>
-                        <div class="form-group">
-                            <label>🔗 Link da Pasta Geral (Backup/Drive)</label>
-                            <input type="text" name="link_drive_pasta" value="<?= $detalhes['link_drive_pasta']??'' ?>" placeholder="https://drive.google.com/...">
-                        </div>
+
                         <button type="submit" name="btn_salvar_arquivos" class="btn-save btn-info">Salvar Links</button>
                     </form>
 
@@ -631,6 +625,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
 
             <?php elseif($active_tab == 'financeiro'): ?>
+
                 <!-- ConfigFinanceiro -->
                 <div class="form-card" style="border-left: 6px solid #28a745; background:#f0fff4;">
                     <h3 style="color:#28a745;">📂 Pasta de Comprovantes/Pagamentos</h3>
@@ -638,8 +633,6 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
                         <div class="form-group">
                             <label>Link da Pasta (Google Drive) para Cliente ver Boletos/Comprovantes</label>
-                            <div style="display:flex; gap:10px;">
-                                <input type="text" name="link_pasta_pagamentos" value="<?= $detalhes['link_pasta_pagamentos']??'' ?>" placeholder="https://drive.google.com/..." style="flex:1;">
                             <div style="display:flex; gap:10px;">
                                 <input type="text" name="link_pasta_pagamentos" value="<?= $detalhes['link_pasta_pagamentos']??'' ?>" placeholder="https://drive.google.com/..." style="flex:1;">
                                 <button type="submit" name="btn_salvar_dados_financeiros" class="btn-save btn-success" style="margin:0;">Salvar Link</button>
