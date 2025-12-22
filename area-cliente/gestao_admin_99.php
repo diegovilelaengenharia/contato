@@ -524,28 +524,30 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             <div class="form-card">
                 <h2>Importar Cadastros do Site</h2>
                 <p>Abaixo estão as solicitações de cadastro vindas da página pública.</p>
-                <table style="width:100%; border-collapse:collapse; margin-top:20px;">
-                    <thead><tr style="background:#eee;"><th style="padding:10px;">Data</th><th style="padding:10px;">Nome</th><th style="padding:10px;">Contato</th><th style="padding:10px;">Serviço</th><th style="padding:10px;">Ação</th></tr></thead>
-                    <tbody>
-                        <?php 
-                        try {
-                            $pendentes = $pdo->query("SELECT * FROM pre_cadastros WHERE status='pendente' ORDER BY data_solicitacao DESC")->fetchAll();
-                            if(count($pendentes) == 0) echo "<tr><td colspan='5' style='padding:20px; text-align:center;'>Nenhuma solicitação pendente.</td></tr>";
-                            foreach($pendentes as $p): ?>
-                            <tr style="border-bottom:1px solid #eee;">
-                                <td style="padding:10px;"><?= date('d/m/Y H:i', strtotime($p['data_solicitacao'])) ?></td>
-                                <td style="padding:10px;"><strong><?= htmlspecialchars($p['nome']) ?></strong><br><small><?= $p['cpf_cnpj'] ?></small></td>
-                                <td style="padding:10px;"><?= $p['telefone'] ?><br><small><?= $p['email'] ?></small></td>
-                                <td style="padding:10px;"><?= $p['tipo_servico'] ?></td>
-                                <td style="padding:10px; text-align:center;">
-                                    <a href="?aprovar_cadastro=<?= $p['id'] ?>" class="btn-save btn-success" style="padding:5px 10px; font-size:0.8rem; text-decoration:none;">✅ Aprovar</a>
-                                </td>
-                            </tr>
-                        <?php endforeach; 
-                        } catch(Exception $e) { echo "<tr><td colspan='5'>Erro: Rode o setup_cadastro_db.php</td></tr>"; }
-                        ?>
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table style="width:100%; border-collapse:collapse; margin-top:20px;">
+                        <thead><tr style="background:#eee;"><th style="padding:10px;">Data</th><th style="padding:10px;">Nome</th><th style="padding:10px;">Contato</th><th style="padding:10px;">Serviço</th><th style="padding:10px;">Ação</th></tr></thead>
+                        <tbody>
+                            <?php 
+                            try {
+                                $pendentes = $pdo->query("SELECT * FROM pre_cadastros WHERE status='pendente' ORDER BY data_solicitacao DESC")->fetchAll();
+                                if(count($pendentes) == 0) echo "<tr><td colspan='5' style='padding:20px; text-align:center;'>Nenhuma solicitação pendente.</td></tr>";
+                                foreach($pendentes as $p): ?>
+                                <tr style="border-bottom:1px solid #eee;">
+                                    <td style="padding:10px;"><?= date('d/m/Y H:i', strtotime($p['data_solicitacao'])) ?></td>
+                                    <td style="padding:10px;"><strong><?= htmlspecialchars($p['nome']) ?></strong><br><small><?= $p['cpf_cnpj'] ?></small></td>
+                                    <td style="padding:10px;"><?= $p['telefone'] ?><br><small><?= $p['email'] ?></small></td>
+                                    <td style="padding:10px;"><?= $p['tipo_servico'] ?></td>
+                                    <td style="padding:10px; text-align:center;">
+                                        <a href="?aprovar_cadastro=<?= $p['id'] ?>" class="btn-save btn-success" style="padding:5px 10px; font-size:0.8rem; text-decoration:none;">✅ Aprovar</a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; 
+                            } catch(Exception $e) { echo "<tr><td colspan='5'>Erro: Rode o setup_cadastro_db.php</td></tr>"; }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
         <?php elseif(isset($_GET['novo'])): ?>
@@ -734,39 +736,41 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
                 <div class="form-card">
                     <h3>📜 Histórico de Movimentações</h3>
-                    <table style="width:100%; border-collapse:collapse;">
-                        <thead><tr style="background:rgba(0,0,0,0.03);"><th style="padding:10px; text-align:left;">Data</th><th style="padding:10px; text-align:left;">Descrição</th></tr></thead>
-                        <tbody>
-                            <?php 
-                            $hist = $pdo->prepare("SELECT * FROM processo_movimentos WHERE cliente_id=? ORDER BY data_movimento DESC");
-                            $hist->execute([$cliente_ativo['id']]);
-                            foreach($hist->fetchAll() as $h): ?>
-                                <tr style="border-bottom:1px solid #eee;">
-                                    <td style="padding:15px; color:var(--color-primary); font-weight:bold; white-space:nowrap; vertical-align:top;">
-                                        <?= date('d/m/Y H:i', strtotime($h['data_movimento'])) ?>
-                                    </td>
-                                    <td style="padding:15px;">
-                                        <div style="font-weight:bold; margin-bottom:5px; color:#212529;"><?= htmlspecialchars($h['titulo_fase']) ?></div>
-                                        <?php 
-                                            // Lógica de exibição de comentários estilizados
-                                            $parts = explode("||COMENTARIO_USER||", $h['descricao']);
-                                            $sys_desc = nl2br(htmlspecialchars($parts[0]));
-                                            echo "<div style='color:var(--color-text-subtle);'>{$sys_desc}</div>";
-                                            
-                                            // Se tiver comentário do usuário
-                                            if (count($parts) > 1) {
-                                                $user_comment = nl2br(htmlspecialchars($parts[1]));
-                                                echo "<div style='margin-top:8px; border-left: 3px solid #d32f2f; padding-left:10px;'>
-                                                        <span style='font-weight:800; color:black;'>Comentário Diego Vilela:</span>
-                                                        <div style='color:#d32f2f; font-weight:bold; margin-top:2px;'>{$user_comment}</div>
-                                                      </div>";
-                                            }
-                                        ?>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table style="width:100%; border-collapse:collapse;">
+                            <thead><tr style="background:rgba(0,0,0,0.03);"><th style="padding:10px; text-align:left;">Data</th><th style="padding:10px; text-align:left;">Descrição</th></tr></thead>
+                            <tbody>
+                                <?php 
+                                $hist = $pdo->prepare("SELECT * FROM processo_movimentos WHERE cliente_id=? ORDER BY data_movimento DESC");
+                                $hist->execute([$cliente_ativo['id']]);
+                                foreach($hist->fetchAll() as $h): ?>
+                                    <tr style="border-bottom:1px solid #eee;">
+                                        <td style="padding:15px; color:var(--color-primary); font-weight:bold; white-space:nowrap; vertical-align:top;">
+                                            <?= date('d/m/Y H:i', strtotime($h['data_movimento'])) ?>
+                                        </td>
+                                        <td style="padding:15px;">
+                                            <div style="font-weight:bold; margin-bottom:5px; color:#212529;"><?= htmlspecialchars($h['titulo_fase']) ?></div>
+                                            <?php 
+                                                // Lógica de exibição de comentários estilizados
+                                                $parts = explode("||COMENTARIO_USER||", $h['descricao']);
+                                                $sys_desc = nl2br(htmlspecialchars($parts[0]));
+                                                echo "<div style='color:var(--color-text-subtle);'>{$sys_desc}</div>";
+                                                
+                                                // Se tiver comentário do usuário
+                                                if (count($parts) > 1) {
+                                                    $user_comment = nl2br(htmlspecialchars($parts[1]));
+                                                    echo "<div style='margin-top:8px; border-left: 3px solid #d32f2f; padding-left:10px;'>
+                                                            <span style='font-weight:800; color:black;'>Comentário Diego Vilela:</span>
+                                                            <div style='color:#d32f2f; font-weight:bold; margin-top:2px;'>{$user_comment}</div>
+                                                          </div>";
+                                                }
+                                            ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
             <?php elseif($active_tab == 'pendencias'): ?>
@@ -913,7 +917,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         if(count($rows) == 0) {
                             echo "<p style='color:#666; font-style:italic;'>Nenhum lançamento encontrado nesta categoria.</p>";
                         } else {
-                            echo "<div style='overflow-x:auto;'>
+                            echo "<div class='table-responsive'>
                                   <table style='width:100%; border-collapse:collapse; font-size:0.95rem; min-width:600px;'>
                                     <thead><tr style='background:#f8f9fa; border-bottom:2px solid #dee2e6;'>
                                         <th style='padding:12px; text-align:left;'>Descrição</th>
@@ -1004,7 +1008,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             <!-- Tabela Geral de Clientes -->
             <div class="form-card">
                 <h3>📋 Situação da Carteira de Clientes</h3>
-                <div style="overflow-x:auto;">
+                <div class="table-responsive">
                     <table style="width:100%; border-collapse:collapse; margin-top:15px;">
                         <thead>
                             <tr style="background:#f8f9fa; border-bottom:2px solid #ddd;">
