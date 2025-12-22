@@ -402,20 +402,7 @@ if (!empty($detalhes['link_pasta_pagamentos'])) {
                     </table>
                 </div>
 
-                <div style="margin-top: 25px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 12px; padding: 20px; text-align: center;">
-                    <h3 style="margin-top:0; font-size:1.1rem; color: var(--color-text);">📂 Comprovantes e Boletos</h3>
-                    <p style="font-size: 0.9rem; color: var(--color-text-subtle); margin-bottom: 15px;">Acesse a pasta segura no Drive com todos os boletos e comprovantes organizados.</p>
-                    
-                    <?php if (!empty($detalhes['link_pasta_pagamentos'])): ?>
-                        <a href="<?= htmlspecialchars($detalhes['link_pasta_pagamentos']) ?>" target="_blank" class="nav-btn" style="display: inline-flex; width: auto; background: #fff; padding: 12px 25px; text-decoration: none; gap: 10px; align-items: center; border: 2px solid var(--color-border);">
-                            <span style="font-size: 1.2rem;">📂</span> 
-                            <span style="font-weight: 700; color: var(--color-primary);">ACESSAR PASTA FINANCEIRA</span>
-                        </a>
-                    <?php else: ?>
-                        <div style="opacity: 0.7; font-size: 0.9rem; color: var(--color-text-subtle);">Pasta ainda não vinculada pelo administrador.</div>
-                    <?php endif; ?>
-                </div>
-            </section>
+
         </div>
     </div>
 

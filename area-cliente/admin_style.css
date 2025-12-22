@@ -130,12 +130,92 @@ body {
 }
 
 .tab-btn.active {
-    border-bottom-color: var(--color-primary);
-    color: var(--color-primary);
     opacity: 1;
     font-weight: 700;
-    background: transparent;
-    box-shadow: none;
+    background: white;
+    box-shadow: 0 -2px 0 0 inset;
+    /* inset border effect */
+}
+
+/* Custom Tab Colors */
+/* Cadastro (Default Blue) */
+.tab-btn[href*="tab=cadastro"] {
+    color: #0d6efd;
+    border-bottom-color: transparent;
+}
+
+.tab-btn[href*="tab=cadastro"]:hover {
+    background: #e7f1ff;
+}
+
+.tab-btn[href*="tab=cadastro"].active {
+    color: #0d6efd;
+    border-bottom-color: #0d6efd;
+    background: #e7f1ff;
+}
+
+/* Linha do Tempo (Teal/Cyan) */
+.tab-btn[href*="tab=andamento"] {
+    color: #0dcaf0;
+    border-bottom-color: transparent;
+}
+
+.tab-btn[href*="tab=andamento"]:hover {
+    background: #e0faff;
+}
+
+.tab-btn[href*="tab=andamento"].active {
+    color: #0dcaf0;
+    border-bottom-color: #0dcaf0;
+    background: #e0faff;
+}
+
+/* Pendências (Orange/Warning) */
+.tab-btn[href*="tab=pendencias"] {
+    color: #fd7e14;
+    border-bottom-color: transparent;
+}
+
+.tab-btn[href*="tab=pendencias"]:hover {
+    background: #fff3e6;
+}
+
+.tab-btn[href*="tab=pendencias"].active {
+    color: #fd7e14;
+    border-bottom-color: #fd7e14;
+    background: #fff3e6;
+}
+
+/* Financeiro (Green) */
+.tab-btn[href*="tab=financeiro"] {
+    color: #198754;
+    border-bottom-color: transparent;
+}
+
+.tab-btn[href*="tab=financeiro"]:hover {
+    background: #e8f5e9;
+}
+
+.tab-btn[href*="tab=financeiro"].active {
+    color: #198754;
+    border-bottom-color: #198754;
+    background: #e8f5e9;
+}
+
+/* Arquivos (Indigo/Purple) */
+.tab-btn[href*="tab=arquivos"] {
+    color: #6610f2;
+    border-bottom-color: transparent;
+}
+
+.tab-btn[href*="tab=arquivos"]:hover {
+    background: #f3ebff;
+}
+
+.tab-btn[href*="tab=arquivos"].active {
+    color: #6610f2;
+    border-bottom-color: #6610f2;
+    background: #f3ebff;
 }
 
 .tab-btn.blue.active {
@@ -547,7 +627,7 @@ body {
 }
 
 .collapsible-header:hover {
-    background-color: rgba(0,0,0,0.02);
+    background-color: rgba(0, 0, 0, 0.02);
 }
 
 .collapsible-header h3 {

@@ -494,6 +494,17 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="admin_style.css?v=mobile_v2">
     <link rel="icon" href="../assets/logo.png" type="image/png">
+    <!-- TinyMCE -->
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+      tinymce.init({
+        selector: 'textarea[name="texto_pendencias"]',
+        menubar: false,
+        plugins: 'lists link',
+        toolbar: 'undo redo | bold italic underline | fontsizeselect | forecolor | alignleft aligncenter alignright | bullist numlist',
+        height: 300
+      });
+    </script>
 </head>
 <body>
 
