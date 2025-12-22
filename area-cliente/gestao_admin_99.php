@@ -467,7 +467,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
     <link rel="stylesheet" href="../style.css">
-    <link rel="stylesheet" href="admin_style.css">
+    <link rel="stylesheet" href="admin_style.css?v=mobile_v2">
     <link rel="icon" href="../assets/logo.png" type="image/png">
 </head>
 <body>

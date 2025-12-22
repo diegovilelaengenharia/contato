@@ -20,6 +20,11 @@ body.dark-mode {
     --header-bg: #0b3d26;
 }
 
+/* Default: Hidden on Desktop */
+.mobile-menu-toggle {
+    display: none;
+}
+
 /* FIX CRÍTICO DE LAYOUT */
 body {
     background: var(--color-bg) !important;
@@ -448,11 +453,6 @@ body {
         font-size: 1rem;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     }
-}
-
-/* Desktop: Esconde botão menu */
-.mobile-menu-toggle {
-    display: none;
 }
 
 /* Helper para tabelas rolarem no mobile */
