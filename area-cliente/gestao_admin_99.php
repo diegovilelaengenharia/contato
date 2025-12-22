@@ -35,19 +35,19 @@ $fases_padrao = [
 // --- Taxas e Multas Padrão ---
 $taxas_padrao = [
     'taxas' => [
-        ['titulo' => 'Taxa de Aprovação de Projeto', 'lei' => 'Código de Obras', 'desc' => 'Análise e aprovação de projeto arquitetônico.'],
-        ['titulo' => 'Emissão de Alvará de Construção', 'lei' => 'Código de Posturas', 'desc' => 'Licença para execução de obra.'],
-        ['titulo' => 'Taxa de Habite-se', 'lei' => 'Lei Comp. Municipal', 'desc' => 'Vistoria para certificado de conclusão.'],
-        ['titulo' => 'ISSQN de Obra', 'lei' => 'Código Tributário', 'desc' => 'Imposto Sobre Serviços relativo à construção.'],
-        ['titulo' => 'Taxa de Numeração Predial', 'lei' => 'Lei Municipal', 'desc' => 'Atribuição oficial de número.'],
-        ['titulo' => 'Averbação em Cartório', 'lei' => 'Lei 6.015/73', 'desc' => 'Custo de registro de averbação da construção.']
+        ['titulo' => 'Taxa de Aprovação de Projeto', 'lei' => 'Código de Obras', 'desc' => 'Análise e aprovação de projeto arquitetônico.', 'valor' => '150.00'],
+        ['titulo' => 'Emissão de Alvará de Construção', 'lei' => 'Código de Posturas', 'desc' => 'Licença para execução de obra.', 'valor' => '200.00'],
+        ['titulo' => 'Taxa de Habite-se', 'lei' => 'Lei Comp. Municipal', 'desc' => 'Vistoria para certificado de conclusão.', 'valor' => '300.00'],
+        ['titulo' => 'ISSQN de Obra', 'lei' => 'Código Tributário', 'desc' => 'Imposto Sobre Serviços relativo à construção.', 'valor' => '0.00'],
+        ['titulo' => 'Taxa de Numeração Predial', 'lei' => 'Lei Municipal', 'desc' => 'Atribuição oficial de número.', 'valor' => '50.00'],
+        ['titulo' => 'Averbação em Cartório', 'lei' => 'Lei 6.015/73', 'desc' => 'Custo de registro de averbação da construção.', 'valor' => '800.00']
     ],
     'multas' => [
-        ['titulo' => 'Início de Obra sem Alvará', 'lei' => 'Art. 35 Cód. Obras', 'desc' => 'Multa por iniciar construção sem licença prévia.'],
-        ['titulo' => 'Ausência de Placa na Obra', 'lei' => 'Art. 42 Lei Fed. 5.194', 'desc' => 'Falta de identificação de responsabilidade técnica.'],
-        ['titulo' => 'Obra em Desacordo com Projeto', 'lei' => 'Art. 50 Cód. Obras', 'desc' => 'Execução diferente do aprovado.'],
-        ['titulo' => 'Obstrução de Passeio Público', 'lei' => 'Cód. Posturas Art. 12', 'desc' => 'Materiais depositados na calçada.'],
-        ['titulo' => 'Falta de Limpeza/Tapume', 'lei' => 'Lei Mun. 123/20', 'desc' => 'Falta de proteção ou sujeira na via pública.']
+        ['titulo' => 'Início de Obra sem Alvará', 'lei' => 'Art. 35 Cód. Obras', 'desc' => 'Multa por iniciar construção sem licença prévia.', 'valor' => '1500.00'],
+        ['titulo' => 'Ausência de Placa na Obra', 'lei' => 'Art. 42 Lei Fed. 5.194', 'desc' => 'Falta de identificação de responsabilidade técnica.', 'valor' => '850.00'],
+        ['titulo' => 'Obra em Desacordo com Projeto', 'lei' => 'Art. 50 Cód. Obras', 'desc' => 'Execução diferente do aprovado.', 'valor' => '2500.00'],
+        ['titulo' => 'Obstrução de Passeio Público', 'lei' => 'Cód. Posturas Art. 12', 'desc' => 'Materiais depositados na calçada.', 'valor' => '400.00'],
+        ['titulo' => 'Falta de Limpeza/Tapume', 'lei' => 'Lei Mun. 123/20', 'desc' => 'Falta de proteção ou sujeira na via pública.', 'valor' => '600.00']
     ]
 ];
 
@@ -855,10 +855,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             <label>Texto descritivo das pendências (Cliente visualizará isso)</label>
                             <textarea name="texto_pendencias" rows="12" style="background:#fffbf2; border:1px solid #ffeeba;"><?= htmlspecialchars($detalhes['texto_pendencias']??'') ?></textarea>
                         </div>
-                        <div class="form-group">
-                            <label>Link Pasta Pendências (Drive)</label>
-                            <input type="text" name="link_doc_pendencias" value="<?= $detalhes['link_doc_pendencias']??'' ?>">
-                        </div>
+
 
                         <button type="submit" name="btn_salvar_pendencias" class="btn-save btn-warning" style="color:#000;">Salvar Pendências</button>
                     </form>
@@ -1188,18 +1185,23 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
     function closeTaxasModal() {
         document.getElementById('modalTaxas').style.display = 'none';
     }
-    function selectTaxa(titulo, lei, tipo) {
+    function selectTaxa(titulo, lei, tipo, valor) {
         // Preenche campos
         const form = document.querySelector('form[action=""] div.form-grid') ? document.querySelector('form[action=""] div.form-grid').parentElement : document.forms[2]; // Busca o form de financeiro (hack simples baseada na ordem, melhor usar ID)
         
         // Melhor abordagem: usar IDs nos inputs do Financeiro
         const inpDesc = document.querySelector('input[name="descricao"]');
         const semCateg = document.querySelector('select[name="categoria"]');
+        const inpValor = document.querySelector('input[name="valor"]');
         
         if(inpDesc) {
             let texto = titulo;
             if(lei) texto += " (Ref: " + lei + ")";
             inpDesc.value = texto;
+        }
+        
+        if(inpValor && valor) {
+            inpValor.value = valor;
         }
         
         if(semCateg) {
@@ -1233,9 +1235,12 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     <h4 style="color:#0f5132; border-bottom:2px solid #d1e7dd; padding-bottom:10px; margin-top:0;">🏛️ Taxas Administrativas</h4>
                     <div style="display:flex; flex-direction:column; gap:10px;">
                         <?php foreach($taxas_padrao['taxas'] as $t): ?>
-                            <div onclick="selectTaxa('<?= $t['titulo'] ?>', '<?= $t['lei'] ?>', 'taxa')" 
+                            <div onclick="selectTaxa('<?= $t['titulo'] ?>', '<?= $t['lei'] ?>', 'taxa', '<?= $t['valor'] ?? '' ?>')" 
                                  style="padding:15px; border:1px solid #e9ecef; border-radius:8px; cursor:pointer; transition:0.2s; background:#fff;">
-                                <div style="font-weight:bold; color:#146c43;"><?= $t['titulo'] ?></div>
+                                <div style="display:flex; justify-content:space-between;">
+                                    <div style="font-weight:bold; color:#146c43;"><?= $t['titulo'] ?></div>
+                                    <div style="font-weight:bold; color:#146c43;">R$ <?= $t['valor'] ?? '0.00' ?></div>
+                                </div>
                                 <div style="font-size:0.85rem; color:#666; margin:4px 0;"><?= $t['desc'] ?></div>
                                 <div style="font-size:0.8rem; background:#e9ecef; display:inline-block; padding:2px 6px; border-radius:4px; color:#555;">Eg: <?= $t['lei'] ?></div>
                             </div>
@@ -1248,9 +1253,12 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     <h4 style="color:#842029; border-bottom:2px solid #f8d7da; padding-bottom:10px; margin-top:0;">🚨 Infrações e Multas</h4>
                     <div style="display:flex; flex-direction:column; gap:10px;">
                         <?php foreach($taxas_padrao['multas'] as $t): ?>
-                            <div onclick="selectTaxa('<?= $t['titulo'] ?>', '<?= $t['lei'] ?>', 'multa')" 
+                            <div onclick="selectTaxa('<?= $t['titulo'] ?>', '<?= $t['lei'] ?>', 'multa', '<?= $t['valor'] ?? '' ?>')" 
                                  style="padding:15px; border:1px solid #ffebe9; border-radius:8px; cursor:pointer; transition:0.2s; background:#fff;">
-                                <div style="font-weight:bold; color:#a50e0e;"><?= $t['titulo'] ?></div>
+                                <div style="display:flex; justify-content:space-between;">
+                                    <div style="font-weight:bold; color:#a50e0e;"><?= $t['titulo'] ?></div>
+                                    <div style="font-weight:bold; color:#a50e0e;">R$ <?= $t['valor'] ?? '0.00' ?></div>
+                                </div>
                                 <div style="font-size:0.85rem; color:#666; margin:4px 0;"><?= $t['desc'] ?></div>
                                 <div style="font-size:0.8rem; background:#fff3cd; display:inline-block; padding:2px 6px; border-radius:4px; color:#666;">Eg: <?= $t['lei'] ?></div>
                             </div>

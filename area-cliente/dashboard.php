@@ -315,16 +315,7 @@ if (!empty($detalhes['link_pasta_pagamentos'])) {
                 <?php endif; ?>
             </section>
 
-            <section class="card">
-                <h2 style="margin-top:0;">Arquivos e Documentos</h2>
-                <?php if ($drive_folder_id): ?>
-                    <div class="drive-embed-container">
-                        <iframe src="https://drive.google.com/embeddedfolderview?id=<?= htmlspecialchars($drive_folder_id) ?>#list" allowfullscreen></iframe>
-                    </div>
-                <?php else: ?>
-                    <p style="color:var(--color-text-subtle);">A pasta de documentos ainda não foi vinculada.</p>
-                <?php endif; ?>
-            </section>
+
         </div>
 
 
@@ -344,13 +335,7 @@ if (!empty($detalhes['link_pasta_pagamentos'])) {
                     </div>
                 <?php endif; ?>
 
-                <?php if(!empty($detalhes['link_doc_pendencias'])): ?>
-                    <div style="margin-top:20px;">
-                        <a href="<?= htmlspecialchars($detalhes['link_doc_pendencias']) ?>" target="_blank" class="nav-btn active" style="text-decoration:none; display:inline-flex; flex-direction:row; padding:15px 30px;">
-                             📂 Acessar Pasta de Pendências no Drive
-                        </a>
-                    </div>
-                <?php endif; ?>
+
             </section>
         </div>
         
