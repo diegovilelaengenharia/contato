@@ -596,16 +596,6 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     📥 Importar Cadastro
                 </a>
             </div>
-
-            <?php if($cliente_ativo): ?>
-                <a href="?exportar_cliente=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-menu">
-                    📄 Exportar Relatório
-                </a>
-            <?php else: ?>
-                <div class="btn-menu" style="opacity:0.5; cursor:not-allowed;" title="Selecione um cliente para exportar">
-                    📄 Exportar Relatório
-                </div>
-            <?php endif; ?>
         </nav>
 
         <h4 style="margin: 10px 0; color: var(--color-text-subtle); display:flex; align-items:center; gap:8px;">📂 Clientes</h4>
@@ -672,6 +662,9 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     </div>
                 </div>
                 <div>
+                    <a href="?exportar_cliente=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save btn-secondary" style="text-decoration:none; margin-top:10px; margin-right:10px;">
+                       📄 Resumo do Processo
+                    </a>
                     <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" onclick="return confirm('ATENÇÃO EXTREMA!\n\nVocê tem certeza absoluta que deseja EXCLUIR este cliente?\n\nEssa ação apagará todo o histórico e dados permanentemente.')" 
                        class="btn-save btn-danger" style="text-decoration:none; margin-top:10px;">
                        🗑️ Excluir Cliente
