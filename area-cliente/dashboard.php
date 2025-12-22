@@ -182,19 +182,41 @@ if (!empty($detalhes['link_pasta_pagamentos'])) {
                     <h1>Olá, <?= htmlspecialchars($_SESSION['cliente_nome']) ?></h1>
                     <span class="badge-panel"><?= htmlspecialchars($endereco_final) ?></span>
                 </div>
-                <div class="header-actions" style="display:flex; align-items:center;">
-                    <a href="exportar_resumo.php" target="_blank" class="btn-icon-mobile" title="Resumo PDF">📄 <span class="desktop-only">Resumo</span></a>
-                    <button class="btn-icon-mobile" onclick="toggleTheme()" title="Alternar Tema">🌓 <span class="desktop-only">Tema</span></button>
-                    <a href="logout.php" class="btn-logout btn-icon-mobile" title="Sair">🚪 <span class="desktop-only">Sair</span></a>
+                <div class="header-actions" style="display:flex; align-items:center; gap: 10px;">
+                    <a href="exportar_resumo.php" target="_blank" class="btn-resumo-destaque">
+                        📄 <span class="desktop-only">RESUMO DO PROCESSO</span><span class="mobile-only">RESUMO</span>
+                    </a>
+
+                    <button class="btn-icon-mobile" onclick="toggleTheme()" title="Alternar Tema">🌓</button>
+                    <a href="logout.php" class="btn-logout btn-icon-mobile" title="Sair">🚪</a>
                 </div>
             </div>
             
             <style>
+                .btn-resumo-destaque {
+                    background: linear-gradient(135deg, #146c43 0%, #0d462b 100%);
+                    color: white;
+                    text-decoration: none;
+                    padding: 10px 20px;
+                    border-radius: 8px;
+                    font-weight: 700;
+                    box-shadow: 0 4px 10px rgba(20, 108, 67, 0.2);
+                    transition: transform 0.2s;
+                    display: flex; align-items: center; gap: 8px;
+                    font-size: 0.95rem;
+                    border: 1px solid rgba(255,255,255,0.2);
+                }
+                .btn-resumo-destaque:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(20, 108, 67, 0.3); }
+
+                .mobile-only { display: none; }
+
                 @media (max-width: 600px) {
                     .desktop-only { display: none; }
-                    .btn-icon-mobile { padding: 10px; font-size: 1.2rem; background: transparent; border: 1px solid var(--color-border); border-radius: 8px; margin-left: 5px; text-decoration: none; color: var(--color-text); cursor: pointer; }
+                    .mobile-only { display: inline; }
+                    .btn-icon-mobile { padding: 8px 12px; font-size: 1.2rem; background: transparent; border: 1px solid var(--color-border); border-radius: 8px; text-decoration: none; color: var(--color-text); cursor: pointer; }
                     .header-panel { flex-direction: column; align-items: flex-start; gap: 15px; }
-                    .header-actions { width: 100%; justify-content: flex-end; }
+                    .header-actions { width: 100%; justify-content: space-between; gap: 5px; }
+                    .btn-resumo-destaque { flex: 1; justify-content: center; }
                 }
             </style>
 
@@ -234,10 +256,6 @@ if (!empty($detalhes['link_pasta_pagamentos'])) {
                 <span class="nav-icon">📊</span>
                 Linha do Tempo
             </button>
-            <button class="nav-btn" onclick="openDriveModal()">
-                <span class="nav-icon">☁️</span>
-                Documentos na Nuvem
-            </button>
             <button class="nav-btn" onclick="switchView('financeiro', this)">
                 <span class="nav-icon">💰</span>
                 Financeiro & Taxas
@@ -245,6 +263,10 @@ if (!empty($detalhes['link_pasta_pagamentos'])) {
             <button class="nav-btn" onclick="switchView('pendencias', this)">
                 <span class="nav-icon">⚠️</span>
                 Pendências
+            </button>
+            <button class="nav-btn" onclick="openDriveModal()">
+                <span class="nav-icon">☁️</span>
+                Documentos na Nuvem
             </button>
         </div>
 
@@ -395,13 +417,19 @@ if (!empty($detalhes['link_pasta_pagamentos'])) {
                     </table>
                 </div>
 
-                <?php if ($drive_pagamentos_id): ?>
-                    <div style="margin-top: 20px; text-align: center;">
-                        <a href="https://drive.google.com/drive/folders/<?= $drive_pagamentos_id ?>" target="_blank" class="nav-btn" style="display: inline-block; padding: 10px 20px; text-decoration: none;">
-                            📂 Acessar Pasta de Comprovantes no Drive
+                <div style="margin-top: 25px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 12px; padding: 20px; text-align: center;">
+                    <h3 style="margin-top:0; font-size:1.1rem; color: var(--color-text);">📂 Comprovantes e Boletos</h3>
+                    <p style="font-size: 0.9rem; color: var(--color-text-subtle); margin-bottom: 15px;">Acesse a pasta segura no Drive com todos os boletos e comprovantes organizados.</p>
+                    
+                    <?php if (!empty($detalhes['link_pasta_pagamentos'])): ?>
+                        <a href="<?= htmlspecialchars($detalhes['link_pasta_pagamentos']) ?>" target="_blank" class="nav-btn" style="display: inline-flex; width: auto; background: #fff; padding: 12px 25px; text-decoration: none; gap: 10px; align-items: center; border: 2px solid var(--color-border);">
+                            <span style="font-size: 1.2rem;">📂</span> 
+                            <span style="font-weight: 700; color: var(--color-primary);">ACESSAR PASTA FINANCEIRA</span>
                         </a>
-                    </div>
-                <?php endif; ?>
+                    <?php else: ?>
+                        <div style="opacity: 0.7; font-size: 0.9rem; color: var(--color-text-subtle);">Pasta ainda não vinculada pelo administrador.</div>
+                    <?php endif; ?>
+                </div>
             </section>
         </div>
     </div>

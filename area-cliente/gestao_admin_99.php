@@ -618,124 +618,118 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 <!-- Form separado para dados detalhados para nao conflitar com o de acesso se quiser submit separado, ou tudo junto.
                      Neste caso, o primeiro form ali em cima fecha. Vamos ajustar. -->
                 
-                <form method="POST" id="form_dados_acesso">
-                    <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
-                    <!-- Card Acesso Inserido no Grid Abaixo via ReplacementChunk 2 -->
-                </form>
+                <!-- Estilos Modernos para Formulário Unificado -->
+                <style>
+                    .modern-form-section { background: #fff; padding: 25px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); border: 1px solid #eef2f5; }
+                    .modern-form-header { margin-bottom: 20px; display: flex; align-items: center; gap: 10px; border-bottom: 2px solid var(--color-primary-light); padding-bottom: 10px; }
+                    .modern-form-header h3 { margin: 0; color: var(--color-primary); font-size: 1.1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+                    .modern-icon { background: var(--color-primary-light); color: var(--color-primary); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+                </style>
+
+                <div style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
+                     <button type="button" onclick="toggleEditMode()" class="btn-save" style="width:auto; background: var(--color-primary); display: flex; align-items: center; gap: 8px;">✏️ Editar Cadastro</button>
+                </div>
 
                 <form method="POST" id="form_dados_detalhados">
                     <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
-                    <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px;">
-                        <!-- Coluna 1: Acesso + Pessoais -->
-                        <div>
-                            <!-- Card Acesso -->
-                            <div class="form-card" style="border-left: 6px solid #efb524;">
-                                <h3>🔐 Dados de Acesso (Login)</h3>
-                                <div style="display: grid; grid-template-columns: 1.5fr 1fr 1fr auto; gap: 15px; align-items: end;">
-                                    <div class="form-group" style="margin-bottom:0;"><label>Nome (Sistema)</label><input type="text" name="nome" value="<?= htmlspecialchars($cliente_ativo['nome']) ?>" required></div>
-                                    <div class="form-group" style="margin-bottom:0;"><label>Usuário</label><input type="text" name="usuario" value="<?= htmlspecialchars($cliente_ativo['usuario']) ?>" required></div>
-                                    <div class="form-group" style="margin-bottom:0;"><label>Nova Senha</label><input type="text" name="nova_senha" placeholder="Opcional"></div>
 
-                                    <button type="submit" name="btn_salvar_acesso" class="btn-save btn-warning" style="color:black; margin:0; padding: 10px 20px; white-space:nowrap; width:auto; height:auto;">Salvar Acesso</button>
-                                </div>
-                            </div>
-
-                            <!-- CARD REQUERENTE COLLAPSIBLE -->
-                            <div class="form-card">
-                                <div class="collapsible-header" onclick="toggleSection('sec_requerente')">
-                                    <h3>👤 Dados do Cliente</h3>
-                                    <span id="icon_sec_requerente">▼</span>
-                                </div>
-                                <div id="sec_requerente" class="collapsible-content" style="display:none;">
-                                    <div class="form-grid">
-                                        <div class="form-group"><label>Tipo</label><select name="tipo_pessoa" disabled style="background:var(--color-bg);"><option value="Fisica">Física</option><option value="Juridica">Jurídica</option></select></div>
-                                        <div class="form-group"><label>CPF/CNPJ</label><input type="text" name="cpf_cnpj" value="<?= $detalhes['cpf_cnpj']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                                    </div>
-                                    <div class="form-group"><label>Identidade (RG)</label><input type="text" name="rg_ie" value="<?= $detalhes['rg_ie']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                                    <div class="form-group"><label>Email</label><input type="text" name="contato_email" value="<?= $detalhes['contato_email']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                                    <div class="form-group"><label>Telefone</label><input type="text" name="contato_tel" value="<?= $detalhes['contato_tel']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                                    <div class="form-group"><label>Endereço</label><input type="text" name="endereco_residencial" value="<?= $detalhes['endereco_residencial']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                                </div>
-                            </div>
-                        </div> <!-- Fim Coluna 1 -->
-                        
-                        <!-- Coluna 2 -->
-                        <div>
-                            <!-- CARD IMOVEL COLLAPSIBLE -->
-                            <div class="form-card">
-                                <div class="collapsible-header" onclick="toggleSection('sec_imovel')">
-                                    <h3>🏠 Imóvel</h3>
-                                    <span id="icon_sec_imovel">▼</span>
-                                </div>
-                                <div id="sec_imovel" class="collapsible-content" style="display:none;">
-                                    
-                                    <div class="form-grid" style="grid-template-columns: 3fr 1fr;">
-                                        <div class="form-group"><label>Rua / Logradouro</label><input type="text" name="imovel_rua" value="<?= $detalhes['imovel_rua']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                                        <div class="form-group"><label>Número</label><input type="text" name="imovel_numero" value="<?= $detalhes['imovel_numero']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                                    </div>
-                                    
-                                    <div class="form-grid">
-                                        <div class="form-group"><label>Bairro</label><input type="text" name="imovel_bairro" value="<?= $detalhes['imovel_bairro']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                                        <div class="form-group"><label>Complemento</label><input type="text" name="imovel_complemento" value="<?= $detalhes['imovel_complemento']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                                    </div>
-
-                                    <div class="form-grid">
-                                         <div class="form-group"><label>Cidade</label><input type="text" name="imovel_cidade" value="<?= $detalhes['imovel_cidade']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                                         <div class="form-group"><label>UF</label><input type="text" name="imovel_uf" value="<?= $detalhes['imovel_uf']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                                    </div>
-
-                                    <div class="form-grid">
-                                        <div class="form-group"><label>Inscrição</label><input type="text" name="inscricao_imob" value="<?= $detalhes['inscricao_imob']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                                        <div class="form-group"><label>Matrícula</label><input type="text" name="num_matricula" value="<?= $detalhes['num_matricula']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                                        <div class="form-group"><label>Área do Lote (m²)</label><input type="text" name="imovel_area_lote" value="<?= $detalhes['imovel_area_lote']??($detalhes['area_terreno']??'') ?>" readonly style="background:var(--color-bg);"></div>
-                                        <div class="form-group"><label>Área Constr.</label><input type="text" name="area_construida" value="<?= $detalhes['area_construida']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- CARD TECNICO COLLAPSIBLE -->
-                            <div class="form-card">
-                                <div class="collapsible-header" onclick="toggleSection('sec_tecnico')">
-                                    <h3>👷 Responsabilidade Técnica</h3>
-                                    <span id="icon_sec_tecnico">▼</span>
-                                </div>
-                                <div id="sec_tecnico" class="collapsible-content" style="display:none;">
-                                    <div class="form-group"><label>Nome Responsável</label><input type="text" name="resp_tecnico" value="<?= $detalhes['resp_tecnico']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                                    <div class="form-grid">
-                                        <div class="form-group"><label>CAU/CREA</label><input type="text" name="registro_prof" value="<?= $detalhes['registro_prof']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                                        <div class="form-group"><label>ART/RRT</label><input type="text" name="num_art_rrt" value="<?= $detalhes['num_art_rrt']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                                    </div>
-                                </div>
-                            </div>
+                    <!-- Seção 1: Acesso -->
+                    <div class="modern-form-section">
+                        <div class="modern-form-header">
+                            <div class="modern-icon">🔐</div>
+                            <h3>Dados de Acesso (Login)</h3>
+                        </div>
+                        <div class="form-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                            <div class="form-group"><label>Nome no Sistema</label><input type="text" name="nome" value="<?= htmlspecialchars($cliente_ativo['nome']) ?>" required readonly style="background:var(--color-bg); font-weight:bold;"></div>
+                            <div class="form-group"><label>Usuário (Login)</label><input type="text" name="usuario" value="<?= htmlspecialchars($cliente_ativo['usuario']) ?>" required readonly style="background:var(--color-bg); font-family:monospace;"></div>
+                            <div class="form-group"><label>Redefinir Senha</label><input type="text" name="nova_senha" placeholder="Digite para alterar..." readonly style="background:var(--color-bg);"></div>
+                        </div>
+                        <!-- Botão de salvar acesso específico removido em prol do salvamento global ou lógica unificada se preferir, mas vamos manter o botão escondido que é acionado pelo JS se mudarem algo aqui, ou melhor, vamos deixar o update de acesso ser tratado separadamente no backend mas submetido pelo mesmo botão SE quisermos, mas o backend trata forms diferentes. 
+                        Para simplificar, vamos manter a lógica de que o botão SALVAR GERAL submete este form. Mas espere, o backend tem blocos separados: 'btn_salvar_cadastro' e 'btn_salvar_acesso'. 
+                        Vou incluir um hidden input 'btn_salvar_acesso' se o user preencher senha? Não, melhor manter a div de acesso separada logicamente no PHP, mas visualmente unida. 
+                        Vou fazer um botão 'Salvar Acesso' discreto ou injetar no submit geral?
+                        O usuário quer algo Clean. Vamos fazer com que o botão SALVAR GERAL submeta TUDO.
+                        Para isso, preciso mudar o PHP lá em cima para aceitar um único POST ou unificar os forms.
+                        Como não quero refatorar todo o PHP agora, vou colocar um botão de salvar acesso discreto dentro desta seção apenas se houver edição. -->
+                        <div id="btn_save_access_container" style="display:none; text-align:right; margin-top:10px;">
+                            <button type="submit" name="btn_salvar_acesso" class="btn-save btn-warning" style="width:auto; padding: 5px 15px; font-size: 0.9rem;">💾 Confirmar Alteração de Acesso</button>
                         </div>
                     </div>
+
+                    <!-- Seção 2: Cliente -->
+                    <div class="modern-form-section">
+                        <div class="modern-form-header">
+                            <div class="modern-icon">👤</div>
+                            <h3>Dados do Cliente</h3>
+                        </div>
+                        <div class="form-grid">
+                             <div class="form-group"><label>Tipo Pessoa</label><select name="tipo_pessoa" disabled style="background:var(--color-bg);"><option value="Fisica" <?= ($detalhes['tipo_pessoa']??'')=='Fisica'?'selected':''?>>Física</option><option value="Juridica" <?= ($detalhes['tipo_pessoa']??'')=='Juridica'?'selected':''?>>Jurídica</option></select></div>
+                             <div class="form-group"><label>CPF / CNPJ</label><input type="text" name="cpf_cnpj" value="<?= $detalhes['cpf_cnpj']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                             <div class="form-group"><label>RG / Inscrição Estadual</label><input type="text" name="rg_ie" value="<?= $detalhes['rg_ie']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group"><label>Email Principal</label><input type="text" name="contato_email" value="<?= $detalhes['contato_email']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                            <div class="form-group"><label>Telefone / WhatsApp</label><input type="text" name="contato_tel" value="<?= $detalhes['contato_tel']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                        </div>
+                        <div class="form-group"><label>Endereço Residencial Completo</label><input type="text" name="endereco_residencial" value="<?= $detalhes['endereco_residencial']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                        <div class="form-grid">
+                            <div class="form-group"><label>Profissão</label><input type="text" name="profissao" value="<?= $detalhes['profissao']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                            <div class="form-group"><label>Estado Civil</label><input type="text" name="estado_civil" value="<?= $detalhes['estado_civil']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                        </div>
+                    </div>
+
+                    <!-- Seção 3: Imóvel -->
+                    <div class="modern-form-section">
+                        <div class="modern-form-header">
+                            <div class="modern-icon">🏠</div>
+                            <h3>Dados do Imóvel</h3>
+                        </div>
+                        <div class="form-grid" style="grid-template-columns: 4fr 1fr;">
+                             <div class="form-group"><label>Logradouro (Rua/Av)</label><input type="text" name="imovel_rua" value="<?= $detalhes['imovel_rua']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                             <div class="form-group"><label>Número</label><input type="text" name="imovel_numero" value="<?= $detalhes['imovel_numero']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                        </div>
+                        <div class="form-grid">
+                             <div class="form-group"><label>Bairro</label><input type="text" name="imovel_bairro" value="<?= $detalhes['imovel_bairro']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                             <div class="form-group"><label>Complemento</label><input type="text" name="imovel_complemento" value="<?= $detalhes['imovel_complemento']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                             <div class="form-group"><label>Cidade/UF</label><input type="text" name="imovel_cidade" value="<?= ($detalhes['imovel_cidade']??'') . '/' . ($detalhes['imovel_uf']??'') ?>" readonly style="background:var(--color-bg);"></div>
+                        </div>
+                        <div class="form-grid">
+                             <div class="form-group"><label>Inscrição Imobiliária</label><input type="text" name="inscricao_imob" value="<?= $detalhes['inscricao_imob']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                             <div class="form-group"><label>Matrícula Cartório</label><input type="text" name="num_matricula" value="<?= $detalhes['num_matricula']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                        </div>
+                        <div class="form-grid">
+                             <div class="form-group"><label>Área do Lote (m²)</label><input type="text" name="imovel_area_lote" value="<?= $detalhes['imovel_area_lote']??($detalhes['area_terreno']??'') ?>" readonly style="background:var(--color-bg);"></div>
+                             <div class="form-group"><label>Área Construída (m²)</label><input type="text" name="area_construida" value="<?= $detalhes['area_construida']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                        </div>
+                    </div>
+
+                    <!-- Seção 4: Responsabilidade Técnica -->
+                    <div class="modern-form-section">
+                        <div class="modern-form-header">
+                            <div class="modern-icon">👷</div>
+                            <h3>Responsabilidade Técnica</h3>
+                        </div>
+                        <div class="form-group"><label>Nome do Profissional</label><input type="text" name="resp_tecnico" value="<?= $detalhes['resp_tecnico']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                        <div class="form-grid">
+                             <div class="form-group"><label>Registro de Classe</label><input type="text" name="registro_prof" value="<?= $detalhes['registro_prof']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                             <div class="form-group"><label>ART / RRT</label><input type="text" name="num_art_rrt" value="<?= $detalhes['num_art_rrt']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                        </div>
+                    </div>
+
+                    <!-- Botão Salvar Flutuante ou Fixo -->
+                    <button type="submit" name="btn_salvar_cadastro" id="btn_salvar_dados" class="btn-save btn-success" style="display:none; width: 100%; padding: 15px; font-size: 1.1rem; margin-top: 20px;">
+                        💾 Salvar Todas as Alterações
+                    </button>
+
                 </form>
-                
-                <!-- Botão Salvar Geral (Cadastrais) -->
-                <div style="margin-top: -20px; margin-bottom: 40px; display:flex; gap:15px; align-items:center;">
-                     <button type="button" onclick="toggleEditMode()" class="btn-save btn-secondary" style="width:auto;">🔓 Liberar Edição</button>
-                     <button type="submit" form="form_dados_detalhados" name="btn_salvar_cadastro" id="btn_salvar_dados" class="btn-save btn-success" style="display:none;">Salvar Detalhes Cadastrais</button>
-                </div>
 
                 <script>
-                    function toggleSection(id) {
-                        const el = document.getElementById(id);
-                        const icon = document.getElementById('icon_' + id);
-                        if (el.style.display === 'none') {
-                            el.style.display = 'block';
-                            icon.innerText = '▲';
-                        } else {
-                            el.style.display = 'none';
-                            icon.innerText = '▼';
-                        }
-                    }
-
                     function toggleEditMode() {
                         const form = document.getElementById('form_dados_detalhados');
                         const inputs = form.querySelectorAll('input, select');
                         const btnSalvar = document.getElementById('btn_salvar_dados');
                         const btnUnlock = document.querySelector('button[onclick="toggleEditMode()"]');
+                        const btnAccess = document.getElementById('btn_save_access_container');
                         
                         inputs.forEach(input => {
                             if (input.hasAttribute('readonly') || input.hasAttribute('disabled')) {
@@ -743,35 +737,51 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                 input.removeAttribute('disabled');
                                 input.style.background = '#ffffff';
                                 input.style.borderColor = 'var(--color-primary)';
+                                input.style.boxShadow = '0 0 0 3px rgba(20, 108, 67, 0.1)';
                             } else {
                                 input.setAttribute('readonly', 'true');
-                                // Selects need disabled instead of readonly
                                 if(input.tagName === 'SELECT') input.setAttribute('disabled', 'true');
                                 input.style.background = 'var(--color-bg)';
                                 input.style.borderColor = 'var(--color-border)';
+                                input.style.boxShadow = 'none';
                             }
                         });
 
                         if (btnSalvar.style.display === 'none') {
                             btnSalvar.style.display = 'block';
-                            btnUnlock.innerText = '🔒 Bloquear Edição';
-                            btnUnlock.style.background = '#dc3545';
-                            
-                            // Opcional: Expandir todas ao editar para facilitar
-                            ['sec_requerente', 'sec_imovel', 'sec_tecnico'].forEach(id => {
-                                document.getElementById(id).style.display = 'block';
-                                document.getElementById('icon_' + id).innerText = '▲';
-                            });
+                            if(btnAccess) btnAccess.style.display = 'block';
 
+
+                        if (btnSalvar.style.display === 'none') {
+                            btnSalvar.style.display = 'block';
+                            btnUnlock.innerText = '🔒 Bloquear e Cancelar Edição';
+                            btnUnlock.style.background = '#dc3545';
+                            btnUnlock.style.color = '#fff';
                         } else {
                             btnSalvar.style.display = 'none';
-                            btnUnlock.innerText = '🔓 Liberar Edição';
-                            btnUnlock.style.background = '#6c757d';
+                            btnUnlock.innerText = '✏️ Editar Cadastro';
+                            btnUnlock.style.background = 'var(--color-primary)';
+                            btnUnlock.style.color = '#fff';
                         }
                     }
                 </script>
             
-            <?php elseif($active_tab == 'andamento'): ?>
+            <?php elseif($active_tab == 'financeiro'): ?>
+                <div class="form-card">
+                    <h3>📂 Configurações Financeiras</h3>
+                    <form method="POST" style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 20px;">
+                        <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
+                        <div class="form-group">
+                            <label>Link da Pasta de Comprovantes/Boletos (Drive)</label>
+                            <input type="text" name="link_pasta_pagamentos" value="<?= $detalhes['link_pasta_pagamentos']??'' ?>" placeholder="https://drive.google.com/..." style="width: 100%;">
+                            <small style="color: grey;">Cole o link da pasta do Google Drive onde estão os boletos e comprovantes.</small>
+                        </div>
+                        <button type="submit" name="btn_salvar_dados_financeiros" class="btn-save btn-secondary">💾 Salvar Link da Pasta</button>
+                    </form>
+                </div>
+
+                <div class="form-card">
+                    <h3>💰 Lançamentos Financeiros</h3>
                 <div class="form-card">
                     <h3>🔄 Atualizar Fase do Processo</h3>
                     <form method="POST">
