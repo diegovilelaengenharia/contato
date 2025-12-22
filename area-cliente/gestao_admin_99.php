@@ -238,12 +238,11 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
         .client-list li a:hover { background: var(--color-primary-light); color: var(--color-primary); }
         .client-list li a.active { background: var(--color-primary); color: white; }
 
-        .tabs-header { display: flex; gap: 10px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 5px; flex-wrap:wrap; }
-        .tab-btn { padding: 10px 24px; background: var(--color-surface); border: 2px solid transparent; border-radius: 99px; cursor: pointer; font-weight: 600; color: var(--color-text-subtle); text-decoration: none; box-shadow: var(--shadow); transition:0.2s; display:flex; align-items:center; gap:6px; white-space:nowrap; }
-        .tab-btn:hover { transform: translateY(-2px); color: var(--color-primary); }
-        .tab-btn.active { background: var(--color-primary); color: white; box-shadow: 0 5px 15px rgba(20,108,67,0.3); }
-        .tab-btn.blue { border-color: #2196f3; color: #1976d2; }
-        .tab-btn.blue.active { background: #2196f3; color: white; }
+        .tabs-header { display: flex; gap: 10px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 5px; flex-wrap:wrap; border-bottom: 1px solid var(--color-border); }
+        .tab-btn { padding: 12px 20px; background: transparent; border: none; border-bottom: 3px solid transparent; border-radius: 0; cursor: pointer; font-weight: 600; color: var(--color-text-subtle); text-decoration: none; transition: 0.2s; display: flex; align-items: center; gap: 8px; white-space: nowrap; font-size: 0.95rem; opacity: 0.7; }
+        .tab-btn:hover { background: rgba(0,0,0,0.02); color: var(--color-primary); opacity: 1; }
+        .tab-btn.active { border-bottom-color: var(--color-primary); color: var(--color-primary); opacity: 1; font-weight: 700; background: transparent; box-shadow: none; }
+        .tab-btn.blue.active { border-bottom-color: #2196f3; color: #1976d2; }
 
         .form-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 16px; padding: 30px; margin-bottom: 30px; box-shadow: var(--shadow); position: relative; overflow: hidden; }
         .form-card::before { content: ''; position: absolute; top:0; left:0; width: 6px; height: 100%; background: var(--color-primary); opacity: 0.5; }
@@ -363,8 +362,8 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=cadastro" class="tab-btn <?= $active_tab=='cadastro'?'active':'' ?>">📝 Cadastro</a>
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="tab-btn <?= $active_tab=='andamento'?'active':'' ?>">📊 Andamento</a>
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias" class="tab-btn <?= $active_tab=='pendencias'?'active':'' ?>">⚠️ Pendências</a>
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=arquivos" class="tab-btn blue <?= $active_tab=='arquivos'?'active':'' ?>">📂 Arquivos</a>
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=financeiro" class="tab-btn <?= $active_tab=='financeiro'?'active':'' ?>" style="border-color:#28a745; color:#198754;">💰 Financeiro</a>
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=financeiro" class="tab-btn <?= $active_tab=='financeiro'?'active':'' ?>">💰 Financeiro</a>
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=arquivos" class="tab-btn <?= $active_tab=='arquivos'?'active':'' ?>">📂 Arquivos</a>
             </div>
 
             <?php if($active_tab == 'cadastro'): ?>
