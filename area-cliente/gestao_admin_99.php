@@ -160,7 +160,7 @@ if (isset($_POST['btn_salvar_financeiro'])) {
         ]);
         $sucesso = "Lançamento financeiro adicionado!";
     } catch(PDOException $e) { $erro = "Erro: " . $e->getMessage(); }
-    } catch(PDOException $e) { $erro = "Erro: " . $e->getMessage(); }
+
 }
 
 // 6.5 Salvar Dados Gerais Financeiro (Link da Pasta)
