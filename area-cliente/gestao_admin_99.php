@@ -288,7 +288,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             <h1 style="margin:0; font-size:1.3rem; font-weight:700;">Gestão Administrativa (Vilela Engenharia)</h1>
             <div style="font-size:0.8rem; opacity: 0.9; line-height:1.4;">
                 <strong>Eng. Diego Vilela</strong><br>
-                CREA-MG: (Inserir) &nbsp;|&nbsp; Email: vilela.eng.mg@gmail.com &nbsp;|&nbsp; Tel: (35) 98452-9577
+                CREA-MG: 235474/D &nbsp;|&nbsp; Email: vilela.eng.mg@gmail.com &nbsp;|&nbsp; Tel: (35) 98452-9577
             </div>
         </div>
     </div>
