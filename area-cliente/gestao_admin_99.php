@@ -586,12 +586,17 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             <a href="gestao_admin_99.php" class="btn-menu <?= (!isset($_GET['cliente_id']) && !isset($_GET['novo']) && !isset($_GET['importar'])) ? 'active' : '' ?>">
                 🏠 Página Inicial
             </a>
-            <a href="?novo=true" class="btn-menu <?= (isset($_GET['novo'])) ? 'active' : '' ?>">
-                ➕ Novo Cliente
-            </a>
-            <a href="?importar=true" class="btn-menu <?= (isset($_GET['importar'])) ? 'active' : '' ?>">
-                📥 Importar Cadastro
-            </a>
+            
+            <div style="margin: 10px 0; border-top: 1px solid #eee; padding-top: 10px;">
+                <label style="font-size: 0.75rem; text-transform: uppercase; color: #999; font-weight: bold; padding-left: 10px; margin-bottom: 5px; display: block;">Gestão</label>
+                <a href="?novo=true" class="btn-menu <?= (isset($_GET['novo'])) ? 'active' : '' ?>" style="color: var(--color-primary); background: rgba(20, 108, 67, 0.05); border: 1px solid rgba(20, 108, 67, 0.1);">
+                    ➕ Novo Cliente
+                </a>
+                <a href="?importar=true" class="btn-menu <?= (isset($_GET['importar'])) ? 'active' : '' ?>">
+                    📥 Importar Cadastro
+                </a>
+            </div>
+
             <?php if($cliente_ativo): ?>
                 <a href="?exportar_cliente=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-menu">
                     📄 Exportar Relatório
@@ -603,7 +608,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             <?php endif; ?>
         </nav>
 
-        <h4 style="margin: 10px 0; color: var(--color-text-subtle);">Meus Clientes</h4>
+        <h4 style="margin: 10px 0; color: var(--color-text-subtle); display:flex; align-items:center; gap:8px;">📂 Clientes</h4>
         <ul class="client-list" style="list-style:none; padding:0; max-height:500px; overflow-y:auto;">
             <?php foreach($clientes as $c): ?>
                 <li><a href="?cliente_id=<?= $c['id'] ?>" class="<?= ($cliente_ativo && $cliente_ativo['id'] == $c['id']) ? 'active' : '' ?>"><?= htmlspecialchars($c['nome']) ?></a></li>
