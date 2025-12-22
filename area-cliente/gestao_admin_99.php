@@ -931,17 +931,21 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
             <?php elseif($active_tab == 'pendencias'): ?>
                 <div class="form-card" style="border-left: 6px solid #ffc107;">
-                    <h3>⚠️ Quadro de Avisos Gerais</h3>
+                    <h3>Gestão de Pendências do Projeto</h3>
+                    <p style="color:#666; margin-bottom:15px;">Utilize os campos abaixo para comunicar pendências, seja via texto livre ou lista estruturada. Tudo será exibido no quadro do cliente.</p>
+
                     <form method="POST">
                         <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
                         <div class="form-group">
-                            <label>Texto Livre (Avisos Gerais)</label>
-                            <textarea name="texto_pendencias" id="editor_pendencias" rows="8" style="background:#fffbf2; border:1px solid #ffeeba;"><?= htmlspecialchars($detalhes['texto_pendencias']??'') ?></textarea>
+                            <label>Observações Gerais / Introdução (Texto Livre)</label>
+                            <textarea name="texto_pendencias" id="editor_pendencias" rows="4" style="background:#fffbf2; border:1px solid #ffeeba;"><?= htmlspecialchars($detalhes['texto_pendencias']??'') ?></textarea>
                         </div>
-                        <button type="submit" name="btn_salvar_pendencias" class="btn-save btn-warning" style="color:#000; margin-bottom:20px;">Salvar Avisos Gerais</button>
+                        <button type="submit" name="btn_salvar_pendencias" class="btn-save btn-warning" style="color:#000; margin-bottom:20px; width:auto;">Salvar Texto</button>
                     </form>
                     
-                    <h3>📋 Lista de Pendências Individuais</h3>
+                    <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+
+                    <label style="display:block; margin-bottom:10px; font-weight:bold;">Itens de Pendência (Checklist)</label>
 
                     <!-- Adicionar/Editar Pendência -->
                     <form method="POST" id="form-pendencia" style="margin-bottom:25px; padding-bottom:20px; border-bottom:1px solid #eee;">

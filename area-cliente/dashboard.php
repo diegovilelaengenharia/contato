@@ -347,7 +347,7 @@ if (!empty($detalhes['link_pasta_pagamentos'])) {
         <!-- VIEW 3: PENDÊNCIAS -->
         <div id="view-pendencias" class="view-section">
             <section class="card">
-                <h2 style="margin-top:0;">Quadro de Avisos e Pendências</h2>
+                <h2 style="margin-top:0;">Avisos e Pendências do Projeto</h2>
                 <?php 
                 if(!empty($detalhes['texto_pendencias'])): ?>
                     <div class="pendency-board" style="margin-bottom:20px;">
