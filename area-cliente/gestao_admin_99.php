@@ -549,8 +549,14 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             .btn-save.full-mobile { width: 100%; }
         }
         
-        .iframe-container { width:100%; height:600px; border:1px solid var(--color-border); border-radius:8px; display:none; margin-top:15px; }
         .iframe-container.visible { display:block; }
+        
+        .sidebar-menu { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--color-border); padding-bottom: 20px; }
+        .btn-menu { display: block; padding: 12px 15px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.95rem; color: var(--color-text); transition: 0.2s; border: 1px solid transparent; display:flex; align-items:center; gap:10px; }
+        .btn-menu:hover { background: var(--color-surface); border-color: var(--color-border); transform: translateX(5px); }
+        .btn-menu.active { background: var(--color-primary-light); color: var(--color-primary); }
+        .btn-menu-primary { background: var(--color-primary); color: white !important; }
+        .btn-menu-primary:hover { filter: brightness(1.1); }
     </style>
 </head>
 <body>
@@ -559,7 +565,9 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
     <div style="display: flex; align-items: center; gap: 15px;">
         <img src="../assets/logo.png" alt="Logo" style="height: 50px;">
         <div style="display:flex; flex-direction:column; gap:4px;">
-            <h1 style="margin:0; font-size:1.3rem; font-weight:700;">Gestão Administrativa (Vilela Engenharia)</h1>
+            <a href="gestao_admin_99.php" style="text-decoration:none; color:inherit;">
+                <h1 style="margin:0; font-size:1.3rem; font-weight:700;">Gestão Administrativa (Vilela Engenharia)</h1>
+            </a>
             <div style="font-size:0.8rem; opacity: 0.9; line-height:1.4;">
                 <strong>Eng. Diego Vilela</strong><br>
                 CREA-MG: 235474/D &nbsp;|&nbsp; Email: vilela.eng.mg@gmail.com &nbsp;|&nbsp; Tel: (35) 98452-9577
@@ -574,14 +582,26 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
 <div class="admin-container">
     <aside class="sidebar">
-        <a href="?novo=true" style="display:block; text-align:center; padding:12px; border-radius:6px; font-weight:bold; text-decoration:none; margin-bottom:20px;" class="btn-warning">+ Novo Cliente</a>
-        
-        <div style="margin-bottom:20px; display:grid; gap:10px;">
-            <a href="?importar=true" class="btn-save btn-info" style="display:block; text-align:center; padding:10px; margin:0; text-decoration:none; font-size:0.9rem;">📥 Importar Site</a>
+        <nav class="sidebar-menu">
+            <a href="gestao_admin_99.php" class="btn-menu <?= (!isset($_GET['cliente_id']) && !isset($_GET['novo']) && !isset($_GET['importar'])) ? 'active' : '' ?>">
+                🏠 Página Inicial
+            </a>
+            <a href="?novo=true" class="btn-menu <?= (isset($_GET['novo'])) ? 'active' : '' ?>">
+                ➕ Novo Cliente
+            </a>
+            <a href="?importar=true" class="btn-menu <?= (isset($_GET['importar'])) ? 'active' : '' ?>">
+                📥 Importar Cadastro
+            </a>
             <?php if($cliente_ativo): ?>
-                <a href="?exportar_cliente=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save btn-secondary" style="display:block; text-align:center; padding:10px; margin:0; text-decoration:none; font-size:0.9rem;">📄 Exportar PDF</a>
+                <a href="?exportar_cliente=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-menu">
+                    📄 Exportar Relatório
+                </a>
+            <?php else: ?>
+                <div class="btn-menu" style="opacity:0.5; cursor:not-allowed;" title="Selecione um cliente para exportar">
+                    📄 Exportar Relatório
+                </div>
             <?php endif; ?>
-        </div>
+        </nav>
 
         <h4 style="margin: 10px 0; color: var(--color-text-subtle);">Meus Clientes</h4>
         <ul class="client-list" style="list-style:none; padding:0; max-height:500px; overflow-y:auto;">
