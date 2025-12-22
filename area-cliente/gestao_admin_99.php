@@ -1,4 +1,5 @@
 <?php
+ob_start();
 session_start();
 require 'db.php';
 
@@ -956,14 +957,17 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             <!-- Fix CKEditor Layout & Logic -->
                             <style>
                                 :root { --ck-z-default: 10050; --ck-z-modal: 10050; }
-                                /* Ensure toolbar is above everything else in modal */
-                                .ck-editor__top { z-index: 10060 !important; position: relative; }
+                                /* Ensure toolbar is above everything else in modal and sticky */
+                                .ck-editor__top { 
+                                    z-index: 10060 !important; 
+                                    position: sticky !important; 
+                                    top: 0; 
+                                }
                                 .ck.ck-editor__main > .ck-editor__editable {
                                     max-height: 300px; 
                                     overflow-y: auto;
-                                    background: white !important; /* Ensure background is white */
+                                    background: white !important; 
                                 }
-                                /* CRITICAL: Force hide original textarea when CKEditor is loaded. CKEditor adds .ck-hidden usually. */
                                 textarea.ck-hidden { display: none !important; }
                             </style>
 
