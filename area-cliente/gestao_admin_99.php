@@ -460,6 +460,12 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel de Gestão | Vilela Engenharia</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- SweetAlert2 + Toastify -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
     <link rel="stylesheet" href="../style.css">
     <link rel="icon" href="../assets/logo.png" type="image/png">
     <style>
@@ -607,8 +613,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
     </aside>
 
     <main>
-        <?php if(isset($sucesso)): ?><div style="background:#d1e7dd; color:#0f5132; padding:15px; margin-bottom:20px; border-radius:8px;"><?= $sucesso ?></div><?php endif; ?>
-        <?php if(isset($erro)): ?><div style="background:#f8d7da; color:#842029; padding:15px; margin-bottom:20px; border-radius:8px;"><?= $erro ?></div><?php endif; ?>
+        <!-- Mensagens PHP serão capturadas pelo JS abaixo -->
 
         <?php if(isset($_GET['importar'])): ?>
             <div class="form-card">
@@ -665,8 +670,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     <a href="?exportar_cliente=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save btn-secondary" style="text-decoration:none; margin-top:10px; margin-right:10px;">
                        📄 Resumo do Processo
                     </a>
-                    <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" onclick="return confirm('ATENÇÃO EXTREMA!\n\nVocê tem certeza absoluta que deseja EXCLUIR este cliente?\n\nEssa ação apagará todo o histórico e dados permanentemente.')" 
-                       class="btn-save btn-danger" style="text-decoration:none; margin-top:10px;">
+                    <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" class="btn-save btn-danger btn-delete-confirm" data-confirm-text="Você tem certeza absoluta que deseja EXCLUIR este cliente? Essa ação apagará todo o histórico e dados permanentemente." style="text-decoration:none; margin-top:10px;">
                        🗑️ Excluir Cliente
                     </a>
                 </div>
@@ -1129,6 +1133,70 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
         <?php endif; ?>
     </main>
 </div>
+
+<script>
+    // 1. Loading nos Botões
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', function() {
+            const btn = this.querySelector('button[type="submit"]');
+            if(btn) {
+                const originalText = btn.innerText;
+                btn.innerHTML = '⏳ Salvando...';
+                btn.style.opacity = '0.7';
+                btn.style.cursor = 'wait';
+                // Prevents double click logic is handled effectively by the form submission navigation, but disabling helps visual feedback
+                // btn.disabled = true; // Caution: disabling sometimes prevents value submission in some browsers if not careful, but usually ok.
+            }
+        });
+    });
+
+    // 2. SweetAlert nos deletes
+    document.querySelectorAll('.btn-delete-confirm').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const href = this.getAttribute('href');
+            const text = this.getAttribute('data-confirm-text') || 'Tem certeza?';
+            
+            Swal.fire({
+                title: 'Atenção!',
+                text: text,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Sim, excluir!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = href;
+                }
+            });
+        });
+    });
+
+    // 3. Toasts para Mensagens PHP
+    <?php if(isset($sucesso)): ?>
+        Toastify({
+            text: "<?= addslashes($sucesso) ?>",
+            duration: 4000,
+            gravity: "top", // `top` or `bottom`
+            position: "right", // `left`, `center` or `right`
+            style: { background: "linear-gradient(to right, #00b09b, #96c93d)" }
+        }).showToast();
+        // Toca som sutil (opcional, removido por ser intrusivo as vezes)
+    <?php endif; ?>
+
+    <?php if(isset($erro)): ?>
+        Toastify({
+            text: "<?= addslashes($erro) ?>",
+            duration: 5000,
+            gravity: "top", 
+            position: "right", 
+            style: { background: "linear-gradient(to right, #ff5f6d, #ffc371)" }
+        }).showToast();
+    <?php endif; ?>
+</script>
+
 </body>
 <!-- Welcome Popup -->
 <?php if($show_welcome_popup): ?>
