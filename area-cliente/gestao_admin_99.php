@@ -953,7 +953,16 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             <button type="button" onclick="closePendenciaModal()" style="border:none; background:none; font-size:1.5rem; cursor:pointer;">&times;</button>
                         </div>
                         <div style="padding:20px;">
-                            <form method="POST">
+                            <!-- Fix CKEditor Toolbar Z-Index Issue in Modal -->
+                            <style>
+                                :root { --ck-z-default: 10050; --ck-z-modal: 10050; }
+                                .ck.ck-editor__top { z-index: 10050 !important; position: sticky; top: 0; }
+                                .ck-rounded-corners .ck.ck-editor__main > .ck-editor__editable, .ck.ck-editor__main > .ck-editor__editable.ck-rounded-corners {
+                                    max-height: 300px; overflow-y: auto;
+                                }
+                            </style>
+
+                            <form method="POST" onsubmit="this.querySelector('button[type=submit]').disabled = true; this.querySelector('button[type=submit]').innerText = 'Enviando...';">
                                 <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
                                 <input type="hidden" name="pendencia_id" id="pendencia_id_input">
                                 
