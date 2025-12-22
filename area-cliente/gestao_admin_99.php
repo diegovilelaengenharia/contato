@@ -211,6 +211,26 @@ if (isset($_GET['del_fin'])) {
     $pdo->prepare("DELETE FROM processo_financeiro WHERE id=? AND cliente_id=?")->execute([$fid, $cid]);
     header("Location: ?cliente_id=$cid&tab=financeiro");
     exit;
+    exit;
+}
+
+// 7.5 Alternar Status Financeiro
+if (isset($_GET['toggle_status'])) {
+    $fid = $_GET['toggle_status'];
+    $cid = $_GET['cliente_id'];
+    
+    // Ciclo: pendente -> pago -> atrasado -> isento -> pendente
+    $atual = $pdo->query("SELECT status FROM processo_financeiro WHERE id=$fid")->fetchColumn();
+    $novo = 'pendente';
+    if($atual == 'pendente') $novo = 'pago';
+    elseif($atual == 'pago') $novo = 'atrasado';
+    elseif($atual == 'atrasado') $novo = 'isento';
+    elseif($atual == 'isento') $novo = 'pendente';
+    
+    $pdo->prepare("UPDATE processo_financeiro SET status=? WHERE id=?")->execute([$novo, $fid]);
+    
+    header("Location: ?cliente_id=$cid&tab=financeiro");
+    exit;
 }
 
 // Delete
@@ -342,11 +362,15 @@ if (isset($_GET['exportar_cliente'])) {
         <div class="two-col" style="margin-top: 20px;">
             <div>
                 <h2>3. Dados do Imóvel/Obra</h2>
-                <div class="data-row"><span class="data-label">Endereço Obra:</span> <span class="data-value"><?= $d['endereco_imovel']??'--' ?></span></div>
+                <div class="data-row"><span class="data-label">Logradouro:</span> <span class="data-value"><?= $d['imovel_rua']??'--' ?></span></div>
+                <div class="data-row"><span class="data-label">Número:</span> <span class="data-value"><?= $d['imovel_numero']??'--' ?></span></div>
+                <div class="data-row"><span class="data-label">Bairro:</span> <span class="data-value"><?= $d['imovel_bairro']??'--' ?></span></div>
+                <div class="data-row"><span class="data-label">Complemento:</span> <span class="data-value"><?= $d['imovel_complemento']??'--' ?></span></div>
+                <div class="data-row"><span class="data-label">Cidade/UF:</span> <span class="data-value"><?= ($d['imovel_cidade']??'--') . '/' . ($d['imovel_uf']??'') ?></span></div>
                 <div class="data-row"><span class="data-label">Matrícula:</span> <span class="data-value"><?= $d['num_matricula']??'--' ?></span></div>
                 <div class="data-row"><span class="data-label">Insc. Imob.:</span> <span class="data-value"><?= $d['inscricao_imob']??'--' ?></span></div>
-                <div class="data-row"><span class="data-label">Área Terreno:</span> <span class="data-value"><?= $d['area_terreno']??'--' ?></span></div>
-                <div class="data-row"><span class="data-label">Área Construída:</span> <span class="data-value"><?= $d['area_construida']??'--' ?></span></div>
+                <div class="data-row"><span class="data-label">Área Lote:</span> <span class="data-value"><?= $d['imovel_area_lote']??'--' ?></span></div>
+                <div class="data-row"><span class="data-label">Área Const.:</span> <span class="data-value"><?= $d['area_construida']??'--' ?></span></div>
             </div>
             <div>
                 <h2>4. Responsabilidade Técnica</h2>
@@ -1005,6 +1029,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                     case 'pago': $st_color='#198754'; $st_icon='✅ Pago'; break;
                                     case 'pendente': $st_color='#ffc107'; $st_icon='⏳ Pendente'; break;
                                     case 'atrasado': $st_color='#dc3545'; $st_icon='❌ Atrasado'; break;
+                                    case 'isento': $st_color='#6c757d'; $st_icon='⚪ Isento'; break;
                                     default: $st_icon=$r['status'];
                                 }
                                 $valor = number_format($r['valor'], 2, ',', '.');
@@ -1015,7 +1040,9 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                         <td style='padding:12px;'>{$r['descricao']}</td>
                                         <td style='padding:12px; font-weight:bold;'>R$ {$valor}</td>
                                         <td style='padding:12px;'>{$data}</td>
-                                        <td style='padding:12px; text-align:center; color:{$st_color}; font-weight:bold;'>{$st_icon}</td>
+                                        <td style='padding:12px; text-align:center;'>
+                                            <a href='?cliente_id={$cid}&tab=financeiro&toggle_status={$r['id']}' style='text-decoration:none; color:{$st_color}; font-weight:bold; border:1px solid {$st_color}; padding:4px 8px; border-radius:12px; font-size:0.85rem;' title='Clique para alternar status'>{$st_icon} 🔄</a>
+                                        </td>
                                         <td style='padding:12px; text-align:center;'>{$link}</td>
                                         <td style='padding:12px; text-align:right;'>
                                             <a href='?cliente_id={$cid}&tab=financeiro&del_fin={$r['id']}' onclick='return confirm(\"Tem certeza que deseja EXCLUIR este lançamento financeiro?\")' style='color:#dc3545; text-decoration:none; font-size:1.1rem;'>🗑️</a>

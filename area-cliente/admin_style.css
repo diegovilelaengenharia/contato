@@ -105,11 +105,11 @@ body {
 }
 
 .tab-btn {
-    padding: 12px 20px;
-    background: transparent;
-    border: none;
-    border-bottom: 3px solid transparent;
-    border-radius: 0;
+    padding: 10px 20px;
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: 50px;
+    /* Pill shape */
     cursor: pointer;
     font-weight: 600;
     color: var(--color-text-subtle);
@@ -119,45 +119,54 @@ body {
     align-items: center;
     gap: 8px;
     white-space: nowrap;
-    font-size: 0.95rem;
-    opacity: 0.7;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+    opacity: 1;
+    /* Reset opacity */
 }
 
 .tab-btn:hover {
-    background: rgba(0, 0, 0, 0.02);
-    color: var(--color-primary);
-    opacity: 1;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
 }
 
 .tab-btn.active {
-    opacity: 1;
     font-weight: 700;
-    background: white;
-    box-shadow: 0 -2px 0 0 inset;
-    /* inset border effect */
+    color: white !important;
+    /* Force white text for active pills */
+    border-color: transparent;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    background: var(--color-primary);
+    /* Default fallback */
 }
 
 /* Custom Tab Colors */
+/* Custom Tab Colors */
 /* Cadastro (Default Blue) */
-.tab-btn[href*="tab=cadastro"] {
-    color: #0d6efd;
-    border-bottom-color: transparent;
-}
-
 .tab-btn[href*="tab=cadastro"]:hover {
-    background: #e7f1ff;
+    color: #0d6efd;
+    border-color: #0d6efd;
+    background: #fff;
 }
 
 .tab-btn[href*="tab=cadastro"].active {
-    color: #0d6efd;
-    border-bottom-color: #0d6efd;
-    background: #e7f1ff;
+    background: #0d6efd;
+    border-color: #0d6efd;
+    color: white;
 }
 
 /* Linha do Tempo (Teal/Cyan) */
-.tab-btn[href*="tab=andamento"] {
+.tab-btn[href*="tab=andamento"]:hover {
     color: #0dcaf0;
-    border-bottom-color: transparent;
+    border-color: #0dcaf0;
+    background: #fff;
+}
+
+.tab-btn[href*="tab=andamento"].active {
+    background: #0dcaf0;
+    border-color: #0dcaf0;
+    color: white;
+}
 }
 
 .tab-btn[href*="tab=andamento"]:hover {

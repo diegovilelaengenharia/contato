@@ -326,7 +326,7 @@ if (!empty($detalhes['link_pasta_pagamentos'])) {
                 <h2 style="margin-top:0;">Quadro de Avisos e Pendências</h2>
                 <?php if(!empty($detalhes['texto_pendencias'])): ?>
                     <div class="pendency-board">
-                        <div class="pendency-text"><?= nl2br(htmlspecialchars($detalhes['texto_pendencias'])) ?></div>
+                        <div class="pendency-text"><?= nl2br($detalhes['texto_pendencias']) ?></div>
                     </div>
                 <?php else: ?>
                     <div style="padding:40px; text-align:center; color:var(--color-text-subtle); background:rgba(0,0,0,0.02); border-radius:12px;">
