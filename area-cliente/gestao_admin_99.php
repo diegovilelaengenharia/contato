@@ -214,7 +214,7 @@ if (isset($_POST['btn_salvar_financeiro'])) {
 // 6.6 Nova Lógica de Pendências (Lista Individual)
 // Adicionar ou Editar
 // 8. Pendências - Emitir (Do Quadro para a Lista) e Editar
-if (isset($_POST['btn_emitir_pendencia'])) {
+if (isset($_POST['action_emitir_pendencia'])) {
     $cid = $_POST['cliente_id'];
     $texto = trim($_POST['texto_pendencias']);
     $pid = $_POST['pendencia_id'] ?? '';
@@ -953,22 +953,28 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             <button type="button" onclick="closePendenciaModal()" style="border:none; background:none; font-size:1.5rem; cursor:pointer;">&times;</button>
                         </div>
                         <div style="padding:20px;">
-                            <!-- Fix CKEditor Toolbar Z-Index Issue in Modal -->
+                            <!-- Fix CKEditor Layout & Logic -->
                             <style>
                                 :root { --ck-z-default: 10050; --ck-z-modal: 10050; }
-                                .ck.ck-editor__top { z-index: 10050 !important; position: sticky; top: 0; }
-                                .ck-rounded-corners .ck.ck-editor__main > .ck-editor__editable, .ck.ck-editor__main > .ck-editor__editable.ck-rounded-corners {
-                                    max-height: 300px; overflow-y: auto;
+                                /* Ensure toolbar is above everything else in modal */
+                                .ck-editor__top { z-index: 10060 !important; position: relative; }
+                                .ck.ck-editor__main > .ck-editor__editable {
+                                    max-height: 300px; 
+                                    overflow-y: auto;
+                                    background: white !important; /* Ensure background is white */
                                 }
+                                /* CRITICAL: Force hide original textarea when CKEditor is loaded. CKEditor adds .ck-hidden usually. */
+                                textarea.ck-hidden { display: none !important; }
                             </style>
 
                             <form method="POST" onsubmit="this.querySelector('button[type=submit]').disabled = true; this.querySelector('button[type=submit]').innerText = 'Enviando...';">
                                 <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
                                 <input type="hidden" name="pendencia_id" id="pendencia_id_input">
+                                <input type="hidden" name="action_emitir_pendencia" value="1">
                                 
-                                <div class="form-group">
-                                    <label>Descrição do Comunicado (Texto Rico)</label>
-                                    <textarea name="texto_pendencias" id="editor_pendencias" rows="6" style="background:#fffbf2; border:1px solid #ffeeba; width:100%;"><?= htmlspecialchars($detalhes['texto_pendencias']??'') ?></textarea>
+                                <div class="form-group" style="position:relative;">
+                                    <label style="display:block; margin-bottom:5px; font-weight:bold;">Descrição do Comunicado (Texto Rico)</label>
+                                    <textarea name="texto_pendencias" id="editor_pendencias" rows="6" style="width:100%;"><?= htmlspecialchars($detalhes['texto_pendencias']??'') ?></textarea>
                                 </div>
                                 
                                 <div style="display:flex; gap:10px; align-items:center; justify-content:flex-end; margin-top:20px;">
