@@ -1,4 +1,14 @@
 :root {
+    box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+:root {
     --color-bg: #f0f8f5;
     --color-surface: #ffffff;
     --color-text: #2f3e36;

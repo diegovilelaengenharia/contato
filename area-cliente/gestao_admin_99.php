@@ -588,12 +588,21 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
-    <link rel="stylesheet" href="../style.css">
-    <link rel="stylesheet" href="admin_style.css?v=mobile_v2">
+    <!-- <link rel="stylesheet" href="../style.css"> (REMOVIDO) -->
+    <link rel="stylesheet" href="admin_style.css?v=stable_fix_<?= time() ?>">
     <link rel="icon" href="../assets/logo.png" type="image/png">
     <!-- CKEditor 5 -->
     <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
     <style>
+        /* CRITICAL RESET */
+        body { 
+            display: block !important; 
+            margin: 0 !important; 
+            padding: 0 !important; 
+            background: #f0f8f5 !important;
+            overflow-x: hidden !important;
+        }
+        * { box-sizing: border-box; }
         .ck-editor__editable { min-height: 200px; }
     </style>
 </head>
