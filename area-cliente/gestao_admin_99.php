@@ -669,21 +669,21 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
     </button>
     <aside class="sidebar" id="mobileSidebar">
         <nav class="sidebar-menu">
-            <h4 style="font-size:0.75rem; text-transform:uppercase; color:#adb5bd; font-weight:700; margin:10px 0 8px 10px;">Principal</h4>
+            <h4 style="font-size:0.75rem; text-transform:uppercase; color:#adb5bd; font-weight:700; margin:10px 0 5px 10px;">Principal</h4>
             <a href="gestao_admin_99.php" class="btn-menu <?= (!isset($_GET['cliente_id']) && !isset($_GET['novo']) && !isset($_GET['importar'])) ? 'active' : '' ?>">
                 <span class="material-symbols-rounded">dashboard</span>
                 Visão Geral
             </a>
             
-            <button onclick="document.getElementById('modalNotificacoes').showModal()" class="btn-menu" style="text-align: left; cursor: pointer; font-family: inherit;">
+            <button onclick="document.getElementById('modalNotificacoes').showModal()" class="btn-menu" style="cursor:pointer; text-align:left; width:100%; font-family:inherit; font-size:inherit;">
                 <span class="material-symbols-rounded">notifications</span>
                 Central de Avisos
                 <?php if($kpi_pre_pendentes > 0): ?>
-                    <span style="background:#dc3545; color:white; padding:2px 6px; border-radius:10px; font-size:0.7rem; margin-left:auto; line-height:1; font-weight:bold;"><?= $kpi_pre_pendentes ?></span>
+                    <span style="background:#dc3545; color:white; padding:1px 6px; border-radius:10px; font-size:0.7rem; margin-left:auto; line-height:1.2;"><?= $kpi_pre_pendentes ?></span>
                 <?php endif; ?>
             </button>
             
-            <h4 style="font-size:0.75rem; text-transform:uppercase; color:#adb5bd; font-weight:700; margin:20px 0 8px 10px;">Gestão</h4>
+            <h4 style="font-size:0.75rem; text-transform:uppercase; color:#adb5bd; font-weight:700; margin:15px 0 5px 10px;">Gestão</h4>
             <a href="?novo=true" class="btn-menu <?= (isset($_GET['novo'])) ? 'active' : '' ?>">
                 <span class="material-symbols-rounded">person_add</span>
                 Novo Cliente
@@ -694,9 +694,9 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             </a>
             <a href="?importar=true" class="btn-menu <?= (isset($_GET['importar'])) ? 'active' : '' ?>">
                 <span class="material-symbols-rounded">move_to_inbox</span>
-                Solicitações Web
+                Solicitações
                 <?php if(isset($kpi_pre_pendentes) && $kpi_pre_pendentes > 0): ?>
-                    <span style="background:#dc3545; color:white; padding:2px 6px; border-radius:10px; font-size:0.7rem; margin-left:auto; line-height:1; font-weight:bold;"><?= $kpi_pre_pendentes ?></span>
+                    <span class="badge-count"><?= $kpi_pre_pendentes ?></span>
                 <?php endif; ?>
             </a>
         </nav>

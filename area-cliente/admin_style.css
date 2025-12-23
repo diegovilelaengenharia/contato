@@ -597,11 +597,10 @@ body {
     display: block;
 }
 
-/* Sidebar Menu & Buttons */
 .sidebar-menu {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
     margin-bottom: 20px;
     border-bottom: 1px solid var(--color-border);
     padding-bottom: 20px;
@@ -609,33 +608,25 @@ body {
 
 .btn-menu {
     justify-content: flex-start;
+    /* Sidebar align left */
     width: 100%;
     margin-bottom: 4px;
     background: transparent;
     color: var(--color-text);
     border: 1px solid transparent;
     box-shadow: none;
-    position: relative;
-    overflow: hidden;
-    padding: 12px 16px; /* Aumentado para melhor toque */
-    font-size: 0.95rem;
-    border-radius: 8px;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Icon Styling */
+/* Default Icon Color */
 .btn-menu .material-symbols-rounded {
     color: #a0a0a0;
-    font-size: 1.3rem; /* Ícones levemente maiores */
-    transition: color 0.2s;
+    transition: 0.3s;
 }
 
-/* Hover State */
 .btn-menu:hover {
     background: #ffffff;
     color: var(--color-primary);
-    border-color: rgba(20, 108, 67, 0.1);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
     transform: translateX(4px);
 }
 
@@ -645,28 +636,29 @@ body {
 
 /* Active State */
 .btn-menu.active {
-    background: var(--color-primary); /* Fundo verde sólido */
-    color: white !important;
-    font-weight: 600;
-    box-shadow: 0 4px 10px rgba(20, 108, 67, 0.25);
-    border-color: transparent;
+    background: linear-gradient(135deg, var(--color-primary-light), white);
+    color: var(--color-primary-hover);
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(20, 108, 67, 0.1);
+    border-left: 4px solid var(--color-primary);
 }
 
 .btn-menu.active .material-symbols-rounded {
-    color: white !important;
+    color: var(--color-primary);
 }
 
 /* Click Effect */
 .btn-menu:active {
-    transform: scale(0.98);
+    transform: scale(0.97);
+    background: var(--color-border);
 }
 
-/* "Novo Cliente" Special Styling */
+/* Novo Cliente Highlight (Yellow) */
 .btn-menu[href*="?novo=true"] {
-    background: linear-gradient(135deg, #ffc107, #ffdb72);
     color: #333 !important;
-    border: 1px solid rgba(0,0,0,0.05);
-    box-shadow: 0 2px 6px rgba(255, 193, 7, 0.2);
+    background: linear-gradient(135deg, #ffc107, #ffdb72);
+    box-shadow: 0 4px 10px rgba(255, 193, 7, 0.3);
+    border: 1px solid #e0a800;
 }
 
 .btn-menu[href*="?novo=true"] .material-symbols-rounded {
@@ -676,7 +668,22 @@ body {
 .btn-menu[href*="?novo=true"]:hover {
     filter: brightness(1.05);
     transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(255, 193, 7, 0.35);
+    box-shadow: 0 6px 15px rgba(255, 193, 7, 0.4);
+}
+
+.btn-menu[href*="?novo=true"]:active {
+    transform: scale(0.95);
+}
+
+.btn-menu:hover {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+    transform: translateX(5px);
+}
+
+.btn-menu.active {
+    background: var(--color-primary-light);
+    color: var(--color-primary);
 }
 
 .btn-menu-primary {
