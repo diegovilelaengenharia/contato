@@ -91,7 +91,38 @@ if (isset($_POST['atualizar_etapa'])) {
         $sql = "INSERT INTO processo_movimentos (cliente_id, titulo_fase, data_movimento, descricao, status_tipo) VALUES (?, ?, NOW(), ?, 'conclusao')";
         $pdo->prepare($sql)->execute([$cid, $titulo, $desc]);
 
-        $sucesso = "Fase atualizada e histórico registrado!";
+        // --- AUTOMAÇÃO WHATSAPP ---
+        try {
+            $stmtC = $pdo->prepare("SELECT nome, contato_tel FROM processo_detalhes WHERE cliente_id = ?");
+            $stmtC->execute([$cid]);
+            $client_data = $stmtC->fetch();
+            
+            if ($client_data && !empty($client_data['contato_tel'])) {
+                $raw_phone = preg_replace('/[^0-9]/', '', $client_data['contato_tel']);
+                if (strlen($raw_phone) >= 10) { // Valid phone check
+                     // Format message
+                     $first_name = explode(' ', trim($client_data['nome'] ?? 'Cliente'))[0];
+                     $msg = "Olá {$first_name}, tudo bem? 👋\n\n📢 Atualização do seu processo: *{$nova_etapa}*.\n\nAcesse seu painel para ver mais detalhes: https://vilelaengenharia.com/area-cliente/";
+                     
+                     if (trim($obs_etapa) !== '') {
+                        $msg .= "\n\nobs: {$obs_etapa}";
+                     }
+
+                     $wpp_link = "https://wa.me/55{$raw_phone}?text=" . urlencode($msg);
+                     $sucesso = "Fase atualizada! Preparando notificação...";
+                     
+                     // Injeta script para abrir modal
+                     $trigger_wpp = true;
+                } else {
+                    $sucesso = "Fase atualizada! (Telefone inválido para whats)";
+                }
+            } else {
+                 $sucesso = "Fase atualizada! (Sem telefone cadastrado)";
+            }
+        } catch (Exception $e) { 
+            $sucesso = "Fase atualizada, mas erro ao gerar link whats.";
+        }
+
     } catch(PDOException $e) {
         $erro = "Erro: " . $e->getMessage();
     }
@@ -164,9 +195,23 @@ if (isset($_POST['novo_cliente'])) {
         $nome_final = sprintf("Cliente %03d - %s", $nid, $nome_original);
         $pdo->prepare("UPDATE clientes SET nome = ? WHERE id = ?")->execute([$nome_final, $nid]);
         
-        $pdo->prepare("INSERT INTO processo_detalhes (cliente_id) VALUES (?)")->execute([$nid]);
+        $pdo->prepare("INSERT INTO processo_detalhes (
+            cliente_id, 
+            cpf_cnpj, 
+            contato_tel, 
+            rg_ie, 
+            endereco_residencial, 
+            endereco_imovel
+        ) VALUES (?, ?, ?, ?, ?, ?)")->execute([
+            $nid, 
+            $_POST['cpf_cnpj'], 
+            $_POST['telefone'], 
+            $_POST['rg'], 
+            $_POST['endereco_residencial'], 
+            $_POST['endereco_imovel']
+        ]);
         $sucesso = "Cliente criado com sucesso: $nome_final";
-    } catch (PDOException $e) { $erro = "Erro ao criar cliente."; }
+    } catch (PDOException $e) { $erro = "Erro ao criar cliente: " . $e->getMessage(); }
 }
 
 // 5.5 Atualizar Acesso (Nome/Login/Senha)
@@ -582,18 +627,15 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel de Gestão | Vilela Engenharia</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
     
     <!-- SweetAlert2 + Toastify -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-
-    <!-- <link rel="stylesheet" href="../style.css"> (DEFINITELY REMOVED) -->
-    <link rel="stylesheet" href="dashboard_clean.css?v=nuclear_<?= time() ?>">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="admin_style.css?v=yesterday_restored_<?= time() ?>">
     <link rel="icon" href="../assets/logo.png" type="image/png">
     <!-- CKEditor 5 -->
     <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
@@ -608,37 +650,55 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
         <img src="../assets/logo.png" alt="Logo" style="height: 50px;">
         <div style="display:flex; flex-direction:column; gap:4px;">
             <a href="gestao_admin_99.php" style="text-decoration:none; color:inherit;">
-                <h1 style="margin:0; font-size:1.3rem; font-weight:700;">Gestão Administrativa (Vilela Engenharia)</h1>
+                <h1 style="margin:0; font-size:1.4rem; font-weight:700;">Gestão Administrativa</h1>
             </a>
-            <div style="font-size:0.8rem; opacity: 0.9; line-height:1.4;">
-                <strong>Eng. Diego Vilela</strong><br>
-                CREA-MG: 235474/D &nbsp;|&nbsp; Email: vilela.eng.mg@gmail.com &nbsp;|&nbsp; Tel: (35) 98452-9577
+            <div style="font-size:0.85rem; opacity: 1; line-height:1.4; font-weight: 500;">
+                Eng. Diego Vilela &nbsp;|&nbsp; CREA-MG: 235474/D<br>
+                vilela.eng.mg@gmail.com &nbsp;|&nbsp; (35) 98452-9577
             </div>
         </div>
     </div>
     <div style="display:flex; align-items:center;">
-        <button onclick="document.body.classList.toggle('dark-mode')" style="background:transparent; border:1px solid white; color:white; padding:5px 10px; border-radius:20px; cursor:pointer; margin-right:15px;">🌓 Tema</button>
         <a href="?sair=true" style="color: white;">Sair</a>
     </div>
 </header>
 
 <div class="admin-container">
-    <!-- Mobile Toggle Removed (Fixed Desktop Layout) -->
+    <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+        ☰ Menu de Navegação
+    </button>
     <aside class="sidebar" id="mobileSidebar">
         <nav class="sidebar-menu">
+            <h4 style="font-size:0.75rem; text-transform:uppercase; color:#adb5bd; font-weight:700; margin:10px 0 5px 10px;">Principal</h4>
             <a href="gestao_admin_99.php" class="btn-menu <?= (!isset($_GET['cliente_id']) && !isset($_GET['novo']) && !isset($_GET['importar'])) ? 'active' : '' ?>">
-                🏠 Página Inicial
+                <span class="material-symbols-rounded">dashboard</span>
+                Visão Geral
             </a>
             
-            <div style="margin: 10px 0; border-top: 1px solid #eee; padding-top: 10px;">
-                <label style="font-size: 0.75rem; text-transform: uppercase; color: #999; font-weight: bold; padding-left: 10px; margin-bottom: 5px; display: block;">Gestão</label>
-                <a href="?novo=true" class="btn-menu <?= (isset($_GET['novo'])) ? 'active' : '' ?>" style="color: var(--color-primary); background: rgba(20, 108, 67, 0.05); border: 1px solid rgba(20, 108, 67, 0.1);">
-                    ➕ Novo Cliente
-                </a>
-                <a href="?importar=true" class="btn-menu <?= (isset($_GET['importar'])) ? 'active' : '' ?>">
-                    📥 Importar Cadastro
-                </a>
-            </div>
+            <button onclick="document.getElementById('modalNotificacoes').showModal()" class="btn-menu" style="cursor:pointer; text-align:left; width:100%; font-family:inherit; font-size:inherit;">
+                <span class="material-symbols-rounded">notifications</span>
+                Central de Avisos
+                <?php if($kpi_pre_pendentes > 0): ?>
+                    <span style="background:#dc3545; color:white; padding:1px 6px; border-radius:10px; font-size:0.7rem; margin-left:auto; line-height:1.2;"><?= $kpi_pre_pendentes ?></span>
+                <?php endif; ?>
+            </button>
+            
+            <h4 style="font-size:0.75rem; text-transform:uppercase; color:#adb5bd; font-weight:700; margin:15px 0 5px 10px;">Gestão</h4>
+            <a href="?novo=true" class="btn-menu <?= (isset($_GET['novo'])) ? 'active' : '' ?>">
+                <span class="material-symbols-rounded">person_add</span>
+                Novo Cliente
+            </a>
+            <a href="../cadastro.php" target="_blank" class="btn-menu">
+                <span class="material-symbols-rounded">public</span>
+                Pré-Cadastro ↗
+            </a>
+            <a href="?importar=true" class="btn-menu <?= (isset($_GET['importar'])) ? 'active' : '' ?>">
+                <span class="material-symbols-rounded">move_to_inbox</span>
+                Solicitações
+                <?php if(isset($kpi_pre_pendentes) && $kpi_pre_pendentes > 0): ?>
+                    <span class="badge-count"><?= $kpi_pre_pendentes ?></span>
+                <?php endif; ?>
+            </a>
         </nav>
 
         <h4 style="margin: 10px 0; color: var(--color-text-subtle); display:flex; align-items:center; gap:8px;">📂 Clientes</h4>
@@ -687,11 +747,18 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 <h2>Cadastrar Novo Cliente</h2>
                 <form method="POST">
                     <div class="form-grid">
-                        <div class="form-group"><label>Nome</label><input type="text" name="nome" required></div>
-                        <div class="form-group"><label>Login</label><input type="text" name="usuario" required></div>
-                        <div class="form-group"><label>Senha</label><input type="text" name="senha" required></div>
+                        <div class="form-group"><label>Nome Completo</label><input type="text" name="nome" required></div>
+                        <div class="form-group"><label>CPF / CNPJ</label><input type="text" name="cpf_cnpj"></div>
+                        <div class="form-group"><label>Telefone</label><input type="text" name="telefone"></div>
+                        
+                        <div class="form-group"><label>Login (Usuário)</label><input type="text" name="usuario" required></div>
+                        <div class="form-group"><label>Senha Acesso</label><input type="text" name="senha" required></div>
+                        
+                        <div class="form-group"><label>RG / IE</label><input type="text" name="rg"></div>
+                        <div class="form-group"><label>Endereço Residencial</label><input type="text" name="endereco_residencial"></div>
+                        <div class="form-group"><label>Endereço do Imóvel (Obra)</label><input type="text" name="endereco_imovel"></div>
                     </div>
-                    <button type="submit" name="novo_cliente" class="btn-save">Cadastrar</button>
+                    <button type="submit" name="novo_cliente" class="btn-save">Cadastrar Cliente Completo</button>
                 </form>
             </div>
 
@@ -774,9 +841,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         O usuário quer algo Clean. Vamos fazer com que o botão SALVAR GERAL submeta TUDO.
                         Para isso, preciso mudar o PHP lá em cima para aceitar um único POST ou unificar os forms.
                         Como não quero refatorar todo o PHP agora, vou colocar um botão de salvar acesso discreto dentro desta seção apenas se houver edição. -->
-                        <div id="btn_save_access_container" style="display:none; text-align:right; margin-top:10px;">
-                            <button type="submit" name="btn_salvar_acesso" class="btn-save btn-warning" style="width:auto; padding: 5px 15px; font-size: 0.9rem;">💾 Confirmar Alteração de Acesso</button>
-                        </div>
+                        <!-- Botão de acesso específico removido conforme solicitação -->
                     </div>
 
                     <!-- Seção 2: Cliente -->
@@ -875,7 +940,6 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         if (btnSalvar.style.display === 'none') {
                             // Enable Edit Mode
                             btnSalvar.style.display = 'block';
-                            if(btnAccess) btnAccess.style.display = 'block';
                             
                             btnUnlock.innerText = '🔒 Bloquear e Cancelar Edição';
                             btnUnlock.style.background = '#dc3545';
@@ -883,7 +947,6 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         } else {
                             // Disable Edit Mode
                             btnSalvar.style.display = 'none';
-                            if(btnAccess) btnAccess.style.display = 'none';
                             
                             btnUnlock.innerText = '✏️ Editar Cadastro';
                             btnUnlock.style.background = 'var(--color-primary)';
@@ -1254,10 +1317,72 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
         <?php else: ?>
             
             <!-- DASHBOARD GERAL (Visão do Gestor) -->
-            <div style="margin-bottom:30px;">
-                <h2 style="color:var(--color-primary); margin-bottom:10px;">Visão Geral do Escritório</h2>
-                <p style="color:var(--color-text-subtle);">Resumo de atividades e indicadores de performance.</p>
+            <div style="margin-bottom:30px; display:flex; justify-content:space-between; align-items:flex-end;">
+                <div>
+                    <h2 style="color:var(--color-primary); margin-bottom:5px;">Visão Geral do Escritório</h2>
+                    <p style="color:var(--color-text-subtle);">Resumo de atividades e indicadores de performance.</p>
+                </div>
             </div>
+
+            <!-- MODAL NOTIFICAÇÕES -->
+            <dialog id="modalNotificacoes" style="border:none; border-radius:12px; width:90%; max-width:600px; padding:0; box-shadow:0 10px 40px rgba(0,0,0,0.2);">
+                <div style="background:var(--color-primary); color:white; padding:15px 20px; display:flex; justify-content:space-between; align-items:center;">
+                    <h3 style="margin:0; font-size:1.1rem;">🔔 Avisos e Atualizações</h3>
+                    <button onclick="document.getElementById('modalNotificacoes').close()" style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
+                </div>
+                <div style="padding:20px; max-height:60vh; overflow-y:auto;">
+                    
+                    <!-- 1. Novos Cadastros -->
+                    <h4 style="border-bottom:1px solid #eee; padding-bottom:5px; color:#dc3545; margin-top:0;">📥 Solicitações Web (Pendentes)</h4>
+                    <?php 
+                    $notif_pre = $pdo->query("SELECT * FROM pre_cadastros WHERE status='pendente' ORDER BY data_solicitacao DESC LIMIT 5")->fetchAll();
+                    if(count($notif_pre) > 0): ?>
+                        <ul style="list-style:none; padding:0; margin-bottom:20px;">
+                            <?php foreach($notif_pre as $np): ?>
+                                <li style="padding:10px; border-bottom:1px solid #f0f0f0; display:flex; justify-content:space-between; align-items:center;">
+                                    <div>
+                                        <strong><?= htmlspecialchars($np['nome']) ?></strong><br>
+                                        <small style="color:#888;"><?= date('d/m H:i', strtotime($np['data_solicitacao'])) ?> • <?= htmlspecialchars($np['tipo_servico']) ?></small>
+                                    </div>
+                                    <a href="?importar=true" style="font-size:0.8rem; background:#dc3545; color:white; padding:4px 8px; text-decoration:none; border-radius:4px;">Ver</a>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php else: ?>
+                        <p style="color:#aaa; font-style:italic; font-size:0.9rem;">Nenhuma solicitação pendente.</p>
+                    <?php endif; ?>
+
+                    <!-- 2. Últimas Movimentações -->
+                    <h4 style="border-bottom:1px solid #eee; padding-bottom:5px; color:var(--color-primary); margin-top:20px;">🔄 Últimas Alterações de Processo</h4>
+                    <?php 
+                    // Busca últimas 10 movimentações de QUALQUER cliente, juntando com nome do cliente
+                    $sql_log = "SELECT m.*, c.nome as cliente_nome 
+                                FROM processo_movimentos m 
+                                JOIN clientes c ON m.cliente_id = c.id 
+                                ORDER BY m.data_movimento DESC LIMIT 10";
+                    $notif_mov = $pdo->query($sql_log)->fetchAll();
+                    
+                    if(count($notif_mov) > 0): ?>
+                        <ul style="list-style:none; padding:0;">
+                            <?php foreach($notif_mov as $nm): ?>
+                                <li style="padding:10px; border-bottom:1px solid #f0f0f0;">
+                                    <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                                        <span style="font-weight:bold; color:#333; font-size:0.9rem;"><?= htmlspecialchars(explode(' ', $nm['cliente_nome'])[0]) ?>...</span>
+                                        <small style="color:#888;"><?= date('d/m H:i', strtotime($nm['data_movimento'])) ?></small>
+                                    </div>
+                                    <div style="font-size:0.85rem; color:#555;">
+                                        <?= htmlspecialchars($nm['titulo_fase']) ?>
+                                    </div>
+                                    <a href="?cliente_id=<?= $nm['cliente_id'] ?>" style="font-size:0.75rem; color:var(--color-primary); text-decoration:none; display:block; margin-top:4px;">Ir para Cliente →</a>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php else: ?>
+                        <p style="color:#aaa; font-style:italic; font-size:0.9rem;">Nenhuma atividade recente.</p>
+                    <?php endif; ?>
+
+                </div>
+            </dialog>
 
             <!-- KPI Cards -->
             <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:20px; margin-bottom:40px;">
@@ -1383,11 +1508,27 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
         Toastify({
             text: "<?= addslashes($sucesso) ?>",
             duration: 4000,
-            gravity: "top", // `top` or `bottom`
-            position: "right", // `left`, `center` or `right`
+            gravity: "top", 
+            position: "right", 
             style: { background: "linear-gradient(to right, #00b09b, #96c93d)" }
         }).showToast();
-        // Toca som sutil (opcional, removido por ser intrusivo as vezes)
+    <?php endif; ?>
+
+    <?php if(isset($trigger_wpp) && isset($wpp_link)): ?>
+        Swal.fire({
+            title: 'Notificar Cliente? 📱',
+            text: "O processo mudou de fase. Deseja avisar no WhatsApp?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#25D366',
+            cancelButtonColor: '#aaa',
+            confirmButtonText: 'Sim, Enviar Whats!',
+            cancelButtonText: 'Não notificar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.open('<?= $wpp_link ?>', '_blank');
+            }
+        });
     <?php endif; ?>
 
     <?php if(isset($erro)): ?>
