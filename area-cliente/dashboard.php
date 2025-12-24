@@ -97,6 +97,10 @@ if (isset($_POST['btn_upload_pendencia'])) {
                             // Inserir na tabela de arquivos
                             $stmtUp = $pdo->prepare("INSERT INTO processo_pendencias_arquivos (pendencia_id, arquivo_nome, arquivo_path, data_upload) VALUES (?, ?, ?, NOW())");
                             $stmtUp->execute([$pend_id_upload, $filename, $rel_path]);
+                            
+                            // 2025-12 UPDATE: Mudar status para 'anexado' (azul)
+                            $pdo->prepare("UPDATE processo_pendencias SET status='anexado' WHERE id=?")->execute([$pend_id_upload]);
+                            
                             $processed_count++;
                         } catch(PDOException $e) { $error_count++; }
                     } else { $error_count++; }

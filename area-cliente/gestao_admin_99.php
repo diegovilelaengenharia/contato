@@ -1122,8 +1122,9 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                     <tr><td colspan="4" style="padding:30px; text-align:center; color:#aaa; font-style:italic;">Nenhuma pendência registrada para este cliente.</td></tr>
                                 <?php else: foreach($pendencias as $p): 
                                     $is_res = ($p['status'] == 'resolvido');
+                                    $is_anexo = ($p['status'] == 'anexado');
                                     $row_opac = $is_res ? '0.6' : '1';
-                                    $bg_row = $is_res ? '#f8fff9' : '#fff';
+                                    $bg_row = $is_res ? '#f8fff9' : ($is_anexo ? '#f0f8ff' : '#fff');
                                     $txt_dec = $is_res ? 'line-through' : 'none';
                                     
                                     // Arquivos
@@ -1154,6 +1155,8 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                         <td style="padding:15px; text-align:center;">
                                             <?php if($is_res): ?>
                                                 <span style="background:#198754; color:white; padding:4px 10px; border-radius:20px; font-size:0.8rem; font-weight:bold;">RESOLVIDO</span>
+                                            <?php elseif($is_anexo): ?>
+                                                <span style="background:#0d6efd; color:white; padding:4px 10px; border-radius:20px; font-size:0.8rem; font-weight:bold;">ANEXADO</span>
                                             <?php else: ?>
                                                 <span style="background:#ffc107; color:#000; padding:4px 10px; border-radius:20px; font-size:0.8rem; font-weight:bold;">PENDENTE</span>
                                             <?php endif; ?>

@@ -471,7 +471,15 @@ body {
         margin: 10px auto;
         padding: 0 10px;
         gap: 10px;
-        /* Reduzido de 20px */
+    }
+
+    /* Ocultar Header Desktop e Mostrar Mobile */
+    .admin-header {
+        display: none !important;
+    }
+
+    .admin-mobile-header {
+        display: block !important;
     }
 
     /* Sidebar Hidden by Default */
@@ -486,40 +494,67 @@ body {
         display: block;
     }
 
-    @keyframes slideDown {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    /* Botão flutuante do Menu - Mais Bonito */
+    .mobile-menu-toggle {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border: 1px solid #dee2e6;
+        color: var(--color-primary);
+        font-weight: 700;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s, box-shadow 0.2s;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
+    .mobile-menu-toggle:active {
+        transform: scale(0.98);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .mobile-menu-toggle::before {
+        content: '☰';
+        font-size: 1.2rem;
+    }
+
+    /* KPIs Discretos para Mobile */
+    .kpi-card {
+        padding: 15px !important;
+        text-align: left !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+    }
+
+    .kpi-card .material-symbols-rounded {
+        font-size: 24px !important;
+        /* Reduzido de possiveis 48px */
+        opacity: 0.7;
+    }
+
+    .kpi-card h3 {
+        font-size: 1.5rem !important;
+        margin-bottom: 0 !important;
+    }
+
+    .kpi-card p {
+        font-size: 0.85rem !important;
+        margin: 0 !important;
+    }
+
+    /* Outros ajustes */
     .client-list {
         max-height: 250px;
-    }
-
-    .admin-header {
-        padding: 0.8rem;
-        flex-direction: column;
-        gap: 10px;
-        align-items: stretch;
-        text-align: center;
-    }
-
-    .admin-header>div {
-        width: 100%;
-        justify-content: center;
-        flex-direction: column;
-        gap: 8px;
-    }
-
-    .admin-header img {
-        margin: 0 auto;
-        height: 40px !important;
     }
 
     .form-card {
@@ -528,8 +563,6 @@ body {
         margin-bottom: 15px;
     }
 
-    /* Compactado */
-
     .form-grid {
         grid-template-columns: 1fr;
         gap: 10px;
@@ -537,46 +570,6 @@ body {
 
     .btn-save.full-mobile {
         width: 100%;
-    }
-
-    h1 {
-        font-size: 1.1rem !important;
-    }
-
-    h2 {
-        font-size: 1rem !important;
-        font-weight: 700;
-    }
-
-    .form-group {
-        margin-bottom: 10px;
-    }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-        padding: 10px;
-        font-size: 0.95rem;
-    }
-
-    /* Botão flutuante do Menu */
-    .mobile-menu-toggle {
-        display: flex !important;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        width: 100%;
-        padding: 10px;
-        background: var(--color-surface);
-        border: 2px solid var(--color-primary);
-        color: var(--color-primary);
-        font-weight: 700;
-        border-radius: 8px;
-        margin-bottom: 15px;
-        cursor: pointer;
-        font-family: inherit;
-        font-size: 0.95rem;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
 }
 
