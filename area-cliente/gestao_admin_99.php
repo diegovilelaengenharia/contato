@@ -1059,35 +1059,53 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             <p style="color:var(--color-text-subtle); margin-bottom:20px;">Adicione itens que o cliente precisa resolver. O cliente verá esta lista.</p>
                         </div>
                         <?php 
+                        <?php 
                             // Movido para cá para usar no botão WhatsApp
                             $stmt_pend = $pdo->prepare("SELECT * FROM processo_pendencias WHERE cliente_id=? ORDER BY status ASC, id DESC");
                             $stmt_pend->execute([$cliente_ativo['id']]);
-                            $pendencias = $stmt_pend->fetchAll();
+                            $pendencias = $stmt_pend->fetchAll(); // Mantendo nome da variavel igual
 
                             // Lógica WhatsApp - Cobrança Dinâmica
                             $pend_abertas = array_filter($pendencias, function($p) {
-                                return $p['status'] == 'pendente' || $p['status'] == 'anexado'; // Inclui as anexadas se quiser cobrar resolução final
+                                return $p['status'] == 'pendente' || $p['status'] == 'anexado';
                             });
                             
-                            $msg_wpp_pend = "";
-                            if ($detalhes['contato_tel']) {
-                                $primeiro_nome = explode(' ', trim($cliente_ativo['nome']))[0];
-                                $msg_wpp_pend = "Olá {$primeiro_nome}, tudo bem? 👋\n\nConstam as seguintes *pendências* no seu processo que precisamos resolver:\n\n";
+                            // GERA TEXTO SEMPRE (independente de ter telefone)
+                            $primeiro_nome = explode(' ', trim($cliente_ativo['nome']))[0];
+                            $msg_wpp_pend = "Olá {$primeiro_nome}, tudo bem? 👋\n\nConstam as seguintes *pendências* no seu processo que precisamos resolver:\n\n";
+                            if(count($pend_abertas) > 0) {
                                 foreach($pend_abertas as $p) {
                                     $msg_wpp_pend .= "🔸 " . strip_tags($p['descricao']) . "\n";
                                 }
-                                $msg_wpp_pend .= "\nPor favor, acesse sua área do cliente para anexar ou resolver:\nhttps://vilela.eng.br/area-cliente/";
+                            } else {
+                                $msg_wpp_pend .= "(Nenhuma pendência em aberto encontrada)\n";
                             }
+                            $msg_wpp_pend .= "\nPor favor, acesse sua área do cliente para anexar ou resolver:\nhttps://vilela.eng.br/area-cliente/";
+                            
                             
                             $tel_clean = preg_replace('/[^0-9]/', '', $detalhes['contato_tel'] ?? '');
-                            $link_wpp_pend = (count($pend_abertas) > 0 && !empty($tel_clean)) 
-                                ? "https://wa.me/55{$tel_clean}?text=" . urlencode($msg_wpp_pend) 
-                                : "#";
                             
-                            $btn_wpp_style = ($link_wpp_pend == "#") ? "opacity:0.6; cursor:not-allowed; background:#ccc;" : "background:#25D366;";
+                            if (count($pend_abertas) > 0) {
+                                if (!empty($tel_clean)) {
+                                    // Tem pendencia E telefone
+                                    $link_wpp_pend = "https://wa.me/55{$tel_clean}?text=" . urlencode($msg_wpp_pend);
+                                    $onclick_action = ""; 
+                                    $btn_wpp_style = "background:#25D366;";
+                                } else {
+                                    // Tem pendencia mas SEM telefone -> Link Genérico
+                                    $link_wpp_pend = "https://wa.me/?text=" . urlencode($msg_wpp_pend);
+                                    $onclick_action = "";
+                                    $btn_wpp_style = "background:#25D366;"; // Ativo também
+                                }
+                            } else {
+                                // Sem pendencias
+                                $link_wpp_pend = "#";
+                                $onclick_action = "alert('Sem pendências abertas para cobrar.'); return false;";
+                                $btn_wpp_style = "opacity:0.6; cursor:not-allowed; background:#ccc;";
+                            }
                         ?>
                         <div style="text-align:right;">
-                            <a href="<?= $link_wpp_pend ?>" target="_blank" class="btn-save" style="border:none; display:inline-flex; align-items:center; gap:5px; <?= $btn_wpp_style ?>" onclick="<?= ($link_wpp_pend=='#')?'alert(\'Sem pendências abertas ou telefone não cadastrado.\'); return false;':'' ?>">
+                            <a href="<?= $link_wpp_pend ?>" target="_blank" class="btn-save" style="border:none; display:inline-flex; align-items:center; gap:5px; <?= $btn_wpp_style ?>" onclick="<?= $onclick_action ?>">
                                 📱 Cobrar no WhatsApp
                             </a>
                         </div>
