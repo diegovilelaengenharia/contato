@@ -251,6 +251,9 @@ $text_color = '#333';
             </div>
             <div class="meta-header">
                 <strong>Relatório de Processo</strong><br>
+                <?php if(!empty($detalhes['data_inicio'])): ?>
+                    <span style="color:var(--primary);">Início: <?= date('d/m/Y', strtotime($detalhes['data_inicio'])) ?></span><br>
+                <?php endif; ?>
                 Gerado em: <?= date('d/m/Y H:i') ?><br>
                 ID Cliente: #<?= str_pad($cliente['id'], 3, '0', STR_PAD_LEFT) ?>
             </div>

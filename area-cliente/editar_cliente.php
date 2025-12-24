@@ -83,7 +83,8 @@ if (isset($_POST['btn_salvar_tudo'])) {
                 res_rua=?, res_numero=?, res_bairro=?, res_complemento=?, res_cidade=?, res_uf=?,
                 profissao=?, estado_civil=?, imovel_rua=?, imovel_numero=?,
                 imovel_bairro=?, imovel_complemento=?, imovel_cidade=?, imovel_uf=?, inscricao_imob=?,
-                num_matricula=?, imovel_area_lote=?, area_construida=?
+                imovel_bairro=?, imovel_complemento=?, imovel_cidade=?, imovel_uf=?, inscricao_imob=?,
+                num_matricula=?, imovel_area_lote=?, area_construida=?, data_inicio=?
                 WHERE cliente_id=?";
         } else {
             $sqlDet = "INSERT INTO processo_detalhes (
@@ -91,8 +92,8 @@ if (isset($_POST['btn_salvar_tudo'])) {
                 res_rua, res_numero, res_bairro, res_complemento, res_cidade, res_uf,
                 profissao, estado_civil, imovel_rua, imovel_numero,
                 imovel_bairro, imovel_complemento, imovel_cidade, imovel_uf, inscricao_imob,
-                num_matricula, imovel_area_lote, area_construida, cliente_id
-            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                num_matricula, imovel_area_lote, area_construida, data_inicio, cliente_id
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         }
         
         $stmtDetUp = $pdo->prepare($sqlDet);
@@ -102,6 +103,7 @@ if (isset($_POST['btn_salvar_tudo'])) {
             $_POST['profissao'], $_POST['estado_civil'], $_POST['imovel_rua'], $_POST['imovel_numero'],
             $_POST['imovel_bairro'], $_POST['imovel_complemento'], $_POST['imovel_cidade'], $_POST['imovel_uf'], $_POST['inscricao_imob'],
             $_POST['num_matricula'], $_POST['imovel_area_lote'], $_POST['area_construida'],
+            $_POST['data_inicio'] ?? null,
             $cliente_id
         ]);
 
@@ -561,8 +563,8 @@ if (isset($_POST['btn_salvar_tudo'])) {
 
             <!-- SECTION 5: CUSTOM FIELDS (DINÂMICOS) -->
             <div class="section-header">
-                <div class="section-icon">⚡</div>
-                <h2>Campos Adicionais</h2>
+                <div class="section-icon">📝</div>
+                <h2>Outras Informações</h2>
             </div>
             <div class="section-body">
                 <p style="font-size:0.9rem; color:#666; margin-bottom:15px;">Adicione informações extras que não estão nos campos padrão.</p>
