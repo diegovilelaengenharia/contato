@@ -926,29 +926,10 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
                 </form>
 
-                <div style="flex:1; min-width:250px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-                        <h2 style="margin:0; color:var(--color-text); font-size:1.4rem;"><?= htmlspecialchars($cliente_ativo['nome']) ?></h2>
-                        <span style="font-size:0.8rem; color:#888;">ID #<?= str_pad($cliente_ativo['id'], 3, "0", STR_PAD_LEFT) ?></span>
-                    </div>
-                    
-                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap:10px; margin:10px 0 15px 0;">
-                        <div>
-                            <small style="display:block; color:#999; text-transform:uppercase; font-size:0.65rem; font-weight:bold;">CPF / CNPJ</small>
-                            <span style="color:#555; font-size:0.9rem;"><?= htmlspecialchars($detalhes['cpf_cnpj']??'--') ?></span>
-                        </div>
-                        <div>
-                            <small style="display:block; color:#999; text-transform:uppercase; font-size:0.65rem; font-weight:bold;">Telefone</small>
-                            <span style="color:#555; font-size:0.9rem;"><?= htmlspecialchars($detalhes['contato_tel']??'--') ?></span>
-                        </div>
-                        <div>
-                            <small style="display:block; color:#999; text-transform:uppercase; font-size:0.65rem; font-weight:bold;">Endereço da Obra</small>
-                            <span style="color:#555; font-size:0.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="<?= htmlspecialchars($detalhes['endereco_imovel']??$detalhes['imovel_rua']??'--') ?>">
-                                <?= htmlspecialchars(mb_strimwidth($detalhes['endereco_imovel']??$detalhes['imovel_rua']??'--', 0, 25, '...')) ?>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="client-summary-card">
+                    <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
+                </form>
+
+                <div class="client-summary-card">
                     <div style="display:flex; gap:15px; align-items:center;">
                         <div style="width:60px; height:60px; background:var(--color-primary-light); color:var(--color-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.5rem; font-weight:bold;">
                             <?= strtoupper(substr($cliente_ativo['nome'], 0, 1)) ?>
