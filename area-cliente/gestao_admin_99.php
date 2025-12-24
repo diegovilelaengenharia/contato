@@ -799,10 +799,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap;">
                 <div>
                     <h1 style="margin: 0; color: var(--color-text); font-size: 1.8rem;"><?= htmlspecialchars($cliente_ativo['nome']) ?></h1>
-                    <div style="display:flex; gap:15px; color: var(--color-text-subtle); margin-top:8px; font-size:0.95rem;">
-                        <span>🆔 CPF/CNPJ: <strong><?= htmlspecialchars($detalhes['cpf_cnpj']??'--') ?></strong></span>
-                        <span>📍 Obra: <strong><?= htmlspecialchars($detalhes['endereco_imovel']??'--') ?></strong></span>
-                    </div>
+                    <!-- Dados removidos daqui pois já estarão no Card Resumo abaixo -->
                 </div>
                 <div>
                     <a href="?exportar_cliente=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save btn-secondary" style="text-decoration:none; margin-top:10px; margin-right:10px;">
@@ -812,6 +809,41 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                        🗑️ Excluir Cliente
                     </a>
                 </div>
+            </div>
+
+            <!-- Card Resumo do Cliente (Agora no Topo) -->
+            <div class="form-card" style="display:flex; align-items:center; gap:30px; padding:40px; flex-wrap:wrap; margin-bottom:30px; border-left:5px solid var(--color-primary); background:#fff;">
+                
+                <!-- Avatar / Iniciais -->
+                <div style="width:100px; height:100px; background:var(--color-primary-light); color:var(--color-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2.5rem; font-weight:800; border:4px solid white; box-shadow:0 4px 15px rgba(0,0,0,0.1); min-width:100px;">
+                    <?= strtoupper(substr($cliente_ativo['nome'], 0, 1)) ?>
+                </div>
+
+                <div style="flex:1; min-width:250px;">
+                    <h2 style="margin:0 0 10px 0; color:var(--color-text); font-size:1.8rem;"><?= htmlspecialchars($cliente_ativo['nome']) ?></h2>
+                    
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:15px; margin-bottom:20px;">
+                        <div>
+                            <small style="display:block; color:#888; text-transform:uppercase; font-size:0.75rem; font-weight:bold;">Login de Acesso</small>
+                            <span style="font-family:monospace; font-size:1.1rem; color:var(--color-primary);"><?= htmlspecialchars($cliente_ativo['usuario']) ?></span>
+                        </div>
+                        <div>
+                            <small style="display:block; color:#888; text-transform:uppercase; font-size:0.75rem; font-weight:bold;">CPF / CNPJ</small>
+                            <span style="color:#555;"><?= htmlspecialchars($detalhes['cpf_cnpj']??'--') ?></span>
+                        </div>
+                        <div>
+                            <small style="display:block; color:#888; text-transform:uppercase; font-size:0.75rem; font-weight:bold;">ID do Sistema</small>
+                            <span style="color:#555;">#<?= str_pad($cliente_ativo['id'], 3, "0", STR_PAD_LEFT) ?></span>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                        <a href="editar_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save" style="text-decoration:none; padding:12px 25px; display:inline-flex; align-items:center; gap:8px;">
+                            ✏️ Gerenciar Perfil Completo ↗
+                        </a>
+                    </div>
+                </div>
+
             </div>
 
             <div class="simple-timeline">
@@ -829,54 +861,14 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             </div>
 
             <div class="tabs-header">
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=cadastro" class="tab-btn <?= $active_tab=='cadastro'?'active':'' ?>">📝 Cadastro</a>
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="tab-btn <?= $active_tab=='andamento'?'active':'' ?>">📊 Linha do Tempo</a>
+                <!-- Aba Cadastro Removida (Agora é o header fixo) -->
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="tab-btn <?= ($active_tab=='andamento' || $active_tab=='cadastro')?'active':'' ?>">📊 Linha do Tempo</a>
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias" class="tab-btn <?= $active_tab=='pendencias'?'active':'' ?>">⚠️ Pendências</a>
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=financeiro" class="tab-btn <?= $active_tab=='financeiro'?'active':'' ?>">💰 Financeiro</a>
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=arquivos" class="tab-btn <?= $active_tab=='arquivos'?'active':'' ?>">📂 Arquivos</a>
             </div>
 
-            <?php if($active_tab == 'cadastro'): ?>
-                
-                <!-- Card Resumo do Cliente (Simplificado) -->
-                <div class="form-card" style="display:flex; align-items:center; gap:30px; padding:40px; flex-wrap:wrap;">
-                    
-                    <!-- Avatar / Iniciais -->
-                    <div style="width:100px; height:100px; background:var(--color-primary-light); color:var(--color-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2.5rem; font-weight:800; border:4px solid white; box-shadow:0 4px 15px rgba(0,0,0,0.1); min-width:100px;">
-                        <?= strtoupper(substr($cliente_ativo['nome'], 0, 1)) ?>
-                    </div>
-
-                    <div style="flex:1; min-width:250px;">
-                        <h2 style="margin:0 0 10px 0; color:var(--color-text); font-size:1.8rem;"><?= htmlspecialchars($cliente_ativo['nome']) ?></h2>
-                        
-                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:15px; margin-bottom:20px;">
-                            <div>
-                                <small style="display:block; color:#888; text-transform:uppercase; font-size:0.75rem; font-weight:bold;">Login de Acesso</small>
-                                <span style="font-family:monospace; font-size:1.1rem; color:var(--color-primary);"><?= htmlspecialchars($cliente_ativo['usuario']) ?></span>
-                            </div>
-                            <div>
-                                <small style="display:block; color:#888; text-transform:uppercase; font-size:0.75rem; font-weight:bold;">Status</small>
-                                <span style="background:#e8f5e9; color:#1b5e20; padding:2px 8px; border-radius:4px; font-weight:bold; font-size:0.9rem;">Ativo</span>
-                            </div>
-                            <div>
-                                <small style="display:block; color:#888; text-transform:uppercase; font-size:0.75rem; font-weight:bold;">ID do Sistema</small>
-                                <span style="color:#555;">#<?= str_pad($cliente_ativo['id'], 3, "0", STR_PAD_LEFT) ?></span>
-                            </div>
-                        </div>
-
-                        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                            <a href="editar_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save" style="text-decoration:none; padding:12px 25px; display:inline-flex; align-items:center; gap:8px;">
-                                ✏️ Gerenciar Perfil Completo ↗
-                            </a>
-                        </div>
-                        <p style="margin-top:10px; font-size:0.85rem; color:#999;">
-                            Para editar dados pessoais, endereço ou acesso, clique no botão acima para abrir a ficha completa.
-                        </p>
-                    </div>
-
-                </div>
-
-            <?php elseif($active_tab == 'andamento'): ?>
+            <?php if($active_tab == 'andamento' || $active_tab == 'cadastro'): ?>
                 <style>
                     .mobile-only { display: none; }
                     @media(max-width:768px) { .mobile-only { display: flex; } }
