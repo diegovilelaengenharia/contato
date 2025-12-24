@@ -1098,6 +1098,14 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                 $stmt_pend->execute([$cliente_ativo['id']]);
                                 $pendencias = $stmt_pend->fetchAll();
                                 
+                                // Buscar Arquivos (Novo Sistema)
+                                $stmtArq = $pdo->prepare("SELECT pendencia_id, id, arquivo_nome, arquivo_path, data_upload FROM processo_pendencias_arquivos WHERE pendencia_id IN (SELECT id FROM processo_pendencias WHERE cliente_id=?)");
+                                $stmtArq->execute([$cliente_ativo['id']]);
+                                $arquivos_por_pendencia = [];
+                                foreach($stmtArq->fetchAll() as $arq) {
+                                    $arquivos_por_pendencia[$arq['pendencia_id']][] = $arq;
+                                }
+                                
                                 if(count($pendencias) == 0): ?>
                                     <tr><td colspan="4" style="padding:30px; text-align:center; color:#aaa; font-style:italic;">Nenhuma pendência registrada para este cliente.</td></tr>
                                 <?php else: foreach($pendencias as $p): 
@@ -1105,17 +1113,26 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                     $row_opac = $is_res ? '0.6' : '1';
                                     $bg_row = $is_res ? '#f8fff9' : '#fff';
                                     $txt_dec = $is_res ? 'line-through' : 'none';
+                                    
+                                    // Arquivos
+                                    $arquivos = $arquivos_por_pendencia[$p['id']] ?? [];
+                                    // Legado
+                                    if (!empty($p['arquivo_path']) && empty($arquivos)) {
+                                        $arquivos[] = ['arquivo_nome' => 'Anexo (Antigo)', 'arquivo_path' => $p['arquivo_path']];
+                                    }
                                 ?>
                                     <tr style="border-bottom:1px solid #eee; background:<?= $bg_row ?>; opacity:<?= $row_opac ?>;">
                                         <td style="padding:15px;">
                                             <div style="font-size:1.05rem; color:#333; text-decoration:<?= $txt_dec ?>;">
                                                 <?= $p['descricao'] // Já permite HTML do editor ?>
                                             </div>
-                                            <?php if(!empty($p['arquivo_path'])): ?>
-                                                <div style="margin-top:5px;">
-                                                    <a href="<?= htmlspecialchars($p['arquivo_path']) ?>" target="_blank" style="display:inline-flex; align-items:center; gap:5px; font-size:0.85rem; color:#0d6efd; text-decoration:none; background:#e9ecef; padding:2px 8px; border-radius:4px;">
-                                                        📎 Ver Anexo Enviado
+                                            <?php if(!empty($arquivos)): ?>
+                                                <div style="margin-top:5px; display:flex; flex-wrap:wrap; gap:5px;">
+                                                    <?php foreach($arquivos as $arq): ?>
+                                                    <a href="<?= htmlspecialchars($arq['arquivo_path']) ?>" target="_blank" style="display:inline-flex; align-items:center; gap:5px; font-size:0.85rem; color:#0d6efd; text-decoration:none; background:#e9ecef; padding:2px 8px; border-radius:4px;">
+                                                        📎 <?= (strlen($arq['arquivo_nome']) > 25 ? substr($arq['arquivo_nome'],0,25).'...' : $arq['arquivo_nome']) ?>
                                                     </a>
+                                                    <?php endforeach; ?>
                                                 </div>
                                             <?php endif; ?>
                                         </td>

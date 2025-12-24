@@ -60,48 +60,69 @@ if (!empty($detalhes['link_pasta_pagamentos'])) {
     $drive_pagamentos_id = getDriveFolderId($detalhes['link_pasta_pagamentos']);
 }
 
-// --- LÓGICA DE UPLOAD DE PENDÊNCIA ---
+// --- LÓGICA DE UPLOAD DE PENDÊNCIA (MÚLTIPLOS ARQUIVOS) ---
 $msg_upload = '';
 if (isset($_POST['btn_upload_pendencia'])) {
     $pend_id_upload = $_POST['upload_pendencia_id'];
     
-    // Verifica se arquivo foi enviado
-    if (isset($_FILES['arquivo_pendencia']) && $_FILES['arquivo_pendencia']['error'] == 0) {
-        $allowed = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx'];
-        $filename = $_FILES['arquivo_pendencia']['name'];
-        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+    // Verifica se arquivos foram enviados
+    if (isset($_FILES['arquivo_pendencia'])) {
+        $files = $_FILES['arquivo_pendencia'];
+        $processed_count = 0;
+        $error_count = 0;
         
-        if (in_array($ext, $allowed)) {
-            // Cria pasta se não existir
-            $upload_dir = __DIR__ . '/uploads/pendencias/';
-            if (!is_dir($upload_dir)) {
-                mkdir($upload_dir, 0755, true);
-            }
-            
-            // Gera nome único: ID_TIMESTAMP_NOME
-            $new_name = $pend_id_upload . '_' . time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '', $filename);
-            $dest_path = $upload_dir . $new_name;
-            
-            // Move e Salva no BD
-            if (move_uploaded_file($_FILES['arquivo_pendencia']['tmp_name'], $dest_path)) {
-                // Caminho relativo para salvar no banco
-                $rel_path = 'uploads/pendencias/' . $new_name;
+        // Normalizar array de arquivos se for múltiplo ou único transformado
+        $file_names = is_array($files['name']) ? $files['name'] : [$files['name']];
+        $file_tmps  = is_array($files['tmp_name']) ? $files['tmp_name'] : [$files['tmp_name']];
+        $file_errs  = is_array($files['error']) ? $files['error'] : [$files['error']];
+        
+        // Pasta de uploads
+        $upload_dir = __DIR__ . '/uploads/pendencias/';
+        if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
+
+        for ($i = 0; $i < count($file_names); $i++) {
+            if ($file_errs[$i] == 0) {
+                $allowed = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx'];
+                $filename = $file_names[$i];
+                $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
                 
-                try {
-                    $stmtUp = $pdo->prepare("UPDATE processo_pendencias SET arquivo_nome = ?, arquivo_path = ?, data_upload = NOW() WHERE id = ? AND cliente_id = ?");
-                    $stmtUp->execute([$filename, $rel_path, $pend_id_upload, $cliente_id]);
-                    $msg_upload = "success|Arquivo anexado com sucesso!";
-                } catch(PDOException $e) {
-                    $msg_upload = "error|Erro ao salvar no banco: " . $e->getMessage();
-                }
-            } else {
-                $msg_upload = "error|Erro ao mover arquivo para pasta de uploads.";
+                if (in_array($ext, $allowed)) {
+                     // Gera nome único
+                    $new_name = $pend_id_upload . '_' . time() . '_' . $i . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '', $filename);
+                    $dest_path = $upload_dir . $new_name;
+                    $rel_path = 'uploads/pendencias/' . $new_name;
+                    
+                    if (move_uploaded_file($file_tmps[$i], $dest_path)) {
+                        try {
+                            // Inserir na tabela de arquivos
+                            $stmtUp = $pdo->prepare("INSERT INTO processo_pendencias_arquivos (pendencia_id, arquivo_nome, arquivo_path, data_upload) VALUES (?, ?, ?, NOW())");
+                            $stmtUp->execute([$pend_id_upload, $filename, $rel_path]);
+                            $processed_count++;
+                        } catch(PDOException $e) { $error_count++; }
+                    } else { $error_count++; }
+                } else { $error_count++; }
             }
-        } else {
-            $msg_upload = "error|Extensão não permitida. Use PDF, JPG, PNG ou DOC.";
         }
+        
+        if ($processed_count > 0) {
+            $msg_upload = "success|{$processed_count} arquivo(s) anexado(s) com sucesso!";
+            
+            // --- NOTIFICAÇÃO DE UPLOAD ---
+            try {
+                // Registrar na timeline/avisos para o admin ver
+                $desc_pend = $pdo->query("SELECT descricao FROM processo_pendencias WHERE id=$pend_id_upload")->fetchColumn();
+                $titulo_aviso = "📎 Novo Anexo Enviado";
+                $desc_aviso = "O cliente enviou {$processed_count} arquivo(s) para a pendência: " . strip_tags($desc_pend);
+                
+                $pdo->prepare("INSERT INTO processo_movimentos (cliente_id, titulo_fase, data_movimento, descricao, status_tipo) VALUES (?, ?, NOW(), ?, 'upload')")->execute([$cliente_id, $titulo_aviso, $desc_aviso]);
+            } catch(Exception $ex) {}
+            
+        } else {
+            $msg_upload = "error|Falha ao enviar arquivos. Verifique formatos permitidos.";
+        }
+
     } else {
-        $msg_upload = "error|Nenhum arquivo selecionado ou erro no envio.";
+        $msg_upload = "error|Nenhum arquivo selecionado.";
     }
 }
 ?>
@@ -398,23 +419,34 @@ if (isset($_POST['btn_upload_pendencia'])) {
                 $stmtPend->execute([$cliente_id]);
                 $pendencias = $stmtPend->fetchAll();
                 
+                // Buscar Arquivos (Novo Sistema)
+                $stmtArq = $pdo->prepare("SELECT pendencia_id, id, arquivo_nome, arquivo_path, data_upload FROM processo_pendencias_arquivos WHERE pendencia_id IN (SELECT id FROM processo_pendencias WHERE cliente_id=?)");
+                $stmtArq->execute([$cliente_id]);
+                $arquivos_raw = $stmtArq->fetchAll();
+                $arquivos_por_pendencia = [];
+                foreach($arquivos_raw as $arq) {
+                    $arquivos_por_pendencia[$arq['pendencia_id']][] = $arq;
+                }
+
                 if(count($pendencias) > 0): ?>
                     <div class="pendency-list">
                         <?php foreach($pendencias as $p): 
                              $is_resolved = ($p['status'] === 'resolvido');
                              $status_text = $is_resolved ? 'RESOLVIDO' : 'PENDENTE';
                              
-                             // Ícone e Cor base
                              $icon = $is_resolved ? '✅' : '⚠️';
                              $border_color = $is_resolved ? 'var(--color-primary)' : '#ffc107';
                              $bg_color = $is_resolved ? '#f8fff9' : '#fffbf2';
                              $opacity = $is_resolved ? '0.7' : '1';
                              
-                             // Permitir HTML seguro (o que vem do CKEditor)
                              $descricao_html = $p['descricao']; 
                              
-                             // Verificação de Arquivo
-                             $tem_arquivo = !empty($p['arquivo_path']);
+                             // Arquivos
+                             $arquivos = $arquivos_por_pendencia[$p['id']] ?? [];
+                             // Fallback Legado
+                             if (!empty($p['arquivo_path']) && empty($arquivos)) {
+                                 $arquivos[] = ['arquivo_nome' => $p['arquivo_nome'] ?? 'Anexo (Antigo)', 'arquivo_path' => $p['arquivo_path']];
+                             }
                         ?>
                         <div class="pendency-card" style="border-left: 5px solid <?= $border_color ?>; background: <?= $bg_color ?>; opacity: <?= $opacity ?>;">
                             <div class="p-header" onclick="openPendencyModal('<?= addslashes(str_replace(["\r", "\n"], '', $descricao_html)) ?>')">
@@ -433,15 +465,18 @@ if (isset($_POST['btn_upload_pendencia'])) {
                                     Clique para ver detalhes
                                 </span>
                                 
-                                <!-- AÇÕES DE ARQUIVO -->
-                                <div class="p-actions">
-                                    <?php if($tem_arquivo): ?>
-                                        <a href="<?= htmlspecialchars($p['arquivo_path']) ?>" target="_blank" class="btn-file-view" title="Ver anexo enviado">
-                                            📎 Ver Anexo
-                                        </a>
-                                    <?php elseif(!$is_resolved): ?>
+                                <div class="p-actions" style="display:flex; flex-direction:column; align-items:flex-end; gap:5px;">
+                                    <?php if(!empty($arquivos)): ?>
+                                        <?php foreach($arquivos as $arq): ?>
+                                            <a href="<?= htmlspecialchars($arq['arquivo_path']) ?>" target="_blank" class="btn-file-view" title="<?= $arq['arquivo_nome'] ?>">
+                                                📎 <?= (strlen($arq['arquivo_nome']) > 20 ? substr($arq['arquivo_nome'],0,20).'...' : $arq['arquivo_nome']) ?>
+                                            </a>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+
+                                    <?php if(!$is_resolved): ?>
                                         <button onclick="openUploadModal(<?= $p['id'] ?>)" class="btn-file-upload">
-                                            📤 Anexar
+                                            📤 Anexar <?= !empty($arquivos)?'(Mais)':'' ?>
                                         </button>
                                     <?php endif; ?>
                                 </div>
@@ -482,7 +517,8 @@ if (isset($_POST['btn_upload_pendencia'])) {
                                 <p style="margin-top:0; color:#666; font-size:0.9rem;">Selecione o comprovante ou documento para anexar a esta pendência.</p>
                                 
                                 <div style="margin-bottom:20px;">
-                                    <input type="file" name="arquivo_pendencia" required accept=".pdf,.jp,.jpeg,.png,.doc,.docx" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px;">
+                                    <input type="file" name="arquivo_pendencia[]" multiple required accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px;">
+                                    <small style="color:#888;">Você pode selecionar múltiplos arquivos de uma vez.</small>
                                 </div>
                                 
                                 <div style="text-align:right;">
