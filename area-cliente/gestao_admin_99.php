@@ -837,118 +837,51 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             </div>
 
             <?php if($active_tab == 'cadastro'): ?>
-                <!-- Form separado para dados detalhados para nao conflitar com o de acesso se quiser submit separado, ou tudo junto.
-                     Neste caso, o primeiro form ali em cima fecha. Vamos ajustar. -->
                 
-                <!-- Estilos Modernos para Formulário Unificado -->
-                <!-- Visualização Estilo Relatório (Read-Only) -->
-                <style>
-                    .report-section { background: #fff; padding: 25px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); border: 1px solid #eef2f5; }
-                    .report-header { margin-bottom: 20px; display: flex; align-items: center; gap: 10px; border-bottom: 2px solid var(--color-primary-light); padding-bottom: 10px; }
-                    .report-header h3 { margin: 0; color: var(--color-primary); font-size: 1.1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-                    .report-icon { background: var(--color-primary-light); color: var(--color-primary); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+                <!-- Card Resumo do Cliente (Simplificado) -->
+                <div class="form-card" style="display:flex; align-items:center; gap:30px; padding:40px; flex-wrap:wrap;">
                     
-                    .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
-                    .info-item label { display: block; font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; font-weight: 600; }
-                    .info-item span { display: block; font-size: 1rem; color: #333; font-weight: 500; border-bottom: 1px dashed #eee; padding-bottom: 5px; }
-                    .empty-val { color: #ccc; font-style: italic; }
-                    
-                    .edit-float-btn {
-                        position: fixed; bottom: 30px; right: 30px; 
-                        background: var(--color-primary); color: white; 
-                        width: 60px; height: 60px; border-radius: 50%; 
-                        display: flex; align-items: center; justify-content: center; 
-                        box-shadow: 0 4px 15px rgba(20, 108, 67, 0.4); 
-                        font-size: 24px; text-decoration: none; z-index: 1000;
-                        transition: transform 0.2s;
-                    }
-                    .edit-float-btn:hover { transform: scale(1.1); }
-                </style>
+                    <!-- Avatar / Iniciais -->
+                    <div style="width:100px; height:100px; background:var(--color-primary-light); color:var(--color-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2.5rem; font-weight:800; border:4px solid white; box-shadow:0 4px 15px rgba(0,0,0,0.1); min-width:100px;">
+                        <?= strtoupper(substr($cliente_ativo['nome'], 0, 1)) ?>
+                    </div>
 
-                <div style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
-                     <a href="editar_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save" style="width:auto; background: var(--color-primary); display: flex; align-items: center; gap: 8px; text-decoration:none;">
-                        ✏️ Editar Cadastro Completo ↗
-                     </a>
+                    <div style="flex:1; min-width:250px;">
+                        <h2 style="margin:0 0 10px 0; color:var(--color-text); font-size:1.8rem;"><?= htmlspecialchars($cliente_ativo['nome']) ?></h2>
+                        
+                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:15px; margin-bottom:20px;">
+                            <div>
+                                <small style="display:block; color:#888; text-transform:uppercase; font-size:0.75rem; font-weight:bold;">Login de Acesso</small>
+                                <span style="font-family:monospace; font-size:1.1rem; color:var(--color-primary);"><?= htmlspecialchars($cliente_ativo['usuario']) ?></span>
+                            </div>
+                            <div>
+                                <small style="display:block; color:#888; text-transform:uppercase; font-size:0.75rem; font-weight:bold;">Status</small>
+                                <span style="background:#e8f5e9; color:#1b5e20; padding:2px 8px; border-radius:4px; font-weight:bold; font-size:0.9rem;">Ativo</span>
+                            </div>
+                            <div>
+                                <small style="display:block; color:#888; text-transform:uppercase; font-size:0.75rem; font-weight:bold;">ID do Sistema</small>
+                                <span style="color:#555;">#<?= str_pad($cliente_ativo['id'], 3, "0", STR_PAD_LEFT) ?></span>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                            <a href="editar_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save" style="text-decoration:none; padding:12px 25px; display:inline-flex; align-items:center; gap:8px;">
+                                ✏️ Gerenciar Perfil Completo ↗
+                            </a>
+                        </div>
+                        <p style="margin-top:10px; font-size:0.85rem; color:#999;">
+                            Para editar dados pessoais, endereço ou acesso, clique no botão acima para abrir a ficha completa.
+                        </p>
+                    </div>
+
                 </div>
 
-                <!-- Seção 1: Acesso -->
-                <div class="report-section">
-                    <div class="report-header">
-                        <div class="report-icon">🔐</div>
-                        <h3>Dados de Acesso</h3>
-                    </div>
-                    <div class="info-grid">
-                        <div class="info-item"><label>Nome no Painel</label><span><?= htmlspecialchars($cliente_ativo['nome']) ?></span></div>
-                        <div class="info-item"><label>Usuário (Login)</label><span style="font-family:monospace; color:#0d6efd;"><?= htmlspecialchars($cliente_ativo['usuario']) ?></span></div>
-                        <div class="info-item"><label>Senha</label><span>••••••</span></div>
-                    </div>
-                </div>
-
-                <!-- Seção 2: Cliente -->
-                <div class="report-section">
-                    <div class="report-header">
-                        <div class="report-icon">👤</div>
-                        <h3>Dados do Cliente</h3>
-                    </div>
-                    <div class="info-grid">
-                         <div class="info-item"><label>Tipo Pessoa</label><span><?= !empty($detalhes['tipo_pessoa']) ? htmlspecialchars($detalhes['tipo_pessoa']) : '<span class="empty-val">--</span>' ?></span></div>
-                         <div class="info-item"><label>CPF / CNPJ</label><span><?= !empty($detalhes['cpf_cnpj']) ? htmlspecialchars($detalhes['cpf_cnpj']) : '<span class="empty-val">--</span>' ?></span></div>
-                         <div class="info-item"><label>RG / I.E.</label><span><?= !empty($detalhes['rg_ie']) ? htmlspecialchars($detalhes['rg_ie']) : '<span class="empty-val">--</span>' ?></span></div>
-                    </div>
-                    <div class="info-grid" style="margin-top:15px;">
-                        <div class="info-item"><label>Email</label><span><?= !empty($detalhes['contato_email']) ? htmlspecialchars($detalhes['contato_email']) : '<span class="empty-val">--</span>' ?></span></div>
-                        <div class="info-item"><label>Telefone / WhatsApp</label><span><?= !empty($detalhes['contato_tel']) ? htmlspecialchars($detalhes['contato_tel']) : '<span class="empty-val">--</span>' ?></span></div>
-                        <div class="info-item"><label>Profissão</label><span><?= !empty($detalhes['profissao']) ? htmlspecialchars($detalhes['profissao']) : '<span class="empty-val">--</span>' ?></span></div>
-                        <div class="info-item"><label>Estado Civil</label><span><?= !empty($detalhes['estado_civil']) ? htmlspecialchars($detalhes['estado_civil']) : '<span class="empty-val">--</span>' ?></span></div>
-                    </div>
-                    <div class="info-item" style="margin-top:15px;"><label>Endereço Residencial</label><span><?= !empty($detalhes['endereco_residencial']) ? htmlspecialchars($detalhes['endereco_residencial']) : '<span class="empty-val">--</span>' ?></span></div>
-                </div>
-
-                <!-- Seção 3: Imóvel -->
-                <div class="report-section">
-                    <div class="report-header">
-                        <div class="report-icon">🏠</div>
-                        <h3>Dados do Imóvel</h3>
-                    </div>
-                    <div class="info-grid">
-                         <div class="info-item"><label>Endereço</label><span><?= htmlspecialchars(($detalhes['imovel_rua']??'') . ', ' . ($detalhes['imovel_numero']??'')) ?></span></div>
-                         <div class="info-item"><label>Bairro</label><span><?= !empty($detalhes['imovel_bairro']) ? htmlspecialchars($detalhes['imovel_bairro']) : '<span class="empty-val">--</span>' ?></span></div>
-                         <div class="info-item"><label>Cidade/UF</label><span><?= htmlspecialchars(($detalhes['imovel_cidade']??'') . '/' . ($detalhes['imovel_uf']??'')) ?></span></div>
-                    </div>
-                    <div class="info-grid" style="margin-top:15px;">
-                         <div class="info-item"><label>Complemento</label><span><?= !empty($detalhes['imovel_complemento']) ? htmlspecialchars($detalhes['imovel_complemento']) : '<span class="empty-val">--</span>' ?></span></div>
-                         <div class="info-item"><label>Inscrição Imob.</label><span><?= !empty($detalhes['inscricao_imob']) ? htmlspecialchars($detalhes['inscricao_imob']) : '<span class="empty-val">--</span>' ?></span></div>
-                         <div class="info-item"><label>Matrícula</label><span><?= !empty($detalhes['num_matricula']) ? htmlspecialchars($detalhes['num_matricula']) : '<span class="empty-val">--</span>' ?></span></div>
-                    </div>
-                    <div class="info-grid" style="margin-top:15px;">
-                         <div class="info-item"><label>Área do Lote (m²)</label><span><?= !empty($detalhes['imovel_area_lote']) ? htmlspecialchars($detalhes['imovel_area_lote']) : (!empty($detalhes['area_terreno']) ? htmlspecialchars($detalhes['area_terreno']) : '<span class="empty-val">--</span>') ?></span></div>
-                         <div class="info-item"><label>Área Construída (m²)</label><span><?= !empty($detalhes['area_construida']) ? htmlspecialchars($detalhes['area_construida']) : '<span class="empty-val">--</span>' ?></span></div>
-                    </div>
-                </div>
-
-                <!-- Seção 4: Responsabilidade Técnica -->
-                <div class="report-section">
-                    <div class="report-header">
-                        <div class="report-icon">👷</div>
-                        <h3>Responsabilidade Técnica</h3>
-                    </div>
-                    <div class="info-item"><label>Responsável Técnico</label><span><?= !empty($detalhes['resp_tecnico']) ? htmlspecialchars($detalhes['resp_tecnico']) : '<span class="empty-val">--</span>' ?></span></div>
-                    <div class="info-grid" style="margin-top:15px;">
-                         <div class="info-item"><label>Registro Profissional</label><span><?= !empty($detalhes['registro_prof']) ? htmlspecialchars($detalhes['registro_prof']) : '<span class="empty-val">--</span>' ?></span></div>
-                         <div class="info-item"><label>ART / RRT</label><span><?= !empty($detalhes['num_art_rrt']) ? htmlspecialchars($detalhes['num_art_rrt']) : '<span class="empty-val">--</span>' ?></span></div>
-                    </div>
-                </div>
-                
-                <!-- Botão Flutuante Mobile -->
-                <a href="editar_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="edit-float-btn mobile-only" title="Editar Cadastro">
-                    ✎
-                </a>
+            <?php elseif($active_tab == 'andamento'): ?>
                 <style>
                     .mobile-only { display: none; }
                     @media(max-width:768px) { .mobile-only { display: flex; } }
                 </style>
-            
-            <?php elseif($active_tab == 'andamento'): ?>
+
                 <div class="form-card">
                     <h3>🔄 Atualizar Fase do Processo</h3>
                     <form method="POST">
@@ -1409,65 +1342,8 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 </div>
             </div>
 
-            <!-- MODAL NOTIFICAÇÕES -->
-            <dialog id="modalNotificacoes" style="border:none; border-radius:12px; width:90%; max-width:600px; padding:0; box-shadow:0 10px 40px rgba(0,0,0,0.2);">
-                <div style="background:var(--color-primary); color:white; padding:15px 20px; display:flex; justify-content:space-between; align-items:center;">
-                    <h3 style="margin:0; font-size:1.1rem;">🔔 Avisos e Atualizações</h3>
-                    <button onclick="document.getElementById('modalNotificacoes').close()" style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
-                </div>
-                <div style="padding:20px; max-height:60vh; overflow-y:auto;">
-                    
-                    <!-- 1. Novos Cadastros -->
-                    <h4 style="border-bottom:1px solid #eee; padding-bottom:5px; color:#dc3545; margin-top:0;">📥 Solicitações Web (Pendentes)</h4>
-                    <?php 
-                    $notif_pre = $pdo->query("SELECT * FROM pre_cadastros WHERE status='pendente' ORDER BY data_solicitacao DESC LIMIT 5")->fetchAll();
-                    if(count($notif_pre) > 0): ?>
-                        <ul style="list-style:none; padding:0; margin-bottom:20px;">
-                            <?php foreach($notif_pre as $np): ?>
-                                <li style="padding:10px; border-bottom:1px solid #f0f0f0; display:flex; justify-content:space-between; align-items:center;">
-                                    <div>
-                                        <strong><?= htmlspecialchars($np['nome']) ?></strong><br>
-                                        <small style="color:#888;"><?= date('d/m H:i', strtotime($np['data_solicitacao'])) ?> • <?= htmlspecialchars($np['tipo_servico']) ?></small>
-                                    </div>
-                                    <a href="?importar=true" style="font-size:0.8rem; background:#dc3545; color:white; padding:4px 8px; text-decoration:none; border-radius:4px;">Ver</a>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    <?php else: ?>
-                        <p style="color:#aaa; font-style:italic; font-size:0.9rem;">Nenhuma solicitação pendente.</p>
-                    <?php endif; ?>
+                <!-- Modal Notificações Movido para rodapé para ser global -->
 
-                    <!-- 2. Últimas Movimentações -->
-                    <h4 style="border-bottom:1px solid #eee; padding-bottom:5px; color:var(--color-primary); margin-top:20px;">🔄 Últimas Alterações de Processo</h4>
-                    <?php 
-                    // Busca últimas 10 movimentações de QUALQUER cliente, juntando com nome do cliente
-                    $sql_log = "SELECT m.*, c.nome as cliente_nome 
-                                FROM processo_movimentos m 
-                                JOIN clientes c ON m.cliente_id = c.id 
-                                ORDER BY m.data_movimento DESC LIMIT 10";
-                    $notif_mov = $pdo->query($sql_log)->fetchAll();
-                    
-                    if(count($notif_mov) > 0): ?>
-                        <ul style="list-style:none; padding:0;">
-                            <?php foreach($notif_mov as $nm): ?>
-                                <li style="padding:10px; border-bottom:1px solid #f0f0f0;">
-                                    <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                                        <span style="font-weight:bold; color:#333; font-size:0.9rem;"><?= htmlspecialchars(explode(' ', $nm['cliente_nome'])[0]) ?>...</span>
-                                        <small style="color:#888;"><?= date('d/m H:i', strtotime($nm['data_movimento'])) ?></small>
-                                    </div>
-                                    <div style="font-size:0.85rem; color:#555;">
-                                        <?= htmlspecialchars($nm['titulo_fase']) ?>
-                                    </div>
-                                    <a href="?cliente_id=<?= $nm['cliente_id'] ?>" style="font-size:0.75rem; color:var(--color-primary); text-decoration:none; display:block; margin-top:4px;">Ir para Cliente →</a>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    <?php else: ?>
-                        <p style="color:#aaa; font-style:italic; font-size:0.9rem;">Nenhuma atividade recente.</p>
-                    <?php endif; ?>
-
-                </div>
-            </dialog>
 
             <!-- KPI Cards -->
             <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:20px; margin-bottom:40px;">
@@ -1800,6 +1676,66 @@ function editPendencia(id, texto) {
     });
 </script>
 <?php endif; ?>
+
+<!-- MODAL NOTIFICAÇÕES (GLOBAL) -->
+<dialog id="modalNotificacoes" style="border:none; border-radius:12px; width:90%; max-width:600px; padding:0; box-shadow:0 10px 40px rgba(0,0,0,0.2);">
+    <div style="background:var(--color-primary); color:white; padding:15px 20px; display:flex; justify-content:space-between; align-items:center;">
+        <h3 style="margin:0; font-size:1.1rem;">🔔 Avisos e Atualizações</h3>
+        <button onclick="document.getElementById('modalNotificacoes').close()" style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
+    </div>
+    <div style="padding:20px; max-height:60vh; overflow-y:auto;">
+        
+        <!-- 1. Novos Cadastros -->
+        <h4 style="border-bottom:1px solid #eee; padding-bottom:5px; color:#dc3545; margin-top:0;">📥 Solicitações Web (Pendentes)</h4>
+        <?php 
+        $notif_pre = $pdo->query("SELECT * FROM pre_cadastros WHERE status='pendente' ORDER BY data_solicitacao DESC LIMIT 5")->fetchAll();
+        if(count($notif_pre) > 0): ?>
+            <ul style="list-style:none; padding:0; margin-bottom:20px;">
+                <?php foreach($notif_pre as $np): ?>
+                    <li style="padding:10px; border-bottom:1px solid #f0f0f0; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <strong><?= htmlspecialchars($np['nome']) ?></strong><br>
+                            <small style="color:#888;"><?= date('d/m H:i', strtotime($np['data_solicitacao'])) ?> • <?= htmlspecialchars($np['tipo_servico']) ?></small>
+                        </div>
+                        <a href="?importar=true" style="font-size:0.8rem; background:#dc3545; color:white; padding:4px 8px; text-decoration:none; border-radius:4px;">Ver</a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php else: ?>
+            <p style="color:#aaa; font-style:italic; font-size:0.9rem;">Nenhuma solicitação pendente.</p>
+        <?php endif; ?>
+
+        <!-- 2. Últimas Movimentações -->
+        <h4 style="border-bottom:1px solid #eee; padding-bottom:5px; color:var(--color-primary); margin-top:20px;">🔄 Últimas Alterações de Processo</h4>
+        <?php 
+        // Busca últimas 10 movimentações de QUALQUER cliente, juntando com nome do cliente
+        $sql_log = "SELECT m.*, c.nome as cliente_nome 
+                    FROM processo_movimentos m 
+                    JOIN clientes c ON m.cliente_id = c.id 
+                    ORDER BY m.data_movimento DESC LIMIT 10";
+        $notif_mov = $pdo->query($sql_log)->fetchAll();
+        
+        if(count($notif_mov) > 0): ?>
+            <ul style="list-style:none; padding:0;">
+                <?php foreach($notif_mov as $nm): ?>
+                    <li style="padding:10px; border-bottom:1px solid #f0f0f0;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                            <span style="font-weight:bold; color:#333; font-size:0.9rem;"><?= htmlspecialchars(explode(' ', $nm['cliente_nome'])[0]) ?>...</span>
+                            <small style="color:#888;"><?= date('d/m H:i', strtotime($nm['data_movimento'])) ?></small>
+                        </div>
+                        <div style="font-size:0.85rem; color:#555;">
+                            <?= htmlspecialchars($nm['titulo_fase']) ?>
+                        </div>
+                        <a href="?cliente_id=<?= $nm['cliente_id'] ?>" style="font-size:0.75rem; color:var(--color-primary); text-decoration:none; display:block; margin-top:4px;">Ir para Cliente →</a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php else: ?>
+            <p style="color:#aaa; font-style:italic; font-size:0.9rem;">Nenhuma atividade recente.</p>
+        <?php endif; ?>
+
+    </div>
+</dialog>
 
 <div id="successModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:10000; justify-content:center; align-items:center;">
     <div style="background:white; padding:30px; border-radius:12px; text-align:center; box-shadow:0 4px 15px rgba(0,0,0,0.2); max-width:400px; width:90%;">
