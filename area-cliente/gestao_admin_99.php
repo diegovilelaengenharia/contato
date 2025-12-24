@@ -837,151 +837,112 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                      Neste caso, o primeiro form ali em cima fecha. Vamos ajustar. -->
                 
                 <!-- Estilos Modernos para Formulário Unificado -->
+                <!-- Visualização Estilo Relatório (Read-Only) -->
                 <style>
-                    .modern-form-section { background: #fff; padding: 25px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); border: 1px solid #eef2f5; }
-                    .modern-form-header { margin-bottom: 20px; display: flex; align-items: center; gap: 10px; border-bottom: 2px solid var(--color-primary-light); padding-bottom: 10px; }
-                    .modern-form-header h3 { margin: 0; color: var(--color-primary); font-size: 1.1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-                    .modern-icon { background: var(--color-primary-light); color: var(--color-primary); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+                    .report-section { background: #fff; padding: 25px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); border: 1px solid #eef2f5; }
+                    .report-header { margin-bottom: 20px; display: flex; align-items: center; gap: 10px; border-bottom: 2px solid var(--color-primary-light); padding-bottom: 10px; }
+                    .report-header h3 { margin: 0; color: var(--color-primary); font-size: 1.1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+                    .report-icon { background: var(--color-primary-light); color: var(--color-primary); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+                    
+                    .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+                    .info-item label { display: block; font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; font-weight: 600; }
+                    .info-item span { display: block; font-size: 1rem; color: #333; font-weight: 500; border-bottom: 1px dashed #eee; padding-bottom: 5px; }
+                    .empty-val { color: #ccc; font-style: italic; }
+                    
+                    .edit-float-btn {
+                        position: fixed; bottom: 30px; right: 30px; 
+                        background: var(--color-primary); color: white; 
+                        width: 60px; height: 60px; border-radius: 50%; 
+                        display: flex; align-items: center; justify-content: center; 
+                        box-shadow: 0 4px 15px rgba(20, 108, 67, 0.4); 
+                        font-size: 24px; text-decoration: none; z-index: 1000;
+                        transition: transform 0.2s;
+                    }
+                    .edit-float-btn:hover { transform: scale(1.1); }
                 </style>
 
                 <div style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
-                     <button type="button" onclick="toggleEditMode()" class="btn-save" style="width:auto; background: var(--color-primary); display: flex; align-items: center; gap: 8px;">✏️ Editar Cadastro</button>
+                     <a href="editar_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save" style="width:auto; background: var(--color-primary); display: flex; align-items: center; gap: 8px; text-decoration:none;">
+                        ✏️ Editar Cadastro Completo ↗
+                     </a>
                 </div>
 
-                <form method="POST" id="form_dados_detalhados">
-                    <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
-
-                    <!-- Seção 1: Acesso -->
-                    <div class="modern-form-section">
-                        <div class="modern-form-header">
-                            <div class="modern-icon">🔐</div>
-                            <h3>Dados de Acesso (Login)</h3>
-                        </div>
-                        <div class="form-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
-                            <div class="form-group"><label>Nome no Sistema</label><input type="text" name="nome" value="<?= htmlspecialchars($cliente_ativo['nome']) ?>" required readonly style="background:var(--color-bg); font-weight:bold;"></div>
-                            <div class="form-group"><label>Usuário (Login)</label><input type="text" name="usuario" value="<?= htmlspecialchars($cliente_ativo['usuario']) ?>" required readonly style="background:var(--color-bg); font-family:monospace;"></div>
-                            <div class="form-group"><label>Redefinir Senha</label><input type="text" name="nova_senha" placeholder="Digite para alterar..." readonly style="background:var(--color-bg);"></div>
-                        </div>
-                        <!-- Botão de salvar acesso específico removido em prol do salvamento global ou lógica unificada se preferir, mas vamos manter o botão escondido que é acionado pelo JS se mudarem algo aqui, ou melhor, vamos deixar o update de acesso ser tratado separadamente no backend mas submetido pelo mesmo botão SE quisermos, mas o backend trata forms diferentes. 
-                        Para simplificar, vamos manter a lógica de que o botão SALVAR GERAL submete este form. Mas espere, o backend tem blocos separados: 'btn_salvar_cadastro' e 'btn_salvar_acesso'. 
-                        Vou incluir um hidden input 'btn_salvar_acesso' se o user preencher senha? Não, melhor manter a div de acesso separada logicamente no PHP, mas visualmente unida. 
-                        Vou fazer um botão 'Salvar Acesso' discreto ou injetar no submit geral?
-                        O usuário quer algo Clean. Vamos fazer com que o botão SALVAR GERAL submeta TUDO.
-                        Para isso, preciso mudar o PHP lá em cima para aceitar um único POST ou unificar os forms.
-                        Como não quero refatorar todo o PHP agora, vou colocar um botão de salvar acesso discreto dentro desta seção apenas se houver edição. -->
-                        <!-- Botão de acesso específico removido conforme solicitação -->
+                <!-- Seção 1: Acesso -->
+                <div class="report-section">
+                    <div class="report-header">
+                        <div class="report-icon">🔐</div>
+                        <h3>Dados de Acesso</h3>
                     </div>
-
-                    <!-- Seção 2: Cliente -->
-                    <div class="modern-form-section">
-                        <div class="modern-form-header">
-                            <div class="modern-icon">👤</div>
-                            <h3>Dados do Cliente</h3>
-                        </div>
-                        <div class="form-grid">
-                             <div class="form-group"><label>Tipo Pessoa</label><select name="tipo_pessoa" disabled style="background:var(--color-bg);"><option value="Fisica" <?= ($detalhes['tipo_pessoa']??'')=='Fisica'?'selected':''?>>Física</option><option value="Juridica" <?= ($detalhes['tipo_pessoa']??'')=='Juridica'?'selected':''?>>Jurídica</option></select></div>
-                             <div class="form-group"><label>CPF / CNPJ</label><input type="text" name="cpf_cnpj" value="<?= $detalhes['cpf_cnpj']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                             <div class="form-group"><label>RG / Inscrição Estadual</label><input type="text" name="rg_ie" value="<?= $detalhes['rg_ie']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                        </div>
-                        <div class="form-grid">
-                            <div class="form-group"><label>Email Principal</label><input type="text" name="contato_email" value="<?= $detalhes['contato_email']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                            <div class="form-group"><label>Telefone / WhatsApp</label><input type="text" name="contato_tel" value="<?= $detalhes['contato_tel']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                        </div>
-                        <div class="form-group"><label>Endereço Residencial Completo</label><input type="text" name="endereco_residencial" value="<?= $detalhes['endereco_residencial']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                        <div class="form-grid">
-                            <div class="form-group"><label>Profissão</label><input type="text" name="profissao" value="<?= $detalhes['profissao']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                            <div class="form-group"><label>Estado Civil</label><input type="text" name="estado_civil" value="<?= $detalhes['estado_civil']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                        </div>
+                    <div class="info-grid">
+                        <div class="info-item"><label>Nome no Painel</label><span><?= htmlspecialchars($cliente_ativo['nome']) ?></span></div>
+                        <div class="info-item"><label>Usuário (Login)</label><span style="font-family:monospace; color:#0d6efd;"><?= htmlspecialchars($cliente_ativo['usuario']) ?></span></div>
+                        <div class="info-item"><label>Senha</label><span>••••••</span></div>
                     </div>
+                </div>
 
-                    <!-- Seção 3: Imóvel -->
-                    <div class="modern-form-section">
-                        <div class="modern-form-header">
-                            <div class="modern-icon">🏠</div>
-                            <h3>Dados do Imóvel</h3>
-                        </div>
-                        <div class="form-grid" style="grid-template-columns: 4fr 1fr;">
-                             <div class="form-group"><label>Logradouro (Rua/Av)</label><input type="text" name="imovel_rua" value="<?= $detalhes['imovel_rua']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                             <div class="form-group"><label>Número</label><input type="text" name="imovel_numero" value="<?= $detalhes['imovel_numero']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                        </div>
-                        <div class="form-grid">
-                             <div class="form-group"><label>Bairro</label><input type="text" name="imovel_bairro" value="<?= $detalhes['imovel_bairro']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                             <div class="form-group"><label>Complemento</label><input type="text" name="imovel_complemento" value="<?= $detalhes['imovel_complemento']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                             <div class="form-group"><label>Cidade/UF</label><input type="text" name="imovel_cidade" value="<?= ($detalhes['imovel_cidade']??'') . '/' . ($detalhes['imovel_uf']??'') ?>" readonly style="background:var(--color-bg);"></div>
-                        </div>
-                        <div class="form-grid">
-                             <div class="form-group"><label>Inscrição Imobiliária</label><input type="text" name="inscricao_imob" value="<?= $detalhes['inscricao_imob']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                             <div class="form-group"><label>Matrícula Cartório</label><input type="text" name="num_matricula" value="<?= $detalhes['num_matricula']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                        </div>
-                        <div class="form-grid">
-                             <div class="form-group"><label>Área do Lote (m²)</label><input type="text" name="imovel_area_lote" value="<?= $detalhes['imovel_area_lote']??($detalhes['area_terreno']??'') ?>" readonly style="background:var(--color-bg);"></div>
-                             <div class="form-group"><label>Área Construída (m²)</label><input type="text" name="area_construida" value="<?= $detalhes['area_construida']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                        </div>
+                <!-- Seção 2: Cliente -->
+                <div class="report-section">
+                    <div class="report-header">
+                        <div class="report-icon">👤</div>
+                        <h3>Dados do Cliente</h3>
                     </div>
-
-                    <!-- Seção 4: Responsabilidade Técnica -->
-                    <div class="modern-form-section">
-                        <div class="modern-form-header">
-                            <div class="modern-icon">👷</div>
-                            <h3>Responsabilidade Técnica</h3>
-                        </div>
-                        <div class="form-group"><label>Nome do Profissional</label><input type="text" name="resp_tecnico" value="<?= $detalhes['resp_tecnico']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                        <div class="form-grid">
-                             <div class="form-group"><label>Registro de Classe</label><input type="text" name="registro_prof" value="<?= $detalhes['registro_prof']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                             <div class="form-group"><label>ART / RRT</label><input type="text" name="num_art_rrt" value="<?= $detalhes['num_art_rrt']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                        </div>
+                    <div class="info-grid">
+                         <div class="info-item"><label>Tipo Pessoa</label><span><?= !empty($detalhes['tipo_pessoa']) ? htmlspecialchars($detalhes['tipo_pessoa']) : '<span class="empty-val">--</span>' ?></span></div>
+                         <div class="info-item"><label>CPF / CNPJ</label><span><?= !empty($detalhes['cpf_cnpj']) ? htmlspecialchars($detalhes['cpf_cnpj']) : '<span class="empty-val">--</span>' ?></span></div>
+                         <div class="info-item"><label>RG / I.E.</label><span><?= !empty($detalhes['rg_ie']) ? htmlspecialchars($detalhes['rg_ie']) : '<span class="empty-val">--</span>' ?></span></div>
                     </div>
+                    <div class="info-grid" style="margin-top:15px;">
+                        <div class="info-item"><label>Email</label><span><?= !empty($detalhes['contato_email']) ? htmlspecialchars($detalhes['contato_email']) : '<span class="empty-val">--</span>' ?></span></div>
+                        <div class="info-item"><label>Telefone / WhatsApp</label><span><?= !empty($detalhes['contato_tel']) ? htmlspecialchars($detalhes['contato_tel']) : '<span class="empty-val">--</span>' ?></span></div>
+                        <div class="info-item"><label>Profissão</label><span><?= !empty($detalhes['profissao']) ? htmlspecialchars($detalhes['profissao']) : '<span class="empty-val">--</span>' ?></span></div>
+                        <div class="info-item"><label>Estado Civil</label><span><?= !empty($detalhes['estado_civil']) ? htmlspecialchars($detalhes['estado_civil']) : '<span class="empty-val">--</span>' ?></span></div>
+                    </div>
+                    <div class="info-item" style="margin-top:15px;"><label>Endereço Residencial</label><span><?= !empty($detalhes['endereco_residencial']) ? htmlspecialchars($detalhes['endereco_residencial']) : '<span class="empty-val">--</span>' ?></span></div>
+                </div>
 
-                    <!-- Botão Salvar Flutuante ou Fixo -->
-                    <button type="submit" name="btn_salvar_cadastro" id="btn_salvar_dados" class="btn-save btn-success" style="display:none; width: 100%; padding: 15px; font-size: 1.1rem; margin-top: 20px;">
-                        💾 Salvar Todas as Alterações
-                    </button>
+                <!-- Seção 3: Imóvel -->
+                <div class="report-section">
+                    <div class="report-header">
+                        <div class="report-icon">🏠</div>
+                        <h3>Dados do Imóvel</h3>
+                    </div>
+                    <div class="info-grid">
+                         <div class="info-item"><label>Endereço</label><span><?= htmlspecialchars(($detalhes['imovel_rua']??'') . ', ' . ($detalhes['imovel_numero']??'')) ?></span></div>
+                         <div class="info-item"><label>Bairro</label><span><?= !empty($detalhes['imovel_bairro']) ? htmlspecialchars($detalhes['imovel_bairro']) : '<span class="empty-val">--</span>' ?></span></div>
+                         <div class="info-item"><label>Cidade/UF</label><span><?= htmlspecialchars(($detalhes['imovel_cidade']??'') . '/' . ($detalhes['imovel_uf']??'')) ?></span></div>
+                    </div>
+                    <div class="info-grid" style="margin-top:15px;">
+                         <div class="info-item"><label>Complemento</label><span><?= !empty($detalhes['imovel_complemento']) ? htmlspecialchars($detalhes['imovel_complemento']) : '<span class="empty-val">--</span>' ?></span></div>
+                         <div class="info-item"><label>Inscrição Imob.</label><span><?= !empty($detalhes['inscricao_imob']) ? htmlspecialchars($detalhes['inscricao_imob']) : '<span class="empty-val">--</span>' ?></span></div>
+                         <div class="info-item"><label>Matrícula</label><span><?= !empty($detalhes['num_matricula']) ? htmlspecialchars($detalhes['num_matricula']) : '<span class="empty-val">--</span>' ?></span></div>
+                    </div>
+                    <div class="info-grid" style="margin-top:15px;">
+                         <div class="info-item"><label>Área do Lote (m²)</label><span><?= !empty($detalhes['imovel_area_lote']) ? htmlspecialchars($detalhes['imovel_area_lote']) : (!empty($detalhes['area_terreno']) ? htmlspecialchars($detalhes['area_terreno']) : '<span class="empty-val">--</span>') ?></span></div>
+                         <div class="info-item"><label>Área Construída (m²)</label><span><?= !empty($detalhes['area_construida']) ? htmlspecialchars($detalhes['area_construida']) : '<span class="empty-val">--</span>' ?></span></div>
+                    </div>
+                </div>
 
-                </form>
-
-                <script>
-                    function toggleEditMode() {
-                        const form = document.getElementById('form_dados_detalhados');
-                        const inputs = form.querySelectorAll('input, select');
-                        const btnSalvar = document.getElementById('btn_salvar_dados');
-                        const btnUnlock = document.querySelector('button[onclick="toggleEditMode()"]');
-                        const btnAccess = document.getElementById('btn_save_access_container');
-                        
-                        // Toggle Inputs
-                        inputs.forEach(input => {
-                            if (input.hasAttribute('readonly') || input.hasAttribute('disabled')) {
-                                input.removeAttribute('readonly');
-                                input.removeAttribute('disabled');
-                                input.style.background = '#ffffff';
-                                input.style.borderColor = 'var(--color-primary)';
-                                input.style.boxShadow = '0 0 0 3px rgba(20, 108, 67, 0.1)';
-                            } else {
-                                input.setAttribute('readonly', 'true');
-                                if(input.tagName === 'SELECT') input.setAttribute('disabled', 'true');
-                                input.style.background = 'var(--color-bg)';
-                                input.style.borderColor = 'var(--color-border)';
-                                input.style.boxShadow = 'none';
-                            }
-                        });
-
-                        // Toggle Buttons
-                        if (btnSalvar.style.display === 'none') {
-                            // Enable Edit Mode
-                            btnSalvar.style.display = 'block';
-                            
-                            btnUnlock.innerText = '🔒 Bloquear e Cancelar Edição';
-                            btnUnlock.style.background = '#dc3545';
-                            btnUnlock.style.color = '#fff';
-                        } else {
-                            // Disable Edit Mode
-                            btnSalvar.style.display = 'none';
-                            
-                            btnUnlock.innerText = '✏️ Editar Cadastro';
-                            btnUnlock.style.background = 'var(--color-primary)';
-                            btnUnlock.style.color = '#fff';
-                        }
-                    }
-                </script>
+                <!-- Seção 4: Responsabilidade Técnica -->
+                <div class="report-section">
+                    <div class="report-header">
+                        <div class="report-icon">👷</div>
+                        <h3>Responsabilidade Técnica</h3>
+                    </div>
+                    <div class="info-item"><label>Responsável Técnico</label><span><?= !empty($detalhes['resp_tecnico']) ? htmlspecialchars($detalhes['resp_tecnico']) : '<span class="empty-val">--</span>' ?></span></div>
+                    <div class="info-grid" style="margin-top:15px;">
+                         <div class="info-item"><label>Registro Profissional</label><span><?= !empty($detalhes['registro_prof']) ? htmlspecialchars($detalhes['registro_prof']) : '<span class="empty-val">--</span>' ?></span></div>
+                         <div class="info-item"><label>ART / RRT</label><span><?= !empty($detalhes['num_art_rrt']) ? htmlspecialchars($detalhes['num_art_rrt']) : '<span class="empty-val">--</span>' ?></span></div>
+                    </div>
+                </div>
+                
+                <!-- Botão Flutuante Mobile -->
+                <a href="editar_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="edit-float-btn mobile-only" title="Editar Cadastro">
+                    ✎
+                </a>
+                <style>
+                    .mobile-only { display: none; }
+                    @media(max-width:768px) { .mobile-only { display: flex; } }
+                </style>
             
             <?php elseif($active_tab == 'andamento'): ?>
                 <div class="form-card">
