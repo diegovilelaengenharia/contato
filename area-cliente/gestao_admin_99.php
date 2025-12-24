@@ -162,15 +162,63 @@ if (isset($_POST['btn_salvar_cadastro'])) {
     catch (PDOException $e) { $erro = "Erro: " . $e->getMessage(); }
 }
 
-// 3. Salvar Pendências (Aba Pendências)
-if (isset($_POST['btn_salvar_pendencias'])) {
+// 3. Salvar Pendências (Lógica Nova - CRUD Individual via AJAX/Form)
+// (Mantido compatibilidade com forms antigos se houver, mas o foco é a nova lista)
+if (isset($_POST['btn_adicionar_pendencia'])) {
     $cid = $_POST['cliente_id'];
-    try {
-        $sql = "UPDATE processo_detalhes SET texto_pendencias = ?, link_doc_pendencias = ? WHERE cliente_id = ?";
-        $pdo->prepare($sql)->execute([$_POST['texto_pendencias'], $_POST['link_doc_pendencias'], $cid]);
-        $sucesso = "Pendências atualizadas!";
-    } catch(PDOException $e) { $erro = "Erro: " . $e->getMessage(); }
+    $texto = trim($_POST['descricao_pendencia']);
+    
+    if (!empty($texto)) {
+        try {
+            $stmt = $pdo->prepare("INSERT INTO processo_pendencias (cliente_id, descricao, status, data_criacao) VALUES (?, ?, 'pendente', NOW())");
+            $stmt->execute([$cid, $texto]);
+            $sucesso = "Pendência adicionada!";
+        } catch(PDOException $e) { $erro = "Erro: " . $e->getMessage(); }
+    }
 }
+
+if (isset($_POST['btn_editar_pendencia'])) {
+    $pid = $_POST['pendencia_id'];
+    $cid = $_POST['cliente_id'];
+    $texto = trim($_POST['descricao_pendencia']);
+    
+    if (!empty($texto)) {
+        try {
+            $pdo->prepare("UPDATE processo_pendencias SET descricao = ? WHERE id = ? AND cliente_id = ?")->execute([$texto, $pid, $cid]);
+            $sucesso = "Pendência atualizada!";
+        } catch(PDOException $e) { $erro = "Erro: " . $e->getMessage(); }
+    }
+}
+
+// Ação de Resolver/Reabrir via GET (Toggle)
+if (isset($_GET['toggle_pendencia'])) {
+    $pid = $_GET['toggle_pendencia'];
+    $cid = $_GET['cliente_id'];
+    
+    try {
+        $curr = $pdo->query("SELECT status FROM processo_pendencias WHERE id=$pid")->fetchColumn();
+        $new = ($curr == 'pendente') ? 'resolvido' : 'pendente';
+        $pdo->prepare("UPDATE processo_pendencias SET status = ? WHERE id = ? AND cliente_id = ?")->execute([$new, $pid, $cid]);
+        
+        // Redireciona para limpar URL
+        header("Location: ?cliente_id=$cid&tab=pendencias");
+        exit;
+    } catch(PDOException $e) { $erro = "Erro ao alterar status: " . $e->getMessage(); }
+}
+
+// Ação de Excluir Pendência
+if (isset($_GET['delete_pendencia'])) {
+    $pid = $_GET['delete_pendencia'];
+    $cid = $_GET['cliente_id'];
+    try {
+        $pdo->prepare("DELETE FROM processo_pendencias WHERE id = ? AND cliente_id = ?")->execute([$pid, $cid]);
+        header("Location: ?cliente_id=$cid&tab=pendencias");
+        exit;
+    } catch(PDOException $e) { $erro = "Erro ao excluir: " . $e->getMessage(); }
+}
+
+// Gerar Token de Visualização Pública (Opcional - Futuro)
+
 
 // 4. Salvar Arquivos/Links (Aba Arquivos)
 if (isset($_POST['btn_salvar_arquivos'])) {
@@ -259,50 +307,7 @@ if (isset($_POST['btn_salvar_financeiro'])) {
 
 // 6.6 Nova Lógica de Pendências (Lista Individual)
 // Adicionar ou Editar
-// 8. Pendências - Emitir (Do Quadro para a Lista) e Editar
-if (isset($_POST['action_emitir_pendencia'])) {
-    $cid = $_POST['cliente_id'];
-    $texto = trim($_POST['texto_pendencias']);
-    $pid = $_POST['pendencia_id'] ?? '';
-
-    if(!empty($texto)) {
-        if(!empty($pid)) {
-            // EDITAR existente
-            $pdo->prepare("UPDATE processo_pendencias SET descricao=? WHERE id=? AND cliente_id=?")->execute([$texto, $pid, $cid]);
-            $sucesso = "Pendência atualizada com sucesso!";
-            $redirect_msg = "pendencia_updated";
-        } else {
-            // CRIAR nova (Do quadro)
-            $pdo->prepare("INSERT INTO processo_pendencias (cliente_id, descricao, status, data_criacao) VALUES (?, ?, 'pendente', NOW())")->execute([$cid, $texto]);
-            $sucesso = "Pendência publicada!";
-            $redirect_msg = "pendencia_emitted";
-        }
-        
-        // Limpar o texto do quadro (banco de dados) para garantir que não fique "salvo" como rascunho persistente antigo
-        $pdo->prepare("UPDATE clientes SET texto_pendencias = NULL WHERE id = ?")->execute([$cid]);
-        
-        header("Location: gestao_admin_99.php?tab=pendencias&client_id=$cid&msg=$redirect_msg");
-        exit;
-    }
-}
-// Delete Pendencia
-if (isset($_GET['del_pend'])) {
-    $pid = $_GET['del_pend'];
-    $cid = $_GET['cliente_id'];
-    $pdo->prepare("DELETE FROM processo_pendencias WHERE id=? AND cliente_id=?")->execute([$pid, $cid]);
-    header("Location: ?cliente_id=$cid&tab=pendencias");
-    exit;
-}
-// Toggle Status Pendencia
-if (isset($_GET['toggle_pend'])) {
-    $pid = $_GET['toggle_pend'];
-    $cid = $_GET['cliente_id'];
-    $curr = $pdo->query("SELECT status FROM processo_pendencias WHERE id=$pid")->fetchColumn();
-    $new = ($curr == 'pendente') ? 'resolvido' : 'pendente';
-    $pdo->prepare("UPDATE processo_pendencias SET status=? WHERE id=?")->execute([$new, $pid]);
-    header("Location: ?cliente_id=$cid&tab=pendencias");
-    exit;
-}
+// Código antigo removido para evitar duplicidade de lógica. Nova lógica implementada acima.
 
 // 6.7 Excluir Histórico (Movimentação)
 if (isset($_GET['del_hist'])) {
@@ -1023,137 +1028,188 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     </div>
                 </div>
 
-            <?php elseif($active_tab == 'pendencias'): ?>
                 <div class="form-card" style="border-left: 6px solid #ffc107;">
-                    <h3>Gestão de Pendências do Projeto</h3>
-                    <p style="color:#666; margin-bottom:15px;">Gerencie os comunicados e pendências abaixo.</p>
-
-                    <!-- Button to Open Modal -->
-                    <button type="button" onclick="openPendenciaModal()" class="btn-save btn-warning" style="color:#000; width:auto; font-weight:bold;">➕ Criar Comunicado</button>
-                    
-                    <!-- Modal de Criação/Edição de Pendência -->
-                    <dialog id="modalPendencia" style="border:none; border-radius:12px; padding:0; width:90%; max-width:600px; box-shadow:0 10px 40px rgba(0,0,0,0.2);">
-                        <div style="padding:20px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center; background:#ffc107;">
-                            <h3 style="margin:0; color:#000;">📝 Comunicado / Pendência</h3>
-                            <button type="button" onclick="closePendenciaModal()" style="border:none; background:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div>
+                            <h3 style="color:#b38600; margin-bottom:5px;">📋 Checklist de Pendências</h3>
+                            <p style="color:var(--color-text-subtle); margin-bottom:20px;">Adicione itens que o cliente precisa resolver. O cliente verá esta lista.</p>
                         </div>
-                        <div style="padding:20px;">
-                            <!-- Fix CKEditor Layout & Logic -->
-                            <style>
-                                :root { --ck-z-default: 10050; --ck-z-modal: 10050; }
-                                /* Fix Toolbar Overlap - Remove sticky to prevent covering header */
-                                .ck-editor__top { 
-                                    z-index: 100 !important; 
-                                    position: relative !important; 
-                                }
-                                .ck.ck-editor__main > .ck-editor__editable {
-                                    max-height: 300px; 
-                                    overflow-y: auto;
-                                    background: white !important; 
-                                }
-                                textarea.ck-hidden { display: none !important; }
-                            </style>
-
-                            <form method="POST" onsubmit="this.querySelector('button[type=submit]').disabled = true; this.querySelector('button[type=submit]').innerText = 'Enviando...';">
-                                <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
-                                <input type="hidden" name="pendencia_id" id="pendencia_id_input">
-                                <input type="hidden" name="action_emitir_pendencia" value="1">
-                                
-                                <div class="form-group" style="position:relative;">
-                                    <label style="display:block; margin-bottom:5px; font-weight:bold;">Descrição do Comunicado (Texto Rico)</label>
-                                    <textarea name="texto_pendencias" id="editor_pendencias" rows="6" style="width:100%;"><?= htmlspecialchars($detalhes['texto_pendencias']??'') ?></textarea>
-                                </div>
-                                
-                                <div style="display:flex; gap:10px; align-items:center; justify-content:flex-end; margin-top:20px;">
-                                    <button type="button" onclick="closePendenciaModal()" style="padding:10px 15px; border:1px solid #ccc; background:#fff; border-radius:8px; cursor:pointer;">Cancelar</button>
-                                    <button type="submit" name="btn_emitir_pendencia" id="btn_submit_pendencia" class="btn-save btn-warning" style="color:#000; margin:0; width:auto;">Emitir Comunicado</button>
-                                </div>
-                            </form>
-                        </div>
-                    </dialog>
-                    
-                    <hr style="margin: 30px 0; border: 0; border-top: 1px solid #eee;">
-
-                    <!-- Lista de Pendências -->
-                    <table style="width:100%; border-collapse:collapse; margin-top:10px;">
-                        <thead>
-                            <tr style="background:var(--bg-warning); color:var(--text-warning);">
-                                <th style="padding:10px; text-align:center; width:140px;">Data</th>
-                                <th style="padding:10px; text-align:left;">Descrição</th>
-                                <th style="padding:10px; text-align:center; width:120px;">Status</th>
-                                <th style="padding:10px; text-align:center; width:100px;">Ação</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php 
-                            $pends = $pdo->prepare("SELECT * FROM processo_pendencias WHERE cliente_id=? ORDER BY id DESC");
-                            $pends->execute([$cliente_ativo['id']]);
-                            $lista_pend = $pends->fetchAll();
+                        <?php
+                            // Prepara mensagem de WhatsApp
+                            $pends_abertas = $pdo->prepare("SELECT descricao FROM processo_pendencias WHERE cliente_id=? AND status='pendente'");
+                            $pends_abertas->execute([$cliente_ativo['id']]);
+                            $lista_abertas = $pends_abertas->fetchAll(PDO::FETCH_COLUMN);
                             
-                            if(count($lista_pend) == 0): ?>
-                                <tr><td colspan="4" style="padding:20px; text-align:center; color:var(--color-text-subtle);">Nenhuma pendência registrada.</td></tr>
-                            <?php else: foreach($lista_pend as $p): 
-                                $is_solved = ($p['status'] == 'resolvido');
-                                $color = $is_solved ? 'var(--text-success)' : 'var(--text-danger)';
-                                $bg = $is_solved ? 'var(--bg-success)' : 'var(--bg-danger)';
-                                $status_text = $is_solved ? 'RESOLVIDO' : 'PENDENTE';
-                                $data_criacao = isset($p['data_criacao']) ? date('d/m/Y H:i', strtotime($p['data_criacao'])) : '-';
-                            ?>
-                                <tr style="border-bottom:1px solid var(--color-border);">
-                                    <td style="padding:12px; text-align:center; color:var(--color-text-subtle); font-size:0.85rem;">
-                                        <?= $data_criacao ?>
-                                    </td>
-                                    <td style="padding:12px; color:var(--color-text); text-decoration: <?= $is_solved ? 'line-through' : 'none' ?>; opacity: <?= $is_solved ? '0.6' : '1' ?>;">
-                                        <?= mb_strimwidth(strip_tags($p['descricao']), 0, 80, "...") ?>
-                                    </td>
-                                    <td style="padding:12px; text-align:center;">
-                                        <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias&toggle_pend=<?= $p['id'] ?>" 
-                                           style="display:inline-block; padding:4px 10px; border-radius:12px; font-size:0.75rem; font-weight:bold; text-decoration:none; background:<?= $bg ?>; color:<?= $color ?>;">
-                                           <?= $status_text ?>
-                                        </a>
-                                    </td>
-                                    <td style="padding:12px; text-align:center;">
-                                        <button type="button" onclick="editPendencia(<?= $p['id'] ?>, '<?= addslashes(htmlspecialchars_decode($p['descricao'])) ?>')" style="border:none; background:none; cursor:pointer;" title="Editar">✏️</button>
-                                        <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias&del_pend=<?= $p['id'] ?>" onclick="confirmAction(event, 'Excluir esta pendência?')" style="text-decoration:none; margin-left:5px;">🗑️</a>
-                                    </td>
+                            $msg_wpp_pend = "";
+                            if(count($lista_abertas) > 0) {
+                                $primeiro_nome = explode(' ', trim($cliente_ativo['nome']))[0];
+                                $msg_wpp_pend = "Olá {$primeiro_nome}, tudo bem?\n\nPassando para lembrar das pendências do seu processo que precisamos resolver:\n\n";
+                                foreach($lista_abertas as $p) {
+                                    $msg_wpp_pend .= "unchecked_box_icon {$p}\n"; // Placeholder icon, será substituído por emoji na string final se quiser
+                                    $msg_wpp_pend = str_replace("unchecked_box_icon", "◻️", $msg_wpp_pend);
+                                }
+                                $msg_wpp_pend .= "\nQualquer dúvida estou à disposição!";
+                            }
+                            
+                            $tel_clean = preg_replace('/[^0-9]/', '', $detalhes['contato_tel'] ?? '');
+                            $link_wpp_pend = ($tel_clean && strlen($tel_clean) >= 10 && $msg_wpp_pend) 
+                                ? "https://wa.me/55{$tel_clean}?text=" . urlencode($msg_wpp_pend) 
+                                : "#";
+                            
+                            $btn_wpp_style = ($link_wpp_pend == "#") ? "opacity:0.5; cursor:not-allowed;" : "";
+                        ?>
+                        <div style="text-align:right;">
+                            <a href="<?= $link_wpp_pend ?>" target="_blank" class="btn-save btn-success" style="background:#25D366; border:none; display:inline-flex; align-items:center; gap:5px; <?= $btn_wpp_style ?>" onclick="<?= ($link_wpp_pend=='#')?'alert(\'Sem pendências abertas ou telefone inválido.\'); return false;':'' ?>">
+                                📱 Cobrar no WhatsApp
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Novo Form de Inserção Rápida -->
+                    <form method="POST" style="background:#fff8e1; padding:20px; border-radius:8px; border:1px solid #ffeeba; margin-bottom:25px;">
+                        <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
+                        <h4 style="margin-top:0; color:#b38600;">➕ Adicionar Nova Pendência</h4>
+                        <div style="display:flex; flex-direction:column; gap:10px;">
+                            <div style="flex-grow:1;">
+                                <textarea name="descricao_pendencia" id="new_pendencia_editor" placeholder="Digite a descrição..." style="width:100%;"></textarea>
+                            </div>
+                            <div style="text-align:right;">
+                                <button type="submit" name="btn_adicionar_pendencia" class="btn-save btn-warning" style="width:auto; margin:0; padding:10px 25px; color:#000;">Adicionar Pendência</button>
+                            </div>
+                        </div>
+                    </form>
+                    
+                    <!-- Lista de Pendências -->
+                    <div class="table-responsive">
+                        <table style="width:100%; border-collapse:collapse;">
+                            <thead>
+                                <tr style="border-bottom:2px solid #eee; background:#f9f9f9; color:#666;">
+                                    <th style="padding:15px; text-align:left; width:60%;">Descrição</th>
+                                    <th style="padding:15px; text-align:center;">Data</th>
+                                    <th style="padding:15px; text-align:center;">Status</th>
+                                    <th style="padding:15px; text-align:right;">Ações</th>
                                 </tr>
-                            <?php endforeach; endif; ?>
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                <?php 
+                                $stmt_pend = $pdo->prepare("SELECT * FROM processo_pendencias WHERE cliente_id=? ORDER BY status ASC, id DESC");
+                                $stmt_pend->execute([$cliente_ativo['id']]);
+                                $pendencias = $stmt_pend->fetchAll();
+                                
+                                if(count($pendencias) == 0): ?>
+                                    <tr><td colspan="4" style="padding:30px; text-align:center; color:#aaa; font-style:italic;">Nenhuma pendência registrada para este cliente.</td></tr>
+                                <?php else: foreach($pendencias as $p): 
+                                    $is_res = ($p['status'] == 'resolvido');
+                                    $row_opac = $is_res ? '0.6' : '1';
+                                    $bg_row = $is_res ? '#f8fff9' : '#fff';
+                                    $txt_dec = $is_res ? 'line-through' : 'none';
+                                ?>
+                                    <tr style="border-bottom:1px solid #eee; background:<?= $bg_row ?>; opacity:<?= $row_opac ?>;">
+                                        <td style="padding:15px;">
+                                            <div style="font-size:1.05rem; color:#333; text-decoration:<?= $txt_dec ?>;">
+                                                <?= $p['descricao'] // Já permite HTML do editor ?>
+                                            </div>
+                                            <?php if(!empty($p['arquivo_path'])): ?>
+                                                <div style="margin-top:5px;">
+                                                    <a href="<?= htmlspecialchars($p['arquivo_path']) ?>" target="_blank" style="display:inline-flex; align-items:center; gap:5px; font-size:0.85rem; color:#0d6efd; text-decoration:none; background:#e9ecef; padding:2px 8px; border-radius:4px;">
+                                                        📎 Ver Anexo Enviado
+                                                    </a>
+                                                </div>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td style="padding:15px; text-align:center; color:#777; font-size:0.9rem;">
+                                            <?= date('d/m/Y', strtotime($p['data_criacao'])) ?>
+                                        </td>
+                                        <td style="padding:15px; text-align:center;">
+                                            <?php if($is_res): ?>
+                                                <span style="background:#198754; color:white; padding:4px 10px; border-radius:20px; font-size:0.8rem; font-weight:bold;">RESOLVIDO</span>
+                                            <?php else: ?>
+                                                <span style="background:#ffc107; color:#000; padding:4px 10px; border-radius:20px; font-size:0.8rem; font-weight:bold;">PENDENTE</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td style="padding:15px; text-align:right;">
+                                            <?php if(!$is_res): ?>
+                                                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias&toggle_pendencia=<?= $p['id'] ?>" class="btn-icon" style="background:#e8f5e9; color:#198754; border:1px solid #c3e6cb; margin-right:5px;" title="Marcar como Resolvido">✅</a>
+                                                <button onclick="openEditPendencia(<?= $p['id'] ?>, '<?= addslashes(str_replace(["\r", "\n"], '', $p['descricao'])) // Encode seguro para JS inline ?>')" class="btn-icon" style="background:#e3f2fd; color:#0d6efd; border:1px solid #d1e7dd; margin-right:5px;" title="Editar">✏️</button>
+                                            <?php else: ?>
+                                                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias&toggle_pendencia=<?= $p['id'] ?>" class="btn-icon" style="background:#fff3cd; color:#856404; border:1px solid #ffeeba; margin-right:5px;" title="Reabrir Pendência">↩️</a>
+                                            <?php endif; ?>
+                                            
+                                            <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias&delete_pendencia=<?= $p['id'] ?>" onclick="confirmAction(event, 'Excluir esta pendência definitivamente?')" class="btn-icon" style="background:#f8d7da; color:#dc3545; border:1px solid #f5c6cb;" title="Excluir">🗑️</a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
-                <script>
-                    ClassicEditor
-                        .create( document.querySelector( '#editor_pendencias' ), {
-                            toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|', 'undo', 'redo' ],
-                            language: 'pt-br'
-                        } )
-                        .catch( error => {
-                            console.error( error );
-                        } );
+                <!-- Modal Editar Pendência -->
+                <dialog id="modalEditPendencia" style="border:none; border-radius:10px; padding:0; width:90%; max-width:600px; box-shadow:0 10px 40px rgba(0,0,0,0.3);">
+                    <form method="POST" style="display:flex; flex-direction:column;">
+                        <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
+                        <input type="hidden" name="pendencia_id" id="edit_pendencia_id">
+                        
+                        <div style="padding:20px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
+                            <h3 style="margin:0;">✏️ Editar Pendência</h3>
+                            <button type="button" onclick="document.getElementById('modalEditPendencia').close()" style="border:none; background:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+                        </div>
+                        
+                        <div style="padding:20px;">
+                            <label style="display:block; margin-bottom:8px; font-weight:bold;">Descrição</label>
+                            <textarea name="descricao_pendencia" id="edit_pendencia_texto" rows="4" style="width:100%;"></textarea>
+                        </div>
+                        
+                        <div style="padding:20px; background:#f9f9f9; text-align:right;">
+                            <button type="button" onclick="document.getElementById('modalEditPendencia').close()" style="padding:10px 15px; border:1px solid #ddd; background:#fff; border-radius:5px; margin-right:10px; cursor:pointer;">Cancelar</button>
+                            <button type="submit" name="btn_editar_pendencia" class="btn-save btn-primary" style="width:auto; margin:0;">Salvar Alteração</button>
+                        </div>
+                    </form>
+                </dialog>
 
-                    ClassicEditor
-                        .create( document.querySelector( '#editor_etapa' ), {
-                            toolbar: [ 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|', 'undo', 'redo' ],
-                            language: 'pt-br'
-                        } )
-                        .catch( error => {
-                            console.error( error );
-                        } );
-
-                    function editPendencia(id, text) {
-                        document.getElementById('pendencia_id_input').value = id;
-                        document.getElementById('nova_pendencia_input').value = text;
-                        document.getElementById('btn_save_pend_submit').innerText = 'Salvar Alteração';
-                        document.getElementById('btn_cancel_edit').style.display = 'block';
+                <style>
+                    .btn-icon {
+                        display: inline-flex; width: 32px; height: 32px; align-items: center; justify-content: center;
+                        border-radius: 6px; text-decoration: none; font-size: 1rem; cursor: pointer; transition: 0.2s;
                     }
-                    function resetPendenciaForm() {
-                        document.getElementById('pendencia_id_input').value = '';
-                        document.getElementById('nova_pendencia_input').value = '';
-                        document.getElementById('btn_save_pend_submit').innerText = 'Adicionar';
-                        document.getElementById('btn_cancel_edit').style.display = 'none';
+                    .btn-icon:hover { transform: scale(1.1); filter: brightness(0.95); }
+                    /* Ajuste fino para o editor ficar mais compacto */
+                    .ck-editor__editable_inline { min-height: 80px !important; }
+                </style>
+
+                <script>
+                    let editorAdicao;
+                    let editorEdicao;
+
+                    // Inicializa Editor de Adição (Simples)
+                    ClassicEditor
+                        .create( document.querySelector( '#new_pendencia_editor' ), {
+                            toolbar: [ 'bold', 'italic', 'link', 'bulletedList', '|', 'undo', 'redo' ],
+                            placeholder: 'Digite a pendência aqui (Você pode usar negrito, listas...)',
+                            language: 'pt-br'
+                        } )
+                        .then( newEditor => { editorAdicao = newEditor; } )
+                        .catch( error => { console.error( error ); } );
+
+                    // Inicializa Editor de Edição
+                    ClassicEditor
+                        .create( document.querySelector( '#edit_pendencia_texto' ), {
+                            toolbar: [ 'bold', 'italic', 'link', 'bulletedList', '|', 'undo', 'redo' ],
+                            language: 'pt-br'
+                        } )
+                        .then( newEditor => { editorEdicao = newEditor; } )
+                        .catch( error => { console.error( error ); } );
+
+                    function openEditPendencia(id, textoHtml) {
+                        document.getElementById('edit_pendencia_id').value = id;
+                        // Seta dados no CKEditor
+                        if(editorEdicao) {
+                            editorEdicao.setData(textoHtml);
+                        }
+                        document.getElementById('modalEditPendencia').showModal();
                     }
                 </script>
+
 
             <?php elseif($active_tab == 'arquivos'): ?>
                 <div class="form-card" style="border-left: 6px solid #2196f3;">

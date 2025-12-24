@@ -59,6 +59,51 @@ $drive_pagamentos_id = null;
 if (!empty($detalhes['link_pasta_pagamentos'])) {
     $drive_pagamentos_id = getDriveFolderId($detalhes['link_pasta_pagamentos']);
 }
+
+// --- LÓGICA DE UPLOAD DE PENDÊNCIA ---
+$msg_upload = '';
+if (isset($_POST['btn_upload_pendencia'])) {
+    $pend_id_upload = $_POST['upload_pendencia_id'];
+    
+    // Verifica se arquivo foi enviado
+    if (isset($_FILES['arquivo_pendencia']) && $_FILES['arquivo_pendencia']['error'] == 0) {
+        $allowed = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx'];
+        $filename = $_FILES['arquivo_pendencia']['name'];
+        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+        
+        if (in_array($ext, $allowed)) {
+            // Cria pasta se não existir
+            $upload_dir = __DIR__ . '/uploads/pendencias/';
+            if (!is_dir($upload_dir)) {
+                mkdir($upload_dir, 0755, true);
+            }
+            
+            // Gera nome único: ID_TIMESTAMP_NOME
+            $new_name = $pend_id_upload . '_' . time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '', $filename);
+            $dest_path = $upload_dir . $new_name;
+            
+            // Move e Salva no BD
+            if (move_uploaded_file($_FILES['arquivo_pendencia']['tmp_name'], $dest_path)) {
+                // Caminho relativo para salvar no banco
+                $rel_path = 'uploads/pendencias/' . $new_name;
+                
+                try {
+                    $stmtUp = $pdo->prepare("UPDATE processo_pendencias SET arquivo_nome = ?, arquivo_path = ?, data_upload = NOW() WHERE id = ? AND cliente_id = ?");
+                    $stmtUp->execute([$filename, $rel_path, $pend_id_upload, $cliente_id]);
+                    $msg_upload = "success|Arquivo anexado com sucesso!";
+                } catch(PDOException $e) {
+                    $msg_upload = "error|Erro ao salvar no banco: " . $e->getMessage();
+                }
+            } else {
+                $msg_upload = "error|Erro ao mover arquivo para pasta de uploads.";
+            }
+        } else {
+            $msg_upload = "error|Extensão não permitida. Use PDF, JPG, PNG ou DOC.";
+        }
+    } else {
+        $msg_upload = "error|Nenhum arquivo selecionado ou erro no envio.";
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -344,69 +389,161 @@ if (!empty($detalhes['link_pasta_pagamentos'])) {
 
 
 
-        <!-- VIEW 3: PENDÊNCIAS -->
+        <!-- VIEW 3: PENDÊNCIAS (Reformulada) -->
         <div id="view-pendencias" class="view-section">
             <section class="card">
-                <h2 style="margin-top:0;">Avisos e Pendências do Projeto</h2>
+                <h2 style="margin-top:0; margin-bottom:20px;">Avisos e Pendências do Projeto</h2>
                 <?php 
-                $stmtPend = $pdo->prepare("SELECT * FROM processo_pendencias WHERE cliente_id=? ORDER BY id DESC");
+                $stmtPend = $pdo->prepare("SELECT * FROM processo_pendencias WHERE cliente_id=? ORDER BY status ASC, id DESC");
                 $stmtPend->execute([$cliente_id]);
                 $pendencias = $stmtPend->fetchAll();
                 
                 if(count($pendencias) > 0): ?>
-                    <div style="overflow-x:auto;">
-                        <table class="history-table">
-                            <thead>
-                                <tr><th>Data</th><th>Status</th><th>Descrição/Detalhes</th></tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach($pendencias as $p): 
-                                     $data = isset($p['data_criacao']) ? date('d/m/Y H:i', strtotime($p['data_criacao'])) : '-';
-                                     $is_resolved = ($p['status'] === 'resolvido');
-                                     $row_bg = $is_resolved ? 'var(--bg-success)' : 'var(--bg-warning)';
-                                     $text_color = $is_resolved ? 'var(--text-success)' : 'var(--text-warning)';
-                                     $badge_class = $is_resolved ? 'st-pago' : 'st-pend'; // st-pago is usually green
-                                     $status_text = $is_resolved ? 'RESOLVIDO' : 'PENDENTE';
-                                     $desc_style = $is_resolved ? "color:var(--text-success); opacity:0.8; cursor:pointer;" : "color:var(--text-warning); font-weight:500; cursor:pointer; text-decoration:underline;";
-                                     
-                                     // Safe preview for table (no html tags)
-                                     $preview_text = mb_strimwidth(strip_tags(htmlspecialchars_decode($p['descricao'])), 0, 60, "...");
-                                ?>
-                                <tr style="background:<?= $row_bg ?>;">
-                                    <td style="white-space:nowrap; color:<?= $text_color ?>;"><?= $data ?></td>
-                                    <td><span class="status-badge <?= $badge_class ?>"><?= $status_text ?></span></td>
-                                    <td style="<?= $desc_style ?>" 
-                                        onclick="openPendencyModal('<?= addslashes(htmlspecialchars_decode($p['descricao'])) ?>')">
-                                        <?= htmlspecialchars($preview_text) ?>
-                                    </td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
+                    <div class="pendency-list">
+                        <?php foreach($pendencias as $p): 
+                             $is_resolved = ($p['status'] === 'resolvido');
+                             $status_text = $is_resolved ? 'RESOLVIDO' : 'PENDENTE';
+                             
+                             // Ícone e Cor base
+                             $icon = $is_resolved ? '✅' : '⚠️';
+                             $border_color = $is_resolved ? 'var(--color-primary)' : '#ffc107';
+                             $bg_color = $is_resolved ? '#f8fff9' : '#fffbf2';
+                             $opacity = $is_resolved ? '0.7' : '1';
+                             
+                             // Permitir HTML seguro (o que vem do CKEditor)
+                             $descricao_html = $p['descricao']; 
+                             
+                             // Verificação de Arquivo
+                             $tem_arquivo = !empty($p['arquivo_path']);
+                        ?>
+                        <div class="pendency-card" style="border-left: 5px solid <?= $border_color ?>; background: <?= $bg_color ?>; opacity: <?= $opacity ?>;">
+                            <div class="p-header" onclick="openPendencyModal('<?= addslashes(str_replace(["\r", "\n"], '', $descricao_html)) ?>')">
+                                <span class="p-date"><?= date('d/m/Y', strtotime($p['data_criacao'])) ?></span>
+                                <span class="status-badge <?= $is_resolved ? 'st-pago' : 'st-pend' ?>"><?= $status_text ?></span>
+                            </div>
+                            
+                            <div class="p-body" onclick="openPendencyModal('<?= addslashes(str_replace(["\r", "\n"], '', $descricao_html)) ?>')">
+                                <div class="p-content">
+                                    <?= $descricao_html ?>
+                                </div>
+                            </div>
+                            
+                            <div class="p-footer">
+                                <span style="font-size:0.85rem; color:var(--color-text-subtle); display:flex; align-items:center; gap:5px; flex-grow:1;" onclick="openPendencyModal('<?= addslashes(str_replace(["\r", "\n"], '', $descricao_html)) ?>')">
+                                    Clique para ver detalhes
+                                </span>
+                                
+                                <!-- AÇÕES DE ARQUIVO -->
+                                <div class="p-actions">
+                                    <?php if($tem_arquivo): ?>
+                                        <a href="<?= htmlspecialchars($p['arquivo_path']) ?>" target="_blank" class="btn-file-view" title="Ver anexo enviado">
+                                            📎 Ver Anexo
+                                        </a>
+                                    <?php elseif(!$is_resolved): ?>
+                                        <button onclick="openUploadModal(<?= $p['id'] ?>)" class="btn-file-upload">
+                                            📤 Anexar
+                                        </button>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
                     </div>
                 <?php else: ?>
                     <div style="padding:40px; text-align:center; color:var(--color-text-subtle); background:rgba(0,0,0,0.02); border-radius:12px;">
-                        <div style="font-size:2rem;">✅</div>
-                        <p>Não há pendências registradas no momento.</p>
+                        <div style="font-size:3rem; margin-bottom:15px;">🎉</div>
+                        <p style="font-size:1.1rem;">Tudo certo! Não há pendências no momento.</p>
                     </div>
                 <?php endif; ?>
 
                 <!-- PENDENCY MODAL -->
                 <div id="pendency-modal" class="modal-overlay">
-                    <div class="modal-content" style="height:auto; max-height:80vh;">
-                        <div class="modal-header" style="background:var(--bg-warning); color:var(--text-warning);">
-                            <h3 style="margin:0;">⚠️ Detalhes da Pendência</h3>
+                    <div class="modal-content" style="height:auto; max-height:80vh; max-width:600px;">
+                        <div class="modal-header">
+                            <h3 style="margin:0;">Detalhes da Pendência</h3>
                             <button class="modal-close" onclick="closePendencyModal()">×</button>
                         </div>
                         <div class="modal-body" style="padding:30px; overflow-y:auto;">
-                            <p id="pendency-modal-text" style="font-size:1.1rem; line-height:1.6; color:var(--color-text); white-space: pre-wrap;"></p>
+                            <div id="pendency-modal-content" class="ck-content"></div>
                         </div>
                     </div>
                 </div>
 
+                <!-- UPLOAD MODAL -->
+                <div id="upload-modal" class="modal-overlay">
+                    <div class="modal-content" style="height:auto; max-width:400px; overflow:visible;">
+                        <div class="modal-header">
+                            <h3 style="margin:0;">📤 Anexar Arquivo</h3>
+                            <button class="modal-close" onclick="closeUploadModal()">×</button>
+                        </div>
+                        <div class="modal-body" style="padding:25px;">
+                            <form method="POST" enctype="multipart/form-data">
+                                <input type="hidden" name="upload_pendencia_id" id="upload_pendencia_id">
+                                <p style="margin-top:0; color:#666; font-size:0.9rem;">Selecione o comprovante ou documento para anexar a esta pendência.</p>
+                                
+                                <div style="margin-bottom:20px;">
+                                    <input type="file" name="arquivo_pendencia" required accept=".pdf,.jp,.jpeg,.png,.doc,.docx" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px;">
+                                </div>
+                                
+                                <div style="text-align:right;">
+                                    <button type="submit" name="btn_upload_pendencia" class="nav-btn active" style="padding:10px 20px; font-size:0.95rem; width:100%;">Confirmar Envio</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <style>
+                    .pendency-list { display: grid; gap: 15px; }
+                    .pendency-card { 
+                        padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+                        transition: transform 0.2s, box-shadow 0.2s;
+                        border: 1px solid rgba(0,0,0,0.05);
+                        border-left-width: 5px; /* Importante para override */
+                        display: flex; flex-direction: column;
+                    }
+                    .pendency-card:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+                    
+                    .p-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; cursor: pointer; }
+                    .p-date { font-size: 0.85rem; color: var(--color-text-subtle); font-weight: 600; }
+                    
+                    .p-body { margin-bottom: 15px; cursor: pointer; }
+                    .p-content { 
+                        font-size: 1rem; color: var(--color-text); line-height: 1.5; 
+                        max-height: 60px; overflow: hidden; position: relative;
+                        text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+                    }
+                    
+                    .p-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.05); }
+                    
+                    .btn-file-upload { background: var(--color-primary); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 0.85rem; transition:0.2s; }
+                    .btn-file-upload:hover { background: #0d462b; }
+                    
+                    .btn-file-view { background: #e2e6ea; color: #495057; text-decoration: none; padding: 6px 12px; border-radius: 6px; font-weight: 600; display: flex; align-items: center; gap: 5px; font-size: 0.85rem; transition:0.2s; }
+                    .btn-file-view:hover { background: #dbe2e8; }
+
+                    /* CKEditor Content Styles in Modal */
+                    .ck-content ul { padding-left: 20px; }
+                    .ck-content p { margin-bottom: 10px; }
+                    .ck-content a { color: var(--color-primary); text-decoration: underline; }
+                </style>
+                
+                <!-- Toast Logic for PHP Message -->
+                <?php if(!empty($msg_upload)): 
+                    list($type, $text) = explode('|', $msg_upload);
+                    $bgColor = ($type == 'success') ? '#4caf50' : '#f44336';
+                ?>
+                <div id="toast-msg" style="position:fixed; bottom:20px; right:20px; background:<?= $bgColor ?>; color:white; padding:15px 25px; border-radius:8px; box-shadow:0 5px 15px rgba(0,0,0,0.2); z-index:9999; animation: slideIn 0.3s ease-out;">
+                    <?= $text ?>
+                </div>
                 <script>
-                    function openPendencyModal(text) {
-                        document.getElementById('pendency-modal-text').innerText = text;
+                    setTimeout(() => { document.getElementById('toast-msg').style.display = 'none'; }, 5000);
+                </script>
+                <?php endif; ?>
+
+                <script>
+                    function openPendencyModal(htmlContent) {
+                        document.getElementById('pendency-modal-content').innerHTML = htmlContent;
                         document.getElementById('pendency-modal').classList.add('active');
                         document.body.style.overflow = 'hidden';
                     }
@@ -414,7 +551,23 @@ if (!empty($detalhes['link_pasta_pagamentos'])) {
                         document.getElementById('pendency-modal').classList.remove('active');
                         document.body.style.overflow = '';
                     }
+                    
+                    function openUploadModal(id) {
+                        document.getElementById('upload_pendencia_id').value = id;
+                        document.getElementById('upload-modal').classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                    }
+                    function closeUploadModal() {
+                        document.getElementById('upload-modal').classList.remove('active');
+                        document.body.style.overflow = '';
+                    }
+                    
+                    // Close upload on outside click
+                    document.getElementById('upload-modal').addEventListener('click', function(e) {
+                         if (e.target === this) closeUploadModal();
+                    });
                 </script>
+
 
 
             </section>
