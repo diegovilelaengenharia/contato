@@ -1025,7 +1025,6 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             <p style="color:var(--color-text-subtle); margin-bottom:20px;">Adicione itens que o cliente precisa resolver. O cliente verá esta lista.</p>
                         </div>
                         <?php 
-                        <?php 
                             // Movido para cá para usar no botão WhatsApp
                             $stmt_pend = $pdo->prepare("SELECT * FROM processo_pendencias WHERE cliente_id=? ORDER BY status ASC, id DESC");
                             $stmt_pend->execute([$cliente_ativo['id']]);
