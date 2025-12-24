@@ -42,7 +42,7 @@ foreach($financeiro as $item) {
 }
 
 // Configurações Visuais
-$primary_color = '#005f73'; // Vilela Oficial (aprox)
+$primary_color = '#146c43'; // Vilela Brand Green
 $text_color = '#333';
 ?>
 <!DOCTYPE html>
@@ -250,7 +250,7 @@ $text_color = '#333';
                 <span style="display:none;">Engenharia</span>
             </div>
             <div class="meta-header" style="text-align:right; font-size:10pt; line-height:1.5;">
-                <strong style="font-size:12pt; color:var(--primary);">VILELA ENGENHARIA & CONSULTORIA</strong><br>
+                <strong style="font-size:12pt; color:var(--primary);">VILELA ENGENHARIA</strong><br>
                 Eng. Diego Vilela | CREA-MG: 235474/D<br>
                 📞 (35) 98452-9577 | 📧 vilela.eng.mg@gmail.com<br>
                 <div style="margin-top:5px; border-top:1px solid #ddd; padding-top:5px; font-size:9pt; color:#777;">
