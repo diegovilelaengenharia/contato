@@ -41,6 +41,15 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS processo_pendencias (
     FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
 )");
 
+// Create Dynamic Fields Table
+$pdo->exec("CREATE TABLE IF NOT EXISTS processo_campos_extras (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cliente_id INT NOT NULL,
+    titulo VARCHAR(255) NOT NULL,
+    valor TEXT,
+    FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
+)");
+
 // --- Fases Padrão ---
 $fases_padrao = [
     "Abertura de Processo (Guichê)", "Fiscalização (Parecer Fiscal)", "Triagem (Documentos Necessários)",
@@ -260,15 +269,11 @@ if (isset($_POST['novo_cliente'])) {
             rg_ie, 
             endereco_residencial, 
             endereco_imovel
-        ) VALUES (?, ?, ?, ?, ?, ?)")->execute([
-            $nid, 
-            $_POST['cpf_cnpj'], 
-            $_POST['telefone'], 
-            $_POST['rg'], 
-            $_POST['endereco_residencial'], 
-            $_POST['endereco_imovel']
-        ]);
-        $sucesso = "Cliente criado com sucesso: $nome_final";
+        ) VALUES (?, ?, ?, ?, ?, ?)")->execute([$nid, $_POST['cpf_cnpj'], $_POST['telefone'], $_POST['rg'], $_POST['endereco_residencial'], $_POST['endereco_imovel']]);
+        
+        // REDIRECIONAMENTO IMEDIATO PARA EDITOR COMPLETÃO
+        header("Location: editar_cliente.php?id=$nid&msg=welcome");
+        exit;
     } catch (PDOException $e) { $erro = "Erro ao criar cliente: " . $e->getMessage(); }
 }
 
@@ -714,8 +719,8 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 <?php endif; ?>
             </button>
             
-            <h4 style="font-size:0.75rem; text-transform:uppercase; color:#adb5bd; font-weight:700; margin:15px 0 5px 10px;">Gestão</h4>
-            <!-- Botão Novo Cliente sem active por padrão -->
+            <h4 style="font-size:0.75rem; text-transform:uppercase; color:#adb5bd; font-weight:700; margin:15px 0 5px 10px;">Cadastro</h4>
+            <!-- Botão Novo Cliente (Neutro) -->
             <a href="?novo=true" class="btn-menu <?= (isset($_GET['novo'])) ? 'active' : '' ?>">
                 <span class="material-symbols-rounded">person_add</span>
                 Novo Cliente
@@ -733,12 +738,27 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             </a>
         </nav>
 
-        <h4 style="margin: 10px 0; color: var(--color-text-subtle); display:flex; align-items:center; gap:8px;">📂 Clientes</h4>
-        <ul class="client-list" style="list-style:none; padding:0; max-height:500px; overflow-y:auto;">
-            <?php foreach($clientes as $c): ?>
-                <li><a href="?cliente_id=<?= $c['id'] ?>" class="<?= ($cliente_ativo && $cliente_ativo['id'] == $c['id']) ? 'active' : '' ?>"><?= htmlspecialchars($c['nome']) ?></a></li>
+        <h4 style="margin: 20px 0 10px 10px; color: var(--color-text-subtle); display:flex; align-items:center; gap:8px; font-size:0.8rem; text-transform:uppercase; font-weight:700;">📂 Meus Clientes</h4>
+        <div class="client-list-fancy" style="padding:0 10px; max-height:500px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;">
+            <?php foreach($clientes as $c): 
+                $isActive = ($cliente_ativo && $cliente_ativo['id'] == $c['id']);
+                $initial = strtoupper(substr($c['nome'], 0, 1));
+                // Estilo
+                $bg = $isActive ? 'var(--color-primary-light)' : '#fff';
+                $border = $isActive ? '1px solid var(--color-primary)' : '1px solid transparent';
+                $color = $isActive ? 'var(--color-primary)' : '#444';
+            ?>
+                <a href="?cliente_id=<?= $c['id'] ?>" style="display:flex; align-items:center; gap:12px; padding:10px; background:<?= $bg ?>; border-radius:8px; text-decoration:none; color:<?= $color ?>; border:<?= $border ?>; transition:0.2s;" onmouseover="this.style.background='#f0f8f5'" onmouseout="this.style.background='<?= $bg ?>'">
+                    <div style="width:32px; height:32px; background:<?= $isActive?'var(--color-primary)':'#eee' ?>; color:<?= $isActive?'#fff':'#777' ?>; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:0.9rem;">
+                        <?= $initial ?>
+                    </div>
+                    <div style="flex:1; min-width:0;">
+                        <div style="font-weight:600; font-size:0.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><?= htmlspecialchars($c['nome']) ?></div>
+                        <div style="font-size:0.75rem; opacity:0.7;">ID #<?= str_pad($c['id'], 3, '0', STR_PAD_LEFT) ?></div>
+                    </div>
+                </a>
             <?php endforeach; ?>
-        </ul>
+        </div>
     </aside>
 
     <main>

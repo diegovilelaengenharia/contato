@@ -37,6 +37,11 @@ $stmtDet = $pdo->prepare("SELECT * FROM processo_detalhes WHERE cliente_id = ?")
 $stmtDet->execute([$cliente_id]);
 $detalhes = $stmtDet->fetch();
 
+// Buscar campos extras
+$stmtEx = $pdo->prepare("SELECT * FROM processo_campos_extras WHERE cliente_id = ?");
+$stmtEx->execute([$cliente_id]);
+$campos_extras = $stmtEx->fetchAll();
+
 // Arrays para dropdowns
 $tipos_pessoa = ['Fisica', 'Juridica'];
 $estados_civil = ['Solteiro', 'Casado', 'Divorciado', 'Viuvo', 'Uniao Estavel'];
@@ -80,7 +85,24 @@ if (isset($_POST['btn_salvar_tudo'])) {
             $_POST['imovel_bairro'], $_POST['imovel_complemento'], $_POST['imovel_cidade'], $_POST['imovel_uf'], $_POST['inscricao_imob'],
             $_POST['num_matricula'], $_POST['imovel_area_lote'], $_POST['area_construida'], $_POST['resp_tecnico'], $_POST['registro_prof'], $_POST['num_art_rrt'],
             $cliente_id
+            $cliente_id
         ]);
+
+        // 3. Atualizar Campos Extras (Delete + Insert Strategy)
+        $pdo->prepare("DELETE FROM processo_campos_extras WHERE cliente_id = ?")->execute([$cliente_id]);
+        
+        if (isset($_POST['extra_titulos']) && isset($_POST['extra_valores'])) {
+            $titulos = $_POST['extra_titulos'];
+            $valores = $_POST['extra_valores'];
+            
+            $stmtInsEx = $pdo->prepare("INSERT INTO processo_campos_extras (cliente_id, titulo, valor) VALUES (?, ?, ?)");
+            
+            for ($i = 0; $i < count($titulos); $i++) {
+                if (!empty($titulos[$i])) { // Apenas se tiver título
+                    $stmtInsEx->execute([$cliente_id, $titulos[$i], $valores[$i]]);
+                }
+            }
+        }
 
         $pdo->commit();
         echo "<script>
@@ -92,7 +114,9 @@ if (isset($_POST['btn_salvar_tudo'])) {
         
         // Recarregar dados
         $stmt->execute([$cliente_id]); $cliente = $stmt->fetch();
+        $stmt->execute([$cliente_id]); $cliente = $stmt->fetch();
         $stmtDet->execute([$cliente_id]); $detalhes = $stmtDet->fetch();
+        $stmtEx->execute([$cliente_id]); $campos_extras = $stmtEx->fetchAll();
 
     } catch (Exception $e) {
         $pdo->rollBack();
@@ -492,7 +516,45 @@ if (isset($_POST['btn_salvar_tudo'])) {
                         <label>Número ART / RRT</label>
                         <input type="text" name="num_art_rrt" value="<?= htmlspecialchars($detalhes['num_art_rrt']??'') ?>">
                     </div>
+                    </div>
+            </div>
+
+            <!-- SECTION 5: CUSTOM FIELDS (DINÂMICOS) -->
+            <div class="section-header">
+                <div class="section-icon">⚡</div>
+                <h2>Campos Adicionais</h2>
+            </div>
+            <div class="section-body">
+                <p style="font-size:0.9rem; color:#666; margin-bottom:15px;">Adicione informações extras que não estão nos campos padrão.</p>
+                
+                <div id="container-campos-extras">
+                    <?php foreach($campos_extras as $ex): ?>
+                        <div class="extra-field-row" style="display:flex; gap:10px; margin-bottom:10px; align-items:center;">
+                            <input type="text" name="extra_titulos[]" value="<?= htmlspecialchars($ex['titulo']) ?>" placeholder="Título do Campo" style="flex:1; font-weight:bold;">
+                            <input type="text" name="extra_valores[]" value="<?= htmlspecialchars($ex['valor']) ?>" placeholder="Valor / Informação" style="flex:2;">
+                            <button type="button" onclick="this.parentElement.remove()" style="background:#ffebee; color:#c62828; border:1px solid #ffcdd2; padding:8px; border-radius:6px; cursor:pointer;" title="Remover Campo">🗑️</button>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
+
+                <button type="button" onclick="addExtraField()" style="margin-top:10px; background:#e8f5e9; color:#2e7d32; border:1px solid #c8e6c9; padding:8px 15px; border-radius:6px; cursor:pointer; font-weight:600;">
+                    + Adicionar Campo
+                </button>
+
+                <script>
+                    function addExtraField() {
+                        const div = document.createElement('div');
+                        div.className = 'extra-field-row';
+                        div.style.cssText = 'display:flex; gap:10px; margin-bottom:10px; align-items:center; animation:fadeIn 0.3s;';
+                        div.innerHTML = `
+                            <input type="text" name="extra_titulos[]" placeholder="Título (ex: Nome do Cônjuge)" style="flex:1; font-weight:bold;">
+                            <input type="text" name="extra_valores[]" placeholder="Valor" style="flex:2;">
+                            <button type="button" onclick="this.parentElement.remove()" style="background:#ffebee; color:#c62828; border:1px solid #ffcdd2; padding:8px; border-radius:6px; cursor:pointer;" title="Remover Campo">🗑️</button>
+                        `;
+                        document.getElementById('container-campos-extras').appendChild(div);
+                    }
+                </script>
+            </div>
             </div>
 
             <!-- Sticky Save -->
