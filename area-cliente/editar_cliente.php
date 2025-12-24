@@ -2,10 +2,18 @@
 // editar_cliente.php
 
 session_start();
+// Debug para erro 500
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 if (!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true) {
     header('Location: index.php');
     exit;
 }
+
+// Output Buffering para evitar erro de Header sent
+ob_start();
 
 require 'db.php';
 

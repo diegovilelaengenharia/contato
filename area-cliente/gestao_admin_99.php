@@ -795,16 +795,58 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             </div>
 
         <?php elseif($cliente_ativo): ?>
-            <!-- Header Redundante Removido conforme solicitado -->
+            <!-- Header Redundante Removido -->
             <div style="margin-bottom: 20px;"></div>
+            
+            <?php
+            // Lógica de Upload de Avatar
+            if(isset($_FILES['avatar_upload']) && $_FILES['avatar_upload']['error'] == 0) {
+                $ext = strtolower(pathinfo($_FILES['avatar_upload']['name'], PATHINFO_EXTENSION));
+                $allowed = ['jpg', 'jpeg', 'png', 'gif'];
+                if(in_array($ext, $allowed)) {
+                    $new_name = 'avatar_' . $cliente_ativo['id'] . '.' . $ext;
+                    $upload_path = 'uploads/avatars/' . $new_name;
+                    if(!is_dir('uploads/avatars/')) mkdir('uploads/avatars/', 0755, true);
+                    
+                    if(move_uploaded_file($_FILES['avatar_upload']['tmp_name'], $upload_path)) {
+                        // Salvar caminho no banco (assumindo coluna 'foto_perfil' ou criando lógica de arquivo)
+                         try {
+                            // Tenta atualizar se a coluna existir, senão o arquivo já vale pelo nome
+                            // Mas para garantir cache busting, ideal seria salvar. 
+                            // Como não tenho certeza da coluna, vou usar o arquivo físico como referência
+                            // e forçar reload.
+                            echo "<script>window.location.href='?cliente_id={$cliente_ativo['id']}&tab=andamento&avatar_updated=1';</script>";
+                         } catch(Exception $e) {}
+                    }
+                }
+            }
+            
+            // Verifica se existe avatar
+            $avatar_file = glob("uploads/avatars/avatar_{$cliente_ativo['id']}.*");
+            $avatar_url = !empty($avatar_file) ? $avatar_file[0] . '?v=' . time() : null;
+            ?>
 
             <!-- Card Resumo do Cliente (Compacto & Integrado) -->
-            <div class="form-card" style="display:flex; align-items:center; gap:15px; padding:15px; flex-wrap:wrap; margin-bottom:20px; border-left:5px solid var(--color-primary); background:#fff; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.05);">
+            <div class="form-card" style="display:flex; align-items:center; gap:20px; padding:20px; flex-wrap:wrap; margin-bottom:20px; border-left:5px solid var(--color-primary); background:#fff; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.05);">
                 
-                <!-- Avatar / Iniciais -->
-                <div style="width:60px; height:60px; background:var(--color-primary-light); color:var(--color-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.6rem; font-weight:800; border:2px solid white; box-shadow:0 2px 5px rgba(0,0,0,0.1); min-width:60px;">
-                    <?= strtoupper(substr($cliente_ativo['nome'], 0, 1)) ?>
+                <!-- Avatar / Iniciais (Com Upload) -->
+                <div style="position:relative; width:80px; height:80px; min-width:80px; cursor:pointer;" onclick="document.getElementById('avatar_input').click();" title="Clique para alterar a foto">
+                    <?php if($avatar_url): ?>
+                        <img src="<?= $avatar_url ?>" style="width:100%; height:100%; object-fit:cover; border-radius:50%; border:3px solid var(--color-primary-light);">
+                    <?php else: ?>
+                        <div style="width:100%; height:100%; background:var(--color-primary-light); color:var(--color-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2rem; font-weight:800; border:2px solid white; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
+                            <?= strtoupper(substr($cliente_ativo['nome'], 0, 1)) ?>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <div style="position:absolute; bottom:0; right:0; background:var(--color-primary); color:white; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; border:2px solid white;">📷</div>
                 </div>
+                
+                <!-- Form invisível para upload -->
+                <form method="POST" enctype="multipart/form-data" id="form_avatar" style="display:none;">
+                    <input type="file" name="avatar_upload" id="avatar_input" accept="image/*" onchange="document.getElementById('form_avatar').submit();">
+                    <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
+                </form>
 
                 <div style="flex:1; min-width:250px;">
                     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
@@ -828,10 +870,10 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             ✏️ Editar Perfil
                         </a>
                         <a href="?exportar_cliente=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save btn-secondary" style="text-decoration:none; padding:8px 15px; font-size:0.9rem;">
-                           📄 Resumo
+                           📄 Resumo do Processo
                         </a>
-                        <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" class="btn-save btn-danger btn-delete-confirm" data-confirm-text="Confirmar exclusão?" style="text-decoration:none; padding:8px 15px; font-size:0.9rem;" title="Excluir Cliente">
-                           🗑️
+                        <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" class="btn-save btn-danger btn-delete-confirm" data-confirm-text="Você tem certeza absoluta que deseja EXCLUIR este cliente? Essa ação apagará todo o histórico e dados permanentemente." style="text-decoration:none; padding:8px 15px; font-size:0.9rem;">
+                           🗑️ Excluir Cliente
                         </a>
                     </div>
                 </div>
