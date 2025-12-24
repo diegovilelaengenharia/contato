@@ -38,9 +38,21 @@ $stmtDet->execute([$cliente_id]);
 $detalhes = $stmtDet->fetch();
 
 // Buscar campos extras
-$stmtEx = $pdo->prepare("SELECT * FROM processo_campos_extras WHERE cliente_id = ?");
-$stmtEx->execute([$cliente_id]);
-$campos_extras = $stmtEx->fetchAll();
+try {
+    $stmtEx = $pdo->prepare("SELECT * FROM processo_campos_extras WHERE cliente_id = ?");
+    $stmtEx->execute([$cliente_id]);
+    $campos_extras = $stmtEx->fetchAll();
+} catch (Exception $e) {
+    // Tabela não existe? Criar agora.
+    $pdo->exec("CREATE TABLE IF NOT EXISTS processo_campos_extras (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        cliente_id INT NOT NULL,
+        titulo VARCHAR(255) NOT NULL,
+        valor TEXT,
+        FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
+    )");
+    $campos_extras = [];
+}
 
 // Arrays para dropdowns
 $tipos_pessoa = ['Fisica', 'Juridica'];
@@ -49,6 +61,9 @@ $estados_civil = ['Solteiro', 'Casado', 'Divorciado', 'Viuvo', 'Uniao Estavel'];
 // Salvar Alterações
 if (isset($_POST['btn_salvar_tudo'])) {
     try {
+        // DEBUG: Gravar POST em arquivo para análise
+        // file_put_contents('debug_post.log', print_r($_POST, true)); 
+        
         $pdo->beginTransaction();
 
         // 1. Atualizar Clientes (Login)
@@ -93,15 +108,33 @@ if (isset($_POST['btn_salvar_tudo'])) {
         // 3. Atualizar Campos Extras (Delete + Insert Strategy)
         $pdo->prepare("DELETE FROM processo_campos_extras WHERE cliente_id = ?")->execute([$cliente_id]);
         
-        if (isset($_POST['extra_titulos']) && isset($_POST['extra_valores'])) {
+        }
+        
+        // 3. Atualizar Campos Extras
+        // Primeiro garante a tabela de novo por segurança
+        $pdo->exec("CREATE TABLE IF NOT EXISTS processo_campos_extras (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            cliente_id INT NOT NULL,
+            titulo VARCHAR(255) NOT NULL,
+            valor TEXT,
+            FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
+        )");
+
+        $pdo->prepare("DELETE FROM processo_campos_extras WHERE cliente_id = ?")->execute([$cliente_id]);
+        
+        if (isset($_POST['extra_titulos']) && is_array($_POST['extra_titulos'])) {
             $titulos = $_POST['extra_titulos'];
-            $valores = $_POST['extra_valores'];
+            $valores = $_POST['extra_valores'] ?? [];
             
             $stmtInsEx = $pdo->prepare("INSERT INTO processo_campos_extras (cliente_id, titulo, valor) VALUES (?, ?, ?)");
             
-            for ($i = 0; $i < count($titulos); $i++) {
-                if (!empty($titulos[$i])) { // Apenas se tiver título
-                    $stmtInsEx->execute([$cliente_id, $titulos[$i], $valores[$i]]);
+            foreach ($titulos as $key => $titulo) {
+                // Remove espaços em branco e verifica se tem conteudo
+                $titulo_limpo = trim($titulo);
+                $valor_limpo = trim($valores[$key] ?? '');
+                
+                if (!empty($titulo_limpo)) {
+                    $stmtInsEx->execute([$cliente_id, $titulo_limpo, $valor_limpo]);
                 }
             }
         }
