@@ -854,14 +854,20 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         <span style="font-size:0.8rem; color:#888;">ID #<?= str_pad($cliente_ativo['id'], 3, "0", STR_PAD_LEFT) ?></span>
                     </div>
                     
-                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap:10px; margin:10px 0 15px 0;">
-                        <div>
-                            <small style="display:block; color:#999; text-transform:uppercase; font-size:0.65rem; font-weight:bold;">Login</small>
-                            <span style="font-family:monospace; font-size:0.95rem; color:var(--color-primary);"><?= htmlspecialchars($cliente_ativo['usuario']) ?></span>
-                        </div>
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap:10px; margin:10px 0 15px 0;">
                         <div>
                             <small style="display:block; color:#999; text-transform:uppercase; font-size:0.65rem; font-weight:bold;">CPF / CNPJ</small>
                             <span style="color:#555; font-size:0.9rem;"><?= htmlspecialchars($detalhes['cpf_cnpj']??'--') ?></span>
+                        </div>
+                        <div>
+                            <small style="display:block; color:#999; text-transform:uppercase; font-size:0.65rem; font-weight:bold;">Telefone</small>
+                            <span style="color:#555; font-size:0.9rem;"><?= htmlspecialchars($detalhes['contato_tel']??'--') ?></span>
+                        </div>
+                        <div>
+                            <small style="display:block; color:#999; text-transform:uppercase; font-size:0.65rem; font-weight:bold;">Endereço da Obra</small>
+                            <span style="color:#555; font-size:0.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="<?= htmlspecialchars($detalhes['endereco_imovel']??$detalhes['imovel_rua']??'--') ?>">
+                                <?= htmlspecialchars(mb_strimwidth($detalhes['endereco_imovel']??$detalhes['imovel_rua']??'--', 0, 25, '...')) ?>
+                            </span>
                         </div>
                     </div>
 

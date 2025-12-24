@@ -57,14 +57,14 @@ if (isset($_POST['btn_salvar_tudo'])) {
 
         // 2. Atualizar Detalhes
         if ($detalhes) {
-            $sqlDet = "UPDATE clientes_detalhes SET 
+            $sqlDet = "UPDATE processo_detalhes SET 
                 tipo_pessoa=?, cpf_cnpj=?, rg_ie=?, contato_email=?, contato_tel=?, 
                 endereco_residencial=?, profissao=?, estado_civil=?, imovel_rua=?, imovel_numero=?,
                 imovel_bairro=?, imovel_complemento=?, imovel_cidade=?, imovel_uf=?, inscricao_imob=?,
                 num_matricula=?, imovel_area_lote=?, area_construida=?, resp_tecnico=?, registro_prof=?, num_art_rrt=?
                 WHERE cliente_id=?";
         } else {
-            $sqlDet = "INSERT INTO clientes_detalhes (
+            $sqlDet = "INSERT INTO processo_detalhes (
                 tipo_pessoa, cpf_cnpj, rg_ie, contato_email, contato_tel, 
                 endereco_residencial, profissao, estado_civil, imovel_rua, imovel_numero,
                 imovel_bairro, imovel_complemento, imovel_cidade, imovel_uf, inscricao_imob,
