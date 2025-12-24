@@ -117,7 +117,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
 <div class="container">
 
-    <!-- 1. CARD RESUME (CORPORATE STYLE) -->
+    <!-- 1. ENGINEER PROFILE (CREDIBILITY) -->
+    <div class="eng-card fade-in">
+        <img src="../assets/logo.png" alt="Eng. Diego" class="eng-avatar" style="background:white; padding:5px;">
+        <div class="eng-info">
+            <h3>Vilela Engenharia</h3>
+            <p>Responsável Técnico: <strong>Eng. Diego Vilela</strong><br>CREA-MG: 235474/D</p>
+        </div>
+        <div class="eng-actions">
+            <a href="https://wa.me/5535984529577" target="_blank" class="btn-outline-light">📞 Falar</a>
+        </div>
+    </div>
+
+    <!-- 2. CARD CLIENTE (SUMMARY) -->
     <div class="resume-card fade-in">
         <div class="resume-cover">
              <!-- Actions (Top Right) -->
@@ -145,27 +157,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 <!-- Nome -->
                 <div class="client-name" style="text-align:right;">
                      <h1><?= htmlspecialchars($primeiro_nome) ?></h1>
-                     <p>Vilela Engenharia</p>
+                     <p>Cliente VIP</p>
                 </div>
             </div>
 
             <div class="info-grid">
                 <div class="info-box">
-                    <label>Status</label>
+                    <label>Situação</label>
                     <span style="color:var(--brand-accent)"><?= $data['status_geral'] ?? 'Ativo' ?></span>
                 </div>
                 <div class="info-box">
-                    <label>Fase Atual</label>
-                    <span><?= $data['etapa_atual'] ?? 'Análise' ?></span>
-                </div>
-                <div class="info-box">
-                    <label>Telefone</label>
-                    <span><?= htmlspecialchars($data['contato_tel'] ?? '--') ?></span>
-                </div>
-                <!-- Endereço se cobrir 2 colunas -->
-                <div class="info-box" style="grid-column: span 2;">
-                    <label>Endereço do Projeto</label>
-                    <span><?= htmlspecialchars($endereco) ?></span>
+                    <label>Fase do Processo</label>
+                    <span><?= $data['etapa_atual'] ?? 'Análise Inicial' ?></span>
                 </div>
             </div>
             
@@ -175,9 +178,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                      <strong><?= count(array_filter($pendencias, fn($p) => $p['status']!='resolvido')) ?></strong>
                  </div>
                  <div class="stat-btn" onclick="switchTab('financeiro')">
-                     <small>A Pagar</small>
+                     <small>Valor em Aberto</small>
                      <strong>R$ <?= number_format($fin_stats['pendente'], 2, ',', '.') ?></strong>
                  </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. DETAILED DATA GRID (NEW COMPONENT) -->
+    <div class="data-grid-section fade-in">
+        <div class="grid-title">📂 Dados Técnicos do Projeto</div>
+        <div class="grid-container">
+            <div class="data-item">
+                <label>Endereço da Obra</label>
+                <span><?= htmlspecialchars($endereco) ?></span>
+            </div>
+            <div class="data-item">
+                <label>Inscrição Imobiliária</label>
+                <span><?= htmlspecialchars($data['inscricao_imob'] ?? '--') ?></span>
+            </div>
+            <div class="data-item">
+                <label>Área do Terreno</label>
+                <span><?= htmlspecialchars($data['imovel_area_lote'] ?? '--') ?></span>
+            </div>
+             <div class="data-item">
+                <label>Área Construída</label>
+                <span><?= htmlspecialchars($data['area_construida'] ?? '--') ?></span>
+            </div>
+            <div class="data-item">
+                <label>Resp. Técnico (Projeto)</label>
+                <span><?= htmlspecialchars($data['resp_tecnico'] ?? 'Vilela Engenharia') ?></span>
+            </div>
+            <div class="data-item">
+                <label>ART / RRT</label>
+                <span><?= htmlspecialchars($data['num_art_rrt'] ?? '--') ?></span>
             </div>
         </div>
     </div>
@@ -259,7 +293,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <!-- VIEW: FINANCEIRO -->
     <div id="view-financeiro" class="view-section hidden fade-in">
         <div class="section-card">
-            <h3 class="section-title">Financeiro</h3>
+            <h3 class="section-title">Financeiro Detalhado</h3>
+            
+            <!-- Summary Boxes -->
+            <div class="fin-summary-box">
+                <div class="fin-box"><span style="color:#0f5132">Pago</span><strong style="color:#198754">R$ <?= number_format($fin_stats['pago'], 2, ',', '.') ?></strong></div>
+                <div class="fin-box highlight"><span>Aberto</span><strong>R$ <?= number_format($fin_stats['pendente'], 2, ',', '.') ?></strong></div>
+                <div class="fin-box"><span>Total</span><strong>R$ <?= number_format($fin_stats['pago']+$fin_stats['pendente'], 2, ',', '.') ?></strong></div>
+            </div>
+
             <div class="finance-list">
                 <?php if(count($financeiro) > 0): foreach($financeiro as $f): 
                     // Logic For Colors
