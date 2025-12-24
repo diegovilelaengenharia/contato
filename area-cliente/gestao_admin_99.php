@@ -873,7 +873,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
                     <div style="display:flex; gap:8px; flex-wrap:wrap;">
                         <a href="editar_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save" style="text-decoration:none; padding:8px 15px; font-size:0.9rem; display:inline-flex; align-items:center; gap:5px;">
-                            ✏️ Editar Perfil
+                            ✏️ Editar Cadastro
                         </a>
                         <a href="?exportar_cliente=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save btn-secondary" style="text-decoration:none; padding:8px 15px; font-size:0.9rem;">
                            📄 Resumo do Processo

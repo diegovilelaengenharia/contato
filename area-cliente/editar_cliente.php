@@ -32,7 +32,8 @@ if (!$cliente) {
 }
 
 // Buscar detalhes
-$stmtDet = $pdo->prepare("SELECT * FROM clientes_detalhes WHERE cliente_id = ?");
+// Buscar detalhes
+$stmtDet = $pdo->prepare("SELECT * FROM processo_detalhes WHERE cliente_id = ?");
 $stmtDet->execute([$cliente_id]);
 $detalhes = $stmtDet->fetch();
 
