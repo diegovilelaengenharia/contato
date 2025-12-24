@@ -2,7 +2,11 @@
 ob_start();
 // Force Redeploy
 session_start();
-require 'db.php';
+try {
+    require 'db.php';
+} catch (Exception $e) {
+    die("<h1>Erro Crítico de Banco de Dados</h1><p>" . $e->getMessage() . "</p><p>Verifique o arquivo db.php</p>");
+}
 
 // --- Configuração e Segurança ---
 $minha_senha_mestra = "VilelaAdmin2025"; 
