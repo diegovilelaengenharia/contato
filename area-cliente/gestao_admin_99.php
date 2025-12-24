@@ -1082,48 +1082,33 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             
                             // GERA TEXTO SEMPRE (independente de ter telefone)
                             $primeiro_nome = explode(' ', trim($cliente_ativo['nome']))[0];
-                            $msg_wpp_pend = "Olá {$primeiro_nome}, tudo bem? 👋\n\nConstam as seguintes *pendências* no seu processo que precisamos resolver:\n\n";
+                            $msg_wpp_pend = "Olá {$primeiro_nome}, tudo bem? 👋\n\nSou a *Vilela Engenharia*. Segue o relatório das pendências necessárias para o andamento do seu processo:\n\n";
+                            
                             if(count($pend_abertas) > 0) {
                                 foreach($pend_abertas as $p) {
                                     $msg_wpp_pend .= "🔸 " . strip_tags($p['descricao']) . "\n";
                                 }
                             } else {
-                                $msg_wpp_pend .= "(Nenhuma pendência em aberto encontrada)\n";
+                                $msg_wpp_pend .= "(Nenhuma pendência em aberto)\n";
                             }
-                            $msg_wpp_pend .= "\nPor favor, acesse sua área do cliente para anexar ou resolver:\nhttps://vilela.eng.br/area-cliente/";
                             
+                            $msg_wpp_pend .= "\n📂 *Acesse sua Área do Cliente* para anexar documentos ou ver detalhes:\nhttps://vilela.eng.br/area-cliente/\n\nQualquer dúvida, estou à disposição por aqui!";
+                            
+                            // Prepare text for JS (Safe Encode)
+                            $js_msg_pend = htmlspecialchars(json_encode($msg_wpp_pend), ENT_QUOTES, 'UTF-8');
                             
                             $tel_clean = preg_replace('/[^0-9]/', '', $detalhes['contato_tel'] ?? '');
-                            
                             if (count($pend_abertas) > 0) {
-                                if (!empty($tel_clean)) {
-                                    // Tem pendencia E telefone
-                                    $link_wpp_pend = "https://wa.me/55{$tel_clean}?text=" . urlencode($msg_wpp_pend);
-                                    $onclick_action = ""; 
-                                    $btn_wpp_style = "background:#25D366;";
-                                } else {
-                                    // Tem pendencia mas SEM telefone -> Link Genérico
-                                    $link_wpp_pend = "https://wa.me/?text=" . urlencode($msg_wpp_pend);
-                                    $onclick_action = "";
-                                    $btn_wpp_style = "background:#25D366;"; // Ativo também
-                                }
+                                // Se tem pendencia
+                                $btn_wpp_style = "background:#25D366;";
                             } else {
-                                // Sem pendencias
-                                $link_wpp_pend = "#";
-                                $onclick_action = "alert('Sem pendências abertas para cobrar.'); return false;";
                                 $btn_wpp_style = "opacity:0.6; cursor:not-allowed; background:#ccc;";
                             }
                         ?>
                         <div style="text-align:right;">
-                        <div style="text-align:right;">
-                            <?php 
-                            // Prepare text for JS
-                            $js_msg_pend = str_replace(["\r", "\n"], '\n', addslashes($msg_wpp_pend));
-                            ?>
-                            <button type="button" class="btn-save" style="border:none; display:inline-flex; align-items:center; gap:5px; <?= $btn_wpp_style ?>" onclick="openChargeModal('<?= $js_msg_pend ?>')">
+                            <button type="button" class="btn-save" style="border:none; display:inline-flex; align-items:center; gap:5px; <?= $btn_wpp_style ?>" onclick='openChargeModal(<?= $js_msg_pend ?>)'>
                                 📱 Cobrar Cliente
                             </button>
-                        </div>
                         </div>
                     </div>
 
