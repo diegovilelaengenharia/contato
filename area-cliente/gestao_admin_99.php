@@ -795,51 +795,43 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             </div>
 
         <?php elseif($cliente_ativo): ?>
-            
-            <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap;">
-                <div>
-                    <h1 style="margin: 0; color: var(--color-text); font-size: 1.8rem;"><?= htmlspecialchars($cliente_ativo['nome']) ?></h1>
-                    <!-- Dados removidos daqui pois já estarão no Card Resumo abaixo -->
-                </div>
-                <div>
-                    <a href="?exportar_cliente=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save btn-secondary" style="text-decoration:none; margin-top:10px; margin-right:10px;">
-                       📄 Resumo do Processo
-                    </a>
-                    <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" class="btn-save btn-danger btn-delete-confirm" data-confirm-text="Você tem certeza absoluta que deseja EXCLUIR este cliente? Essa ação apagará todo o histórico e dados permanentemente." style="text-decoration:none; margin-top:10px;">
-                       🗑️ Excluir Cliente
-                    </a>
-                </div>
-            </div>
+            <!-- Header Redundante Removido conforme solicitado -->
+            <div style="margin-bottom: 20px;"></div>
 
-            <!-- Card Resumo do Cliente (Agora no Topo) -->
-            <div class="form-card" style="display:flex; align-items:center; gap:30px; padding:40px; flex-wrap:wrap; margin-bottom:30px; border-left:5px solid var(--color-primary); background:#fff;">
+            <!-- Card Resumo do Cliente (Compacto & Integrado) -->
+            <div class="form-card" style="display:flex; align-items:center; gap:15px; padding:15px; flex-wrap:wrap; margin-bottom:20px; border-left:5px solid var(--color-primary); background:#fff; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.05);">
                 
                 <!-- Avatar / Iniciais -->
-                <div style="width:100px; height:100px; background:var(--color-primary-light); color:var(--color-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2.5rem; font-weight:800; border:4px solid white; box-shadow:0 4px 15px rgba(0,0,0,0.1); min-width:100px;">
+                <div style="width:60px; height:60px; background:var(--color-primary-light); color:var(--color-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.6rem; font-weight:800; border:2px solid white; box-shadow:0 2px 5px rgba(0,0,0,0.1); min-width:60px;">
                     <?= strtoupper(substr($cliente_ativo['nome'], 0, 1)) ?>
                 </div>
 
                 <div style="flex:1; min-width:250px;">
-                    <h2 style="margin:0 0 10px 0; color:var(--color-text); font-size:1.8rem;"><?= htmlspecialchars($cliente_ativo['nome']) ?></h2>
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                        <h2 style="margin:0; color:var(--color-text); font-size:1.4rem;"><?= htmlspecialchars($cliente_ativo['nome']) ?></h2>
+                        <span style="font-size:0.8rem; color:#888;">ID #<?= str_pad($cliente_ativo['id'], 3, "0", STR_PAD_LEFT) ?></span>
+                    </div>
                     
-                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:15px; margin-bottom:20px;">
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap:10px; margin:10px 0 15px 0;">
                         <div>
-                            <small style="display:block; color:#888; text-transform:uppercase; font-size:0.75rem; font-weight:bold;">Login de Acesso</small>
-                            <span style="font-family:monospace; font-size:1.1rem; color:var(--color-primary);"><?= htmlspecialchars($cliente_ativo['usuario']) ?></span>
+                            <small style="display:block; color:#999; text-transform:uppercase; font-size:0.65rem; font-weight:bold;">Login</small>
+                            <span style="font-family:monospace; font-size:0.95rem; color:var(--color-primary);"><?= htmlspecialchars($cliente_ativo['usuario']) ?></span>
                         </div>
                         <div>
-                            <small style="display:block; color:#888; text-transform:uppercase; font-size:0.75rem; font-weight:bold;">CPF / CNPJ</small>
-                            <span style="color:#555;"><?= htmlspecialchars($detalhes['cpf_cnpj']??'--') ?></span>
-                        </div>
-                        <div>
-                            <small style="display:block; color:#888; text-transform:uppercase; font-size:0.75rem; font-weight:bold;">ID do Sistema</small>
-                            <span style="color:#555;">#<?= str_pad($cliente_ativo['id'], 3, "0", STR_PAD_LEFT) ?></span>
+                            <small style="display:block; color:#999; text-transform:uppercase; font-size:0.65rem; font-weight:bold;">CPF / CNPJ</small>
+                            <span style="color:#555; font-size:0.9rem;"><?= htmlspecialchars($detalhes['cpf_cnpj']??'--') ?></span>
                         </div>
                     </div>
 
-                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                        <a href="editar_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save" style="text-decoration:none; padding:12px 25px; display:inline-flex; align-items:center; gap:8px;">
-                            ✏️ Gerenciar Perfil Completo ↗
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                        <a href="editar_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save" style="text-decoration:none; padding:8px 15px; font-size:0.9rem; display:inline-flex; align-items:center; gap:5px;">
+                            ✏️ Editar Perfil
+                        </a>
+                        <a href="?exportar_cliente=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save btn-secondary" style="text-decoration:none; padding:8px 15px; font-size:0.9rem;">
+                           📄 Resumo
+                        </a>
+                        <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" class="btn-save btn-danger btn-delete-confirm" data-confirm-text="Confirmar exclusão?" style="text-decoration:none; padding:8px 15px; font-size:0.9rem;" title="Excluir Cliente">
+                           🗑️
                         </a>
                     </div>
                 </div>
