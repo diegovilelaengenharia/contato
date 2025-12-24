@@ -65,26 +65,28 @@ if (isset($_POST['btn_salvar_tudo'])) {
         if ($detalhes) {
             $sqlDet = "UPDATE processo_detalhes SET 
                 tipo_pessoa=?, cpf_cnpj=?, rg_ie=?, contato_email=?, contato_tel=?, 
-                endereco_residencial=?, profissao=?, estado_civil=?, imovel_rua=?, imovel_numero=?,
+                res_rua=?, res_numero=?, res_bairro=?, res_complemento=?, res_cidade=?, res_uf=?,
+                profissao=?, estado_civil=?, imovel_rua=?, imovel_numero=?,
                 imovel_bairro=?, imovel_complemento=?, imovel_cidade=?, imovel_uf=?, inscricao_imob=?,
-                num_matricula=?, imovel_area_lote=?, area_construida=?, resp_tecnico=?, registro_prof=?, num_art_rrt=?
+                num_matricula=?, imovel_area_lote=?, area_construida=?
                 WHERE cliente_id=?";
         } else {
             $sqlDet = "INSERT INTO processo_detalhes (
                 tipo_pessoa, cpf_cnpj, rg_ie, contato_email, contato_tel, 
-                endereco_residencial, profissao, estado_civil, imovel_rua, imovel_numero,
+                res_rua, res_numero, res_bairro, res_complemento, res_cidade, res_uf,
+                profissao, estado_civil, imovel_rua, imovel_numero,
                 imovel_bairro, imovel_complemento, imovel_cidade, imovel_uf, inscricao_imob,
-                num_matricula, imovel_area_lote, area_construida, resp_tecnico, registro_prof, num_art_rrt, cliente_id
-            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                num_matricula, imovel_area_lote, area_construida, cliente_id
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         }
         
         $stmtDetUp = $pdo->prepare($sqlDet);
         $stmtDetUp->execute([
             $_POST['tipo_pessoa'], $_POST['cpf_cnpj'], $_POST['rg_ie'], $_POST['contato_email'], $_POST['contato_tel'],
-            $_POST['endereco_residencial'], $_POST['profissao'], $_POST['estado_civil'], $_POST['imovel_rua'], $_POST['imovel_numero'],
+            $_POST['res_rua'], $_POST['res_numero'], $_POST['res_bairro'], $_POST['res_complemento'], $_POST['res_cidade'], $_POST['res_uf'],
+            $_POST['profissao'], $_POST['estado_civil'], $_POST['imovel_rua'], $_POST['imovel_numero'],
             $_POST['imovel_bairro'], $_POST['imovel_complemento'], $_POST['imovel_cidade'], $_POST['imovel_uf'], $_POST['inscricao_imob'],
-            $_POST['num_matricula'], $_POST['imovel_area_lote'], $_POST['area_construida'], $_POST['resp_tecnico'], $_POST['registro_prof'], $_POST['num_art_rrt'],
-            $cliente_id
+            $_POST['num_matricula'], $_POST['imovel_area_lote'], $_POST['area_construida'],
             $cliente_id
         ]);
 
@@ -429,9 +431,39 @@ if (isset($_POST['btn_salvar_tudo'])) {
                     </div>
                 </div>
                 
-                <div class="form-group" style="margin-top:25px;">
-                    <label>Endereço Residencial Completo</label>
-                    <input type="text" name="endereco_residencial" value="<?= htmlspecialchars($detalhes['endereco_residencial']??'') ?>" placeholder="Rua, Número, Bairro, Cidade - UF">
+                <div class="grid" style="margin-top:25px;">
+                     <!-- Endereço Residencial Dividido -->
+                    <div class="form-group" style="grid-column: span 3;">
+                        <h4 style="margin:10px 0 5px 0; color:var(--text-main); font-size:0.9rem;">Endereço Residencial</h4>
+                    </div>
+                </div>
+                <div class="grid" style="grid-template-columns: 3fr 1fr;">
+                    <div class="form-group">
+                        <label>Logradouro (Rua/Av)</label>
+                        <input type="text" name="res_rua" value="<?= htmlspecialchars($detalhes['res_rua']??'') ?>">
+                    </div>
+                    <div class="form-group">
+                        <label>Número</label>
+                        <input type="text" name="res_numero" value="<?= htmlspecialchars($detalhes['res_numero']??'') ?>">
+                    </div>
+                </div>
+                <div class="grid" style="margin-top:15px;">
+                    <div class="form-group">
+                        <label>Bairro</label>
+                        <input type="text" name="res_bairro" value="<?= htmlspecialchars($detalhes['res_bairro']??'') ?>">
+                    </div>
+                    <div class="form-group">
+                        <label>Complemento</label>
+                        <input type="text" name="res_complemento" value="<?= htmlspecialchars($detalhes['res_complemento']??'') ?>">
+                    </div>
+                    <div class="form-group">
+                        <label>Cidade</label>
+                        <input type="text" name="res_cidade" value="<?= htmlspecialchars($detalhes['res_cidade']??'') ?>">
+                    </div>
+                    <div class="form-group">
+                        <label>UF</label>
+                        <input type="text" name="res_uf" value="<?= htmlspecialchars($detalhes['res_uf']??'') ?>" maxlength="2">
+                    </div>
                 </div>
             </div>
 
@@ -497,27 +529,7 @@ if (isset($_POST['btn_salvar_tudo'])) {
                 </div>
             </div>
 
-            <!-- SECTION 4: TECHNICAL -->
-            <div class="section-header">
-                <div class="section-icon">👷</div>
-                <h2>Responsabilidade Técnica</h2>
-            </div>
-            <div class="section-body">
-                <div class="form-group">
-                    <label>Nome do Responsável Técnico</label>
-                    <input type="text" name="resp_tecnico" value="<?= htmlspecialchars($detalhes['resp_tecnico']??'') ?>">
-                </div>
-                <div class="grid" style="margin-top:25px;">
-                    <div class="form-group">
-                        <label>Registro Profissional (CREA/CAU)</label>
-                        <input type="text" name="registro_prof" value="<?= htmlspecialchars($detalhes['registro_prof']??'') ?>">
-                    </div>
-                    <div class="form-group">
-                        <label>Número ART / RRT</label>
-                        <input type="text" name="num_art_rrt" value="<?= htmlspecialchars($detalhes['num_art_rrt']??'') ?>">
-                    </div>
-                    </div>
-            </div>
+            <!-- Seção Técnica Removida conforme solicitação -->
 
             <!-- SECTION 5: CUSTOM FIELDS (DINÂMICOS) -->
             <div class="section-header">
