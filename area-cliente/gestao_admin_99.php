@@ -305,9 +305,8 @@ if (isset($_POST['btn_salvar_arquivos'])) {
             $pdo->prepare("INSERT INTO clientes (nome, usuario, senha) VALUES (?, ?, ?)")->execute([$nome_original, $usuario_final, $pass]);
             $nid = $pdo->lastInsertId();
             
-            // ROTINA DE AUTO-RENOMEAÇÃO (Cliente 00X - Nome)
-            $nome_final = sprintf("Cliente %03d - %s", $nid, $nome_original);
-            $pdo->prepare("UPDATE clientes SET nome = ? WHERE id = ?")->execute([$nome_final, $nid]);
+            // REMOVIDO: ROTINA DE AUTO-RENOMEAÇÃO (Cliente 00X - Nome)
+            // O cliente pediu para manter apenas o nome da pessoa
             
             // Inserção Detalhes (Campos não preenchidos vão vazios para serem completados na edição)
             $pdo->prepare("INSERT INTO processo_detalhes (
@@ -793,7 +792,15 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
         <div class="client-list-fancy" style="padding:0 10px; max-height:500px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;">
             <?php foreach($clientes as $c): 
                 $isActive = ($cliente_ativo && $cliente_ativo['id'] == $c['id']);
-                $initial = strtoupper(substr($c['nome'], 0, 1));
+                
+                // Lógica Inteligente para Nome:
+                // 1. Remove prefixo "Cliente 000 - " se existir
+                $nome_clean = preg_replace('/^Cliente\s\d+\s-\s/', '', $c['nome']);
+                // 2. Pega apenas o primeiro nome
+                $primeiro_nome = explode(' ', trim($nome_clean))[0];
+                
+                $initial = strtoupper(substr($primeiro_nome, 0, 1));
+                
                 // Estilo
                 $bg = $isActive ? 'var(--color-primary-light)' : '#fff';
                 $border = $isActive ? '1px solid var(--color-primary)' : '1px solid transparent';
@@ -804,7 +811,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         <span class="material-symbols-rounded" style="font-size:1.1rem;">person</span>
                     </div>
                     <div style="flex:1; min-width:0;">
-                        <div style="font-weight:600; font-size:0.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><?= htmlspecialchars(explode(' ', trim($c['nome']))[0]) ?></div>
+                        <div style="font-weight:600; font-size:0.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><?= htmlspecialchars($primeiro_nome) ?></div>
                         <div style="font-size:0.75rem; opacity:0.7;">ID #<?= str_pad($c['id'], 3, '0', STR_PAD_LEFT) ?></div>
                     </div>
                 </a>
