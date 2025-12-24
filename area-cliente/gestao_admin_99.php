@@ -655,6 +655,16 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 </head>
 <body>
 
+    <!-- HEADER MOBILE (Exclusivo para telas pequenas) -->
+    <div class="admin-mobile-header" style="display:none; background:#146c43; color:white; padding:15px 20px; text-align:center; border-bottom:4px solid #0f5132;">
+        <img src="../assets/logo.png" alt="Vilela Engenharia" style="height:45px; margin-bottom:10px; display:block; margin-left:auto; margin-right:auto;">
+        <h3 style="margin:0 0 5px 0; font-size:1.1rem; text-transform:uppercase; letter-spacing:1px; font-weight:800;">Gestão Administrativa</h3>
+        <div style="font-size:0.85rem; opacity:0.9; line-height:1.4;">
+            Eng. Diego Vilela &nbsp;|&nbsp; CREA-MG: 235474/D<br>
+            vilela.eng.mg@gmail.com &nbsp;|&nbsp; (35) 98452-9577
+        </div>
+    </div>
+
 <header class="admin-header">
     <div style="display: flex; align-items: center; gap: 15px;">
         <img src="../assets/logo.png" alt="Logo" style="height: 50px;">
@@ -686,21 +696,21 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             </a>
             
             <?php 
+                // Lógica de Cor: Amarelo se tiver pendências, Padrão (branco) se não.
                 $alert_color_style = ($kpi_pre_pendentes > 0) ? 
                     'background: linear-gradient(135deg, #fff3cd, #ffecb5); color: #856404; border: 1px solid #ffeeba;' : 
-                    'background: linear-gradient(135deg, #d4edda, #c3e6cb); color: #155724; border: 1px solid #c3e6cb;';
+                    'background: #fff; color: var(--color-text); border: 1px solid transparent;'; 
             ?>
             <button onclick="document.getElementById('modalNotificacoes').showModal()" class="btn-menu" style="cursor:pointer; text-align:left; width:100%; font-family:inherit; font-size:inherit; transition: 0.3s; <?= $alert_color_style ?>">
                 <span class="material-symbols-rounded">notifications</span>
                 Central de Avisos
                 <?php if($kpi_pre_pendentes > 0): ?>
-                    <span style="background:#dc3545; color:white; padding:1px 6px; border-radius:10px; font-size:0.7rem; margin-left:auto; line-height:1.2; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"><?= $kpi_pre_pendentes ?></span>
-                <?php else: ?>
-                    <span class="material-symbols-rounded" style="margin-left:auto; font-size:1.1rem;">check_circle</span>
+                    <span style="background:#dc3545; color:white; padding:1px 8px; border-radius:12px; font-size:0.75rem; margin-left:auto; line-height:1.2; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight:bold;"><?= $kpi_pre_pendentes ?></span>
                 <?php endif; ?>
             </button>
             
             <h4 style="font-size:0.75rem; text-transform:uppercase; color:#adb5bd; font-weight:700; margin:15px 0 5px 10px;">Gestão</h4>
+            <!-- Botão Novo Cliente sem active por padrão -->
             <a href="?novo=true" class="btn-menu <?= (isset($_GET['novo'])) ? 'active' : '' ?>">
                 <span class="material-symbols-rounded">person_add</span>
                 Novo Cliente
