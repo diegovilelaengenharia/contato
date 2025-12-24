@@ -580,31 +580,47 @@ if (isset($_POST['btn_salvar_tudo'])) {
                 <h2>Outras Informações</h2>
             </div>
             <div class="section-body">
-                <p style="font-size:0.9rem; color:#666; margin-bottom:15px;">Adicione informações extras que não estão nos campos padrão.</p>
+                <p style="font-size:0.9rem; color:#666; margin-bottom:20px;">Use esta seção para adicionar dados personalizados (Ex: CNH, Nome do Cônjuge, etc).</p>
                 
-                <div id="container-campos-extras">
+                <div id="container-campos-extras" style="display:flex; flex-direction:column; gap:15px;">
                     <?php foreach($campos_extras as $ex): ?>
-                        <div class="extra-field-row" style="display:flex; gap:10px; margin-bottom:10px; align-items:center;">
-                            <input type="text" name="extra_titulos[]" value="<?= htmlspecialchars($ex['titulo']) ?>" placeholder="Título do Campo" style="flex:1; font-weight:bold;">
-                            <input type="text" name="extra_valores[]" value="<?= htmlspecialchars($ex['valor']) ?>" placeholder="Valor / Informação" style="flex:2;">
-                            <button type="button" onclick="this.parentElement.remove()" style="background:#ffebee; color:#c62828; border:1px solid #ffcdd2; padding:8px; border-radius:6px; cursor:pointer;" title="Remover Campo">🗑️</button>
+                        <div class="extra-field-row" style="background:#f9f9f9; padding:15px; border-radius:8px; border:1px solid #eee; display:flex; gap:15px; align-items:flex-end;">
+                            <div style="flex:1;">
+                                <label style="display:block; margin-bottom:5px; font-size:0.8rem; font-weight:bold; color:#555;">Título do Campo</label>
+                                <input type="text" name="extra_titulos[]" value="<?= htmlspecialchars($ex['titulo']) ?>" placeholder="Ex: CNH" style="width:100%; border:1px solid #ddd; padding:10px; border-radius:6px;">
+                            </div>
+                            <div style="flex:2;">
+                                <label style="display:block; margin-bottom:5px; font-size:0.8rem; font-weight:bold; color:#555;">Informação / Valor</label>
+                                <input type="text" name="extra_valores[]" value="<?= htmlspecialchars($ex['valor']) ?>" placeholder="Digite a informação..." style="width:100%; border:1px solid #ddd; padding:10px; border-radius:6px;">
+                            </div>
+                            <button type="button" onclick="this.parentElement.remove()" style="height:42px; width:42px; display:flex; align-items:center; justify-content:center; background:#fff; color:#e74c3c; border:1px solid #e74c3c; border-radius:6px; cursor:pointer; transition:0.2s;" onmouseover="this.style.background='#e74c3c'; this.style.color='white';" onmouseout="this.style.background='#fff'; this.style.color='#e74c3c';">
+                                <span class="material-symbols-rounded">delete</span>
+                            </button>
                         </div>
                     <?php endforeach; ?>
                 </div>
 
-                <button type="button" onclick="addExtraField()" style="margin-top:10px; background:#e8f5e9; color:#2e7d32; border:1px solid #c8e6c9; padding:8px 15px; border-radius:6px; cursor:pointer; font-weight:600;">
-                    + Adicionar Campo
+                <button type="button" onclick="addExtraField()" style="margin-top:20px; display:flex; align-items:center; gap:8px; background:#f0f8f5; color:#146c43; border:1px dashed #146c43; padding:12px 20px; border-radius:8px; cursor:pointer; font-weight:600; width:100%; justify-content:center; transition:0.2s;" onmouseover="this.style.background='#e6f4ea'">
+                    <span class="material-symbols-rounded">add_circle</span> Adicionar Novo Campo
                 </button>
 
                 <script>
                     function addExtraField() {
                         const div = document.createElement('div');
                         div.className = 'extra-field-row';
-                        div.style.cssText = 'display:flex; gap:10px; margin-bottom:10px; align-items:center; animation:fadeIn 0.3s;';
+                        div.style.cssText = 'background:#f9f9f9; padding:15px; border-radius:8px; border:1px solid #eee; display:flex; gap:15px; align-items:flex-end; animation:fadeIn 0.3s; margin-top:10px;';
                         div.innerHTML = `
-                            <input type="text" name="extra_titulos[]" placeholder="Título (ex: Nome do Cônjuge)" style="flex:1; font-weight:bold;">
-                            <input type="text" name="extra_valores[]" placeholder="Valor" style="flex:2;">
-                            <button type="button" onclick="this.parentElement.remove()" style="background:#ffebee; color:#c62828; border:1px solid #ffcdd2; padding:8px; border-radius:6px; cursor:pointer;" title="Remover Campo">🗑️</button>
+                            <div style="flex:1;">
+                                <label style="display:block; margin-bottom:5px; font-size:0.8rem; font-weight:bold; color:#555;">Título do Campo</label>
+                                <input type="text" name="extra_titulos[]" placeholder="Ex: CNH" style="width:100%; border:1px solid #ddd; padding:10px; border-radius:6px;">
+                            </div>
+                            <div style="flex:2;">
+                                <label style="display:block; margin-bottom:5px; font-size:0.8rem; font-weight:bold; color:#555;">Informação / Valor</label>
+                                <input type="text" name="extra_valores[]" placeholder="Digite a informação..." style="width:100%; border:1px solid #ddd; padding:10px; border-radius:6px;">
+                            </div>
+                            <button type="button" onclick="this.parentElement.remove()" style="height:42px; width:42px; display:flex; align-items:center; justify-content:center; background:#fff; color:#e74c3c; border:1px solid #e74c3c; border-radius:6px; cursor:pointer; transition:0.2s;" onmouseover="this.style.background='#e74c3c'; this.style.color='white';" onmouseout="this.style.background='#fff'; this.style.color='#e74c3c';">
+                                <span class="material-symbols-rounded">delete</span>
+                            </button>
                         `;
                         document.getElementById('container-campos-extras').appendChild(div);
                     }

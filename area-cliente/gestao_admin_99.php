@@ -1098,15 +1098,10 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             $msg_wpp_pend .= "\n📂 *Acesse sua Área do Cliente* para anexar documentos ou ver detalhes:\nhttps://vilela.eng.br/area-cliente/\n\nQualquer dúvida, estou à disposição por aqui!";
                         ?>
                         
-                        <!-- Transporte Seguro de Dados PHP -> JS -->
-                        <textarea id="hidden_wpp_msg" style="display:none;"><?= htmlspecialchars($msg_wpp_pend) ?></textarea>
-
-                        <div style="text-align:right;">
-                            <button type="button" class="btn-save" style="border:none; display:inline-flex; align-items:center; gap:5px; <?= $btn_wpp_style ?>" 
-                                    onclick="openChargeModalNew()">
-                                📱 Cobrar Cliente
-                            </button>
-                        </div>
+                            $msg_wpp_pend .= "\n📂 *Acesse sua Área do Cliente* para anexar documentos ou ver detalhes:\nhttps://vilela.eng.br/area-cliente/\n\nQualquer dúvida, estou à disposição por aqui!";
+                        ?>
+                        
+                        <!-- Botão Cobrar Cliente removido conforme solicitação -->
                     </div>
 
                     <!-- Novo Form de Inserção Rápida -->
@@ -1500,32 +1495,6 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     document.getElementById('edit_fin_id').value = id;
                     document.getElementById('edit_fin_status').value = currentStatus;
                     document.getElementById('modalStatusFin').showModal();
-                }
-                
-                // Nova Lógica Limpa e Refeita
-                function openChargeModalNew() {
-                    // 1. Pegar texto do elemento oculto (Raw Text)
-                    const rawText = document.getElementById('hidden_wpp_msg').value;
-                    
-                    // 2. Popular o Modal
-                    const txtArea = document.getElementById('chargeTextNew');
-                    txtArea.value = rawText;
-                    
-                    // 3. Atualizar botão WhatsApp
-                    const btn = document.getElementById('btnOpenWhatsNew');
-                    btn.href = "https://wa.me/?text=" + encodeURIComponent(rawText);
-                    
-                    // 4. Abrir
-                    document.getElementById('modalChargeNew').showModal();
-                }
-
-                function copyChargeTextNew() {
-                    const copyText = document.getElementById("chargeTextNew");
-                    copyText.select();
-                    copyText.setSelectionRange(0, 99999);
-                    navigator.clipboard.writeText(copyText.value).then(() => {
-                        alert("Texto copiado!");
-                    });
                 }
                 </script>
 
