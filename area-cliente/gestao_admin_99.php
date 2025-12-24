@@ -1090,8 +1090,9 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             
                             $msg_wpp_pend .= "\n📂 *Acesse sua Área do Cliente* para anexar documentos ou ver detalhes:\nhttps://vilela.eng.br/area-cliente/\n\nQualquer dúvida, estou à disposição por aqui!";
                             
-                            // Prepare text for JS (Safe Encode)
-                            $js_msg_pend = htmlspecialchars(json_encode($msg_wpp_pend), ENT_QUOTES, 'UTF-8');
+                            // Prepare text for HTML Attribute
+                            // We use htmlspecialchars without json_encode to keep it simple in the data attribute
+                            $safe_msg = htmlspecialchars($msg_wpp_pend, ENT_QUOTES, 'UTF-8');
                             
                             $tel_clean = preg_replace('/[^0-9]/', '', $detalhes['contato_tel'] ?? '');
                             if (count($pend_abertas) > 0) {
@@ -1102,7 +1103,9 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             }
                         ?>
                         <div style="text-align:right;">
-                            <button type="button" class="btn-save" style="border:none; display:inline-flex; align-items:center; gap:5px; <?= $btn_wpp_style ?>" onclick='openChargeModal(<?= $js_msg_pend ?>)'>
+                            <button type="button" class="btn-save" style="border:none; display:inline-flex; align-items:center; gap:5px; <?= $btn_wpp_style ?>" 
+                                    data-msg="<?= $safe_msg ?>"
+                                    onclick="openChargeModal(this.getAttribute('data-msg'))">
                                 📱 Cobrar Cliente
                             </button>
                         </div>
