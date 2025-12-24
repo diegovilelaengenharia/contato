@@ -5,8 +5,8 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 session_start();
-if (!isset($_SESSION['admin_logged']) || $_SESSION['admin_logged'] !== true) {
-    header('Location: ../login.php');
+if (!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true) {
+    header('Location: index.php');
     exit;
 }
 
