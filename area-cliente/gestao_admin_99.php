@@ -931,17 +931,17 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
                 <div class="client-summary-card">
                     <div style="display:flex; gap:15px; align-items:center;">
-                        <div style="width:60px; height:60px; background:var(--color-primary-light); color:var(--color-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.5rem; font-weight:bold;">
-                            <?= strtoupper(substr($cliente_ativo['nome'], 0, 1)) ?>
-                        </div>
+                        <!-- Ícone Removido conforme solicitação -->
                         <div>
                             <h2 style="margin:0 0 5px 0; font-size:1.4rem;"><?= htmlspecialchars($cliente_ativo['nome']) ?></h2>
-                            <div style="display:flex; gap:10px; font-size:0.9rem; color:#666;">
+                            <div style="display:flex; gap:10px; font-size:0.9rem; color:#666; align-items:center; flex-wrap:wrap;">
                                 <span>🆔 #<?= str_pad($cliente_ativo['id'], 3, '0', STR_PAD_LEFT) ?></span>
                                 <span>•</span>
                                 <a href="editar_cliente.php?id=<?= $cliente_ativo['id'] ?>" class="link-edit" style="color:var(--color-primary); text-decoration:none; font-weight:600;">✏️ Editar Cadastro</a>
                                 <span>•</span>
                                 <a href="relatorio_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="link-edit" style="color:var(--color-secondary); text-decoration:none; font-weight:600;">⚠️ Resumo PDF</a>
+                                <span>•</span>
+                                <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" class="link-edit btn-delete-confirm" data-confirm-text="Tem certeza que deseja EXCLUIR este cliente permanentemente?" style="color:#dc3545; text-decoration:none; font-weight:600;">🗑️ Excluir</a>
                             </div>
                         </div>
                     </div>
