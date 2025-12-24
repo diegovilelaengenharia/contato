@@ -249,13 +249,16 @@ $text_color = '#333';
                 <h1 style="display:none;">Vilela</h1>
                 <span style="display:none;">Engenharia</span>
             </div>
-            <div class="meta-header">
-                <strong>Relatório de Processo</strong><br>
-                <?php if(!empty($detalhes['data_inicio'])): ?>
-                    <span style="color:var(--primary);">Início: <?= date('d/m/Y', strtotime($detalhes['data_inicio'])) ?></span><br>
-                <?php endif; ?>
-                Gerado em: <?= date('d/m/Y H:i') ?><br>
-                ID Cliente: #<?= str_pad($cliente['id'], 3, '0', STR_PAD_LEFT) ?>
+            <div class="meta-header" style="text-align:right; font-size:10pt; line-height:1.5;">
+                <strong style="font-size:12pt; color:var(--primary);">VILELA ENGENHARIA & CONSULTORIA</strong><br>
+                Eng. Diego Vilela | CREA-MG: 235474/D<br>
+                📞 (35) 98452-9577 | 📧 vilela.eng.mg@gmail.com<br>
+                <div style="margin-top:5px; border-top:1px solid #ddd; padding-top:5px; font-size:9pt; color:#777;">
+                    <?php if(!empty($detalhes['data_inicio'])): ?>
+                        <span>Início do Processo: <strong><?= date('d/m/Y', strtotime($detalhes['data_inicio'])) ?></strong></span><br>
+                    <?php endif; ?>
+                    Gerado em: <?= date('d/m/Y \à\s H:i') ?>
+                </div>
             </div>
         </div>
 
