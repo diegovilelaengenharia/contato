@@ -14,6 +14,11 @@ $stmtDet = $pdo->prepare("SELECT * FROM processo_detalhes WHERE cliente_id = ?")
 $stmtDet->execute([$cliente_id]);
 $detalhes = $stmtDet->fetch();
 
+// Buscar Dados Login (Nome, Usuario)
+$stmtCli = $pdo->prepare("SELECT * FROM clientes WHERE id = ?");
+$stmtCli->execute([$cliente_id]);
+$cliente_ativo = $stmtCli->fetch();
+
 // Montar Endereço Completo
 $end_parts = [];
 if(!empty($detalhes['imovel_rua'])) $end_parts[] = $detalhes['imovel_rua'];
@@ -273,22 +278,45 @@ if (isset($_POST['btn_upload_pendencia'])) {
 </head>
 <body>
     <div class="container">
-        <header class="card" style="padding-bottom: 10px;">
-            <div class="header-panel">
-                <div>
-                    <h1>Olá, <?= htmlspecialchars($_SESSION['cliente_nome']) ?></h1>
-                    <span class="badge-panel"><?= htmlspecialchars($endereco_final) ?></span>
-                </div>
-                <div class="header-actions" style="display:flex; align-items:center; gap: 10px;">
-                    <a href="exportar_resumo.php" target="_blank" class="btn-resumo-destaque">
-                        📄 <span class="desktop-only">RESUMO DO PROCESSO</span><span class="mobile-only">RESUMO</span>
-                    </a>
+    <div class="container">
+        
+        <!-- HEADER / CARD RESUMO -->
+        <div class="card" style="display:flex; align-items:center; gap:30px; padding:30px; flex-wrap:wrap; position:relative;">
+            
+            <!-- Botões Flutuantes (Mobile/Theme) -->
+            <div style="position:absolute; top:20px; right:20px; display:flex; gap:10px;">
+                <button class="btn-icon-mobile" onclick="toggleTheme()" title="Alternar Tema">🌓</button>
+                <a href="logout.php" class="btn-logout btn-icon-mobile" title="Sair">🚪</a>
+            </div>
 
-                    <button class="btn-icon-mobile" onclick="toggleTheme()" title="Alternar Tema">🌓</button>
-                    <a href="logout.php" class="btn-logout btn-icon-mobile" title="Sair">🚪</a>
+            <!-- Avatar / Iniciais -->
+            <div style="width:90px; height:90px; background:var(--color-primary-light); color:var(--color-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2.2rem; font-weight:800; border:4px solid var(--color-surface); box-shadow:0 4px 15px rgba(0,0,0,0.1); min-width:90px;">
+                <?= strtoupper(substr($cliente_ativo['nome'], 0, 1)) ?>
+            </div>
+
+            <div style="flex:1; min-width:250px;">
+                <h2 style="margin:0 0 5px 0; color:var(--color-text); font-size:1.6rem;">Olá, <?= htmlspecialchars(explode(' ', $cliente_ativo['nome'])[0]) ?></h2>
+                <span class="badge-panel" style="margin-bottom:15px; display:inline-block;"><?= htmlspecialchars($endereco_final) ?></span>
+                
+                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:15px;">
+                    <div>
+                        <small style="display:block; color:var(--color-text-subtle); text-transform:uppercase; font-size:0.7rem; font-weight:bold;">Login de Acesso</small>
+                        <span style="font-family:monospace; font-size:1rem; color:var(--color-primary);"><?= htmlspecialchars($cliente_ativo['usuario']) ?></span>
+                    </div>
+                    <div>
+                        <small style="display:block; color:var(--color-text-subtle); text-transform:uppercase; font-size:0.7rem; font-weight:bold;">Status</small>
+                        <span style="background:var(--bg-success); color:var(--text-success); padding:2px 8px; border-radius:4px; font-weight:bold; font-size:0.85rem;">Ativo</span>
+                    </div>
                 </div>
             </div>
-            
+
+            <!-- Ações -->
+            <div style="display:flex; flex-direction:column; gap:10px; align-self:flex-start; margin-top:10px;">
+                <a href="exportar_resumo.php" target="_blank" class="btn-resumo-destaque">
+                    📄 Resumo do Processo
+                </a>
+            </div>
+
             <style>
                 .btn-resumo-destaque {
                     background: linear-gradient(135deg, #146c43 0%, #0d462b 100%);
@@ -298,6 +326,14 @@ if (isset($_POST['btn_upload_pendencia'])) {
                     border-radius: 8px;
                     font-weight: 700;
                     box-shadow: 0 4px 10px rgba(20, 108, 67, 0.2);
+                    text-align: center;
+                    transition: transform 0.2s;
+                    font-size: 0.9rem;
+                    display: block;
+                }
+                .btn-resumo-destaque:hover { transform: translateY(-2px); }
+            </style>
+        </div>
                     transition: transform 0.2s;
                     display: flex; align-items: center; gap: 8px;
                     font-size: 0.95rem;
