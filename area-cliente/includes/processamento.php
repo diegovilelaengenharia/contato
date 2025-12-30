@@ -276,6 +276,22 @@ if (isset($_POST['btn_editar_cliente'])) {
     $ft_aprov = $_POST['fator_aproveitamento'] ?? null;
     $geo = $_POST['geo_coords'] ?? null;
 
+    // Lógica Upload Foto Obra
+    $foto_path = null;
+    if(isset($_FILES['foto_capa_obra']) && $_FILES['foto_capa_obra']['error'] == 0) {
+         $ext = strtolower(pathinfo($_FILES['foto_capa_obra']['name'], PATHINFO_EXTENSION));
+         $allowed = ['jpg', 'jpeg', 'png', 'webp'];
+         if(in_array($ext, $allowed)) {
+             $new_name = "obra_{$cid}_" . time() . ".{$ext}";
+             $target = __DIR__ . "/../uploads/obras/";
+             if(!is_dir($target)) mkdir($target, 0755, true);
+             
+             if(move_uploaded_file($_FILES['foto_capa_obra']['tmp_name'], $target . $new_name)) {
+                 $foto_path = "uploads/obras/" . $new_name;
+             }
+         }
+    }
+
     try {
         $pdo->beginTransaction();
         
@@ -283,15 +299,19 @@ if (isset($_POST['btn_editar_cliente'])) {
         $pdo->prepare($sql_base)->execute($params_base);
         
         // Execute Update Details (Check if exists first)
-        $check = $pdo->prepare("SELECT id FROM processo_detalhes WHERE cliente_id=?");
+        $check = $pdo->prepare("SELECT id, foto_capa_obra FROM processo_detalhes WHERE cliente_id=?");
         $check->execute([$cid]);
         
         if($check->rowCount() > 0) {
-            $sql_det = "UPDATE processo_detalhes SET endereco_imovel=?, link_drive_pasta=?, area_existente=?, area_acrescimo=?, area_permeavel=?, taxa_ocupacao=?, fator_aproveitamento=?, geo_coords=? WHERE cliente_id=?";
-            $pdo->prepare($sql_det)->execute([$end, $link, $a_exist, $a_acresc, $a_perm, $tx_ocup, $ft_aprov, $geo, $cid]);
+            $curr = $check->fetch();
+            // Mantém foto antiga se não enviou nova, ou substitui
+            $final_foto = $foto_path ? $foto_path : ($curr['foto_capa_obra'] ?? null);
+            
+            $sql_det = "UPDATE processo_detalhes SET endereco_imovel=?, link_drive_pasta=?, area_existente=?, area_acrescimo=?, area_permeavel=?, taxa_ocupacao=?, fator_aproveitamento=?, geo_coords=?, foto_capa_obra=? WHERE cliente_id=?";
+            $pdo->prepare($sql_det)->execute([$end, $link, $a_exist, $a_acresc, $a_perm, $tx_ocup, $ft_aprov, $geo, $final_foto, $cid]);
         } else {
-             $sql_det = "INSERT INTO processo_detalhes (cliente_id, endereco_imovel, link_drive_pasta, area_existente, area_acrescimo, area_permeavel, taxa_ocupacao, fator_aproveitamento, geo_coords) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-             $pdo->prepare($sql_det)->execute([$cid, $end, $link, $a_exist, $a_acresc, $a_perm, $tx_ocup, $ft_aprov, $geo]);
+             $sql_det = "INSERT INTO processo_detalhes (cliente_id, endereco_imovel, link_drive_pasta, area_existente, area_acrescimo, area_permeavel, taxa_ocupacao, fator_aproveitamento, geo_coords, foto_capa_obra) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+             $pdo->prepare($sql_det)->execute([$cid, $end, $link, $a_exist, $a_acresc, $a_perm, $tx_ocup, $ft_aprov, $geo, $foto_path]);
         }
         
         $pdo->commit();

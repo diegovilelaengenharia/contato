@@ -399,18 +399,6 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
 
 
-                        <!-- FOTO OBRA -->
-                        <div style="width:100%; border-top:1px dashed #ddd; margin-top:10px; padding-top:10px;">
-                             <label style="font-size:0.8rem; font-weight:bold; color:#666; display:block; margin-bottom:5px;">🖼️ Foto da Capa (Obra/Fachada)</label>
-                             <div style="display:flex; gap:10px; align-items:center;">
-                                <input type="file" name="foto_capa_obra" accept="image/*" style="flex:1;">
-                                <?php if(!empty($detalhes['foto_capa_obra'])): ?>
-                                    <a href="../<?= $detalhes['foto_capa_obra'] ?>" target="_blank" style="font-size:0.8rem; color:#0d6efd; text-decoration:none;">Ver Atual</a>
-                                <?php endif; ?>
-                             </div>
-                        </div>
-
-                        <button type="submit" name="update_processo_header" class="btn-save" style="padding:8px 15px; margin:10px 0 0 0; width:100%;">Salvar Dados do Processo</button>
                     </form>
                 </div>
 
@@ -927,7 +915,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 <div class="form-card" style="border-left: 6px solid #6c757d;">
                     <h3 style="color:#495057;">⚙️ Configurações e Dados Cadastrais</h3>
                     
-                    <form method="POST">
+                    <form method="POST" enctype="multipart/form-data">
                          <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
                         <div class="form-grid">
                             <div class="form-group">
@@ -998,6 +986,17 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                     <input type="text" name="geo_coords" value="<?= htmlspecialchars($detalhes['geo_coords'] ?? '') ?>" placeholder="-20.123, -44.123">
                                 </div>
                             </div>
+                        </div>
+
+                         <!-- FOTO OBRA -->
+                        <div style="margin-bottom:20px;">
+                             <label style="font-weight:bold; color:#666; display:block; margin-bottom:5px;">🖼️ Foto da Capa (Obra/Fachada)</label>
+                             <div style="display:flex; gap:10px; align-items:center;">
+                                <input type="file" name="foto_capa_obra" accept="image/*" style="flex:1; padding:10px; border:1px solid #ddd; border-radius:8px;">
+                                <?php if(!empty($detalhes['foto_capa_obra'])): ?>
+                                    <a href="../<?= $detalhes['foto_capa_obra'] ?>" target="_blank" style="color:#0d6efd; text-decoration:none;">Ver Atual</a>
+                                <?php endif; ?>
+                             </div>
                         </div>
 
                         <button type="submit" name="btn_editar_cliente" class="btn-save">💾 Salvar Alterações</button>
