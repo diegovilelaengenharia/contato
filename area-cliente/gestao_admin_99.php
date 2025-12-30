@@ -399,7 +399,19 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             <label style="font-size:0.8rem; font-weight:bold; color:#666;">Área Total (m²)</label>
                             <input type="text" name="area_total_final" value="<?= htmlspecialchars($detalhes['area_total_final'] ?? '') ?>" placeholder="Ex: 156.45" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:6px;">
                         </div>
-                        <button type="submit" name="update_processo_header" class="btn-save" style="padding:8px 15px; margin:0; height:38px;">Salvar Dados</button>
+
+                        <!-- FOTO OBRA -->
+                        <div style="width:100%; border-top:1px dashed #ddd; margin-top:10px; padding-top:10px;">
+                             <label style="font-size:0.8rem; font-weight:bold; color:#666; display:block; margin-bottom:5px;">🖼️ Foto da Capa (Obra/Fachada)</label>
+                             <div style="display:flex; gap:10px; align-items:center;">
+                                <input type="file" name="foto_capa_obra" accept="image/*" style="flex:1;">
+                                <?php if(!empty($detalhes['foto_capa_obra'])): ?>
+                                    <a href="../<?= $detalhes['foto_capa_obra'] ?>" target="_blank" style="font-size:0.8rem; color:#0d6efd; text-decoration:none;">Ver Atual</a>
+                                <?php endif; ?>
+                             </div>
+                        </div>
+
+                        <button type="submit" name="update_processo_header" class="btn-save" style="padding:8px 15px; margin:10px 0 0 0; width:100%;">Salvar Dados do Processo</button>
                     </form>
                 </div>
 

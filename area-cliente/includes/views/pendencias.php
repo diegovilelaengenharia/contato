@@ -1,6 +1,6 @@
 <div class="view-header-simple">
-    <h2>Pendências</h2>
-    <p>O que precisamos de você para avançar.</p>
+    <h2>Diligências e Pendências</h2>
+    <p>Solicitações de documentos e ações do proprietário.</p>
 </div>
 
 <!-- ASSISTANT TIP -->
@@ -8,7 +8,7 @@
     <div class="at-icon">⚡</div>
     <div class="at-content">
         <strong>Ação Necessária</strong>
-        <p>Esta seção é crucial! Resolva os itens pendentes para que seu processo não pare. Nossa equipe só pode avançar com essas informações em mãos.</p>
+        <p>Abaixo estão listadas as pendências técnicas ou documentais necessárias para o prosseguimento do feito. A regularização depende do saneamento destes itens.</p>
     </div>
 </div>
 

@@ -5,15 +5,15 @@ $total_fases = count($fases_padrao);
 $fase_atual_idx = $fase_index;
 ?>
 <div class="view-header-timeline" style="margin-bottom:10px;">
-    <h2>Jornada do Projeto</h2>
+    <h2>Trâmite Processual</h2>
 </div>
 
 <!-- ASSISTANT TIP -->
 <div class="assistant-tip fade-in-up">
     <div class="at-icon">📅</div>
     <div class="at-content">
-        <strong>Histórico Viva</strong>
-        <p>Esta é a linha do tempo oficial do seu processo. Cada evento, da vistoria à entrega do Habite-se, fica registrado aqui para sua segurança.</p>
+        <strong>Histórico de Movimentações</strong>
+        <p>Abaixo consta o histórico oficial do processo administrativo. Cada evento, da vistoria técnica à emissão do Habite-se, é registrado para fins de controle e transparência.</p>
     </div>
 </div>
 

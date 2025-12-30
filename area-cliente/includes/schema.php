@@ -20,7 +20,7 @@ $cols_needed = [
     // New Columns for Process Tracking
     'processo_numero', 'processo_objeto', 'processo_link_mapa',
     // New Columns for "Maria" Spec (Resumo do Patrimônio)
-    'valor_venal', 'area_total_final'
+    'valor_venal', 'area_total_final', 'foto_capa_obra'
 ];
 
 foreach($cols_needed as $col) {

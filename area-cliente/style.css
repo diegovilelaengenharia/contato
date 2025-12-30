@@ -859,3 +859,112 @@ a {
     animation: fadeInUp 0.5s ease-out forwards;
     opacity: 0;
 }
+
+/* --- PROPERTY CARD (Refined) --- */
+.property-card {
+    background: white;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    margin-bottom: 25px;
+    border: 1px solid var(--border-color);
+}
+
+.pc-image {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    background-color: #e0e0e0;
+}
+
+.pc-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0));
+}
+
+.pc-content-top {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 2;
+}
+
+.pc-status-badge {
+    background: white;
+    color: var(--color-primary);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.pc-id {
+    color: white;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    backdrop-filter: blur(4px);
+}
+
+.pc-info {
+    padding: 20px;
+}
+
+.pc-title {
+    font-size: 1.4rem;
+    margin-bottom: 5px;
+    color: var(--text-main);
+    line-height: 1.2;
+}
+
+.pc-address {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin: 0 0 20px 0;
+}
+
+.pc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 15px;
+}
+
+.pc-grid-item label {
+    display: block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 3px;
+    letter-spacing: 0.5px;
+}
+
+.pc-grid-item strong {
+    display: block;
+    font-size: 0.95rem;
+    color: var(--text-main);
+}
+
+.pc-grid-item.highlight strong {
+    color: var(--color-primary);
+    font-weight: 800;
+}

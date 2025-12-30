@@ -1,14 +1,14 @@
 <div class="view-header-simple">
-    <h2>Arquivos</h2>
-    <p>Documentos oficiais e projetos.</p>
+    <h2>Acervo Técnico</h2>
+    <p>Projetos aprovados e documentos emitidos.</p>
 </div>
 
 <!-- ASSISTANT TIP -->
 <div class="assistant-tip fade-in-up">
     <div class="at-icon">☁️</div>
     <div class="at-content">
-        <strong>Cofre Digital</strong>
-        <p>Todos os documentos oficiais (Alvarás, Habite-se) e projetos aprovados ficam salvos aqui para sempre. Você pode baixar ou consultar quando quiser.</p>
+        <strong>Cofre Digital de Documentos</strong>
+        <p>Repositório seguro de todas as peças técnicas (Plantas, Memoriais) e documentos oficiais (Alvarás, Certidões) vinculados a este processo de regularização.</p>
     </div>
 </div>
 

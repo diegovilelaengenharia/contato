@@ -1,14 +1,14 @@
 <div class="view-header-simple">
-    <h2>Gestão Financeira</h2>
-    <p>Acompanhe seus investimentos na obra.</p>
+    <h2>Demonstrativo Financeiro</h2>
+    <p>Custos contratuais e taxas oficiais.</p>
 </div>
 
 <!-- ASSISTANT TIP -->
 <div class="assistant-tip fade-in-up">
     <div class="at-icon">💰</div>
     <div class="at-content">
-        <strong>Transparência Total</strong>
-        <p>Aqui você confere exatamente para onde vai cada centavo. As taxas governamentais tem a referência da Lei para sua conferência.</p>
+        <strong>Detalhamento de Custos</strong>
+        <p>Nesta seção encontram-se discriminados os honorários técnicos e os DAEs (Documentos de Arrecadação) emitidos pelos órgãos públicos, com suas respectivas fundamentações legais.</p>
     </div>
 </div>
 

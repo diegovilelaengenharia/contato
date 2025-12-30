@@ -14,63 +14,57 @@ $data_inicio = isset($data['data_cadastro']) ? date('d/m/Y', strtotime($data['da
 
 <!-- HOME VIEW -->
 <div class="fade-in-up">
-    <!-- Process Header: RESUMO DO PATRIMÔNIO -->
-    <div style="background:var(--color-primary-dark); color:white; padding:25px 20px; border-radius:16px; margin-bottom:25px; box-shadow:var(--shadow-medium); position:relative; overflow:hidden;">
-        <div style="position:absolute; top:-20px; right:-20px; background:rgba(255,255,255,0.1); width:150px; height:150px; border-radius:50%;"></div>
-        
-        <div style="position:relative; z-index:2;">
-            <p style="opacity:0.9; margin:0 0 5px 0; font-weight:400; font-size:0.9rem;">Olá, <?= $primeiro_nome ?>.</p>
-            <h1 style="font-size:1.6rem; margin:0 0 20px 0; font-weight:800; letter-spacing:-0.5px;">Resumo do Patrimônio</h1>
-            
-            <?php if(!empty($data['processo_numero'])): ?>
-            <div style="background:rgba(0,0,0,0.25); border-radius:12px; overflow:hidden;">
-                <!-- Table-like layout using CSS Grid -->
-                <div style="display:grid; grid-template-columns: 1fr 1fr; border-bottom:1px solid rgba(255,255,255,0.1);">
-                    <div style="padding:15px; border-right:1px solid rgba(255,255,255,0.1);">
-                        <label style="display:block; font-size:0.7rem; text-transform:uppercase; opacity:0.75; margin-bottom:3px;">Status</label>
-                        <strong style="font-size:0.95rem; color:#4caf50;">✅ <?= $etapa_atual ?></strong>
-                    </div>
-                    <div style="padding:15px;">
-                        <label style="display:block; font-size:0.7rem; text-transform:uppercase; opacity:0.75; margin-bottom:3px;">Processo</label>
-                        <strong style="font-size:0.95rem;"><?= htmlspecialchars($data['processo_numero']) ?></strong>
-                    </div>
-                </div>
+    <!-- RICH PROPERTY CARD (Substitui Olá Cliente) -->
+    <div class="property-card fade-in-up">
+        <!-- Background Image Area -->
+        <div class="pc-image" style="background-image: url('<?= !empty($data['foto_capa_obra']) ? htmlspecialchars($data['foto_capa_obra']) : '../assets/obra-placeholder.jpg' ?>');">
+            <div class="pc-overlay"></div>
+            <div class="pc-content-top">
+                <span class="pc-status-badge">
+                    <span class="material-symbols-rounded">engineering</span>
+                    <?= $etapa_atual ?>
+                </span>
+                <span class="pc-id">Processo: <?= htmlspecialchars($data['processo_numero'] ?? '---') ?></span>
+            </div>
+        </div>
 
-                <div style="padding:15px; border-bottom:1px solid rgba(255,255,255,0.1);">
-                    <label style="display:block; font-size:0.7rem; text-transform:uppercase; opacity:0.75; margin-bottom:3px;">Imóvel</label>
-                    <div style="font-size:0.95rem; font-weight:500; line-height:1.4;">
-                        <?= htmlspecialchars($data['processo_objeto'] ?? 'Regularização de Imóvel') ?>
-                    </div>
-                </div>
+        <!-- Info Content -->
+        <div class="pc-info">
+            <h1 class="pc-title"><?= htmlspecialchars($data['processo_objeto'] ?? 'Regularização de Edificação') ?></h1>
+            <p class="pc-address">
+                <span class="material-symbols-rounded">location_on</span>
+                <?= htmlspecialchars($endereco) ?>
+            </p>
 
-                <div style="display:grid; grid-template-columns: 1fr 1fr 1fr;">
-                    <div style="padding:15px; border-right:1px solid rgba(255,255,255,0.1);">
-                        <label style="display:block; font-size:0.7rem; text-transform:uppercase; opacity:0.75; margin-bottom:3px;">Matrícula</label>
-                        <strong style="font-size:0.9rem;"><?= htmlspecialchars($data['num_matricula'] ?? '--') ?></strong>
-                    </div>
-                    <div style="padding:15px; border-right:1px solid rgba(255,255,255,0.1);">
-                        <label style="display:block; font-size:0.7rem; text-transform:uppercase; opacity:0.75; margin-bottom:3px;">Área Final</label>
-                        <strong style="font-size:0.9rem;"><?= htmlspecialchars($data['area_total_final'] ?? '--') ?> m²</strong>
-                    </div>
-                    <div style="padding:15px;">
-                        <label style="display:block; font-size:0.7rem; text-transform:uppercase; opacity:0.75; margin-bottom:3px;">Valor Venal</label>
-                        <strong style="font-size:0.9rem;"><?= htmlspecialchars($data['valor_venal'] ?? '--') ?></strong>
-                    </div>
+            <!-- Technical Grid -->
+            <div class="pc-grid">
+                <div class="pc-grid-item">
+                    <label>Área Construída</label>
+                    <strong><?= htmlspecialchars($data['area_total_final'] ?? '--') ?> m²</strong>
+                </div>
+                <div class="pc-grid-item">
+                    <label>Matrícula (CRIME)</label>
+                    <strong><?= htmlspecialchars($data['num_matricula'] ?? '--') ?></strong>
+                </div>
+                <div class="pc-grid-item">
+                    <label>Inscrição Imobiliária</label>
+                    <strong><?= htmlspecialchars($data['inscricao_imob'] ?? '--') ?></strong>
+                </div>
+                <div class="pc-grid-item highlight">
+                    <label>Valor Venal Avaliado</label>
+                    <strong>R$ <?= htmlspecialchars($data['valor_venal'] ?? '--') ?></strong>
                 </div>
             </div>
-            <?php else: ?>
-                <p style="opacity:0.8;">Os dados do seu processo estão sendo carregados.</p>
-            <?php endif; ?>
         </div>
     </div>
 
 
     <!-- ASSISTANT TIP -->
     <div class="assistant-tip fade-in-up">
-        <div class="at-icon">🤖</div>
+        <div class="at-icon">ℹ️</div>
         <div class="at-content">
-            <strong>Assistente Virtual</strong>
-            <p>Olá! Este é o painel principal. Aqui você vê o resumo do seu patrimônio e o status geral. Para detalhes do histórico, toque em <strong>Fase Atual</strong> ou <strong>Documentos</strong> abaixo.</p>
+            <strong>Informativo Técnico</strong>
+            <p>Este painel apresenta o status do licenciamento urbanístico em tempo real. Acompanhe abaixo o trâmite processual e a emissão das peças técnicas.</p>
         </div>
     </div>
 

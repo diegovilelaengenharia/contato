@@ -10,10 +10,31 @@ if (isset($_POST['update_processo_header'])) {
     $valor_venal = $_POST['valor_venal'] ?? null;
     $area_total = $_POST['area_total_final'] ?? null;
     
+    // Upload de Foto de Capa (Obra)
+    $foto_path = null;
+    if(isset($_FILES['foto_capa_obra']) && $_FILES['foto_capa_obra']['error'] == 0) {
+        $ext = strtolower(pathinfo($_FILES['foto_capa_obra']['name'], PATHINFO_EXTENSION));
+        $allowed = ['jpg', 'jpeg', 'png', 'webp'];
+        if(in_array($ext, $allowed)) {
+            $new_name = "capa_obra_{$cid}_" . time() . ".$ext";
+            $target_dir = __DIR__ . '/../uploads/obras/';
+            if(!is_dir($target_dir)) mkdir($target_dir, 0755, true);
+            
+            if(move_uploaded_file($_FILES['foto_capa_obra']['tmp_name'], $target_dir . $new_name)) {
+                $foto_path = "uploads/obras/" . $new_name;
+            }
+        }
+    }
+
     try {
-        // Upsert logic handled by update since record usually created on signup
-        $pdo->prepare("UPDATE processo_detalhes SET processo_numero=?, processo_objeto=?, processo_link_mapa=?, valor_venal=?, area_total_final=? WHERE cliente_id=?")
-            ->execute([$proc_num, $proc_obj, $proc_map, $valor_venal, $area_total, $cid]);
+        // Se houve upload, atualiza foto também. Se não, mantem a anterior (query dinâmica seria melhor, mas aqui simplificamos)
+        if($foto_path) {
+             $pdo->prepare("UPDATE processo_detalhes SET processo_numero=?, processo_objeto=?, processo_link_mapa=?, valor_venal=?, area_total_final=?, foto_capa_obra=? WHERE cliente_id=?")
+                ->execute([$proc_num, $proc_obj, $proc_map, $valor_venal, $area_total, $foto_path, $cid]);
+        } else {
+             $pdo->prepare("UPDATE processo_detalhes SET processo_numero=?, processo_objeto=?, processo_link_mapa=?, valor_venal=?, area_total_final=? WHERE cliente_id=?")
+                ->execute([$proc_num, $proc_obj, $proc_map, $valor_venal, $area_total, $cid]);
+        }
         
         // Refresh to show changes immediately (managed by page reload usually)
         header("Location: ?cliente_id=$cid&tab=andamento&msg=header_updated");
