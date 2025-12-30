@@ -201,7 +201,10 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 $isActive = ($cliente_ativo && $cliente_ativo['id'] == $c['id']);
                 
                 // Dados do DB já são o Primeiro Nome (devido à migração)
-                $first_name = htmlspecialchars($c['nome']);
+                // NEW: Show First 2 Names
+                $parts = explode(' ', trim($c['nome']));
+                $first_name = $parts[0] . (isset($parts[1]) ? ' ' . $parts[1] : '');
+                $first_name = htmlspecialchars($first_name);
                 
                 $initial = strtoupper(substr($first_name, 0, 1));
                 
@@ -378,26 +381,20 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     <!-- DADOS DO PROCESSO RAPIDO -->
                     <form method="POST" style="margin-top:15px; padding-top:15px; border-top:1px solid #eee; display:flex; gap:15px; flex-wrap:wrap; align-items:flex-end;">
                         <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
-                        <div style="flex:1; min-width:150px;">
-                            <label style="font-size:0.8rem; font-weight:bold; color:#666;">Processo Nº (Prefeitura)</label>
-                            <input type="text" name="processo_numero" value="<?= htmlspecialchars($detalhes['processo_numero'] ?? '') ?>" placeholder="Ex: 6100/2025" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:6px; font-weight:bold; color:var(--color-primary);">
+                        <div style="display:flex; gap:10px; margin-bottom:10px;">
+                            <div style="flex:1;">
+                                <label style="font-size:0.75rem; font-weight:bold; color:#666;">Processo Nº</label>
+                                <input type="text" name="processo_numero" value="<?= htmlspecialchars($detalhes['processo_numero'] ?? '') ?>" placeholder="Ex: 6100/2025" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:6px;">
+                            </div>
+                            <div style="flex:1;">
+                                <label style="font-size:0.75rem; font-weight:bold; color:#666;">Área Total Final (m²)</label>
+                                <input type="text" name="area_total_final" value="<?= htmlspecialchars($detalhes['area_total_final'] ?? '') ?>" placeholder="Ex: 156.45" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:6px;">
+                            </div>
                         </div>
-                        <div style="flex:2; min-width:250px;">
-                            <label style="font-size:0.8rem; font-weight:bold; color:#666;">Objeto do Processo</label>
-                            <input type="text" name="processo_objeto" value="<?= htmlspecialchars($detalhes['processo_objeto'] ?? '') ?>" placeholder="Ex: Regularização de Imóvel Residencial..." style="width:100%; padding:8px; border:1px solid #ddd; border-radius:6px;">
-                        </div>
-                         <div style="flex:1; min-width:150px;">
-                            <label style="font-size:0.8rem; font-weight:bold; color:#666;">Link Mapa</label>
-                            <input type="text" name="processo_link_mapa" value="<?= htmlspecialchars($detalhes['processo_link_mapa'] ?? '') ?>" placeholder="https://maps..." style="width:100%; padding:8px; border:1px solid #ddd; border-radius:6px;">
-                        </div>
-                        <!-- New Fields for "Maria" Spec -->
-                        <div style="flex:1; min-width:150px;">
-                            <label style="font-size:0.8rem; font-weight:bold; color:#666;">Valor Venal (R$)</label>
-                            <input type="text" name="valor_venal" value="<?= htmlspecialchars($detalhes['valor_venal'] ?? '') ?>" placeholder="Ex: 350.000,00" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:6px;">
-                        </div>
-                        <div style="flex:1; min-width:150px;">
-                            <label style="font-size:0.8rem; font-weight:bold; color:#666;">Área Total (m²)</label>
-                            <input type="text" name="area_total_final" value="<?= htmlspecialchars($detalhes['area_total_final'] ?? '') ?>" placeholder="Ex: 156.45" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:6px;">
+
+                        <div style="margin-bottom:10px;">
+                             <label style="font-size:0.75rem; font-weight:bold; color:#666;">Objeto do Processo</label>
+                             <input type="text" name="processo_objeto" value="<?= htmlspecialchars($detalhes['processo_objeto'] ?? '') ?>" placeholder="Ex: Regularização de Edificação Residencial Unifamiliar" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:6px;">
                         </div>
 
                         <!-- DADOS TÉCNICOS (Oliveira/MG) -->
@@ -472,6 +469,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias" class="tab-btn <?= $active_tab=='pendencias'?'active':'' ?>">⚠️ Pendências</a>
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=financeiro" class="tab-btn <?= $active_tab=='financeiro'?'active':'' ?>">💰 Financeiro</a>
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=arquivos" class="tab-btn <?= $active_tab=='arquivos'?'active':'' ?>">📂 Arquivos</a>
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=configuracoes" class="tab-btn <?= $active_tab=='configuracoes'?'active':'' ?>">⚙️ Configurações</a>
             </div>
 
             <?php if($active_tab == 'andamento' || $active_tab == 'cadastro'): ?>
@@ -485,21 +483,10 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     <form method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
                         
-                        <div class="form-grid" style="margin-bottom:15px;">
-                             <!-- TIPO DE MOVIMENTO -->
-                             <div class="form-group">
-                                <label>Tipo de Registro</label>
-                                <select name="tipo_movimento" id="tipo_movimento_select" onchange="toggleUploadField()" style="background:#fff3cd; font-weight:bold;">
-                                    <option value="padrao">📌 Andamento Padrão</option>
-                                    <option value="fase_inicio">🚀 Início de Nova Fase (Título)</option>
-                                    <option value="documento">📄 Entrega de Documento Oficial</option>
-                                </select>
-                            </div>
-
                             <!-- SELEÇÃO DE FASE PREDETERMINADA -->
                             <div class="form-group">
                                 <label>Fase Atual (Sistema)</label>
-                                <select name="nova_etapa" style="font-size:1rem; padding:10px; border:1px solid #ccc;">
+                                <select name="nova_etapa" style="font-size:1rem; padding:10px; border:1px solid #ccc; width:100%;">
                                     <option value="">Manter atual (<?= htmlspecialchars($detalhes['etapa_atual']??'-') ?>)</option>
                                     <?php foreach($fases_padrao as $f): ?>
                                         <option value="<?= $f ?>"><?= $f ?></option>
@@ -513,10 +500,11 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             <input type="text" name="titulo_evento" required placeholder="Ex: Protocolo na Prefeitura, Alvará Emitido..." style="font-size:1.1rem; font-weight:600;">
                         </div>
 
-                        <!-- UPLOAD FIELD (HIDDEN BY DEFAULT) -->
-                        <div id="upload_field_container" style="display:none; background:#e9ECEF; padding:15px; border-radius:8px; margin-bottom:15px; border:1px dashed #6c757d;">
-                             <label style="display:block; font-weight:bold; color:#0d6efd; margin-bottom:5px;">📎 Upload do Documento (PDF/Imagem)</label>
-                             <input type="file" name="arquivo_documento">
+                        <!-- UPLOAD FIELD (Always Visible but Optional) -->
+                        <div style="background:#f8f9fa; padding:15px; border-radius:8px; margin-bottom:15px; border:1px solid #eee;">
+                             <label style="display:block; font-weight:bold; color:#666; margin-bottom:5px; font-size:0.9rem;">📎 Anexar Documento (Opcional)</label>
+                             <input type="file" name="arquivo_documento" style="width:100%;">
+                             <small style="display:block; color:#999; margin-top:5px;">Se anexado, o registro será salvo como "Documento".</small>
                         </div>
 
                         <div class="form-group">
@@ -525,14 +513,8 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         </div>
                         <button type="submit" name="atualizar_etapa" class="btn-save">Registrar Movimentação</button>
                     </form>
-
-                    <script>
-                        function toggleUploadField() {
-                            const val = document.getElementById('tipo_movimento_select').value;
-                            document.getElementById('upload_field_container').style.display = (val === 'documento') ? 'block' : 'none';
-                        }
-                    </script>
-                </div>
+                    
+                    <!-- Script removed as logic is now backend-driven -->
 
                 <div class="form-card">
                     <h3>📜 Histórico Completo do Processo</h3>
@@ -953,6 +935,58 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     echo "<div style='color:red'>Erro ao carregar dados financeiros. Verifique se o Setup de Banco de Dados foi rodado. <br>". $e->getMessage() ."</div>";
                 }
                 ?>
+            <?php elseif($active_tab == 'configuracoes'): ?>
+                <div class="form-card" style="border-left: 6px solid #6c757d;">
+                    <h3 style="color:#495057;">⚙️ Configurações e Dados Cadastrais</h3>
+                    
+                    <form method="POST">
+                         <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Nome Completo</label>
+                                <input type="text" name="nome" value="<?= htmlspecialchars($cliente_ativo['nome']) ?>" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Senha de Acesso (Deixe em branco para manter)</label>
+                                <input type="text" name="nova_senha" placeholder="Digite para alterar...">
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>CPF / CNPJ</label>
+                                <input type="text" name="cpf_cnpj" value="<?= htmlspecialchars($cliente_ativo['cpf_cnpj']) ?>">
+                            </div>
+                            <div class="form-group">
+                                <label>Telefone</label>
+                                <input type="text" name="telefone" value="<?= htmlspecialchars($cliente_ativo['telefone']) ?>">
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="text" name="email" value="<?= htmlspecialchars($cliente_ativo['email']) ?>">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Endereço do Imóvel</label>
+                            <input type="text" name="endereco_imovel" value="<?= htmlspecialchars($detalhes['endereco_imovel'] ?? '') ?>" placeholder="Rua, Número, Bairro...">
+                        </div>
+
+                         <div class="form-group">
+                            <label>Link Pasta Drive (Raiz)</label>
+                            <input type="text" name="link_drive" value="<?= htmlspecialchars($cliente_ativo['link_drive_pasta'] ?? '') ?>" placeholder="https://drive.google.com/...">
+                        </div>
+
+                        <button type="submit" name="btn_editar_cliente" class="btn-save">💾 Salvar Alterações</button>
+                    </form>
+                    
+                    <hr style="margin:30px 0; border-top:1px solid #eee;">
+                    
+                    <h4 style="color:#dc3545;">Zona de Perigo</h4>
+                    <p style="color:#666; font-size:0.9rem;">A exclusão removerá todos os dados, arquivos e histórico deste cliente.</p>
+                    <a href="?deletar_cliente=<?= $cliente_ativo['id'] ?>" onclick="return confirm('ATENÇÃO EXTREMA: \n\nVocê tem certeza que deseja EXCLUIR DEFINITIVAMENTE este cliente?\n\nTodos os dados serão perdidos para sempre.')" class="btn-save" style="background:#dc3545; display:inline-block; text-align:center; text-decoration:none;">🗑️ Excluir Cliente Permanentemente</a>
+                </div>
+
             <?php endif; ?>
 
         <?php else: ?>

@@ -51,13 +51,16 @@ if (isset($_POST['update_processo_header'])) {
 }
 
 // 1. Atualizar Etapa & Adicionar Histórico
+// 1. Atualizar Etapa & Adicionar Histórico
 if (isset($_POST['atualizar_etapa'])) {
     $cid = $_POST['cliente_id'];
-    $nova_etapa = $_POST['nova_etapa']; // Can be empty if just adding history
-    $tipo_mov = $_POST['tipo_movimento']; // padrao, fase_inicio, documento
+    $nova_etapa = $_POST['nova_etapa'] ?? null; 
+    // $tipo_mov = $_POST['tipo_movimento']; // REMOVED - Auto-detected
     $titulo_ev = $_POST['titulo_evento'];
     $obs_etapa = $_POST['observacao_etapa'] ?? '';
     
+    $tipo_mov = 'padrao'; // Default
+
     try {
         // 1. Update Current Phase if selected
         if (!empty($nova_etapa)) {
@@ -65,10 +68,12 @@ if (isset($_POST['atualizar_etapa'])) {
         }
         
         // 2. Prepare Description
-        $sys_desc = $obs_etapa; // Default description is what user typed
+        $sys_desc = $obs_etapa; 
         
-        // 3. Handle File Upload if Document
-        if ($tipo_mov == 'documento' && isset($_FILES['arquivo_documento']) && $_FILES['arquivo_documento']['error'] == 0) {
+        // 3. Handle File Upload if Document (Auto-detect)
+        if (isset($_FILES['arquivo_documento']) && $_FILES['arquivo_documento']['error'] == 0) {
+            $tipo_mov = 'documento'; // Auto-set type
+            
             $ext = strtolower(pathinfo($_FILES['arquivo_documento']['name'], PATHINFO_EXTENSION));
             $new_name = "doc_{$cid}_" . time() . ".$ext";
             $target = __DIR__ . "/../uploads/entregaveis/" . $new_name;
@@ -78,6 +83,7 @@ if (isset($_POST['atualizar_etapa'])) {
             if (move_uploaded_file($_FILES['arquivo_documento']['tmp_name'], $target)) {
                 $rel_path = "uploads/entregaveis/$new_name";
                 $sys_desc .= "<br><br><a href='$rel_path' target='_blank' class='btn-download-doc'>📥 Baixar Documento</a>";
+                // Also save to `arquivo_path` if column exists (optional based on schema, but let's stick to appending desc for safety with existing views)
             }
         }
         
