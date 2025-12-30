@@ -797,7 +797,45 @@ a {
 }
 
 .badge {
-    padding: 4px 10px;
+
+    /* --- ASSISTANT TIPS (Virtual Assistant) --- */
+    .assistant-tip {
+        background: #e3f2fd;
+        border-left: 4px solid #2196f3;
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 25px;
+        display: flex;
+        gap: 15px;
+        align-items: flex-start;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .at-icon {
+        font-size: 24px;
+        background: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .at-content {
+        flex: 1;
+        font-size: 0.9rem;
+        color: #0d47a1;
+        line-height: 1.5;
+    }
+
+    .at-content strong {
+        display: block;
+        margin-bottom: 3px;
+        color: #0d47a1;
+    }
+
     border-radius: 20px;
     font-size: 0.75rem;
     font-weight: 700;

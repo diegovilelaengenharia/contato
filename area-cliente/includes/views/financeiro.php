@@ -3,6 +3,15 @@
     <p>Acompanhe seus investimentos na obra.</p>
 </div>
 
+<!-- ASSISTANT TIP -->
+<div class="assistant-tip fade-in-up">
+    <div class="at-icon">💰</div>
+    <div class="at-content">
+        <strong>Transparência Total</strong>
+        <p>Aqui você confere exatamente para onde vai cada centavo. As taxas governamentais tem a referência da Lei para sua conferência.</p>
+    </div>
+</div>
+
 <!-- Summary Cards -->
 <div class="finance-summary fade-in-up">
     <div class="fin-card highlight">
@@ -60,6 +69,11 @@ if(!file_exists(__DIR__ . '/../partials/fin_row_premium.php')) {
         <div class="fp-left">
             <h4><?= htmlspecialchars($f["descricao"]) ?></h4>
             <span>Vencimento: <?= date("d/m/Y", strtotime($f["data_vencimento"])) ?></span>
+            <?php if(!empty($f["referencia_legal"])): ?>
+                <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">
+                    <span style="font-weight:600;">Lei/Ref:</span> <?= htmlspecialchars($f["referencia_legal"]) ?>
+                </div>
+            <?php endif; ?>
         </div>
         <div class="fp-right">
             <span class="fp-price">R$ <?= number_format($f["valor"], 2, ",", ".") ?></span>

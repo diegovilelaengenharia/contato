@@ -49,6 +49,12 @@ $taxas_padrao = require 'config/taxas.php';
 // --- Processamento (POST/GET) ---
 require 'includes/processamento.php';
 
+// New processing block for 'update_processo_header' including new fields
+// This is already in 'processamento.php' but we need to update it there too.
+// I will update processamento.php separately.
+// Wait, looking at current File 2 (processamento.php), I need to update it to include the new fields in the UPDATE statement.
+
+
 // 9. Exportar Relatório (Exaustivo e Profissional)
 // 9. Exportar Relatório (Exaustivo e Profissional)
 require 'includes/exportacao.php';
@@ -368,6 +374,33 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- DADOS DO PROCESSO RAPIDO -->
+                    <form method="POST" style="margin-top:15px; padding-top:15px; border-top:1px solid #eee; display:flex; gap:15px; flex-wrap:wrap; align-items:flex-end;">
+                        <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
+                        <div style="flex:1; min-width:150px;">
+                            <label style="font-size:0.8rem; font-weight:bold; color:#666;">Processo Nº (Prefeitura)</label>
+                            <input type="text" name="processo_numero" value="<?= htmlspecialchars($detalhes['processo_numero'] ?? '') ?>" placeholder="Ex: 6100/2025" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:6px; font-weight:bold; color:var(--color-primary);">
+                        </div>
+                        <div style="flex:2; min-width:250px;">
+                            <label style="font-size:0.8rem; font-weight:bold; color:#666;">Objeto do Processo</label>
+                            <input type="text" name="processo_objeto" value="<?= htmlspecialchars($detalhes['processo_objeto'] ?? '') ?>" placeholder="Ex: Regularização de Imóvel Residencial..." style="width:100%; padding:8px; border:1px solid #ddd; border-radius:6px;">
+                        </div>
+                         <div style="flex:1; min-width:150px;">
+                            <label style="font-size:0.8rem; font-weight:bold; color:#666;">Link Mapa</label>
+                            <input type="text" name="processo_link_mapa" value="<?= htmlspecialchars($detalhes['processo_link_mapa'] ?? '') ?>" placeholder="https://maps..." style="width:100%; padding:8px; border:1px solid #ddd; border-radius:6px;">
+                        </div>
+                        <!-- New Fields for "Maria" Spec -->
+                        <div style="flex:1; min-width:150px;">
+                            <label style="font-size:0.8rem; font-weight:bold; color:#666;">Valor Venal (R$)</label>
+                            <input type="text" name="valor_venal" value="<?= htmlspecialchars($detalhes['valor_venal'] ?? '') ?>" placeholder="Ex: 350.000,00" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:6px;">
+                        </div>
+                        <div style="flex:1; min-width:150px;">
+                            <label style="font-size:0.8rem; font-weight:bold; color:#666;">Área Total (m²)</label>
+                            <input type="text" name="area_total_final" value="<?= htmlspecialchars($detalhes['area_total_final'] ?? '') ?>" placeholder="Ex: 156.45" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:6px;">
+                        </div>
+                        <button type="submit" name="update_processo_header" class="btn-save" style="padding:8px 15px; margin:0; height:38px;">Salvar Dados</button>
+                    </form>
                 </div>
 
             </div>
@@ -401,38 +434,82 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 </style>
 
                 <div class="form-card">
-                    <h3>🔄 Atualizar Fase do Processo</h3>
-                    <form method="POST">
+                    <h3>🔄 Atualizar Fase ou Adicionar Histórico</h3>
+                    <form method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
-                        <div class="form-group">
-                            <label>Selecione a Nova Fase</label>
-                            <select name="nova_etapa" style="font-size:1.1rem; padding:15px; border:2px solid var(--color-primary); color:var(--color-primary); font-weight:bold;">
-                                <option value="">-- Selecione --</option>
-                                <?php foreach($fases_padrao as $f): ?>
-                                    <option value="<?= $f ?>" <?= ($detalhes['etapa_atual']??'')==$f?'selected':'' ?>><?= $f ?></option>
-                                <?php endforeach; ?>
-                            </select>
+                        
+                        <div class="form-grid" style="margin-bottom:15px;">
+                             <!-- TIPO DE MOVIMENTO -->
+                             <div class="form-group">
+                                <label>Tipo de Registro</label>
+                                <select name="tipo_movimento" id="tipo_movimento_select" onchange="toggleUploadField()" style="background:#fff3cd; font-weight:bold;">
+                                    <option value="padrao">📌 Andamento Padrão</option>
+                                    <option value="fase_inicio">🚀 Início de Nova Fase (Título)</option>
+                                    <option value="documento">📄 Entrega de Documento Oficial</option>
+                                </select>
+                            </div>
+
+                            <!-- SELEÇÃO DE FASE PREDETERMINADA -->
+                            <div class="form-group">
+                                <label>Fase Atual (Sistema)</label>
+                                <select name="nova_etapa" style="font-size:1rem; padding:10px; border:1px solid #ccc;">
+                                    <option value="">Manter atual (<?= htmlspecialchars($detalhes['etapa_atual']??'-') ?>)</option>
+                                    <?php foreach($fases_padrao as $f): ?>
+                                        <option value="<?= $f ?>"><?= $f ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label>Observação sobre a mudança (opcional)</label>
-                            <textarea name="observacao_etapa" id="editor_etapa" rows="3" placeholder="Ex: Protocolado na prefeitura sob nº 123..."></textarea>
+
+                         <div class="form-group">
+                            <label>Título do Evento / Documento</label>
+                            <input type="text" name="titulo_evento" required placeholder="Ex: Protocolo na Prefeitura, Alvará Emitido..." style="font-size:1.1rem; font-weight:600;">
                         </div>
-                        <button type="submit" name="atualizar_etapa" class="btn-save">Atualizar Status</button>
+
+                        <!-- UPLOAD FIELD (HIDDEN BY DEFAULT) -->
+                        <div id="upload_field_container" style="display:none; background:#e9ECEF; padding:15px; border-radius:8px; margin-bottom:15px; border:1px dashed #6c757d;">
+                             <label style="display:block; font-weight:bold; color:#0d6efd; margin-bottom:5px;">📎 Upload do Documento (PDF/Imagem)</label>
+                             <input type="file" name="arquivo_documento">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Descrição Detalhada / Observação</label>
+                            <textarea name="observacao_etapa" id="editor_etapa" rows="3" placeholder="Detalhes técnicos, números de protocolo, etc..."></textarea>
+                        </div>
+                        <button type="submit" name="atualizar_etapa" class="btn-save">Registrar Movimentação</button>
                     </form>
+
+                    <script>
+                        function toggleUploadField() {
+                            const val = document.getElementById('tipo_movimento_select').value;
+                            document.getElementById('upload_field_container').style.display = (val === 'documento') ? 'block' : 'none';
+                        }
+                    </script>
                 </div>
 
                 <div class="form-card">
-                    <h3>📜 Histórico de Movimentações</h3>
+                    <h3>📜 Histórico Completo do Processo</h3>
                     <div class="table-responsive">
                         <table style="width:100%; border-collapse:collapse;">
-                            <thead><tr style="background:rgba(0,0,0,0.03);"><th style="padding:10px; text-align:left;">Data</th><th style="padding:10px; text-align:left;">Descrição</th><th style="padding:10px; text-align:center;">Ação</th></tr></thead>
+                            <thead><tr style="background:rgba(0,0,0,0.03);"><th style="padding:10px; text-align:left;">Data</th><th style="padding:10px; text-align:left;">Evento</th><th style="padding:10px; text-align:center;">Ação</th></tr></thead>
                             <tbody>
                                 <?php 
                                 $hist = $pdo->prepare("SELECT * FROM processo_movimentos WHERE cliente_id=? ORDER BY data_movimento DESC");
                                 $hist->execute([$cliente_ativo['id']]);
-                                foreach($hist->fetchAll() as $h): ?>
-                                    <tr style="border-bottom:1px solid #eee;">
-                                        <td style="padding:15px; color:var(--color-primary); font-weight:bold; white-space:nowrap; vertical-align:top;">
+                                foreach($hist->fetchAll() as $h): 
+                                    // Style based on type
+                                    $row_style = "";
+                                    $icon_type = "📌";
+                                    if(($h['tipo_movimento']??'padrao') == 'fase_inicio') {
+                                        $row_style = "background:#e3f2fd; border-left:5px solid #0d6efd;";
+                                        $icon_type = "🚀";
+                                    } elseif(($h['tipo_movimento']??'padrao') == 'documento') {
+                                        $row_style = "background:#f8f9fa; border-left:5px solid #198754;";
+                                        $icon_type = "📄";
+                                    }
+                                ?>
+                                    <tr style="border-bottom:1px solid #eee; <?= $row_style ?>">
+                                        <td style="padding:15px; font-size:0.9rem; color:#555; white-space:nowrap; vertical-align:top;">
                                             <?= date('d/m/Y H:i', strtotime($h['data_movimento'])) ?>
                                         </td>
                                         <td style="padding:15px;">

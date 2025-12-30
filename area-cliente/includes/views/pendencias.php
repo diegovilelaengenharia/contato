@@ -3,6 +3,15 @@
     <p>O que precisamos de você para avançar.</p>
 </div>
 
+<!-- ASSISTANT TIP -->
+<div class="assistant-tip fade-in-up">
+    <div class="at-icon">⚡</div>
+    <div class="at-content">
+        <strong>Ação Necessária</strong>
+        <p>Esta seção é crucial! Resolva os itens pendentes para que seu processo não pare. Nossa equipe só pode avançar com essas informações em mãos.</p>
+    </div>
+</div>
+
 <div class="pendency-list fade-in-up">
     <?php if(count($pendencias) > 0): foreach($pendencias as $p): 
         $is_resolved = $p['status'] === 'resolvido';

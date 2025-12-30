@@ -3,6 +3,15 @@
     <p>Seus dados cadastrais.</p>
 </div>
 
+<!-- ASSISTANT TIP -->
+<div class="assistant-tip fade-in-up">
+    <div class="at-icon">👤</div>
+    <div class="at-content">
+        <strong>Seus Dados</strong>
+        <p>Estes são os dados que temos no sistema. Se precisar alterar algo, entre em contato com nossa equipe pelo WhatsApp.</p>
+    </div>
+</div>
+
 <div class="profile-container fade-in-up">
     <!-- AVATAR CARD -->
     <div class="profile-card center-text">

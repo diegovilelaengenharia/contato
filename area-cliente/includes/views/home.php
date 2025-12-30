@@ -12,52 +12,94 @@ $iniciais = strtoupper(substr($primeiro_nome, 0, 1));
 $data_inicio = isset($data['data_cadastro']) ? date('d/m/Y', strtotime($data['data_cadastro'])) : '--/--/----';
 ?>
 
-<!-- HEADER PREMIUM "MASTER CARD" -->
-<div class="header-premium-card fade-in-up">
-    <button onclick="toggleTheme()" class="hp-theme-toggle" title="Alterar Tema">
-        <span class="material-symbols-rounded">dark_mode</span>
-    </button>
-    
-    <div class="hp-top">
-        <div class="hp-avatar">
-            <?php if(!empty($foto_perfil)): ?>
-                <img src="<?= htmlspecialchars($foto_perfil) ?>" alt="Foto" id="userPhoto">
+<!-- HOME VIEW -->
+<div class="fade-in-up">
+    <!-- Process Header: RESUMO DO PATRIMÔNIO -->
+    <div style="background:var(--color-primary-dark); color:white; padding:25px 20px; border-radius:16px; margin-bottom:25px; box-shadow:var(--shadow-medium); position:relative; overflow:hidden;">
+        <div style="position:absolute; top:-20px; right:-20px; background:rgba(255,255,255,0.1); width:150px; height:150px; border-radius:50%;"></div>
+        
+        <div style="position:relative; z-index:2;">
+            <p style="opacity:0.9; margin:0 0 5px 0; font-weight:400; font-size:0.9rem;">Olá, <?= $primeiro_nome ?>.</p>
+            <h1 style="font-size:1.6rem; margin:0 0 20px 0; font-weight:800; letter-spacing:-0.5px;">Resumo do Patrimônio</h1>
+            
+            <?php if(!empty($data['processo_numero'])): ?>
+            <div style="background:rgba(0,0,0,0.25); border-radius:12px; overflow:hidden;">
+                <!-- Table-like layout using CSS Grid -->
+                <div style="display:grid; grid-template-columns: 1fr 1fr; border-bottom:1px solid rgba(255,255,255,0.1);">
+                    <div style="padding:15px; border-right:1px solid rgba(255,255,255,0.1);">
+                        <label style="display:block; font-size:0.7rem; text-transform:uppercase; opacity:0.75; margin-bottom:3px;">Status</label>
+                        <strong style="font-size:0.95rem; color:#4caf50;">✅ <?= $etapa_atual ?></strong>
+                    </div>
+                    <div style="padding:15px;">
+                        <label style="display:block; font-size:0.7rem; text-transform:uppercase; opacity:0.75; margin-bottom:3px;">Processo</label>
+                        <strong style="font-size:0.95rem;"><?= htmlspecialchars($data['processo_numero']) ?></strong>
+                    </div>
+                </div>
+
+                <div style="padding:15px; border-bottom:1px solid rgba(255,255,255,0.1);">
+                    <label style="display:block; font-size:0.7rem; text-transform:uppercase; opacity:0.75; margin-bottom:3px;">Imóvel</label>
+                    <div style="font-size:0.95rem; font-weight:500; line-height:1.4;">
+                        <?= htmlspecialchars($data['processo_objeto'] ?? 'Regularização de Imóvel') ?>
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr 1fr;">
+                    <div style="padding:15px; border-right:1px solid rgba(255,255,255,0.1);">
+                        <label style="display:block; font-size:0.7rem; text-transform:uppercase; opacity:0.75; margin-bottom:3px;">Matrícula</label>
+                        <strong style="font-size:0.9rem;"><?= htmlspecialchars($data['num_matricula'] ?? '--') ?></strong>
+                    </div>
+                    <div style="padding:15px; border-right:1px solid rgba(255,255,255,0.1);">
+                        <label style="display:block; font-size:0.7rem; text-transform:uppercase; opacity:0.75; margin-bottom:3px;">Área Final</label>
+                        <strong style="font-size:0.9rem;"><?= htmlspecialchars($data['area_total_final'] ?? '--') ?> m²</strong>
+                    </div>
+                    <div style="padding:15px;">
+                        <label style="display:block; font-size:0.7rem; text-transform:uppercase; opacity:0.75; margin-bottom:3px;">Valor Venal</label>
+                        <strong style="font-size:0.9rem;"><?= htmlspecialchars($data['valor_venal'] ?? '--') ?></strong>
+                    </div>
+                </div>
+            </div>
             <?php else: ?>
-                <span><?= $iniciais ?></span>
+                <p style="opacity:0.8;">Os dados do seu processo estão sendo carregados.</p>
             <?php endif; ?>
         </div>
-        <div class="hp-client-info">
-            <h1><?= htmlspecialchars($primeiro_nome) ?></h1>
-            <p><span class="material-symbols-rounded" style="font-size:16px;">id_card</span> Cliente #<?= $cliente_id ?></p>
-        </div>
     </div>
-    
-    <div class="hp-details">
-        <div class="hp-item">
-            <label>Local da Obra</label>
-            <span><?= mb_strimwidth($endereco, 0, 30, '...') ?></span>
-        </div>
-        <div class="hp-item">
-            <label>Metragem</label>
-            <span><?= $data['area_construida'] ?? '-- ' ?>m² (Const.)</span>
-        </div>
-    </div>
-</div>
 
-<!-- ALERTAS URGENTES -->
-<?php 
-$pendencias_abertas = array_filter($pendencias, fn($p) => $p['status'] != 'resolvido');
-if(count($pendencias_abertas) > 0): 
-?>
-<div class="urgent-alert fade-in-up" onclick="window.location.href='?view=pendencias'">
-    <div class="ua-icon">🔔</div>
-    <div class="ua-content">
-        <strong>Atenção Necessária</strong>
-        <p>Você possui pendências em aberto. Toque para resolver.</p>
+
+    <!-- ASSISTANT TIP -->
+    <div class="assistant-tip fade-in-up">
+        <div class="at-icon">🤖</div>
+        <div class="at-content">
+            <strong>Assistente Virtual</strong>
+            <p>Olá! Este é o painel principal. Aqui você vê o resumo do seu patrimônio e o status geral. Para detalhes do histórico, toque em <strong>Fase Atual</strong> ou <strong>Documentos</strong> abaixo.</p>
+        </div>
     </div>
-    <span class="material-symbols-rounded">chevron_right</span>
-</div>
-<?php endif; ?>
+
+    <!-- Quick Stats Grid (Modified to show Deliverables) -->
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:25px;">
+        <!-- Status Card -->
+        <div class="stat-card" onclick="window.location.href='?view=timeline'" style="cursor:pointer; background:var(--color-card-bg);">
+            <div class="stat-icon" style="background:var(--color-primary-light); color:var(--color-primary);">🚀</div>
+            <div class="stat-info">
+                <span class="stat-label">Fase Atual</span>
+                <span class="stat-value" style="font-size:1rem; color:var(--color-primary);"><?= $etapa_atual ?: 'Início' ?></span>
+            </div>
+        </div>
+
+        <!-- Deliverables Card -->
+        <?php 
+            // Count official docs
+            $stmtDocs = $pdo->prepare("SELECT COUNT(*) FROM processo_movimentos WHERE cliente_id = ? AND tipo_movimento = 'documento'");
+            $stmtDocs->execute([$cliente_id]);
+            $countDocs = $stmtDocs->fetchColumn();
+        ?>
+        <div class="stat-card" onclick="window.location.href='?view=timeline'" style="cursor:pointer; background:var(--color-card-bg);">
+            <div class="stat-icon" style="background:#e8f5e9; color:#198754;">📜</div>
+            <div class="stat-info">
+                <span class="stat-label">Documentos</span>
+                <span class="stat-value" style="color:#198754;"><?= $countDocs ?> emitidos</span>
+            </div>
+        </div>
+    </div>
 
 
 <!-- STEP PROCESS (MODERN) -->

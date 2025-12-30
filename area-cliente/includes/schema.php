@@ -16,7 +16,11 @@ $cols_needed = [
     'imovel_area_lote', 'area_construida',
     'num_matricula', 'inscricao_imob',
     'tipo_responsavel', 'resp_tecnico', 'registro_prof', 'num_art_rrt',
-    'tipo_pessoa', 'cpf_cnpj', 'rg_ie', 'estado_civil', 'profissao', 'endereco_residencial', 'contato_email', 'contato_tel'
+    'tipo_pessoa', 'cpf_cnpj', 'rg_ie', 'estado_civil', 'profissao', 'endereco_residencial', 'contato_email', 'contato_tel',
+    // New Columns for Process Tracking
+    'processo_numero', 'processo_objeto', 'processo_link_mapa',
+    // New Columns for "Maria" Spec (Resumo do Patrimônio)
+    'valor_venal', 'area_total_final'
 ];
 
 foreach($cols_needed as $col) {
@@ -24,8 +28,24 @@ foreach($cols_needed as $col) {
         $pdo->query("SELECT $col FROM processo_detalhes LIMIT 1");
     } catch (Exception $e) {
         // Column doesn't exist, add it
-        $pdo->exec("ALTER TABLE processo_detalhes ADD COLUMN $col VARCHAR(255) DEFAULT NULL");
+        $type = ($col == 'processo_objeto') ? 'TEXT' : 'VARCHAR(255)';
+        $pdo->exec("ALTER TABLE processo_detalhes ADD COLUMN $col $type DEFAULT NULL");
     }
+}
+
+// Update Schema: Add Columns for processo_financeiro
+try {
+    $pdo->query("SELECT referencia_legal FROM processo_financeiro LIMIT 1");
+} catch (Exception $e) {
+    $pdo->exec("ALTER TABLE processo_financeiro ADD COLUMN referencia_legal VARCHAR(255) DEFAULT NULL");
+}
+
+// Update Schema: Add Columns for processo_movimentos
+try {
+    $pdo->query("SELECT tipo_movimento FROM processo_movimentos LIMIT 1");
+} catch (Exception $e) {
+    // ENUM: 'padrao' (default bullet), 'fase_inicio' (Section Header), 'documento' (Downloadable).
+    $pdo->exec("ALTER TABLE processo_movimentos ADD COLUMN tipo_movimento VARCHAR(50) DEFAULT 'padrao'");
 }
 
 // Create Dynamic Fields Table
