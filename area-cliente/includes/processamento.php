@@ -88,7 +88,27 @@ if (isset($_POST['btn_salvar_cadastro'])) {
     foreach($campos as $c) $params[] = $_POST[$c] ?? null;
     $params[] = $cid;
 
-    try { $pdo->prepare($sql)->execute($params); $sucesso = "Cadastro salvo!"; } 
+    // Verify and Update Main Name (clientes table)
+    if (!empty($_POST['nome_principal'])) {
+        $pdo->prepare("UPDATE clientes SET nome = ? WHERE id = ?")->execute([$_POST['nome_principal'], $cid]);
+    }
+
+    // AVATAR UPLOAD (EDIT)
+    if(isset($_FILES['avatar_upload']) && $_FILES['avatar_upload']['error'] == 0) {
+        $ext = strtolower(pathinfo($_FILES['avatar_upload']['name'], PATHINFO_EXTENSION));
+        $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        if(in_array($ext, $allowed)) {
+            $dir = __DIR__ . '/../uploads/avatars/';
+            if(!is_dir($dir)) mkdir($dir, 0755, true);
+            
+            // Remove antigos
+            array_map('unlink', glob($dir . "avatar_{$cid}.*"));
+            
+            move_uploaded_file($_FILES['avatar_upload']['tmp_name'], $dir . "avatar_{$cid}.{$ext}");
+        }
+    }
+
+    try { $pdo->prepare($sql)->execute($params); $sucesso = "Cadastro atualizado (Nome e Foto inclusos)!"; } 
     catch (PDOException $e) { $erro = "Erro: " . $e->getMessage(); }
 }
 
@@ -223,6 +243,21 @@ if (isset($_POST['novo_cliente'])) {
             endereco_residencial, 
             endereco_imovel
         ) VALUES (?, ?, ?, ?, ?, ?)")->execute([$nid, $cpf, $tel, '', '', '']);
+
+        // AVATAR UPLOAD (NOVO)
+        if(isset($_FILES['avatar_upload']) && $_FILES['avatar_upload']['error'] == 0) {
+            $ext = strtolower(pathinfo($_FILES['avatar_upload']['name'], PATHINFO_EXTENSION));
+            $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+            if(in_array($ext, $allowed)) {
+                $dir = __DIR__ . '/../uploads/avatars/'; // Subindo um nível pois estamos em includes/
+                if(!is_dir($dir)) mkdir($dir, 0755, true);
+                
+                // Remove antigos
+                array_map('unlink', glob($dir . "avatar_{$nid}.*"));
+                
+                move_uploaded_file($_FILES['avatar_upload']['tmp_name'], $dir . "avatar_{$nid}.{$ext}");
+            }
+        }
         
         // REDIRECIONAMENTO IMEDIATO PARA EDITOR COMPLETÃO
         header("Location: editar_cliente.php?id=$nid&msg=welcome");

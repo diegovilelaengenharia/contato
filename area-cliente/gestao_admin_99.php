@@ -255,10 +255,15 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 <h2>Cadastrar Novo Cliente</h2>
                 <p style="color:#666; font-size:0.9rem; margin-bottom:20px;">Preencha os dados básicos. O restante será completado na tela de edição.</p>
                 
-                <form method="POST">
+                <form method="POST" enctype="multipart/form-data">
                     <div class="form-grid">
                         <div class="form-group"><label>Nome Completo</label><input type="text" name="nome" required placeholder="Ex: João da Silva"></div>
                         <div class="form-group"><label>Senha de Acesso</label><input type="text" name="senha" required placeholder="Crie uma senha inicial"></div>
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom:20px;">
+                        <label>📸 Foto de Perfil (Opcional)</label>
+                        <input type="file" name="avatar_upload" accept="image/*" style="padding:10px; border:1px solid #ddd; width:100%; border-radius:8px;">
                     </div>
                     
                     <div style="background:#f8f9fa; padding:15px; border-radius:8px; border:1px solid #e9ecef; margin:20px 0;">
