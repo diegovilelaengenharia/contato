@@ -496,8 +496,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             $msg_wpp_pend .= "\n📂 *Acesse sua Área do Cliente* para anexar documentos ou ver detalhes:\nhttps://vilela.eng.br/area-cliente/\n\nQualquer dúvida, estou à disposição por aqui!";
                         ?>
                         
-                            $msg_wpp_pend .= "\n📂 *Acesse sua Área do Cliente* para anexar documentos ou ver detalhes:\nhttps://vilela.eng.br/area-cliente/\n\nQualquer dúvida, estou à disposição por aqui!";
-                        ?>
+
                         
                         <!-- Botão Cobrar Cliente removido conforme solicitação -->
                     </div>

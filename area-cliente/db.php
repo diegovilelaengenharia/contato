@@ -1,6 +1,6 @@
 <?php
 // Configurações do Banco de Dados
-$host = 'localhost';
+$host = 'srv1074.hstgr.io';
 $db   = 'u884436813_cliente';
 $user = 'u884436813_vilela';
 $pass = 'Diego@159753';

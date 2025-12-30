@@ -2,6 +2,7 @@
 session_start();
 require 'db.php';
 
+// Auth Check
 if (!isset($_SESSION['cliente_id'])) {
     header("Location: index.php");
     exit;
@@ -9,11 +10,13 @@ if (!isset($_SESSION['cliente_id'])) {
 
 $cliente_id = $_SESSION['cliente_id'];
 
-// --- DATA FETCHING ---
+// --- DATA FETCHING (COMMON) ---
 // 1. Client & Details
 $stmt = $pdo->prepare("SELECT c.*, d.* FROM clientes c LEFT JOIN processo_detalhes d ON c.id = d.cliente_id WHERE c.id = ?");
 $stmt->execute([$cliente_id]);
 $data = $stmt->fetch();
+if(!$data) { header("Location: logout.php"); exit; }
+
 $nome_parts = explode(' ', $data['nome']);
 $primeiro_nome = $nome_parts[0];
 $endereco = $data['imovel_rua'] ?? ($data['endereco_imovel'] ?? 'Endereço não cadastrado');
@@ -24,7 +27,7 @@ $stmt->execute([$cliente_id]);
 $timeline = $stmt->fetchAll();
 
 // 3. Pendencies
-$stmt = $pdo->prepare("SELECT * FROM processo_pendencias WHERE cliente_id = ? ORDER BY FIELD(status, 'pendente','vencido','analise','resolvido'), id DESC");
+$stmt = $pdo->prepare("SELECT * FROM processo_pendencias WHERE cliente_id = ? ORDER BY FIELD(status, 'pendente','anexado','resolvido'), id DESC");
 $stmt->execute([$cliente_id]);
 $pendencias = $stmt->fetchAll();
 
@@ -33,16 +36,14 @@ $stmt = $pdo->prepare("SELECT * FROM processo_financeiro WHERE cliente_id = ? OR
 $stmt->execute([$cliente_id]);
 $financeiro = $stmt->fetchAll();
 
-// Financial Summary
+// Financial Stats
 $fin_stats = ['total'=>0, 'pago'=>0, 'pendente'=>0];
 foreach($financeiro as $f) {
-    if($f['categoria'] == 'honorarios') $fin_stats['total'] += $f['valor']; // Assuming stats focus on main fees or total? Adjust logic if needed. 
-    // Or maybe just sum everything
     if($f['status']=='pago') $fin_stats['pago'] += $f['valor'];
     else $fin_stats['pendente'] += $f['valor'];
 }
 
-// Drive IDs
+// Drive ID Helper
 function getDriveId($url) {
     if (preg_match('/folders\/([a-zA-Z0-9-_]+)/', $url, $m)) return $m[1];
     if (preg_match('/id=([a-zA-Z0-9-_]+)/', $url, $m)) return $m[1];
@@ -50,9 +51,13 @@ function getDriveId($url) {
 }
 $drive_id = !empty($data['link_drive_pasta']) ? getDriveId($data['link_drive_pasta']) : null;
 
+// --- CONTROLLER LOGIC ---
+$view = $_GET['view'] ?? 'home';
+$allowed_views = ['home', 'timeline', 'pendencias', 'financeiro', 'arquivos', 'perfil'];
+if(!in_array($view, $allowed_views)) $view = 'home';
 
-// --- HANDLE UPLOAD POST ---
-$msg_toast = "";
+// --- HANDLE POST ACTIONS (If any) ---
+// (Upload logic was in previous dashboard, kept here just in case, but focused on modal)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'upload_pendencia') {
     $p_id = $_POST['p_id'];
     $files = $_FILES['arquivos'];
@@ -78,10 +83,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     if($success > 0) {
         $pdo->prepare("UPDATE processo_pendencias SET status='anexado' WHERE id=?")->execute([$p_id]);
         $pdo->prepare("INSERT INTO processo_movimentos (cliente_id, titulo_fase, data_movimento, descricao, status_tipo) VALUES (?, '📎 Arquivos Enviados', NOW(), ?, 'upload')")->execute([$cliente_id, "$success arquivo(s) enviado(s) pelo cliente para a pendência #$p_id"]);
-        $msg_toast = "Arquivos enviados com sucesso!";
-        // Reduce redirect loop by just setting variable
-    } else {
-        $msg_toast = "Erro ao enviar arquivos. Verifique os formatos.";
+        // Redirect to same view to avoid resubmission
+        header("Location: ?view=pendencias&success=1");
+        exit;
     }
 }
 ?>
@@ -90,329 +94,81 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-    <title>Área do Cliente | Vilela Engenharia</title>
+    <title>Vilela Engenharia | Área do Cliente</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
     <link rel="stylesheet" href="style.css?v=<?= time() ?>">
-    <style>
-        /* CRITICAL INLINE STYLES TO PREVENT FOUC OR LOADING ERROR */
-        body { font-family: 'Outfit', sans-serif; background-color: #f4f7f6; margin:0; }
-        .hidden { display: none !important; }
-    </style>
+    <link rel="icon" href="../assets/logo.png" type="image/png">
+    
     <script>
-        // Check Dark Mode Preference
+        // Init Dark Mode
         if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark-mode');
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        }
     </script>
 </head>
 <body class="<?= isset($_COOKIE['theme']) && $_COOKIE['theme']=='dark' ? 'dark-mode' : '' ?>">
 
-<!-- FLOATING ACTIONS -->
-<div class="header-actions">
-    <button class="icon-btn" onclick="toggleTheme()" title="Alternar Tema">
-        <span id="theme-icon">🌓</span>
-    </button>
-    <a href="logout.php" class="icon-btn" title="Sair" style="text-decoration:none;">
-        <span>🛑</span>
-    </a>
-</div>
-
-<div class="container">
-
-    <!-- 1. ENGINEER PROFILE (CREDIBILITY) -->
-    <div class="eng-card fade-in">
-        <img src="../assets/logo.png" alt="Eng. Diego" class="eng-avatar" style="background:white; padding:5px;">
-        <div class="eng-info">
-            <h3>Vilela Engenharia</h3>
-            <p>Responsável Técnico: <strong>Eng. Diego Vilela</strong><br>CREA-MG: 235474/D</p>
-        </div>
-        <div class="eng-actions">
-            <a href="https://wa.me/5535984529577" target="_blank" class="btn-outline-light">📞 Falar</a>
-        </div>
-    </div>
-
-    <!-- 2. CARD CLIENTE (SUMMARY) -->
-    <div class="resume-card fade-in">
-        <div class="resume-cover">
-             <!-- Actions (Top Right) -->
-             <div class="header-actions">
-                <button class="icon-btn" onclick="toggleTheme()" title="Tema">
-                    <span id="theme-icon">🌓</span>
-                </button>
-                <a href="logout.php" class="icon-btn" title="Sair">
-                    <span>🛑</span>
-                </a>
-            </div>
-        </div>
-        
-        <div class="resume-body">
-            <div class="resume-header">
-                <!-- Avatar -->
-                <?php if(!empty($data['foto_perfil']) && file_exists(__DIR__ . '/' . $data['foto_perfil'])): ?>
-                    <img src="<?= htmlspecialchars($data['foto_perfil']) ?>" alt="Foto" class="avatar-circle" style="object-fit:cover;">
-                <?php else: ?>
-                    <div class="avatar-circle">
-                        <?= strtoupper(substr($primeiro_nome, 0, 1)) ?>
-                    </div>
-                <?php endif; ?>
-                
-                <!-- Nome -->
-                <div class="client-name" style="text-align:right;">
-                     <h1><?= htmlspecialchars($primeiro_nome) ?></h1>
-                     <p>Cliente VIP</p>
-                </div>
-            </div>
-
-            <div class="info-grid">
-                <div class="info-box">
-                    <label>Situação</label>
-                    <span style="color:var(--brand-accent)"><?= $data['status_geral'] ?? 'Ativo' ?></span>
-                </div>
-                <div class="info-box">
-                    <label>Fase do Processo</label>
-                    <span><?= $data['etapa_atual'] ?? 'Análise Inicial' ?></span>
-                </div>
-            </div>
-            
-            <div class="stats-container">
-                 <div class="stat-btn alert" onclick="switchTab('pendencias')">
-                     <small>Pendências</small>
-                     <strong><?= count(array_filter($pendencias, fn($p) => $p['status']!='resolvido')) ?></strong>
-                 </div>
-                 <div class="stat-btn" onclick="switchTab('financeiro')">
-                     <small>Valor em Aberto</small>
-                     <strong>R$ <?= number_format($fin_stats['pendente'], 2, ',', '.') ?></strong>
-                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 3. DETAILED DATA GRID (NEW COMPONENT) -->
-    <div class="data-grid-section fade-in">
-        <div class="grid-title">📂 Dados Técnicos do Projeto</div>
-        <div class="grid-container">
-            <div class="data-item">
-                <label>Endereço da Obra</label>
-                <span><?= htmlspecialchars($endereco) ?></span>
-            </div>
-            <div class="data-item">
-                <label>Inscrição Imobiliária</label>
-                <span><?= htmlspecialchars($data['inscricao_imob'] ?? '--') ?></span>
-            </div>
-            <div class="data-item">
-                <label>Área do Terreno</label>
-                <span><?= htmlspecialchars($data['imovel_area_lote'] ?? '--') ?></span>
-            </div>
-             <div class="data-item">
-                <label>Área Construída</label>
-                <span><?= htmlspecialchars($data['area_construida'] ?? '--') ?></span>
-            </div>
-            <div class="data-item">
-                <label>Resp. Técnico (Projeto)</label>
-                <span><?= htmlspecialchars($data['resp_tecnico'] ?? 'Vilela Engenharia') ?></span>
-            </div>
-            <div class="data-item">
-                <label>ART / RRT</label>
-                <span><?= htmlspecialchars($data['num_art_rrt'] ?? '--') ?></span>
-            </div>
-        </div>
-    </div>
-
-    <!-- 2. NAVIGATION PILLS -->
-    <div class="nav-tabs">
-        <!-- Timeline agora é MODAL -->
-        <button class="nav-item active" style="background:var(--brand-primary); color:white;" onclick="openTimelineModal()">
-            🕒 Ver Linha do Tempo
-        </button>
-        <button class="nav-item" onclick="switchTab('pendencias')">Pendências</button>
-        <button class="nav-item" onclick="switchTab('financeiro')">Financeiro</button>
-        <button class="nav-item" onclick="switchTab('docs')">Documentos</button>
-    </div>
-
-    <!-- 3. VIEWS -->
+<div class="app-container">
     
-    <!-- VIEW: TIMELINE (MODAL NOW) -->
-    <div id="timelineModal" class="modal-overlay">
-        <div class="modal-box" style="max-width:600px; max-height:90vh;">
-            <div class="modal-header">
-                <h3 style="margin:0; color:var(--brand-primary);">Linha do Tempo</h3>
-                <button class="modal-close" onclick="closeTimelineModal()">×</button>
-            </div>
-            <div class="modal-body">
-                <div class="timeline-stream">
-                    <?php if(count($timeline) > 0): foreach($timeline as $t): 
-                        $descricao_formatada = nl2br(str_replace('||COMENTARIO_USER||', '<br><strong style="color:var(--brand-primary)">Obs:</strong> ', htmlspecialchars($t['descricao'])));
-                    ?>
-                        <div class="t-event">
-                            <div class="t-dot"></div>
-                            <span class="t-date"><?= date('d/m/Y H:i', strtotime($t['data_movimento'])) ?></span>
-                            <div class="t-title"><?= htmlspecialchars($t['titulo_fase']) ?></div>
-                            <div class="t-desc"><?= $descricao_formatada ?></div>
-                        </div>
-                    <?php endforeach; else: ?>
-                        <p style="color:var(--text-muted); text-align:center;">Não há histórico para exibir.</p>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- VIEW: PENDENCIES -->
-    <div id="view-pendencias" class="view-section hidden fade-in">
-        <div class="section-card">
-            <h3 class="section-title">Pendências e Solicitações</h3>
-            <?php if(count($pendencias) > 0): foreach($pendencias as $p): 
-                $is_resolved = $p['status'] === 'resolvido';
-                $class = $is_resolved ? 'resolved' : '';
-                $status_label = ucfirst($p['status']);
-            ?>
-                <div class="pendency-item <?= $class ?>">
-                    <div class="p-header">
-                        <span><?= date('d/m/Y', strtotime($p['data_criacao'])) ?></span>
-                        <span><?= $status_label ?></span>
-                    </div>
-                    <div class="p-body">
-                        <?= $p['descricao'] ?> <!-- HTML Allowed from Admin CKEditor -->
-                    </div>
-                    
-                    <?php if(!$is_resolved): ?>
-                    <div style="display:flex; justify-content:flex-end; margin-top:10px;">
-                        <button class="btn btn-primary" onclick="openUploadModal(<?= $p['id'] ?>)">
-                             📤 Enviar Arquivos
-                        </button>
-                    </div>
-                    <?php endif; ?>
-                </div>
-            <?php endforeach; else: ?>
-                <div style="text-align:center; padding:30px; color:var(--text-muted);">
-                    <h3>🎉 Tudo em dia!</h3>
-                    <p>Você não tem pendências no momento.</p>
-                </div>
-            <?php endif; ?>
-        </div>
-    </div>
-
-    <!-- VIEW: FINANCEIRO -->
-    <div id="view-financeiro" class="view-section hidden fade-in">
-        <div class="section-card">
-            <h3 class="section-title">Financeiro Detalhado</h3>
-            
-            <!-- Summary Boxes -->
-            <div class="fin-summary-box">
-                <div class="fin-box"><span style="color:#0f5132">Pago</span><strong style="color:#198754">R$ <?= number_format($fin_stats['pago'], 2, ',', '.') ?></strong></div>
-                <div class="fin-box highlight"><span>Aberto</span><strong>R$ <?= number_format($fin_stats['pendente'], 2, ',', '.') ?></strong></div>
-                <div class="fin-box"><span>Total</span><strong>R$ <?= number_format($fin_stats['pago']+$fin_stats['pendente'], 2, ',', '.') ?></strong></div>
-            </div>
-
-            <div class="finance-list">
-                <?php if(count($financeiro) > 0): foreach($financeiro as $f): 
-                    // Logic For Colors
-                    $color_style = 'color:var(--text-main)';
-                    $status_style = 'background:#e9ecef; color:var(--text-muted);';
-                    
-                    if($f['status']=='pago') {
-                        $color_style = 'color:var(--brand-primary)'; 
-                        $status_style = 'background:var(--brand-light); color:var(--brand-primary);';
-                    }
-                    elseif($f['status']=='atrasado') {
-                         $color_style = 'color:var(--color-urgent)'; 
-                         $status_style = 'background:var(--bg-urgent); color:var(--color-urgent);';
-                    }
-                    elseif($f['status']=='pendente') {
-                         $color_style = 'color:var(--color-warning)';
-                         $status_style = 'background:var(--bg-warning); color:#856404;';
-                    }
-                ?>
-                    <div class="finance-item">
-                        <div class="f-info">
-                            <h4 style="<?= $color_style ?>"><?= htmlspecialchars($f['descricao']) ?></h4>
-                            <span>Venc: <?= date('d/m/Y', strtotime($f['data_vencimento'])) ?> • <?= ucfirst($f['categoria']) ?></span>
-                            <?php if($f['link_comprovante']): ?>
-                                <a href="<?= $f['link_comprovante'] ?>" target="_blank" style="font-size:0.8rem; color:var(--brand-primary); text-decoration:underline;">Ver Comprovante</a>
-                            <?php endif; ?>
-                        </div>
-                        <div class="f-amount">
-                            <span class="f-val" style="<?= $color_style ?>">R$ <?= number_format($f['valor'], 2, ',', '.') ?></span>
-                            <span class="f-status" style="padding:2px 8px; border-radius:4px; font-size:0.7rem; <?= $status_style ?>"><?= strtoupper($f['status']) ?></span>
-                        </div>
-                    </div>
-                <?php endforeach; else: ?>
-                    <p style="text-align:center; color:var(--text-muted);">Nenhum registro financeiro.</p>
-                <?php endif; ?>
-            </div>
-        </div>
-    </div>
-    
-    <!-- VIEW: DOCS -->
-    <div id="view-docs" class="view-section hidden fade-in">
-        <div class="section-card" style="min-height:400px;">
-             <h3 class="section-title">Documentos na Nuvem</h3>
-             <?php if($drive_id): ?>
-                <iframe src="https://drive.google.com/embeddedfolderview?id=<?= $drive_id ?>#list" style="width:100%; height:500px; border:none; border-radius:var(--radius-sm);"></iframe>
-             <?php else: ?>
-                <div style="text-align:center; padding:40px; color:var(--text-muted);">
-                    <p>A pasta de documentos ainda não foi vinculada.</p>
-                </div>
-             <?php endif; ?>
-        </div>
-    </div>
-
-</div>
-
-<a href="https://wa.me/5535984529577" target="_blank" class="fab-whatsapp" title="Falar no WhatsApp">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01C17.18 3.03 14.69 2 12.04 2zM12.05 20.21c-1.5 0-2.97-.39-4.26-1.13l-.3-.17-3.15.82.84-3.07-.2-.31c-.82-1.31-1.26-2.82-1.26-4.38 0-4.54 3.7-8.24 8.24-8.24 2.2 0 4.27.86 5.82 2.42 1.56 1.56 2.41 3.63 2.41 5.84 0 4.54-3.69 8.23-8.24 8.24zm4.83-6.18c-.26-.13-1.55-.77-1.79-.86-.23-.09-.4-.13-.56.13-.17.26-.64.81-.78.97-.14.17-.29.19-.55.06-.26-.13-1.11-.41-2.11-1.3-1.55-1.36-2.6-2.83-2.9-3.34-.31-.51-.23-.81 0-1.22.46-.8.88-1.5 1.09-1.93.07-.13.03-.24-.03-.36-.06-.11-.56-1.35-.77-1.85-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.44.06-.67.31-.23.26-.88.86-.88 2.11 0 1.25.91 2.46 1.03 2.63.13.17 1.79 2.73 4.34 3.83 2.55 1.1 2.55.73 3.01.68.46-.05 1.55-.63 1.77-1.24.22-.61.22-1.13.15-1.24-.07-.11-.26-.17-.52-.3z"/>
-    </svg>
-</a>
-
-<!-- SCRIPTS -->
-<script>
-    // Theme Logic (Existing...)
-    function toggleTheme() {
-        document.body.parentElement.classList.toggle('dark-mode'); 
-        if(document.body.parentElement.classList.contains('dark-mode')) {
-            document.body.classList.add('dark-mode');
-            localStorage.setItem('theme', 'dark');
-            document.cookie = "theme=dark; path=/";
+    <!-- VIEW CONTENT INCLUDED HERE -->
+    <?php 
+        $view_file = 'includes/views/' . $view . '.php';
+        if(file_exists($view_file)) {
+            include $view_file;
         } else {
-            document.body.classList.remove('dark-mode');
-            localStorage.setItem('theme', 'light');
-            document.cookie = "theme=light; path=/";
+            echo "<div class='empty-state'>Erro ao carregar visualização.</div>";
         }
-    }
-    if(localStorage.getItem('theme') === 'dark') {
-        document.body.classList.add('dark-mode');
-        document.documentElement.classList.add('dark-mode');
-    }
+    ?>
 
-    // Tabs Logic
-    function switchTab(tabId) {
-        document.querySelectorAll('.nav-item').forEach(b => {
-             // Don't remove active from timeline button since it's a modal trigger now
-             if(!b.innerHTML.includes('Linha do Tempo')) b.classList.remove('active');
-        });
-        if(tabId !== 'timeline') { // simple check
-             event.target.classList.add('active');
-             
-             document.querySelectorAll('.view-section').forEach(v => v.classList.add('hidden'));
-             document.getElementById('view-'+tabId).classList.remove('hidden');
-        }
-    }
+</div>
 
-    // Modals
-    function openTimelineModal() {
-        document.getElementById('timelineModal').classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-    function closeTimelineModal() {
-        document.getElementById('timelineModal').classList.remove('active');
-        document.body.style.overflow = '';
-    }
+<!-- BOTTOM NAVIGATION -->
+<nav class="bottom-nav">
+    <button class="nav-btn <?= $view=='home'?'active':'' ?>" onclick="window.location.href='?view=home'">
+        <span class="material-symbols-rounded nav-icon">home</span>
+        <span class="nav-label">Início</span>
+    </button>
+    <button class="nav-btn <?= $view=='timeline'?'active':'' ?>" onclick="window.location.href='?view=timeline'">
+        <span class="material-symbols-rounded nav-icon">history</span>
+        <span class="nav-label">Timeline</span>
+    </button>
+    <button class="nav-btn <?= $view=='pendencias'?'active':'' ?>" onclick="window.location.href='?view=pendencias'">
+        <span class="material-symbols-rounded nav-icon">assignment_late</span>
+        <span class="nav-label">Pendências</span>
+    </button>
+    <button class="nav-btn <?= $view=='financeiro'?'active':'' ?>" onclick="window.location.href='?view=financeiro'">
+        <span class="material-symbols-rounded nav-icon">payments</span>
+        <span class="nav-label">Finanças</span>
+    </button>
+    <button class="nav-btn <?= $view=='arquivos'?'active':'' ?>" onclick="window.location.href='?view=arquivos'">
+        <span class="material-symbols-rounded nav-icon">folder</span>
+        <span class="nav-label">Arquivos</span>
+    </button>
+</nav>
 
+<!-- MODAL UPLOAD (Global) -->
+<dialog id="uploadModal" style="border:none; border-radius:16px; padding:20px; width:90%; max-width:400px; box-shadow:0 10px 40px rgba(0,0,0,0.3);">
+    <h3 style="margin-top:0;">📤 Enviar Arquivos</h3>
+    <p>Selecione os documentos solicitados (PDF ou Foto).</p>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="action" value="upload_pendencia">
+        <input type="hidden" name="p_id" id="modal_p_id">
+        <input type="file" name="arquivos[]" multiple required style="margin:20px 0; width:100%;">
+        <div style="display:flex; gap:10px;">
+            <button type="button" class="btn-block btn-outline" onclick="document.getElementById('uploadModal').close()" style="flex:1;">Cancelar</button>
+            <button type="submit" class="btn-block btn-primary" style="background:var(--color-primary); color:white; flex:1;">Enviar</button>
+        </div>
+    </form>
+</dialog>
+
+<script>
     function openUploadModal(pId) {
         document.getElementById('modal_p_id').value = pId;
-        document.getElementById('uploadModal').classList.add('active');
-    }
-    function closeUploadModal() {
-        document.getElementById('uploadModal').classList.remove('active');
+        document.getElementById('uploadModal').showModal();
     }
 </script>
 
