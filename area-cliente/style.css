@@ -671,19 +671,29 @@ body.dark-mode .icon-btn {
     position: absolute;
     top: 20px;
     left: 20px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 8px;
-    color: var(--text-muted);
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    border-radius: 30px;
+    color: var(--text-main);
     text-decoration: none;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 0.9rem;
     z-index: 10;
-    transition: color 0.2s;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sm);
 }
 
 .back-link:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-primary);
     color: var(--color-primary);
+    background: white;
 }
 
 .login-container {
@@ -704,10 +714,10 @@ body.dark-mode .icon-btn {
 }
 
 .logo-area img {
-    height: 60px;
-    /* Reduced from giant size */
+    height: 120px;
+    /* Increased 200% */
     width: auto;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .logo-area h1 {
