@@ -9,7 +9,7 @@ try {
 }
 
 // --- Configuração e Segurança ---
-$minha_senha_mestra = "VilelaAdmin2025"; 
+$minha_senha_mestra = defined('ADMIN_PASSWORD') ? ADMIN_PASSWORD : 'VilelaAdmin2025'; 
 
 // Verifica Sessão
 if (!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true) {
@@ -708,7 +708,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
     <link rel="stylesheet" href="../style.css">
-    <link rel="stylesheet" href="admin_style.css?v=yesterday_restored_<?= time() ?>">
+    <link rel="stylesheet" href="admin_style.css?v=<?= time() ?>">
     <link rel="icon" href="../assets/logo.png" type="image/png">
     <!-- CKEditor 5 -->
     <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>

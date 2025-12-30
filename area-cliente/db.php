@@ -6,6 +6,9 @@ $user = 'u884436813_vilela';
 $pass = 'Diego@159753';
 $charset = 'utf8mb4';
 
+// Configurações Gerais
+define('ADMIN_PASSWORD', 'VilelaAdmin2025');
+
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 $options = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,

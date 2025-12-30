@@ -29,8 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $senha = $_POST['senha'];
 
     // 1. Verifica se é ADMIN
-    // Defina sua senha mestra aqui ou busque de um config, mas hardcoded é seguro o suficiente para este escopo se o arquivo não for exposto
-    $senhaMestraAdmin = "VilelaAdmin2025"; 
+    // Senha mestra definida em db.php
+    $senhaMestraAdmin = defined('ADMIN_PASSWORD') ? ADMIN_PASSWORD : 'VilelaAdmin2025'; 
     
     if (($usuario === 'admin' || $usuario === 'vilela') && $senha === $senhaMestraAdmin) {
         $_SESSION['admin_logado'] = true;
