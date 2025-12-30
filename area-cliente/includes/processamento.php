@@ -9,6 +9,14 @@ if (isset($_POST['update_processo_header'])) {
     // New Fields from "Maria" Spec
     $valor_venal = $_POST['valor_venal'] ?? null;
     $area_total = $_POST['area_total_final'] ?? null;
+
+    // New Technical Fields (Oliveira/MG)
+    $area_existente = $_POST['area_existente'] ?? null;
+    $area_acrescimo = $_POST['area_acrescimo'] ?? null;
+    $area_permeavel = $_POST['area_permeavel'] ?? null;
+    $taxa_ocupacao = $_POST['taxa_ocupacao'] ?? null;
+    $fator_aproveitamento = $_POST['fator_aproveitamento'] ?? null;
+    $geo_coords = $_POST['geo_coords'] ?? null;
     
     // Upload de Foto de Capa (Obra)
     $foto_path = null;
@@ -27,13 +35,13 @@ if (isset($_POST['update_processo_header'])) {
     }
 
     try {
-        // Se houve upload, atualiza foto também. Se não, mantem a anterior (query dinâmica seria melhor, mas aqui simplificamos)
+        // SQL Update with new Technical Columns
         if($foto_path) {
-             $pdo->prepare("UPDATE processo_detalhes SET processo_numero=?, processo_objeto=?, processo_link_mapa=?, valor_venal=?, area_total_final=?, foto_capa_obra=? WHERE cliente_id=?")
-                ->execute([$proc_num, $proc_obj, $proc_map, $valor_venal, $area_total, $foto_path, $cid]);
+             $pdo->prepare("UPDATE processo_detalhes SET processo_numero=?, processo_objeto=?, processo_link_mapa=?, valor_venal=?, area_total_final=?, foto_capa_obra=?, area_existente=?, area_acrescimo=?, area_permeavel=?, taxa_ocupacao=?, fator_aproveitamento=?, geo_coords=? WHERE cliente_id=?")
+                ->execute([$proc_num, $proc_obj, $proc_map, $valor_venal, $area_total, $foto_path, $area_existente, $area_acrescimo, $area_permeavel, $taxa_ocupacao, $fator_aproveitamento, $geo_coords, $cid]);
         } else {
-             $pdo->prepare("UPDATE processo_detalhes SET processo_numero=?, processo_objeto=?, processo_link_mapa=?, valor_venal=?, area_total_final=? WHERE cliente_id=?")
-                ->execute([$proc_num, $proc_obj, $proc_map, $valor_venal, $area_total, $cid]);
+             $pdo->prepare("UPDATE processo_detalhes SET processo_numero=?, processo_objeto=?, processo_link_mapa=?, valor_venal=?, area_total_final=?, area_existente=?, area_acrescimo=?, area_permeavel=?, taxa_ocupacao=?, fator_aproveitamento=?, geo_coords=? WHERE cliente_id=?")
+                ->execute([$proc_num, $proc_obj, $proc_map, $valor_venal, $area_total, $area_existente, $area_acrescimo, $area_permeavel, $taxa_ocupacao, $fator_aproveitamento, $geo_coords, $cid]);
         }
         
         // Refresh to show changes immediately (managed by page reload usually)

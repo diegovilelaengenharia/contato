@@ -10,11 +10,14 @@ if (!isset($_SESSION['cliente_id'])) {
 
 $cliente_id = $_SESSION['cliente_id'];
 
-// --- FASES PADRÃO (Mesma do Admin) ---
+// --- FASES TÉCNICAS (Regularização Oliveira/MG) ---
 $fases_padrao = [
-    "Abertura de Processo (Guichê)", "Fiscalização (Parecer Fiscal)", "Triagem (Documentos Necessários)",
-    "Comunicado de Pendências (Triagem)", "Análise Técnica (Engenharia)", "Comunicado (Pendências e Taxas)",
-    "Confecção de Documentos", "Avaliação (ITBI/Averbação)", "Processo Finalizado (Documentos Prontos)"
+    "Diagnóstico Inicial (Matrícula/Cadastral)", 
+    "Vistoria Fiscal (Notificação)", 
+    "Elaboração Técnica (Projetos/Laudos)",
+    "Saneamento de Pendências (Anuências/Correções)", 
+    "Liquidação Financeira (Multas/Taxas)", 
+    "Expedição Final (Habite-se/Averbação)"
 ];
 
 // --- DATA FETCHING (COMMON) ---
@@ -79,7 +82,7 @@ $drive_id = !empty($data['link_drive_pasta']) ? getDriveId($data['link_drive_pas
 
 // --- CONTROLLER LOGIC ---
 $view = $_GET['view'] ?? 'home';
-$allowed_views = ['home', 'timeline', 'pendencias', 'financeiro', 'arquivos', 'perfil'];
+$allowed_views = ['home', 'timeline', 'pendencias', 'financeiro', 'arquivos', 'perfil', 'conhecimento'];
 if(!in_array($view, $allowed_views)) $view = 'home';
 
 // --- HANDLE POST ACTIONS (If any) ---
@@ -172,7 +175,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     </button>
     <button class="nav-btn <?= $view=='arquivos'?'active':'' ?>" onclick="window.location.href='?view=arquivos'">
         <span class="material-symbols-rounded nav-icon">folder</span>
-        <span class="nav-label">Arquivos</span>
+        <span class="nav-label">Acervo</span>
+    </button>
+    <button class="nav-btn <?= $view=='conhecimento'?'active':'' ?>" onclick="window.location.href='?view=conhecimento'">
+        <span class="material-symbols-rounded nav-icon">menu_book</span>
+        <span class="nav-label">Guia</span>
     </button>
 </nav>
 

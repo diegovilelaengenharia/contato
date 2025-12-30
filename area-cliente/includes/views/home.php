@@ -34,24 +34,36 @@ $data_inicio = isset($data['data_cadastro']) ? date('d/m/Y', strtotime($data['da
             <p class="pc-address">
                 <span class="material-symbols-rounded">location_on</span>
                 <?= htmlspecialchars($endereco) ?>
+                <?php if(!empty($data['geo_coords'])): ?>
+                    <small style="opacity:0.7; font-size:0.8rem;">(<?= htmlspecialchars($data['geo_coords']) ?>)</small>
+                <?php endif; ?>
             </p>
 
-            <!-- Technical Grid -->
-            <div class="pc-grid">
-                <div class="pc-grid-item">
-                    <label>Área Construída</label>
-                    <strong><?= htmlspecialchars($data['area_total_final'] ?? '--') ?> m²</strong>
+            <!-- Technical Grid (Oliveira/MG Spec) -->
+            <div class="pc-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+                 <div class="pc-grid-item">
+                    <label>Área Existente</label>
+                    <strong><?= htmlspecialchars($data['area_existente'] ?? '--') ?> m²</strong>
                 </div>
                 <div class="pc-grid-item">
-                    <label>Matrícula (CRIME)</label>
-                    <strong><?= htmlspecialchars($data['num_matricula'] ?? '--') ?></strong>
+                    <label>Área Acréscimo</label>
+                    <strong><?= htmlspecialchars($data['area_acrescimo'] ?? '--') ?> m²</strong>
+                </div>
+                 <div class="pc-grid-item">
+                    <label>Área Permeável</label>
+                    <strong><?= htmlspecialchars($data['area_permeavel'] ?? '--') ?> m²</strong>
+                </div>
+
+                <div class="pc-grid-item">
+                    <label>Taxa Ocupação</label>
+                    <strong><?= htmlspecialchars($data['taxa_ocupacao'] ?? '--') ?>%</strong>
                 </div>
                 <div class="pc-grid-item">
-                    <label>Inscrição Imobiliária</label>
-                    <strong><?= htmlspecialchars($data['inscricao_imob'] ?? '--') ?></strong>
+                    <label>Coef. Aprov. (CA)</label>
+                    <strong><?= htmlspecialchars($data['fator_aproveitamento'] ?? '--') ?></strong>
                 </div>
-                <div class="pc-grid-item highlight">
-                    <label>Valor Venal Avaliado</label>
+                 <div class="pc-grid-item highlight">
+                    <label>Valor Venal Proposto</label>
                     <strong>R$ <?= htmlspecialchars($data['valor_venal'] ?? '--') ?></strong>
                 </div>
             </div>
@@ -133,6 +145,20 @@ $data_inicio = isset($data['data_cadastro']) ? date('d/m/Y', strtotime($data['da
         <div class="dgs-item" style="background:var(--bg-app); padding:10px; border-radius:8px;">
             <label style="font-size:0.7rem; color:var(--text-muted); display:block;">Documentos</label>
             <strong style="font-size:0.95rem;"><?= $total_docs ?? 0 ?> Anexados</strong>
+        </div>
+    </div>
+
+    <!-- CENTRAL DE CONHECIMENTO LINK -->
+    <div onclick="window.location.href='?view=conhecimento'" style="background:white; border:1px solid var(--border-color); padding:15px; border-radius:12px; display:flex; align-items:center; gap:15px; cursor:pointer; margin-bottom:20px; box-shadow:var(--shadow-card);">
+        <div style="background:var(--color-primary-light); color:var(--color-primary); padding:10px; border-radius:50%;">
+            <span class="material-symbols-rounded">menu_book</span>
+        </div>
+        <div style="flex:1;">
+            <strong style="display:block; color:var(--text-main); font-size:1rem;">Central de Conhecimento</strong>
+            <span style="font-size:0.85rem; color:var(--text-muted);">Glossário Técnico e Legislação Local</span>
+        </div>
+        <div style="color:var(--text-muted);">
+            <span class="material-symbols-rounded">chevron_right</span>
         </div>
     </div>
 

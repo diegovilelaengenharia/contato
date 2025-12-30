@@ -400,6 +400,41 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             <input type="text" name="area_total_final" value="<?= htmlspecialchars($detalhes['area_total_final'] ?? '') ?>" placeholder="Ex: 156.45" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:6px;">
                         </div>
 
+                        <!-- DADOS TÉCNICOS (Oliveira/MG) -->
+                        <div style="background:#f8f9fa; padding:10px; border-radius:8px; margin-top:10px; margin-bottom:10px; border:1px solid #eee;">
+                            <label style="font-size:0.75rem; font-weight:bold; color:#2c3e50; display:block; margin-bottom:8px; text-transform:uppercase;">Parâmetros Urbanísticos</label>
+                            
+                            <div style="display:flex; gap:10px; margin-bottom:10px;">
+                                <div style="flex:1;">
+                                    <label style="font-size:0.7rem; color:#666;">Área Existente (m²)</label>
+                                    <input type="text" name="area_existente" value="<?= htmlspecialchars($detalhes['area_existente'] ?? '') ?>" placeholder="0.00" style="width:100%; padding:5px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                                <div style="flex:1;">
+                                    <label style="font-size:0.7rem; color:#666;">Área Acréscimo (m²)</label>
+                                    <input type="text" name="area_acrescimo" value="<?= htmlspecialchars($detalhes['area_acrescimo'] ?? '') ?>" placeholder="0.00" style="width:100%; padding:5px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                                <div style="flex:1;">
+                                    <label style="font-size:0.7rem; color:#666;">Área Permeável (m²)</label>
+                                    <input type="text" name="area_permeavel" value="<?= htmlspecialchars($detalhes['area_permeavel'] ?? '') ?>" placeholder="0.00" style="width:100%; padding:5px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                            </div>
+
+                            <div style="display:flex; gap:10px;">
+                                <div style="flex:1;">
+                                    <label style="font-size:0.7rem; color:#666;">Taxa Ocupação (%)</label>
+                                    <input type="text" name="taxa_ocupacao" value="<?= htmlspecialchars($detalhes['taxa_ocupacao'] ?? '') ?>" placeholder="Ex: 65" style="width:100%; padding:5px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                                <div style="flex:1;">
+                                    <label style="font-size:0.7rem; color:#666;">Fator Aprov. (X)</label>
+                                    <input type="text" name="fator_aproveitamento" value="<?= htmlspecialchars($detalhes['fator_aproveitamento'] ?? '') ?>" placeholder="Ex: 1.5" style="width:100%; padding:5px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                                <div style="flex:1;">
+                                    <label style="font-size:0.7rem; color:#666;">Geo Coords</label>
+                                    <input type="text" name="geo_coords" value="<?= htmlspecialchars($detalhes['geo_coords'] ?? '') ?>" placeholder="-20.123, -44.123" style="width:100%; padding:5px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- FOTO OBRA -->
                         <div style="width:100%; border-top:1px dashed #ddd; margin-top:10px; padding-top:10px;">
                              <label style="font-size:0.8rem; font-weight:bold; color:#666; display:block; margin-bottom:5px;">🖼️ Foto da Capa (Obra/Fachada)</label>
