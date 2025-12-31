@@ -224,7 +224,7 @@ if (isset($_POST['btn_salvar_tudo'])) {
         }
 
         .main-wrapper {
-            max-width: 1000px; 
+            max-width: 1600px; 
             margin: 0 auto; 
             animation: fadeIn 0.4s ease;
         }
@@ -236,7 +236,7 @@ if (isset($_POST['btn_salvar_tudo'])) {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             background: white;
             padding: 15px 25px;
             border-radius: 12px;
@@ -289,7 +289,7 @@ if (isset($_POST['btn_salvar_tudo'])) {
 
         .section-header {
             background: #fdfdfd;
-            padding: 15px 30px;
+            padding: 12px 25px;
             border-bottom: 1px solid var(--border-color);
             border-top: 1px solid var(--border-color);
             display: flex;
@@ -319,13 +319,13 @@ if (isset($_POST['btn_salvar_tudo'])) {
         }
 
         .section-body {
-            padding: 30px;
+            padding: 20px 25px;
         }
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
         }
 
         .form-group {
