@@ -43,7 +43,7 @@ body {
 .admin-header {
     background: var(--header-bg);
     color: white;
-    padding: 1rem 2rem;
+    padding: 0.8rem 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -59,11 +59,11 @@ body {
 
 .admin-container {
     display: grid;
-    grid-template-columns: 260px 1fr;
-    gap: 24px;
-    max-width: 1600px;
-    margin: 30px auto;
-    padding: 0 20px;
+    grid-template-columns: 240px 1fr;
+    gap: 20px;
+    max-width: 1360px;
+    margin: 20px auto;
+    padding: 0 15px;
     align-items: start;
 }
 
@@ -225,8 +225,8 @@ body {
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 12px;
-    padding: 25px;
-    margin-bottom: 25px;
+    padding: 20px;
+    margin-bottom: 20px;
     box-shadow: var(--shadow);
     position: relative;
     overflow: hidden;
@@ -255,8 +255,8 @@ body {
 
 .form-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 24px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
 }
 
 .form-group {
@@ -276,7 +276,7 @@ body {
 .form-group select,
 .form-group textarea {
     width: 100%;
-    padding: 14px;
+    padding: 10px;
     border: 1px solid var(--color-border);
     background: var(--color-bg);
     color: var(--color-text);
@@ -298,9 +298,9 @@ body {
 .btn-menu {
     border: none;
     border-radius: 10px;
-    padding: 10px 18px;
+    padding: 8px 16px;
     /* Consistent Padding */
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
