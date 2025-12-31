@@ -502,51 +502,46 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         <h3 style="margin:0; font-size:1.1rem; font-weight:600; color:white;">Novo Andamento / Atualização</h3>
                     </div>
                     
-                    <div style="padding:25px; border:1px solid #eee; border-top:none; border-radius:0 0 12px 12px; background:#fff;">
+                    <div style="padding:15px; border:1px solid #eee; border-top:none; border-radius:0 0 12px 12px; background:#fff;">
                         <form method="POST" enctype="multipart/form-data">
                             <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
                             
-                            <div style="display:grid; grid-template-columns: 1fr 1.5fr; gap:20px; margin-bottom:20px;">
-                                <!-- SELEÇÃO DE FASE -->
-                                <div>
-                                    <label style="display:block; font-size:0.85rem; font-weight:bold; color:#555; margin-bottom:8px;">📌 Fase do Processo</label>
+                            <!-- LINHA 1: Fase e Título (Compacto) -->
+                            <div style="display:flex; gap:15px; margin-bottom:10px;">
+                                <div style="flex:1;">
+                                    <label style="display:block; font-size:0.75rem; font-weight:bold; color:#555; margin-bottom:4px; text-transform:uppercase;">📌 Fase</label>
                                     <div style="position:relative;">
-                                        <select name="nova_etapa" style="width:100%; padding:12px; border:1px solid #e0e0e0; border-radius:8px; font-size:0.95rem; background:#f9f9f9; appearance:none; color:#333; cursor:pointer;">
+                                        <select name="nova_etapa" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:6px; font-size:0.9rem; background:#f9f9f9; cursor:pointer;">
                                             <option value="">Manter: <?= htmlspecialchars($detalhes['etapa_atual']??'-') ?></option>
                                             <?php foreach($fases_padrao as $f): ?>
                                                 <option value="<?= $f ?>"><?= $f ?></option>
                                             <?php endforeach; ?>
                                         </select>
-                                        <div style="position:absolute; right:15px; top:50%; transform:translateY(-50%); pointer-events:none; color:#888;">▼</div>
                                     </div>
                                 </div>
-
-                                <!-- TÍTULO -->
-                                <div>
-                                    <label style="display:block; font-size:0.85rem; font-weight:bold; color:#555; margin-bottom:8px;">📝 Título do Evento</label>
-                                    <input type="text" name="titulo_evento" required placeholder="Ex: Protocolo Realizado, Taxa Paga..." style="width:100%; padding:12px; border:1px solid #e0e0e0; border-radius:8px; font-size:0.95rem; box-shadow:inset 0 2px 4px rgba(0,0,0,0.02);">
+                                <div style="flex:2;">
+                                    <label style="display:block; font-size:0.75rem; font-weight:bold; color:#555; margin-bottom:4px; text-transform:uppercase;">📝 Título do Evento</label>
+                                    <input type="text" name="titulo_evento" required placeholder="Ex: Protocolo Realizado..." style="width:100%; padding:8px; border:1px solid #ddd; border-radius:6px; font-size:0.9rem;">
                                 </div>
                             </div>
                             
-                            <div style="display:grid; grid-template-columns: 2fr 1fr; gap:20px; margin-bottom:20px; align-items:start;">
-                                <!-- DESCRIÇÃO -->
-                                <div>
-                                    <label style="display:block; font-size:0.85rem; font-weight:bold; color:#555; margin-bottom:8px;">💬 Detalhes / Observação</label>
-                                    <textarea name="observacao_etapa" id="editor_etapa" rows="4" placeholder="Descreva os detalhes importantes aqui..." style="width:100%; padding:15px; border:1px solid #e0e0e0; border-radius:8px; font-size:0.95rem; resize:vertical; font-family:inherit; min-height:100px;"></textarea>
+                            <!-- LINHA 2: Descrição e Upload (Lado a Lado) -->
+                            <div style="display:flex; gap:15px; margin-bottom:15px;">
+                                <div style="flex:3;">
+                                    <textarea name="observacao_etapa" id="editor_etapa" rows="2" placeholder="Detalhes (Opcional)..." style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; font-size:0.9rem; resize:vertical; min-height:60px; font-family:inherit;"></textarea>
                                 </div>
 
-                                <!-- UPLOAD (Estilo Dropzone) -->
-                                <div>
-                                     <label style="display:block; font-size:0.85rem; font-weight:bold; color:#555; margin-bottom:8px;">📎 Documento (Opcional)</label>
-                                     <div style="position:relative; width:100%; height:100px; border:2px dashed #cbd5e0; border-radius:8px; background:#f8f9fa; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; transition:0.2s; cursor:pointer;" onclick="document.getElementById('file_input_hidden').click();" onmouseover="this.style.borderColor='var(--color-primary)'; this.style.background='#eff6ff';" onmouseout="this.style.borderColor='#cbd5e0'; this.style.background='#f8f9fa';">
-                                         <span style="font-size:1.5rem; color:#888;">📂</span>
-                                         <span style="font-size:0.8rem; color:#666; font-weight:600; margin-top:5px;">Clique para Anexar</span>
-                                         <input type="file" id="file_input_hidden" name="arquivo_documento" style="display:none;" onchange="if(this.files.length > 0) { this.parentElement.style.borderColor='#198754'; this.parentElement.style.background='#e8f5e9'; this.parentElement.querySelector('span:last-child').innerText = 'Arquivo Selecionado!'; this.parentElement.querySelector('span:first-child').innerText = '✅'; }">
+                                <div style="flex:1; min-width:150px;">
+                                     <div style="position:relative; width:100%; height:100%; border:1px dashed #ccc; border-radius:6px; background:#f8f9fa; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; transition:0.2s; cursor:pointer; padding:5px;" onclick="document.getElementById('file_input_hidden').click();" onmouseover="this.style.borderColor='var(--color-primary)'; this.style.background='#eff6ff';" onmouseout="this.style.borderColor='#ccc'; this.style.background='#f8f9fa';">
+                                         <span style="font-size:1.2rem; color:#888;">�</span>
+                                         <span style="font-size:0.7rem; color:#666; font-weight:600;">Anexar</span>
+                                         <input type="file" id="file_input_hidden" name="arquivo_documento" style="display:none;" onchange="if(this.files.length > 0) { this.parentElement.style.borderColor='#198754'; this.parentElement.style.background='#e8f5e9'; this.parentElement.querySelector('span:last-child').innerText = 'OK!'; this.parentElement.querySelector('span:first-child').innerText = '✅'; }">
                                      </div>
                                 </div>
                             </div>
 
-                            <button type="submit" name="atualizar_etapa" class="btn-save" style="width:100%; padding:15px; background:linear-gradient(to right, #11998e, #38ef7d); border:none; border-radius:8px; font-size:1rem; font-weight:bold; letter-spacing:0.5px; text-transform:uppercase; box-shadow:0 4px 15px rgba(25, 135, 84, 0.3); transition:transform 0.2s;">
+                            <!-- BOTÃO -->
+                            <button type="submit" name="atualizar_etapa" class="btn-save" style="width:100%; padding:10px; background:var(--color-primary); border:none; border-radius:6px; font-size:0.95rem; font-weight:bold; color:white; cursor:pointer; text-transform:uppercase;">
                                 ✅ Registrar Movimentação
                             </button>
                         </form>
