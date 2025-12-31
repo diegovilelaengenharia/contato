@@ -11,13 +11,14 @@ if (!isset($_SESSION['cliente_id'])) {
 $cliente_id = $_SESSION['cliente_id'];
 
 // --- FASES TÉCNICAS (Regularização Oliveira/MG) ---
+// --- FASES TÉCNICAS (Processo Administrativo) ---
 $fases_padrao = [
-    "Diagnóstico Inicial (Matrícula/Cadastral)", 
-    "Vistoria Fiscal (Notificação)", 
-    "Elaboração Técnica (Projetos/Laudos)",
-    "Saneamento de Pendências (Anuências/Correções)", 
-    "Liquidação Financeira (Multas/Taxas)", 
-    "Expedição Final (Habite-se/Averbação)"
+    "Protocolo e Autuação", 
+    "Análise Documental", 
+    "Vistoria Técnica In Loco",
+    "Emissão de Laudos/Peças", 
+    "Tramitação e Aprovação", 
+    "Entrega Final/Habite-se"
 ];
 
 // --- DATA FETCHING (COMMON) ---

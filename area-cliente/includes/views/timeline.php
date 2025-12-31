@@ -5,7 +5,7 @@ $total_fases = count($fases_padrao);
 $fase_atual_idx = $fase_index;
 ?>
 <div class="view-header-timeline" style="margin-bottom:10px;">
-    <h2>Trâmite Processual</h2>
+    <h2>Fluxo de Análise</h2>
 </div>
 
 <!-- ASSISTANT TIP -->
