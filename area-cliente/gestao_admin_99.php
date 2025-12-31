@@ -541,7 +541,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             </div>
 
                             <!-- BOTÃO -->
-                            <button type="submit" name="atualizar_etapa" class="btn-save" style="width:100%; padding:10px; background:var(--color-primary); border:none; border-radius:6px; font-size:0.95rem; font-weight:bold; color:white; cursor:pointer; text-transform:uppercase;">
+                            <button type="submit" name="atualizar_etapa" class="btn-save" style="width:100%; padding:12px; background:linear-gradient(to right, #11998e, #38ef7d); border:none; border-radius:8px; font-size:1rem; font-weight:bold; color:white; cursor:pointer; text-transform:uppercase; letter-spacing:0.5px; box-shadow:0 4px 15px rgba(25, 135, 84, 0.3); transition:transform 0.2s;">
                                 ✅ Registrar Movimentação
                             </button>
                         </form>
