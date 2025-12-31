@@ -64,6 +64,15 @@ if (isset($_POST['btn_salvar_tudo'])) {
         // DEBUG: Gravar POST em arquivo para análise
         // file_put_contents('debug_post.log', print_r($_POST, true)); 
         
+        // DDL causes implicit commit in MySQL, so run it before transaction
+        $pdo->exec("CREATE TABLE IF NOT EXISTS processo_campos_extras (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            cliente_id INT NOT NULL,
+            titulo VARCHAR(255) NOT NULL,
+            valor TEXT,
+            FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
+        )");
+
         $pdo->beginTransaction();
 
         // 1. Atualizar Clientes (Login)
@@ -108,14 +117,7 @@ if (isset($_POST['btn_salvar_tudo'])) {
         ]);
 
         // 3. Atualizar Campos Extras
-        // Primeiro garante a tabela de novo por segurança
-        $pdo->exec("CREATE TABLE IF NOT EXISTS processo_campos_extras (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            cliente_id INT NOT NULL,
-            titulo VARCHAR(255) NOT NULL,
-            valor TEXT,
-            FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
-        )");
+        // (Tabela verificada antes da transação)
 
         $pdo->prepare("DELETE FROM processo_campos_extras WHERE cliente_id = ?")->execute([$cliente_id]);
         
@@ -151,7 +153,9 @@ if (isset($_POST['btn_salvar_tudo'])) {
         $stmtEx->execute([$cliente_id]); $campos_extras = $stmtEx->fetchAll();
 
     } catch (Exception $e) {
-        $pdo->rollBack();
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
         echo "<script>alert('❌ Erro ao salvar: " . addslashes($e->getMessage()) . "');</script>";
     }
 }
