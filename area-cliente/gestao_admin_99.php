@@ -362,7 +362,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             <div style="display:flex; gap:10px; font-size:0.9rem; color:#666; align-items:center; flex-wrap:wrap;">
                                 <span>🆔 #<?= str_pad($cliente_ativo['id'], 3, '0', STR_PAD_LEFT) ?></span>
                                 <span>•</span>
-                                <a href="editar_cliente.php?id=<?= $cliente_ativo['id'] ?>" class="link-edit" style="color:var(--color-primary); text-decoration:none; font-weight:600;">✏️ Editar Cadastro</a>
+                                <a href="editar_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="link-edit" style="color:var(--color-primary); text-decoration:none; font-weight:600;">✏️ Editar Cadastro</a>
                                 <span>•</span>
                                 <a href="relatorio_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="link-edit" style="color:var(--color-secondary); text-decoration:none; font-weight:600;">⚠️ Resumo PDF</a>
                                 <span>•</span>
@@ -417,7 +417,6 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias" class="tab-btn <?= $active_tab=='pendencias'?'active':'' ?>">⚠️ Pendências</a>
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=financeiro" class="tab-btn <?= $active_tab=='financeiro'?'active':'' ?>">💰 Financeiro</a>
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=arquivos" class="tab-btn <?= $active_tab=='arquivos'?'active':'' ?>">📂 Arquivos</a>
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=configuracoes" class="tab-btn <?= $active_tab=='configuracoes'?'active':'' ?>">⚙️ Configurações</a>
             </div>
 
             <?php if($active_tab == 'andamento' || $active_tab == 'cadastro'): ?>
@@ -904,105 +903,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     echo "<div style='color:red'>Erro ao carregar dados financeiros. Verifique se o Setup de Banco de Dados foi rodado. <br>". $e->getMessage() ."</div>";
                 }
                 ?>
-            <?php elseif($active_tab == 'configuracoes'): ?>
-                <div class="form-card" style="border-left: 6px solid #6c757d;">
-                    <h3 style="color:#495057;">⚙️ Configurações e Dados Cadastrais</h3>
-                    
-                    <form method="POST" enctype="multipart/form-data">
-                         <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label>Nome Completo</label>
-                                <input type="text" name="nome" value="<?= htmlspecialchars($cliente_ativo['nome']) ?>" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Senha de Acesso (Deixe em branco para manter)</label>
-                                <input type="text" name="nova_senha" placeholder="Digite para alterar...">
-                            </div>
-                        </div>
 
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label>CPF / CNPJ</label>
-                                <input type="text" name="cpf_cnpj" value="<?= htmlspecialchars($detalhes['cpf_cnpj'] ?? '') ?>">
-                            </div>
-                            <div class="form-group">
-                                <label>Telefone</label>
-                                <input type="text" name="telefone" value="<?= htmlspecialchars($detalhes['contato_tel'] ?? '') ?>">
-                            </div>
-                            <div class="form-group">
-                                <label>Email</label>
-                                <input type="text" name="email" value="<?= htmlspecialchars($detalhes['contato_email'] ?? '') ?>">
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Endereço do Imóvel</label>
-                            <input type="text" name="endereco_imovel" value="<?= htmlspecialchars($detalhes['endereco_imovel'] ?? '') ?>" placeholder="Rua, Número, Bairro...">
-                        </div>
-
-                         <div class="form-group">
-                            <label>Link Pasta Drive (Raiz)</label>
-                            <input type="text" name="link_drive" value="<?= htmlspecialchars($cliente_ativo['link_drive_pasta'] ?? '') ?>" placeholder="https://drive.google.com/...">
-                        </div>
-
-                        <!-- DADOS TÉCNICOS (Moved from Header) -->
-                        <div style="background:#f8f9fa; padding:15px; border-radius:8px; margin:20px 0; border:1px solid #eee;">
-                            <h4 style="margin-top:0; color:#2c3e50; border-bottom:1px solid #ddd; padding-bottom:10px;">📐 Parâmetros Urbanísticos (Ficha Técnica)</h4>
-                            
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label>Área Existente (m²)</label>
-                                    <input type="text" name="area_existente" value="<?= htmlspecialchars($detalhes['area_existente'] ?? '') ?>" placeholder="0.00">
-                                </div>
-                                <div class="form-group">
-                                    <label>Área Acréscimo (m²)</label>
-                                    <input type="text" name="area_acrescimo" value="<?= htmlspecialchars($detalhes['area_acrescimo'] ?? '') ?>" placeholder="0.00">
-                                </div>
-                                <div class="form-group">
-                                    <label>Área Permeável (m²)</label>
-                                    <input type="text" name="area_permeavel" value="<?= htmlspecialchars($detalhes['area_permeavel'] ?? '') ?>" placeholder="0.00">
-                                </div>
-                            </div>
-
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label>Taxa Ocupação (%)</label>
-                                    <input type="text" name="taxa_ocupacao" value="<?= htmlspecialchars($detalhes['taxa_ocupacao'] ?? '') ?>" placeholder="Ex: 65">
-                                </div>
-                                <div class="form-group">
-                                    <label>Fator Aprov. (X)</label>
-                                    <input type="text" name="fator_aproveitamento" value="<?= htmlspecialchars($detalhes['fator_aproveitamento'] ?? '') ?>" placeholder="Ex: 1.5">
-                                </div>
-                                <div class="form-group">
-                                    <label>Geo Coords</label>
-                                    <input type="text" name="geo_coords" value="<?= htmlspecialchars($detalhes['geo_coords'] ?? '') ?>" placeholder="-20.123, -44.123">
-                                </div>
-                            </div>
-                        </div>
-
-                         <!-- FOTO OBRA -->
-                        <div style="margin-bottom:20px;">
-                             <label style="font-weight:bold; color:#666; display:block; margin-bottom:5px;">🖼️ Foto da Capa (Obra/Fachada)</label>
-                             <div style="display:flex; gap:10px; align-items:center;">
-                                <input type="file" name="foto_capa_obra" accept="image/*" style="flex:1; padding:10px; border:1px solid #ddd; border-radius:8px;">
-                                <?php if(!empty($detalhes['foto_capa_obra'])): ?>
-                                    <a href="../<?= $detalhes['foto_capa_obra'] ?>" target="_blank" style="color:#0d6efd; text-decoration:none;">Ver Atual</a>
-                                <?php endif; ?>
-                             </div>
-                        </div>
-
-                        <button type="submit" name="btn_editar_cliente" class="btn-save">💾 Salvar Alterações</button>
-                    </form>
-                    
-                    <hr style="margin:30px 0; border-top:1px solid #eee;">
-                    
-                    <h4 style="color:#dc3545;">Zona de Perigo</h4>
-                    <p style="color:#666; font-size:0.9rem;">A exclusão removerá todos os dados, arquivos e histórico deste cliente.</p>
-                    <a href="?deletar_cliente=<?= $cliente_ativo['id'] ?>" onclick="return confirm('ATENÇÃO EXTREMA: \n\nVocê tem certeza que deseja EXCLUIR DEFINITIVAMENTE este cliente?\n\nTodos os dados serão perdidos para sempre.')" class="btn-save" style="background:#dc3545; display:inline-block; text-align:center; text-decoration:none;">🗑️ Excluir Cliente Permanentemente</a>
-                </div>
-
-            <?php endif; ?>
 
         <?php else: ?>
             
