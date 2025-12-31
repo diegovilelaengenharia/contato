@@ -703,6 +703,25 @@ if (isset($_POST['btn_salvar_tudo'])) {
     </form>
 
     <script>
+        // Helper para copiar CPF ou Telefone para o Login
+        function copiarParaLogin(origem) {
+            let valor = '';
+            if(origem === 'cpf') {
+                const cpfInput = document.querySelector('input[name="cpf_cnpj"]');
+                if(cpfInput) valor = cpfInput.value.replace(/\D/g, ''); // Apenas numeros
+            } else if(origem === 'tel') {
+                const telInput = document.querySelector('input[name="contato_tel"]');
+                if(telInput) valor = telInput.value.replace(/\D/g, '');
+            }
+            
+            if(valor) {
+                document.getElementById('campo_login').value = valor;
+                // alert('Login atualizado para: ' + valor);
+            } else {
+                alert('Campo de origem (' + origem + ') está vazio!');
+            }
+        }
+
         // --- MÁSCARAS E VALIDAÇÃO ---
         // --- MÁSCARAS E VALIDAÇÃO ---
         document.addEventListener('DOMContentLoaded', function() {
