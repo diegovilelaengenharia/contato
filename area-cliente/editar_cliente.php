@@ -84,7 +84,7 @@ if (isset($_POST['btn_salvar_tudo'])) {
                 res_rua=?, res_numero=?, res_bairro=?, res_complemento=?, res_cidade=?, res_uf=?,
                 profissao=?, estado_civil=?, imovel_rua=?, imovel_numero=?,
                 imovel_bairro=?, imovel_complemento=?, imovel_cidade=?, imovel_uf=?, inscricao_imob=?,
-                imovel_bairro=?, imovel_complemento=?, imovel_cidade=?, imovel_uf=?, inscricao_imob=?,
+
                 num_matricula=?, imovel_area_lote=?, area_construida=?, data_inicio=?
                 WHERE cliente_id=?";
         } else {
