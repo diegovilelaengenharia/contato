@@ -7,3 +7,6 @@
 thumbs.db
 
 desktop.ini
+
+# Gemini Artifacts
+.gemini/
