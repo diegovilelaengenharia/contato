@@ -4,7 +4,37 @@
 
 require __DIR__ . '/db.php';
 
+// FUNÇÃO AUXILIAR PARA CORRIGIR TABELA (SELF-HEALING)
+function TryAddColumn($pdo, $table, $col, $type) {
+    try {
+        $check = $pdo->query("SHOW COLUMNS FROM $table LIKE '$col'");
+        if ($check->rowCount() == 0) {
+            $pdo->exec("ALTER TABLE $table ADD COLUMN $col $type");
+            echo "Coluna <strong>$col</strong> adicionada na tabela $table.<br>";
+        }
+    } catch (Exception $e) {
+        // Ignora erro se já existir ou outro prob
+    }
+}
+
 try {
+    // --- 0. GARANTIR COLUNAS NOVAS (FIX EVERYTHING) ---
+    echo "<h3>Verificando Estrutura do Banco de Dados...</h3>";
+    
+    // Tabela processo_detalhes
+    TryAddColumn($pdo, 'processo_detalhes', 'observacoes_gerais', 'TEXT NULL');
+    TryAddColumn($pdo, 'processo_detalhes', 'valor_venal', 'DECIMAL(15,2) NULL');
+    TryAddColumn($pdo, 'processo_detalhes', 'area_total_final', 'DECIMAL(10,2) NULL');
+    TryAddColumn($pdo, 'processo_detalhes', 'area_existente', 'DECIMAL(10,2) NULL');
+    TryAddColumn($pdo, 'processo_detalhes', 'area_acrescimo', 'DECIMAL(10,2) NULL');
+    TryAddColumn($pdo, 'processo_detalhes', 'area_permeavel', 'DECIMAL(10,2) NULL');
+    TryAddColumn($pdo, 'processo_detalhes', 'taxa_ocupacao', 'DECIMAL(10,2) NULL');
+    TryAddColumn($pdo, 'processo_detalhes', 'fator_aproveitamento', 'DECIMAL(10,2) NULL');
+    TryAddColumn($pdo, 'processo_detalhes', 'geo_coords', 'VARCHAR(100) NULL');
+    TryAddColumn($pdo, 'processo_detalhes', 'foto_capa_obra', 'VARCHAR(255) NULL');
+
+    echo "<hr>";
+    
     $pdo->beginTransaction();
 
     echo "<h1>Recriando Cliente Teste...</h1>";
