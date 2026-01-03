@@ -26,7 +26,15 @@ export const AuthProvider = ({ children }) => {
           }
         } else {
           console.error("Auth check response verify failed", response.status);
-          window.auth_debug = { error: "HTTP " + response.status };
+          let errorDetail = { error: "HTTP " + response.status };
+          try {
+            // Try to parse the error explanation from the server
+            const errData = await response.json();
+            errorDetail = { ...errorDetail, ...errData };
+          } catch (e) {
+            console.warn("Could not parse error response", e);
+          }
+          window.auth_debug = errorDetail;
         }
       } catch (error) {
         console.error('Auth check failed', error);
