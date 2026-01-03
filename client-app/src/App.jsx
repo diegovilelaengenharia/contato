@@ -198,8 +198,7 @@ function App() {
 
           <div className="flex items-center gap-6">
             <div className="text-right">
-              <p className="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Processo {processDetails.number}</p>
-              <p className="text-sm font-bold text-gray-700">{processDetails.object}</p>
+              {/* Removed Process Info per user request */}
             </div>
             <div className="h-8 w-px bg-gray-100"></div>
             <a href='/area-cliente/logout.php' className="text-gray-400 hover:text-status-danger transition-colors flex items-center gap-2 text-xs font-bold uppercase tracking-wide group">
@@ -224,20 +223,8 @@ function App() {
           {activeTab === 'inicial' && (
             <>
               {/* Process Stats (New Light Widget) */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center gap-3">
-                  <div className="p-2 bg-blue-50 text-blue-600 rounded-lg"><FileDigit size={20} /></div>
-                  <div><p className="text-xs text-gray-400 font-bold uppercase">Nº Processo</p><p className="font-bold text-gray-700">{processDetails.number}</p></div>
-                </div>
-                <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center gap-3">
-                  <div className="p-2 bg-purple-50 text-purple-600 rounded-lg"><Maximize2 size={20} /></div>
-                  <div><p className="text-xs text-gray-400 font-bold uppercase">Área Total</p><p className="font-bold text-gray-700">{processDetails.area}</p></div>
-                </div>
-                <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center gap-3">
-                  <div className="p-2 bg-orange-50 text-orange-600 rounded-lg"><MapPin size={20} /></div>
-                  <div className="truncate"><p className="text-xs text-gray-400 font-bold uppercase">Local</p><p className="font-bold text-gray-700 truncate text-xs">{processDetails.address}</p></div>
-                </div>
-              </div>
+              {/* Process Stats (Removed per request) */}
+              {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4"> ... </div> */}
 
               {/* Progress Bar (Light) */}
               <div className="bg-white rounded-2xl p-6 md:p-8 border border-gray-100 shadow-sm relative overflow-hidden">
