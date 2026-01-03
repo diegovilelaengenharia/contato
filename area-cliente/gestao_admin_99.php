@@ -825,7 +825,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             <input type="text" name="link_drive_pasta" value="<?= $detalhes['link_drive_pasta']??'' ?>" placeholder="https://drive.google.com/...">
                         </div>
 
-                        <button type="submit" name="btn_salvar_arquivos" class="btn-save btn-info">Salvar Links</button>
+                        <button type="submit" name="btn_salvar_arquivos" class="btn-save" style="background:#1976d2; color:white; border:none; box-shadow:0 4px 10px rgba(25, 118, 210, 0.3);">Salvar Links</button>
                     </form>
 
                     <?php 
