@@ -642,42 +642,64 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         </div>
                     </div>
 
-                    <!-- DIREITA: Timeline Vertical -->
-                    <div style="background:#f8f9fa; border-left:1px solid #e9ecef; padding:20px; height:100%; display:flex; flex-direction:column; justify-content:center;">
-                        <h4 style="margin:0 0 15px 0; font-size:0.85rem; text-transform:uppercase; color:#888; letter-spacing:1px; text-align:center;">Status do Processo</h4>
+                    <!-- DIREITA: Timeline Compacta (Gráfico Pizza/Donut) -->
+                    <div style="background:#fff; border-left:1px solid #eee; padding:20px; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; min-width:280px;">
                         
-                        <div class="vertical-timeline" style="display:flex; flex-direction:column; gap:0;">
-                            <?php 
-                            $found_idx = array_search(($detalhes['etapa_atual']??''), $fases_padrao);
-                            if($found_idx === false) $found_idx = -1; // Nada iniciado
-                            
-                            // Mostrar apenas um resumo compacto ou lista completa? 
-                            // O usuário pediu timeline com foco (ant, atual, prox) e esmaecer outros
-                            foreach($fases_padrao as $i => $f): 
-                                $is_past = $i < $found_idx;
-                                $is_active = $i == $found_idx;
-                                $dist = abs($i - $found_idx);
-                                $opacity = ($dist <= 1 || $found_idx == -1) ? '1' : '0.3'; // Foco nos adjacentes
-                                
-                                $color = $is_active ? 'var(--color-primary)' : ($is_past ? '#198754' : '#ddd');
-                                $bg = $is_active ? '#e8f5e9' : 'transparent';
-                                $weight = $is_active ? '700' : '400';
-                                $icon = $is_past ? '✓' : ($is_active ? '➤' : '•');
-                            ?>
-                                <div style="display:flex; align-items:center; gap:8px; padding:4px 8px; border-radius:4px; background:<?= $bg ?>; color:<?= ($is_active || $is_past) ? '#333' : '#aaa' ?>; font-size:0.8rem; opacity:<?= $opacity ?>; transition:opacity 0.3s;">
-                                    <div style="font-weight:bold; color:<?= $color ?>; width:15px; text-align:center;"><?= $icon ?></div>
-                                    <div style="flex:1; font-weight:<?= $weight ?>; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><?= $f ?></div>
-                                </div>
-                            <?php endforeach; ?>
+                        <?php 
+                        $found_idx = array_search(($detalhes['etapa_atual']??''), $fases_padrao);
+                        if($found_idx === false) $found_idx = -1;
+                        
+                        // Calc Percentage
+                        $total_phases = count($fases_padrao);
+                        $percent = ($found_idx >= 0) ? round((($found_idx + 1) / $total_phases) * 100) : 0;
+                        ?>
+
+                        <!-- Donut Chart -->
+                        <div style="position:relative; width:100px; height:100px; border-radius:50%; background:conic-gradient(var(--color-primary) <?= $percent ?>%, #eee <?= $percent ?>% 100%); display:flex; align-items:center; justify-content:center; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+                            <div style="width:75px; height:75px; background:white; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-direction:column;">
+                                <span style="font-size:1.2rem; font-weight:800; color:var(--color-primary);"><?= $percent ?>%</span>
+                            </div>
                         </div>
-                        
-                        <?php if($found_idx == -1): ?>
-                            <div style="text-align:center; margin-top:10px; font-size:0.75rem; color:#999;">Processo não iniciado</div>
-                        <?php endif; ?>
+
+                        <div style="margin-top:10px; text-align:center;">
+                            <h4 style="margin:0; font-size:0.95rem; color:#333; font-weight:700;">Status do Processo</h4>
+                            <p style="margin:5px 0 0 0; font-size:0.85rem; color:#666; max-width:200px; line-height:1.3;">
+                                <?= ($found_idx >= 0) ? htmlspecialchars($fases_padrao[$found_idx]) : 'Não iniciado' ?>
+                            </p>
+                            
+                            <button onclick="document.getElementById('modalTimelineFull').showModal()" style="margin-top:10px; background:none; border:1px solid #ddd; color:#666; padding:5px 12px; border-radius:20px; font-size:0.75rem; cursor:pointer;">
+                                Ver Etapas 📋
+                            </button>
+                        </div>
                     </div>
 
                 </div>
             </div>
+
+            <!-- Modal Timeline Completa -->
+            <dialog id="modalTimelineFull" style="border:none; border-radius:12px; padding:0; width:90%; max-width:400px; box-shadow:0 10px 40px rgba(0,0,0,0.3);">
+                <div style="background:#f8f9fa; padding:15px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
+                    <h3 style="margin:0; font-size:1rem; color:#333;">Todas as Etapas</h3>
+                    <button onclick="document.getElementById('modalTimelineFull').close()" style="border:none; background:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+                </div>
+                <div style="padding:20px; max-height:60vh; overflow-y:auto;">
+                    <div style="display:flex; flex-direction:column; gap:4px;">
+                        <?php foreach($fases_padrao as $i => $f): 
+                             $is_past = $i < $found_idx;
+                             $is_active = $i == $found_idx;
+                             $color = $is_active ? 'var(--color-primary)' : ($is_past ? '#198754' : '#ccc');
+                             $icon = $is_past ? '✅' : ($is_active ? '📍' : '▫️');
+                             $weight = $is_active ? '700' : '400';
+                             $bg_item = $is_active ? '#e8f5e9' : 'transparent';
+                        ?>
+                            <div style="display:flex; align-items:center; gap:10px; padding:8px; border-radius:6px; background:<?= $bg_item ?>">
+                                <span style="font-size:1rem;"><?= $icon ?></span>
+                                <span style="color:<?= $color ?>; font-weight:<?= $weight ?>; font-size:0.9rem;"><?= $f ?></span>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </dialog>
 
             <div class="tabs-header">
                 <!-- Aba Cadastro Removida (Agora é o header fixo) -->
