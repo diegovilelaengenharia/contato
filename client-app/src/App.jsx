@@ -243,178 +243,28 @@ function App() {
 
           {/* === VIEW: INICIAL === */}
           {activeTab === 'inicial' && (
-            <>
-              {/* === RED OBSERVATION ALERT === */}
-              {processDetails.observation && (
-                <div className="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 p-4 mb-6 rounded-r shadow-sm flex items-start gap-3 animate-fade-in-down">
-                  <div className="text-red-600 dark:text-red-400 mt-0.5"><AlertTriangle size={24} /></div>
-                  <div>
-                    <h3 className="text-red-800 dark:text-red-300 font-bold uppercase text-xs tracking-wider mb-1">Avisos Importantes</h3>
-                    <p className="text-red-700 dark:text-red-200 font-medium text-base whitespace-pre-wrap leading-relaxed">
-                      {processDetails.observation}
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {/* HERO SECTION (Process Highlight) */}
-              <div className={`
-                rounded-3xl p-6 md:p-8 mb-8 shadow-xl relative overflow-hidden group transition-all duration-300
-                ${isDarkMode
-                  ? 'bg-gradient-to-br from-[#146c43] to-[#0d3b25] text-white'
-                  : 'bg-white border border-gray-100 text-vilela-primary shadow-lg shadow-gray-100/50'
-                }
-              `}>
-
-                {/* Background Decor */}
-                <div className={`
-                  absolute top-0 right-0 w-64 h-64 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none transition-opacity duration-300
-                  ${isDarkMode ? 'bg-white opacity-5' : 'bg-vilela-primary opacity-[0.03]'}
-                `}></div>
-                <div className={`
-                  absolute bottom-0 left-0 w-48 h-48 rounded-full blur-2xl -ml-10 -mb-10 pointer-events-none transition-opacity duration-300
-                  ${isDarkMode ? 'bg-black opacity-10' : 'bg-vilela-primary opacity-[0.02]'}
-                `}></div>
-
-                <div className="relative z-10">
-                  {/* Greeting & Process Info */}
-                  <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
-                    <div>
-                      <h1 className="text-2xl md:text-4xl font-bold mb-2 flex items-center gap-3">
-                        Olá, {user?.name?.split(' ')[0]}! <span className="animate-pulse">👋</span>
-                      </h1>
-                      <div className={`flex items-center gap-3 text-sm font-medium ${isDarkMode ? 'text-white/80' : 'text-gray-500'}`}>
-                        <span className={`px-3 py-1 rounded-full border backdrop-blur-sm ${isDarkMode ? 'bg-white/10 border-white/10' : 'bg-gray-50 border-gray-200'}`}>
-                          Processo #{processDetails.number || '0000'}
-                        </span>
-                        <span>{processDetails.object || 'Projeto Vilela'}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Integrated Progress Bar (Hero Mode) */}
-                  <ProgressBar currentPhase={DATA.currentPhase} mode={isDarkMode ? "hero" : "light"} />
-                </div>
+            <div className="flex flex-col items-center justify-center h-[50vh] text-center opacity-50">
+              <div className="mb-4 p-4 rounded-full bg-gray-50 border border-gray-100 text-gray-300">
+                <LayoutDashboard size={48} strokeWidth={1} />
               </div>
-
-              {/* === NEW: KPI CARDS (Financial Overview) === */}
-              <KPICards kpis={financeiroKPIs} />
-
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
-                <div className="lg:col-span-2 space-y-6">
-                  {/* Timeline (Cleaner) */}
-                  <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-0 overflow-hidden transition-colors">
-                    <div className="px-6 py-4 border-b border-gray-50 dark:border-gray-700 bg-white dark:bg-gray-800 flex justify-between items-center sticky top-0 z-10">
-                      <h3 className="font-bold text-gray-700 dark:text-gray-200 flex items-center gap-2 text-sm uppercase tracking-wide">
-                        <LayoutDashboard size={18} className="text-vilela-primary dark:text-emerald-400" /> Últimas Movimentações
-                      </h3>
-                    </div>
-                    <div className="p-2 md:p-6 bg-white dark:bg-gray-800 min-h-[300px] transition-colors">
-                      <Timeline movements={timeline} />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-6">
-                  {/* Engineer Widget (Dark Mode Ready) */}
-                  <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm relative overflow-hidden group hover:border-vilela-primary/30 dark:hover:border-emerald-500/30 transition-all">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 bg-vilela-light dark:bg-emerald-900/30 rounded-lg flex items-center justify-center text-vilela-primary dark:text-emerald-400">
-                        <Briefcase size={20} />
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-400 dark:text-gray-500 font-bold uppercase">Engenheiro Responsável</p>
-                        <h4 className="font-bold text-gray-800 dark:text-gray-100 text-lg">{engineer.name}</h4>
-                      </div>
-                    </div>
-
-                    <div className="space-y-3 pt-2">
-                      <a href={`mailto:${engineer.email}`} className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group">
-                        <Mail size={16} className="text-gray-400 group-hover:text-vilela-primary dark:group-hover:text-emerald-400" />
-                        <span className="text-sm font-medium text-gray-600 dark:text-gray-300">{engineer.email}</span>
-                      </a>
-                      <a href={`tel:${engineer.phone}`} className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group">
-                        <Phone size={16} className="text-gray-400 group-hover:text-vilela-primary dark:group-hover:text-emerald-400" />
-                        <span className="text-sm font-medium text-gray-600 dark:text-gray-300">{engineer.phone}</span>
-                      </a>
-                    </div>
-                  </div>
-
-                  {/* Alerts */}
-                  <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-5 hover:shadow-md transition-all">
-                    <h3 className="uppercase text-xs font-bold text-status-warning mb-4 flex items-center gap-2"><AlertTriangle size={14} /> Pendências Urgentes</h3>
-                    <PendencyWidget pendencias={pendencias} />
-                  </div>
-
-                  {/* Finance (Old Widget kept for detailed list if needed, usually redundant with KPI but good for list) */}
-                  <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-5 hover:shadow-md transition-all">
-                    <h3 className="uppercase text-xs font-bold text-gray-500 dark:text-gray-400 mb-4 flex items-center gap-2"><DollarSign size={14} /> Lista Financeira</h3>
-                    <FinanceWidget financeiro={financeiro} />
-                  </div>
-                </div>
-              </div>
-            </>
+              <h2 className="text-xl font-medium text-gray-400">Área de Trabalho Limpa</h2>
+              <p className="text-sm text-gray-300">Pronto para início da construção.</p>
+            </div>
           )}
 
           {/* === VIEW: PENDENCIAS === */}
           {activeTab === 'pendencias' && (
-            <div className="space-y-6">
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 border border-gray-100 dark:border-gray-700 shadow-sm transition-colors">
-                <div className="flex items-center gap-3 mb-6 pb-6 border-b border-gray-50 dark:border-gray-700">
-                  <div className="p-3 bg-orange-50 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-full"><AlertTriangle size={24} /></div>
-                  <div>
-                    <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">Gerencie suas Pendências</h2>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm">Documentos ou ações necessárias para o andamento.</p>
-                  </div>
-                </div>
-                <PendencyWidget pendencias={pendencias} />
-              </div>
-            </div>
+            <div className="flex items-center justify-center h-[50vh] text-gray-300">Módulo Pendências (Vazio)</div>
           )}
 
           {/* === VIEW: FINANCEIRO === */}
           {activeTab === 'financeiro' && (
-            <div className="space-y-6">
-              {/* Show KPIs here too for context */}
-              <KPICards kpis={financeiroKPIs} />
-
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 border border-gray-100 dark:border-gray-700 shadow-sm transition-colors">
-                <div className="flex items-center gap-3 mb-6 pb-6 border-b border-gray-50 dark:border-gray-700">
-                  <div className="p-3 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full"><DollarSign size={24} /></div>
-                  <div>
-                    <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">Histórico Financeiro</h2>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm">Visualize contratos, boletos e recibos.</p>
-                  </div>
-                </div>
-                <FinanceWidget financeiro={financeiro} />
-              </div>
-            </div>
+            <div className="flex items-center justify-center h-[50vh] text-gray-300">Módulo Financeiro (Vazio)</div>
           )}
 
           {/* === VIEW: ARQUIVOS (DRIVE) === */}
           {activeTab === 'arquivos' && (
-            <div className="h-full flex flex-col">
-              <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm flex-1 flex flex-col overflow-hidden min-h-[500px] transition-colors">
-                <div className="p-4 border-b border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 flex justify-between items-center">
-                  <h3 className="font-bold text-gray-700 dark:text-gray-200 flex items-center gap-2"><HardDrive size={18} /> Acervo Digital</h3>
-                  <button className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-3 py-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 font-bold flex items-center gap-1 border border-gray-200 dark:border-gray-600 transition-colors">
-                    Abrir Externamente <ChevronRight size={12} />
-                  </button>
-                </div>
-                <div className="flex-1 bg-gray-50 dark:bg-gray-900 relative">
-                  {/* IFRAME: Use DATA.driveLink */}
-                  {DATA.driveLink ?
-                    <iframe
-                      src={DATA.driveLink}
-                      className="w-full h-full border-0 absolute inset-0"
-                      title="Google Drive"
-                    ></iframe>
-                    :
-                    <div className="flex items-center justify-center h-full text-gray-400 dark:text-gray-600">Pasta do Drive não vinculada.</div>
-                  }
-                </div>
-              </div>
-            </div>
+            <div className="flex items-center justify-center h-[50vh] text-gray-300">Módulo Arquivos (Vazio)</div>
           )}
 
           {/* === VIEW: PROTOCOLO DIGITAL === */}
