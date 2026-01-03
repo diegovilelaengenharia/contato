@@ -1,6 +1,7 @@
 <?php
 // Force session cookie to be available to entire domain, preventing subdirectory issues
 session_set_cookie_params(0, '/');
+session_name('CLIENTE_SESSID');
 session_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -50,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Verifica a senha (usando hash seguro)
     if ($user && password_verify($senha, $user['senha'])) {
+        session_regenerate_id(true);
         $_SESSION['cliente_id'] = $user['id'];
         $_SESSION['cliente_nome'] = $user['nome'];
         header("Location: dashboard.php");
@@ -69,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=<?= time() ?>">
     <link rel="icon" href="../assets/logo.png" type="image/png">
 
 </head>
