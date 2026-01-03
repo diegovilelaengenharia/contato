@@ -702,57 +702,61 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     @media(max-width:768px) { .mobile-only { display: flex; } }
                 </style>
 
-                <div class="form-card" style="border:none; box-shadow:0 4px 20px rgba(0,0,0,0.05); overflow:hidden;">
-                    <div style="background: linear-gradient(135deg, var(--color-primary) 0%, #2980b9 100%); padding:15px 20px; border-radius:12px 12px 0 0; display:flex; align-items:center; gap:10px; color:white;">
-                        <span style="font-size:1.5rem;">✨</span>
-                        <h3 style="margin:0; font-size:1.1rem; font-weight:600; color:white;">Novo Andamento / Atualização</h3>
+                <!-- Botão para Abrir Modal de Novo Andamento -->
+                <div style="margin-bottom:20px;">
+                    <button type="button" onclick="document.getElementById('modalAndamento').showModal()" class="btn-save" style="width:100%; padding:15px; background:linear-gradient(135deg, var(--color-primary) 0%, #2980b9 100%); border:none; border-radius:12px; font-size:1.1rem; font-weight:bold; color:white; cursor:pointer; text-transform:uppercase; letter-spacing:1px; box-shadow:0 4px 15px rgba(41, 128, 185, 0.4); display:flex; align-items:center; justify-content:center; gap:10px; transition:transform 0.2s;">
+                        <span>✨</span> Novo Andamento / Atualização
+                    </button>
+                </div>
+
+                <!-- MODAL DE NOVO ANDAMENTO -->
+                <dialog id="modalAndamento" style="border:none; border-radius:12px; padding:0; width:90%; max-width:600px; box-shadow:0 10px 40px rgba(0,0,0,0.2);">
+                    <div style="background: linear-gradient(135deg, var(--color-primary) 0%, #2980b9 100%); padding:20px; display:flex; justify-content:space-between; align-items:center; color:white;">
+                        <h3 style="margin:0; font-size:1.2rem; display:flex; align-items:center; gap:10px;">✨ Novo Andamento</h3>
+                        <button type="button" onclick="document.getElementById('modalAndamento').close()" style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
                     </div>
                     
-                    <div style="padding:15px; border:1px solid #eee; border-top:none; border-radius:0 0 12px 12px; background:#fff;">
+                    <div style="padding:25px;">
                         <form method="POST" enctype="multipart/form-data">
                             <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
                             
-                            <!-- LINHA 1: Fase e Título (Compacto) -->
-                            <div style="display:flex; gap:15px; margin-bottom:10px;">
-                                <div style="flex:1;">
-                                    <label style="display:block; font-size:0.75rem; font-weight:bold; color:#555; margin-bottom:4px; text-transform:uppercase;">📌 Fase</label>
-                                    <div style="position:relative;">
-                                        <select name="nova_etapa" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:6px; font-size:0.9rem; background:#f9f9f9; cursor:pointer;">
-                                            <option value="">Manter: <?= htmlspecialchars($detalhes['etapa_atual']??'-') ?></option>
-                                            <?php foreach($fases_padrao as $f): ?>
-                                                <option value="<?= $f ?>"><?= $f ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div style="flex:2;">
-                                    <label style="display:block; font-size:0.75rem; font-weight:bold; color:#555; margin-bottom:4px; text-transform:uppercase;">📝 Título do Evento</label>
-                                    <input type="text" name="titulo_evento" required placeholder="Ex: Protocolo Realizado..." style="width:100%; padding:8px; border:1px solid #ddd; border-radius:6px; font-size:0.9rem;">
-                                </div>
+                            <!-- LINHA 1: Fase e Título -->
+                            <div style="margin-bottom:15px;">
+                                <label style="display:block; font-size:0.85rem; font-weight:bold; color:#555; margin-bottom:5px;">📌 Fase</label>
+                                <select name="nova_etapa" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px; font-size:1rem; background:#f9f9f9;">
+                                    <option value="">Manter: <?= htmlspecialchars($detalhes['etapa_atual']??'-') ?></option>
+                                    <?php foreach($fases_padrao as $f): ?>
+                                        <option value="<?= $f ?>"><?= $f ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <div style="margin-bottom:15px;">
+                                <label style="display:block; font-size:0.85rem; font-weight:bold; color:#555; margin-bottom:5px;">📝 Título do Evento</label>
+                                <input type="text" name="titulo_evento" required placeholder="Ex: Protocolo Realizado..." style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px; font-size:1rem;">
                             </div>
                             
-                            <!-- LINHA 2: Descrição e Upload (Lado a Lado) -->
-                            <div style="display:flex; gap:15px; margin-bottom:15px;">
-                                <div style="flex:3;">
-                                    <textarea name="observacao_etapa" id="editor_etapa" rows="2" placeholder="Detalhes (Opcional)..." style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; font-size:0.9rem; resize:vertical; min-height:60px; font-family:inherit;"></textarea>
-                                </div>
+                            <!-- LINHA 2: Descrição -->
+                            <div style="margin-bottom:15px;">
+                                <textarea name="observacao_etapa" rows="3" placeholder="Detalhes (Opcional)..." style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px; font-size:1rem; resize:vertical; font-family:inherit;"></textarea>
+                            </div>
 
-                                <div style="flex:1; min-width:150px;">
-                                     <div style="position:relative; width:100%; height:100%; border:2px dashed #a0aec0; border-radius:8px; background:linear-gradient(to bottom, #f8f9fa, #eef2f7); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; transition:all 0.3s ease; cursor:pointer; padding:5px; box-shadow:0 2px 5px rgba(0,0,0,0.05);" onclick="document.getElementById('file_input_hidden').click();" onmouseover="this.style.borderColor='var(--color-primary)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='#a0aec0'; this.style.transform='translateY(0)';">
-                                         <span style="font-size:1.4rem; color:var(--color-primary); margin-bottom:2px;">📂</span>
-                                         <span style="font-size:0.75rem; color:#4a5568; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Anexar Arquivo</span>
-                                         <input type="file" id="file_input_hidden" name="arquivo_documento" style="display:none;" onchange="if(this.files.length > 0) { this.parentElement.style.borderColor='#38ef7d'; this.parentElement.style.background='#e3fcef'; this.parentElement.querySelector('span:last-child').innerText = 'Arquivo OK!'; this.parentElement.querySelector('span:last-child').style.color='#198754'; this.parentElement.querySelector('span:first-child').innerText = '✅'; }">
-                                     </div>
-                                </div>
+                            <!-- Upload -->
+                            <div style="margin-bottom:20px;">
+                                 <div style="width:100%; border:2px dashed #ccc; border-radius:8px; padding:15px; text-align:center; cursor:pointer; background:#f8f9fa;" onclick="document.getElementById('file_input_modal').click();" id="dropzone_modal">
+                                     <span style="font-size:1.5rem; display:block; margin-bottom:5px;">📂</span>
+                                     <span style="font-weight:bold; color:#666;">Anexar Arquivo</span>
+                                     <input type="file" id="file_input_modal" name="arquivo_documento" style="display:none;" onchange="if(this.files.length > 0) { document.getElementById('dropzone_modal').style.borderColor='#198754'; document.getElementById('dropzone_modal').style.background='#e8f5e9'; document.getElementById('dropzone_modal').querySelector('span:last-child').innerText = '✅ Arquivo Selecionado!'; }">
+                                 </div>
                             </div>
 
                             <!-- BOTÃO -->
-                            <button type="submit" name="atualizar_etapa" class="btn-save" style="width:100%; padding:12px; background:linear-gradient(to right, #11998e, #38ef7d); border:none; border-radius:8px; font-size:1rem; font-weight:bold; color:white; cursor:pointer; text-transform:uppercase; letter-spacing:0.5px; box-shadow:0 4px 15px rgba(25, 135, 84, 0.3); transition:transform 0.2s;">
+                            <button type="submit" name="atualizar_etapa" class="btn-save" style="width:100%; padding:12px; background:var(--color-primary); border:none; border-radius:8px; font-size:1.1rem; font-weight:bold; color:white; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
                                 ✅ Registrar Movimentação
                             </button>
                         </form>
                     </div>
-                </div>
+                </dialog>
                     
                     <!-- Script removed as logic is now backend-driven -->
 
