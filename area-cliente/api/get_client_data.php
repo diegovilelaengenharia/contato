@@ -101,6 +101,11 @@ try {
         'financeiro' => $financeiro,
         'financeiro_kpis' => $financeiro_kpis, // New KPI Object
         'pendencias' => $pendencias,
+        'client_info' => [
+            'cpf' => $clientData['cpf'] ?? $clientData['cpf_cnpj'] ?? 'N/A',
+            'email' => $clientData['email'] ?? 'N/A',
+            'phone' => $clientData['telefone'] ?? 'N/A'
+        ],
         'driveLink' => $clientData['link_drive_pasta'] ?? '',
         'engineer' => [
             'name' => 'Diego Vilela',
