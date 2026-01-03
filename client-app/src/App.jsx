@@ -97,6 +97,7 @@ function App() {
     )
   }
 
+  // Use Real Data (or safe fallbacks)
   const DATA = clientData || {};
   const processDetails = DATA.processDetails || {};
   const timeline = DATA.timeline || [];
@@ -132,7 +133,7 @@ function App() {
           <NavItem icon={<Home size={20} />} label="Início" active={activeTab === 'inicial'} onClick={() => setActiveTab('inicial')} expanded={isSidebarOpen} />
           <NavItem icon={<LayoutList size={20} />} label="Timeline" active={activeTab === 'timeline'} onClick={() => setActiveTab('timeline')} expanded={isSidebarOpen} />
           <NavItem icon={<AlertTriangle size={20} />} label="Pendências" active={activeTab === 'pendencias'} onClick={() => setActiveTab('pendencias')} expanded={isSidebarOpen} badge={pendencias.length} />
-          <div style={{ height: 1, background: 'var(--ios-separator)', margin: '12px 0' }}></div>
+          <div style={{ height: 1, background: 'var(--color-border)', margin: '12px 0' }}></div>
           <NavItem icon={<DollarSign size={20} />} label="Financeiro" active={activeTab === 'financeiro'} onClick={() => setActiveTab('financeiro')} expanded={isSidebarOpen} />
           <NavItem icon={<HardDrive size={20} />} label="Documentos" active={activeTab === 'documentos'} onClick={() => setActiveTab('documentos')} expanded={isSidebarOpen} />
         </nav>
@@ -142,17 +143,19 @@ function App() {
       <div className="main-content">
 
         {/* Desktop Header */}
-        <header className="desktop-header">
-          <div className="breadcrumb">
+        <header className="sidebar-header" style={{ justifyContent: 'space-between', padding: '0 30px', height: '70px', display: window.innerWidth < 768 ? 'none' : 'flex' }}>
+          <h2 style={{ fontSize: 18, margin: 0, color: 'var(--color-text)' }}>
             {activeTab === 'inicial' ? 'Visão Geral' : activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
-          </div>
-          {/* Engineer Info or Actions */}
+          </h2>
+
+          {/* Mobile Menu Toggle (if needed) but we are using Sidebar for Desktop */}
           <div style={{ display: 'flex', gap: 16 }}>
             <button onClick={toggleTheme} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
               {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
             </button>
           </div>
         </header>
+
 
         {/* Scrollable Area */}
         <main className="content-scrollable animate-in">
@@ -175,41 +178,106 @@ function App() {
                   </div>
                 </div>
               </div>
-              {/* Additional Content Here */}
+
+              {/* Optional: Highlights if requested later */}
             </>
           )}
 
           {/* === VIEW: TIMELINE === */}
           {activeTab === 'timeline' && (
-            <div className="ios-section">
-              <h2>Acompanhamento</h2>
-              <Timeline movements={timeline} />
+            <div className="timeline-container">
+              {timeline.map((item, index) => (
+                <div key={index} className="timeline-item">
+                  <div className={`timeline-dot ${index === 0 ? 'active' : ''}`}>
+                    {index + 1}
+                  </div>
+                  <div className="timeline-content">
+                    <span className="timeline-date">{item.data}</span>
+                    <h3 className="timeline-title">{item.titulo}</h3>
+                    <p className="timeline-desc">{item.descricao}</p>
+                  </div>
+                </div>
+              ))}
+              {timeline.length === 0 && <p style={{ textAlign: 'center', color: '#999' }}>Nenhuma etapa registrada.</p>}
             </div>
           )}
 
           {/* === VIEW: PENDENCIAS === */}
           {activeTab === 'pendencias' && (
-            <div className="ios-section">
-              <h2>Pendências do Processo</h2>
-              <PendencyWidget pendencias={pendencias} />
+            <div className="pendency-grid">
+              {pendencias.map((pend, index) => (
+                <div key={index} className="pendency-card">
+                  <div className="pendency-header">
+                    <AlertTriangle size={24} color="#eab308" />
+                    <span className={`status-badge ${pend.status}`}>{pend.status}</span>
+                  </div>
+                  <h3 style={{ margin: '10px 0', fontSize: 16 }}>{pend.titulo}</h3>
+                  <p style={{ color: '#666', fontSize: 14 }}>{pend.descricao}</p>
+                  <button className="btn-action">Resolver</button>
+                </div>
+              ))}
+              {pendencias.length === 0 && <div className="vilela-card" style={{ gridColumn: '1/-1', textAlign: 'center' }}>Nenhuma pendência encontrada.</div>}
             </div>
           )}
 
           {/* === VIEW: FINANCEIRO === */}
           {activeTab === 'financeiro' && (
-            <div className="ios-section">
-              <KPICards kpis={financeiroKPIs} />
-              <div style={{ marginTop: 24 }}>
-                <FinanceWidget financeiro={financeiro} />
+            <div>
+              {financeiroKPIs && (
+                <div className="kpi-row">
+                  <div className="kpi-card">
+                    <span className="kpi-label">Valor Total</span>
+                    <span className="kpi-value">R$ {financeiroKPIs.total}</span>
+                  </div>
+                  <div className="kpi-card">
+                    <span className="kpi-label">Pago</span>
+                    <span className="kpi-value green">R$ {financeiroKPIs.pago}</span>
+                  </div>
+                  <div className="kpi-card">
+                    <span className="kpi-label">A Pagar</span>
+                    <span className="kpi-value red">R$ {financeiroKPIs.restante}</span>
+                  </div>
+                </div>
+              )}
+
+              <div className="vilela-card">
+                <h2>Extrato Detalhado</h2>
+                <table className="finance-table">
+                  <thead>
+                    <tr>
+                      <th>Data</th>
+                      <th>Descrição</th>
+                      <th>Valor</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {financeiro.map((item, idx) => (
+                      <tr key={idx}>
+                        <td>{item.data}</td>
+                        <td>{item.descricao}</td>
+                        <td style={{ color: item.tipo === 'entrada' ? 'var(--color-primary)' : '#dc3545', fontWeight: 700 }}>
+                          {item.tipo === 'entrada' ? '+' : '-'} R$ {item.valor}
+                        </td>
+                      </tr>
+                    ))}
+                    {financeiro.length === 0 && <tr><td colSpan="3" style={{ textAlign: 'center' }}>Sem registros financeiros.</td></tr>}
+                  </tbody>
+                </table>
               </div>
             </div>
           )}
 
           {/* === VIEW: DOCUMENTOS === */}
           {activeTab === 'documentos' && (
-            <div className="hero-card" style={{ height: '100%' }}>
+            <div className="hero-card" style={{ height: 'calc(100vh - 100px)', flexDirection: 'column', alignItems: 'stretch' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+                <h2 style={{ margin: 0, color: 'var(--color-primary)' }}>Arquivos do Projeto</h2>
+                <button className="btn-action" style={{ width: 'auto', marginTop: 0 }} onClick={() => window.open(DATA.driveLink, '_blank')}>
+                  Abrir no Drive <ChevronRight size={16} />
+                </button>
+              </div>
               {DATA.driveLink ?
-                <iframe src={DATA.driveLink} style={{ width: '100%', height: '500px', border: 'none' }}></iframe> :
+                <iframe src={DATA.driveLink} style={{ flex: 1, width: '100%', border: 'none', borderRadius: 12, background: '#eee' }}></iframe> :
                 <p>Drive não conectado.</p>
               }
             </div>
