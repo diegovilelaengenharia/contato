@@ -75,6 +75,10 @@ if (isset($_POST['btn_salvar_tudo'])) {
                 $new_name = 'avatar_' . $cliente_id . '.' . $ext;
                 $target = 'uploads/avatars/' . $new_name;
                 if(!is_dir('uploads/avatars/')) mkdir('uploads/avatars/', 0755, true);
+                
+                // Remove existing avatars to avoid conflict (e.g. .jpg vs .png)
+                array_map('unlink', glob("uploads/avatars/avatar_{$cliente_id}.*"));
+                
                 if(move_uploaded_file($_FILES['avatar_upload']['tmp_name'], $target)) {
                     // Update DB column 'foto_perfil' if it exists, or rely on naming convention
                     // Ideally we should update a column, but for now we follow existing convention or add if able.
