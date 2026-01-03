@@ -16,8 +16,8 @@ if (!isset($_SESSION['cliente_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vilela Engenharia | Área do Cliente</title>
     <!-- Updated Assets from 'client-app' build -->
-    <script type="module" crossorigin src="./app/assets/index-mfwtjDRc.js"></script>
-    <link rel="stylesheet" crossorigin href="./app/assets/index-CJZm_P0c.css">
+    <script type="module" crossorigin src="./app/assets/index-S8VIkZl5.js"></script>
+    <link rel="stylesheet" crossorigin href="./app/assets/index-A6reRXZn.css">
   </head>
   <body>
     <div id="root"></div>
