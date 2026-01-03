@@ -1,3 +1,70 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+:root {
+  /* --- Vilela Brand Colors --- */
+  --color-primary: #146c43;        /* Logo Green */
+  --color-primary-rgb: 20, 108, 67;
+  --color-dark: #383838;           /* Logo Text Grey */
+  --color-accent: #eab308;         /* Logo Window Orange */
+
+  /* --- iOS System Colors (Light) --- */
+  --ios-bg: #F2F2F7;               /* System Grouped Background */
+  --ios-card: #FFFFFF;             /* Secondary Grouped Background (Cards) */
+  --ios-text: #000000;             /* Label Color */
+  --ios-text-secondary: #8E8E93;   /* Secondary Label Color */
+  --ios-separator: #C6C6C8;        /* Separator Color */
+  --ios-blue: #007AFF;             /* System Blue */
+  --ios-red: #FF3B30;              /* System Red */
+  
+  /* --- Dimensions & Spacing --- */
+  --sidebar-width: 280px;
+  --dock-height: 83px;             /* Mobile Bottom Nav */
+  --header-height: 60px;
+  --radius-l: 28px;                /* Large Card Radius */
+  --radius-m: 16px;                /* Standard Radius */
+  --radius-s: 10px;                /* Small/Inner Radius */
+  
+  /* --- Typography --- */
+  --font-stack: -apple-system, BlinkMacSystemFont, "San Francisco", "Helvetica Neue", sans-serif;
+  
+  /* --- Effects --- */
+  --shadow-card: 0px 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-float: 0px 8px 16px rgba(0, 0, 0, 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ios-bg: #000000;
+    --ios-card: #1C1C1E;
+    --ios-text: #FFFFFF;
+    --ios-text-secondary: #8E8E93;
+    --ios-separator: #38383A;
+  }
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-stack);
+  background-color: var(--ios-bg);
+  color: var(--ios-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- Utilities --- */
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.flex-col { display: flex; flex-direction: column; }
+.flex-row { display: flex; flex-direction: row; }
+.hidden { display: none !important; }
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
