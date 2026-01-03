@@ -888,38 +888,50 @@ function editPendencia(id, texto) {
 </script>
 
 <?php endif; ?>
-        if(msg === 'pendencia_emitted') {
-            showSuccessModal('Pendência Emitida!', 'A pendência foi publicada na lista e o quadro foi limpo com sucesso.');
-        } else if (msg === 'pendencia_updated') {
-            showSuccessModal('Pendência Atualizada!', 'As alterações foram salvas com sucesso.');
-        } else if (msg === 'hist_deleted') {
-            showSuccessModal('Histórico Apagado!', 'O item de histórico foi removido com sucesso.');
+    </main>
+</div>
+</body>
+    <!-- Global Modals -->
+    <?php require 'includes/modals/geral.php'; ?>
+    <script>
+        // Check URL for success messages
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const msg = urlParams.get('msg');
+
+            if(msg === 'pendencia_emitted') {
+                showSuccessModal('Pendência Emitida!', 'A pendência foi publicada na lista e o quadro foi limpo com sucesso.');
+            } else if (msg === 'pendencia_updated') {
+                showSuccessModal('Pendência Atualizada!', 'As alterações foram salvas com sucesso.');
+            } else if (msg === 'hist_deleted') {
+                showSuccessModal('Histórico Apagado!', 'O item de histórico foi removido com sucesso.');
+            }
+            
+            // Clean URL
+            if(msg) {
+                const newUrl = window.location.pathname + window.location.search.replace(/&?msg=[^&]*/, '');
+                window.history.replaceState({}, document.title, newUrl);
+            }
+        });
+
+        function showSuccessModal(title, text) {
+            document.getElementById('successModalTitle').innerText = title;
+            document.getElementById('successModalText').innerText = text;
+            document.getElementById('successModal').style.display = 'flex';
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('successModal').style.display = 'none';
         }
         
-        // Clean URL
-        if(msg) {
-            const newUrl = window.location.pathname + window.location.search.replace(/&?msg=[^&]*/, '');
-            window.history.replaceState({}, document.title, newUrl);
+        // Toggle Sidebar Logic
+        function toggleSidebar() {
+            document.getElementById('mobileSidebar').classList.toggle('show');
         }
-    });
-
-    function showSuccessModal(title, text) {
-        document.getElementById('successModalTitle').innerText = title;
-        document.getElementById('successModalText').innerText = text;
-        document.getElementById('successModal').style.display = 'flex';
-    }
-
-    function closeSuccessModal() {
-        document.getElementById('successModal').style.display = 'none';
-    }
-    
-    // Toggle Sidebar Logic
-    function toggleSidebar() {
-        document.getElementById('mobileSidebar').classList.toggle('show');
-    }
     </script>
 
 
+<script>
 // --- MÁSCARAS E VALIDAÇÃO ---
 document.addEventListener('DOMContentLoaded', function() {
     const phoneInputs = document.querySelectorAll('input[name="telefone"], input[name="contato_tel"]');
