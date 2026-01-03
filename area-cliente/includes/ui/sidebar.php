@@ -5,7 +5,7 @@ $kpi_pre_pendentes = $kpi_pre_pendentes ?? 0;
 <button class="mobile-menu-toggle" onclick="toggleSidebar()">
     ☰ Menu de Navegação
 </button>
-<aside class="sidebar" id="mobileSidebar">
+<aside class="sidebar" id="mobileSidebar" style="display:flex; flex-direction:column; height:calc(100vh - 45px); position:sticky; top:45px; overflow-y:auto; overflow-x:hidden;">
     <nav class="sidebar-menu">
         <h4 style="font-size:0.75rem; text-transform:uppercase; color:#adb5bd; font-weight:700; margin:10px 0 5px 10px;">Principal</h4>
         <a href="gestao_admin_99.php" class="btn-menu <?= (!isset($_GET['cliente_id']) && !isset($_GET['novo']) && !isset($_GET['importar'])) ? 'active' : '' ?>">
@@ -101,5 +101,17 @@ $kpi_pre_pendentes = $kpi_pre_pendentes ?? 0;
                 </div>
             </a>
         <?php endforeach; ?>
+    </div>
+
+    <!-- BRANDING FOOTER (Moved from Header) -->
+    <div style="margin-top:auto; padding-top:20px; border-top:1px solid #eee; text-align:center; padding-bottom:10px;">
+        <img src="../assets/logo.png" alt="Vilela Engenharia" style="height:35px; margin-bottom:8px; opacity:0.8;">
+        <h5 style="margin:0 0 5px 0; font-size:0.8rem; text-transform:uppercase; color:#333; font-weight:700;">Gestão Administrativa</h5>
+        <div style="font-size:0.7rem; color:#666; line-height:1.4;">
+            Eng. Diego Vilela<br>
+            CREA-MG: 235474/D<br>
+            vilela.eng.mg@gmail.com<br>
+            (35) 98452-9577
+        </div>
     </div>
 </aside>

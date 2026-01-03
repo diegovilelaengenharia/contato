@@ -7,20 +7,20 @@
     </div>
 </div>
 
-<header class="admin-header">
-    <div style="display: flex; align-items: center; gap: 15px;">
-        <img src="../assets/logo.png" alt="Logo" style="height: 50px;">
-        <div style="display:flex; flex-direction:column; gap:4px;">
-            <a href="gestao_admin_99.php" style="text-decoration:none; color:inherit;">
-                <h1 style="margin:0; font-size:1.4rem; font-weight:700;">Gestão Administrativa</h1>
-            </a>
-            <div style="font-size:0.85rem; opacity: 1; line-height:1.4; font-weight: 500;">
-                Eng. Diego Vilela &nbsp;|&nbsp; CREA-MG: 235474/D<br>
-                vilela.eng.mg@gmail.com &nbsp;|&nbsp; (35) 98452-9577
-            </div>
-        </div>
-    </div>
-    <div style="display:flex; align-items:center;">
-        <a href="?sair=true" style="color: white;">Sair</a>
+<header class="admin-header" style="height: 45px; min-height: 45px; padding: 0 20px; background: #fff; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+    <nav>
+        <ul style="display:flex; gap:20px; list-style:none; margin:0; padding:0; align-items:center;">
+            <li><a href="#" style="text-decoration:none; color:#444; font-size:0.9rem; font-weight:500;">Arquivo</a></li>
+            <li><a href="#" style="text-decoration:none; color:#444; font-size:0.9rem; font-weight:500;">Editar</a></li>
+            <li><a href="#" style="text-decoration:none; color:#444; font-size:0.9rem; font-weight:500;">Exibir</a></li>
+            <li><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=configuracoes" style="text-decoration:none; color:#444; font-size:0.9rem; font-weight:500;">Configurações</a></li>
+            <li><a href="#" style="text-decoration:none; color:#444; font-size:0.9rem; font-weight:500;">Ajuda</a></li>
+        </ul>
+    </nav>
+    <div style="display:flex; align-items:center; gap:15px;">
+        <span style="font-size:0.8rem; color:#888;">v1.2.0</span>
+        <a href="?sair=true" style="text-decoration:none; color:#dc3545; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:5px;">
+            <span class="material-symbols-rounded" style="font-size:1.1rem;">logout</span> Sair
+        </a>
     </div>
 </header>
