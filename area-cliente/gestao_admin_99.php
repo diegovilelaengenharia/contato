@@ -757,7 +757,14 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     <!-- Script removed as logic is now backend-driven -->
 
                 <div class="form-card">
-                    <h3>📜 Histórico Completo do Processo</h3>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                        <h3 style="margin:0;">📜 Histórico Completo do Processo</h3>
+                        <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento&del_all_hist=true" 
+                           onclick="return confirm('ATENÇÃO EXTREMA: \n\nVocê está prestes a APAGAR TODO O HISTÓRICO deste processo.\n\nIsso limpará todas as movimentações, datas e logs.\n\nTem certeza absoluta que deseja fazer isso?');"
+                           style="background:#dc3545; color:white; padding:6px 12px; border-radius:6px; font-size:0.8rem; text-decoration:none; font-weight:bold; display:flex; align-items:center; gap:6px;">
+                           🗑️ Apagar Histórico Completo
+                        </a>
+                    </div>
                     <div class="table-responsive">
                         <table style="width:100%; border-collapse:collapse;">
                             <thead><tr style="background:rgba(0,0,0,0.03);"><th style="padding:10px; text-align:left;">Data</th><th style="padding:10px; text-align:left;">Evento</th><th style="padding:10px; text-align:center;">Ação</th></tr></thead>
