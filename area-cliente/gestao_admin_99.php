@@ -21,6 +21,59 @@ $fases_padrao = [
 $taxas_padrao = require 'config/taxas.php';
 
 // --- Processamento ---
+// Helper Function for Finance Table
+function renderFinTable($stmt, $title, $color, $cid) {
+    if(!$stmt) return;
+    $rows = $stmt->fetchAll();
+    echo "<div class='form-card' style='border-left: 6px solid $color;'>
+            <h3 style='color:$color;'>$title</h3>";
+    
+    if(count($rows) == 0) {
+        echo "<p style='color:#666; font-style:italic;'>Nenhum lançamento encontrado nesta categoria.</p>";
+    } else {
+        echo "<div class='table-responsive'>
+              <table style='width:100%; border-collapse:collapse; font-size:0.95rem; min-width:600px;'>
+                <thead><tr style='background:#f8f9fa; border-bottom:2px solid #dee2e6;'>
+                    <th style='padding:12px; text-align:left;'>Descrição</th>
+                    <th style='padding:12px; text-align:left;'>Valor</th>
+                    <th style='padding:12px; text-align:left;'>Vencimento</th>
+                    <th style='padding:12px; text-align:center;'>Status</th>
+                    <th style='padding:12px; text-align:center;'>Ação</th>
+                    <th style='padding:12px;'></th>
+                </tr></thead><tbody>";
+        foreach($rows as $r) {
+            $st_color = 'black';
+            $st_icon = '';
+            switch($r['status']){
+                case 'pago': $st_color='#198754'; $st_icon='✅ Pago'; break;
+                case 'pendente': $st_color='#ffc107'; $st_icon='⏳ Pendente'; break;
+                case 'atrasado': $st_color='#dc3545'; $st_icon='❌ Atrasado'; break;
+                case 'isento': $st_color='#6c757d'; $st_icon='⚪ Isento'; break;
+                default: $st_icon=$r['status'];
+            }
+            $valor = number_format($r['valor'], 2, ',', '.');
+            $data = date('d/m/Y', strtotime($r['data_vencimento']));
+            $link = $r['link_comprovante'] ? "<a href='{$r['link_comprovante']}' target='_blank' style='color:white; background:#0d6efd; padding:4px 8px; border-radius:4px; text-decoration:none; font-size:0.8rem;'>📄 Ver Doc</a>" : "<span style='opacity:0.5'>--</span>";
+            
+            echo "<tr style='border-bottom:1px solid #eee;'>
+                    <td style='padding:12px;'>{$r['descricao']}</td>
+                    <td style='padding:12px; font-weight:bold;'>R$ {$valor}</td>
+                    <td style='padding:12px;'>{$data}</td>
+                    <td style='padding:12px; text-align:center;'>
+                        <button onclick=\"openStatusFinModal({$r['id']}, '{$r['status']}')\" style=\"background:none; border:1px solid {$st_color}; color:{$st_color}; border-radius:12px; padding:2px 8px; font-weight:bold; cursor:pointer; font-size:0.85rem;\" title=\"Alterar Status\">
+                            {$st_icon} ✏️
+                        </button>
+                    </td>
+                    <td style='padding:12px; text-align:center;'>{$link}</td>
+                    <td style='padding:12px; text-align:right;'>
+                        <a href='?cliente_id={$cid}&tab=financeiro&del_fin={$r['id']}' onclick='confirmAction(event, \"Tem certeza que deseja EXCLUIR este lançamento financeiro?\")' style='color:#dc3545; text-decoration:none; font-size:1.1rem;'>🗑️</a>
+                    </td>
+                  </tr>";
+        }
+        echo "</tbody></table></div>";
+    }
+    echo "</div>";
+}
 
 // --- Processamento (POST/GET) ---
 require 'includes/processamento.php';
@@ -475,6 +528,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             
             <!-- Script removed as logic is now backend-driven -->
 
+            <?php if($active_tab == 'cadastro' || $active_tab == 'andamento'): ?>
                 <div class="form-card">
                     <!-- Unified Header with Actions -->
                     <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; margin-bottom:20px; gap:15px; border-bottom:1px solid #eee; padding-bottom:15px;">
@@ -766,58 +820,6 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     $fin_taxas = $pdo->prepare("SELECT * FROM processo_financeiro WHERE cliente_id=? AND categoria='taxas' ORDER BY data_vencimento ASC");
                     $fin_taxas->execute([$cliente_ativo['id']]);
 
-                    function renderFinTable($stmt, $title, $color, $cid) {
-                        $rows = $stmt->fetchAll();
-                        echo "<div class='form-card' style='border-left: 6px solid $color;'>
-                                <h3 style='color:$color;'>$title</h3>";
-                        
-                        if(count($rows) == 0) {
-                            echo "<p style='color:#666; font-style:italic;'>Nenhum lançamento encontrado nesta categoria.</p>";
-                        } else {
-                            echo "<div class='table-responsive'>
-                                  <table style='width:100%; border-collapse:collapse; font-size:0.95rem; min-width:600px;'>
-                                    <thead><tr style='background:#f8f9fa; border-bottom:2px solid #dee2e6;'>
-                                        <th style='padding:12px; text-align:left;'>Descrição</th>
-                                        <th style='padding:12px; text-align:left;'>Valor</th>
-                                        <th style='padding:12px; text-align:left;'>Vencimento</th>
-                                        <th style='padding:12px; text-align:center;'>Status</th>
-                                        <th style='padding:12px; text-align:center;'>Ação</th>
-                                        <th style='padding:12px;'></th>
-                                    </tr></thead><tbody>";
-                            foreach($rows as $r) {
-                                $st_color = 'black';
-                                $st_icon = '';
-                                switch($r['status']){
-                                    case 'pago': $st_color='#198754'; $st_icon='✅ Pago'; break;
-                                    case 'pendente': $st_color='#ffc107'; $st_icon='⏳ Pendente'; break;
-                                    case 'atrasado': $st_color='#dc3545'; $st_icon='❌ Atrasado'; break;
-                                    case 'isento': $st_color='#6c757d'; $st_icon='⚪ Isento'; break;
-                                    default: $st_icon=$r['status'];
-                                }
-                                $valor = number_format($r['valor'], 2, ',', '.');
-                                $data = date('d/m/Y', strtotime($r['data_vencimento']));
-                                $link = $r['link_comprovante'] ? "<a href='{$r['link_comprovante']}' target='_blank' style='color:white; background:#0d6efd; padding:4px 8px; border-radius:4px; text-decoration:none; font-size:0.8rem;'>📄 Ver Doc</a>" : "<span style='opacity:0.5'>--</span>";
-                                
-                                echo "<tr style='border-bottom:1px solid #eee;'>
-                                        <td style='padding:12px;'>{$r['descricao']}</td>
-                                        <td style='padding:12px; font-weight:bold;'>R$ {$valor}</td>
-                                        <td style='padding:12px;'>{$data}</td>
-                                        <td style='padding:12px; text-align:center;'>
-                                            <button onclick=\"openStatusFinModal({$r['id']}, '{$r['status']}')\" style=\"background:none; border:1px solid {$st_color}; color:{$st_color}; border-radius:12px; padding:2px 8px; font-weight:bold; cursor:pointer; font-size:0.85rem;\" title=\"Alterar Status\">
-                                                {$st_icon} ✏️
-                                            </button>
-                                        </td>
-                                        <td style='padding:12px; text-align:center;'>{$link}</td>
-                                        <td style='padding:12px; text-align:right;'>
-                                            <a href='?cliente_id={$cid}&tab=financeiro&del_fin={$r['id']}' onclick='confirmAction(event, \"Tem certeza que deseja EXCLUIR este lançamento financeiro?\")' style='color:#dc3545; text-decoration:none; font-size:1.1rem;'>🗑️</a>
-                                        </td>
-                                      </tr>";
-                            }
-                            echo "</tbody></table></div>";
-                        }
-                        echo "</div>";
-                    }
-
                     renderFinTable($fin_honorarios, "💰 Honorários e Serviços (Vilela Engenharia)", "#2196f3", $cliente_ativo['id']);
                     renderFinTable($fin_taxas, "🏛️ Taxas e Multas Governamentais", "#efb524", $cliente_ativo['id']);
 
@@ -885,53 +887,38 @@ function editPendencia(id, texto) {
 }
 </script>
 
-</body>
-    <!-- Global Modals -->
-    <?php require 'includes/modals/geral.php'; ?>
-    <script>
-        // Toggle Sidebar Logic
-        function toggleSidebar() {
-            document.getElementById('mobileSidebar').classList.toggle('show');
+<?php endif; ?>
+        if(msg === 'pendencia_emitted') {
+            showSuccessModal('Pendência Emitida!', 'A pendência foi publicada na lista e o quadro foi limpo com sucesso.');
+        } else if (msg === 'pendencia_updated') {
+            showSuccessModal('Pendência Atualizada!', 'As alterações foram salvas com sucesso.');
+        } else if (msg === 'hist_deleted') {
+            showSuccessModal('Histórico Apagado!', 'O item de histórico foi removido com sucesso.');
         }
-// Check URL for success messages
-document.addEventListener('DOMContentLoaded', function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const msg = urlParams.get('msg');
-    
-    if(msg === 'pendencia_emitted') {
-        showSuccessModal('Pendência Emitida!', 'A pendência foi publicada na lista e o quadro foi limpo com sucesso.');
-    } else if (msg === 'pendencia_updated') {
-        showSuccessModal('Pendência Atualizada!', 'As alterações foram salvas com sucesso.');
-    } else if (msg === 'hist_deleted') {
-        showSuccessModal('Histórico Apagado!', 'O item de histórico foi removido com sucesso.');
+        
+        // Clean URL
+        if(msg) {
+            const newUrl = window.location.pathname + window.location.search.replace(/&?msg=[^&]*/, '');
+            window.history.replaceState({}, document.title, newUrl);
+        }
+    });
+
+    function showSuccessModal(title, text) {
+        document.getElementById('successModalTitle').innerText = title;
+        document.getElementById('successModalText').innerText = text;
+        document.getElementById('successModal').style.display = 'flex';
+    }
+
+    function closeSuccessModal() {
+        document.getElementById('successModal').style.display = 'none';
     }
     
-    // Clean URL
-    if(msg) {
-        const newUrl = window.location.pathname + window.location.search.replace(/&?msg=[^&]*/, '');
-        window.history.replaceState({}, document.title, newUrl);
+    // Toggle Sidebar Logic
+    function toggleSidebar() {
+        document.getElementById('mobileSidebar').classList.toggle('show');
     }
-});
+    </script>
 
-function showSuccessModal(title, text) {
-    document.getElementById('successModalTitle').innerText = title;
-    document.getElementById('successModalText').innerText = text;
-    document.getElementById('successModal').style.display = 'flex';
-}
-
-function closeSuccessModal() {
-    document.getElementById('successModal').style.display = 'none';
-}
-
-// FUNÇÃO PARA ABRIR MODAL DE APROVAÇÃO (CRÍTICO)
-function openAprovarModal(id, nome, cpf) {
-    document.getElementById('apr_id_pre').value = id;
-    document.getElementById('apr_nome').value = nome;
-    // Remove tudo que não é número do CPF para sugerir login
-    const loginSugestao = cpf ? cpf.replace(/\D/g, '') : '';
-    document.getElementById('apr_usuario').value = loginSugestao;
-    document.getElementById('modalAprovarCadastro').showModal();
-}
 
 // --- MÁSCARAS E VALIDAÇÃO ---
 document.addEventListener('DOMContentLoaded', function() {
@@ -989,38 +976,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<!-- Modal Aprovar Cadastro (Movido para Footer para estar sempre disponível) -->
-<dialog id="modalAprovarCadastro" style="border:none; border-radius:12px; padding:0; width:90%; max-width:500px; box-shadow:0 10px 40px rgba(0,0,0,0.3);">
-    <div style="background:var(--color-primary); color:white; padding:20px; display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="margin:0; font-size:1.2rem;">✅ Aprovar e Finalizar</h3>
-        <button onclick="document.getElementById('modalAprovarCadastro').close()" style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
-    </div>
-    
-    <form method="POST" style="padding:25px;">
-        <input type="hidden" name="id_pre" id="apr_id_pre">
-        
-        <div class="form-group" style="margin-bottom:15px;">
-            <label style="display:block; margin-bottom:5px; font-weight:600;">Nome do Cliente</label>
-            <input type="text" name="nome_final" id="apr_nome" required style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px;">
-        </div>
-        
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:20px;">
-            <div>
-                <label style="display:block; margin-bottom:5px; font-weight:600;">Usuário (Login)</label>
-                <input type="text" name="usuario_final" id="apr_usuario" required style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; background:#f9f9f9;">
-            </div>
-            <div>
-                <label style="display:block; margin-bottom:5px; font-weight:600;">Senha Inicial</label>
-                <input type="text" name="senha_final" value="mudar123" required style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px;">
-            </div>
-        </div>
-        
-        <hr style="margin:20px 0; border-top:1px solid #eee;">
-        
-        <div style="display:flex; justify-content:flex-end;">
-            <button type="submit" name="btn_confirmar_aprovacao" class="btn-save" style="width:100%; padding:12px; background:#198754; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">🚀 Confirmar e Criar Cliente</button>
-        </div>
-    </form>
-</dialog>
+<!-- Modal Aprovar Removed (Included in cadastro.php) -->
 </body>
 </html>

@@ -16,6 +16,13 @@ try {
     die("<h1>Erro Crítico (Sintaxe ou Banco)</h1><p><strong>Arquivo:</strong> " . $e->getFile() . " <br><strong>Linha:</strong> " . $e->getLine() . "<br><strong>Erro:</strong> " . $e->getMessage() . "</p>");
 }
 
+register_shutdown_function(function() {
+    $error = error_get_last();
+    if ($error !== NULL && $error['type'] === E_ERROR) {
+        die("<h1>Erro Fatal PHP</h1><p><strong>Arquivo:</strong> " . $error['file'] . " <br><strong>Linha:</strong> " . $error['line'] . "<br><strong>Erro:</strong> " . $error['message'] . "</p>");
+    }
+});
+
 // --- SELF-HEALING DATABASE (Correção de Colunas Faltantes) ---
 try {
     $pdo->exec("ALTER TABLE processo_detalhes ADD COLUMN data_nascimento DATE DEFAULT NULL");
