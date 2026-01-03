@@ -668,21 +668,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 </style>
 
                 <!-- Botão para Abrir Modal de Novo Andamento -->
-                <div style="margin-bottom:20px; display:flex; gap:10px; justify-content:flex-start;">
-                    <button type="button" onclick="document.getElementById('modalAndamento').showModal()" class="btn-save" style="padding:8px 20px; background:white; border:2px solid #ffc107; border-radius:30px; font-size:0.9rem; font-weight:700; color:#b38600; cursor:pointer; display:flex; align-items:center; gap:8px; transition:all 0.2s; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
-                        <span style="font-size:1.2rem;">✨</span> Novo Andamento
-                    </button>
-                    <!-- Botão de Apoio (Ex: Apenas Documento) -->
-                    <button type="button" onclick="document.getElementById('modalAndamento').showModal();" style="padding:8px 15px; background:white; border:1px solid #ddd; border-radius:30px; font-size:0.85rem; font-weight:600; color:#666; cursor:pointer; display:flex; align-items:center; gap:5px; transition:all 0.2s;" title="Atalho para documento">
-                        📂 Anexar Arquivo
-                    </button>
-                    <script>
-                        // Hover interactions
-                        const btnNovo = document.querySelector('button[onclick*="modalAndamento"]');
-                        btnNovo.addEventListener('mouseenter', () => { btnNovo.style.background = '#fff9db'; btnNovo.style.transform = 'translateY(-2px)'; });
-                        btnNovo.addEventListener('mouseleave', () => { btnNovo.style.background = 'white'; btnNovo.style.transform = 'translateY(0)'; });
-                    </script>
-                </div>
+
 
                 <!-- MODAL DE NOVO ANDAMENTO -->
                 <dialog id="modalAndamento" style="border:none; border-radius:12px; padding:0; width:90%; max-width:600px; box-shadow:0 10px 40px rgba(0,0,0,0.2);">
@@ -736,13 +722,31 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     <!-- Script removed as logic is now backend-driven -->
 
                 <div class="form-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                        <h3 style="margin:0;">📜 Histórico Completo do Processo</h3>
-                        <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento&del_all_hist=true" 
-                           onclick="return confirm('ATENÇÃO EXTREMA: \n\nVocê está prestes a APAGAR TODO O HISTÓRICO deste processo.\n\nIsso limpará todas as movimentações, datas e logs.\n\nTem certeza absoluta que deseja fazer isso?');"
-                           style="background:#dc3545; color:white; padding:6px 12px; border-radius:6px; font-size:0.8rem; text-decoration:none; font-weight:bold; display:flex; align-items:center; gap:6px;">
-                           🗑️ Apagar Histórico Completo
-                        </a>
+                    <!-- Unified Header with Actions -->
+                    <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; margin-bottom:20px; gap:15px; border-bottom:1px solid #eee; padding-bottom:15px;">
+                        <div>
+                            <h3 style="margin:0; font-size:1.3rem; color:var(--color-primary);">📜 Histórico Completo do Processo</h3>
+                            <p style="margin:5px 0 0 0; color:#888; font-size:0.9rem;">Registre aqui todos os passos e comunicações.</p>
+                        </div>
+                        
+                        <div style="display:flex; gap:10px; align-items:center;">
+                             <!-- Botão Novo Andamento (Integrado) -->
+                            <button type="button" onclick="document.getElementById('modalAndamento').showModal()" style="padding:10px 20px; background:linear-gradient(135deg, #ffc107, #ffdb72); border:1px solid #e0a800; border-radius:30px; font-size:0.9rem; font-weight:700; color:#333; cursor:pointer; display:flex; align-items:center; gap:8px; transition:all 0.2s; box-shadow:0 3px 6px rgba(0,0,0,0.1);">
+                                <span style="font-size:1.2rem;">✨</span> Novo Andamento
+                            </button>
+                            
+                            <!-- Botão Anexar (Secundário) -->
+                            <button type="button" onclick="document.getElementById('modalAndamento').showModal();" style="padding:10px 15px; background:white; border:1px solid #ddd; border-radius:30px; font-size:0.85rem; font-weight:600; color:#666; cursor:pointer; display:flex; align-items:center; gap:6px; transition:all 0.2s;" title="Atalho para documento">
+                                📂 Anexar Arquivo
+                            </button>
+
+                             <!-- Botão Apagar Histórico (Perigo) -->
+                            <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento&del_all_hist=true" 
+                               onclick="return confirm('ATENÇÃO EXTREMA: \n\nVocê está prestes a APAGAR TODO O HISTÓRICO deste processo.\n\nIsso limpará todas as movimentações, datas e logs.\n\nTem certeza absoluta que deseja fazer isso?');"
+                               style="background:#fff0f3; color:#dc3545; padding:10px 15px; border:1px solid #ffdee6; border-radius:30px; font-size:0.8rem; text-decoration:none; font-weight:700; display:flex; align-items:center; gap:5px; margin-left:10px;" title="Limpar Tudo">
+                               🗑️ Limpar
+                            </a>
+                        </div>
                     </div>
                     <div class="table-responsive">
                         <table style="width:100%; border-collapse:collapse;">
