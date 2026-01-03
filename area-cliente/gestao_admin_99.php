@@ -151,17 +151,11 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 <body>
 
     <!-- UI Components -->
+    <!-- UI Components -->
     <?php require 'includes/ui/header.php'; ?>
 
-    <div class="admin-container">
-        <?php require 'includes/ui/sidebar.php'; ?>
-
-    <main>
-        <!-- 🔔 CENTRAL DE AVISOS -->
-        <?php
-        // 1. Tabela de Avisos (Logic Removed per request)
-        // $pdo->exec("CREATE TABLE IF NOT EXISTS sistema_avisos...");
-
+    <!-- DATA FETCHING FOR SIDEBAR WIDGETS -->
+    <?php
         // Aniversariantes
         $aniversariantes = $pdo->query("SELECT c.id, c.nome, pd.data_nascimento, DAY(pd.data_nascimento) as dia 
             FROM clientes c 
@@ -176,143 +170,17 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             GROUP BY c.id 
             HAVING DATEDIFF(NOW(), ultima_mov) > 15 
             ORDER BY ultima_mov ASC")->fetchAll();
-
-        // Solicitações Web (Pendentes)
+            
+        // Solicitações Web (Pendentes) - Available for sidebar counts if needed
         $solicitacoes = $pdo->query("SELECT * FROM pre_cadastros WHERE status='pendente' ORDER BY data_solicitacao DESC")->fetchAll();
-        ?>
+        $kpi_pre_pendentes = count($solicitacoes); // Ensure variable matches what sidebar expects
+    ?>
 
-        <!-- Smart Indicators Bar -->
-        <style>
-            .indicators-bar { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; align-items: flex-start; }
-            
-            .smart-btn { 
-                position: relative; 
-                background: white; 
-                border: 1px solid #e0e0e0; 
-                border-radius: 30px; 
-                padding: 8px 16px; 
-                display: flex; 
-                align-items: center; 
-                gap: 10px; 
-                cursor: default; 
-                transition: all 0.2s ease;
-                font-size: 0.9rem;
-                color: #555;
-                font-weight: 600;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.03);
-            }
-            
-            .smart-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 10; }
-            .smart-btn.active { border-color: currentColor; background: white; }
-            
-            /* Badge Styles */
-            .s-badge { padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 800; color: white; }
-            
-            /* Theme Colors */
-            .theme-green { color: #198754; }
-            .theme-green .s-badge { background: #198754; }
-            .theme-orange { color: #fd7e14; }
-            .theme-orange .s-badge { background: #fd7e14; }
-            .theme-red { color: #dc3545; }
-            .theme-red .s-badge { background: #dc3545; }
-            .theme-gray { color: #adb5bd; border-color: #f0f0f0; }
-            .theme-gray .s-badge { background: #adb5bd; }
+    <div class="admin-container">
+        <?php require 'includes/ui/sidebar.php'; ?>
 
-            /* Dropdown Logic */
-            .smart-dropdown {
-                position: absolute;
-                top: 100%;
-                left: 0;
-                margin-top: 10px;
-                background: white;
-                border: 1px solid #eee;
-                border-radius: 12px;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-                width: 320px;
-                opacity: 0;
-                visibility: hidden;
-                transform: translateY(10px);
-                transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
-                z-index: 100;
-                overflow: hidden;
-            }
-            .smart-btn:hover .smart-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
-            
-            /* Dropdown Content */
-            .sd-header { padding: 12px 15px; border-bottom: 1px solid #f0f0f0; background: #fafafa; font-size: 0.85rem; font-weight: 700; color: #444; }
-            .sd-list { list-style: none; padding: 0; margin: 0; max-height: 300px; overflow-y: auto; }
-            .sd-item { padding: 12px 15px; border-bottom: 1px solid #f9f9f9; display: flex; align-items: center; justify-content: space-between; gap: 10px; transition: background 0.1s; }
-            .sd-item:last-child { border-bottom: none; }
-            .sd-item:hover { background: #f8f9fa; }
-            .sd-empty { padding: 20px; text-align: center; color: #999; font-size: 0.85rem; font-style: italic; }
-            
-
-        </style>
-
-        <div class="indicators-bar">
-            
-            <!-- 1. Solicitações Web (Removido por solicitação) -->
-
-            <!-- 2. Aniversariantes -->
-            <?php 
-                $count_ani = count($aniversariantes);
-                $theme_ani = $count_ani > 0 ? 'theme-orange active' : 'theme-gray';
-            ?>
-            <div class="smart-btn <?= $theme_ani ?>">
-                <span class="material-symbols-rounded">cake</span>
-                Aniversariantes
-                <span class="s-badge"><?= $count_ani ?></span>
-                 <!-- Dropdown -->
-                 <div class="smart-dropdown">
-                    <div class="sd-header">Aniversariantes de <?= date('M') ?></div>
-                    <?php if($count_ani == 0): ?>
-                        <div class="sd-empty">Ninguém por enquanto.</div>
-                    <?php else: ?>
-                        <div class="sd-list">
-                            <?php foreach($aniversariantes as $ani): ?>
-                                <div class="sd-item">
-                                    <span style="font-weight:600; color:#333;"><?= htmlspecialchars($ani['nome']) ?></span>
-                                    <span style="background:#fff3cd; color:#856404; padding:2px 8px; border-radius:10px; font-weight:bold; font-size:0.75rem;">Dia <?= $ani['dia'] ?></span>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                    <?php endif; ?>
-                </div>
-            </div>
-
-            <!-- 3. Processos Parados -->
-            <?php 
-                $count_par = count($parados);
-                $theme_par = $count_par > 0 ? 'theme-red active' : 'theme-gray';
-            ?>
-            <div class="smart-btn <?= $theme_par ?>">
-                <span class="material-symbols-rounded">timer_off</span>
-                Parados (+15d)
-                <span class="s-badge"><?= $count_par ?></span>
-                 <!-- Dropdown -->
-                 <div class="smart-dropdown">
-                    <div class="sd-header">Sem movimentação há > 15 dias</div>
-                    <?php if($count_par == 0): ?>
-                        <div class="sd-empty">Tudo movimentando! 🚀</div>
-                    <?php else: ?>
-                        <div class="sd-list">
-                            <?php foreach($parados as $p): ?>
-                                <div class="sd-item">
-                                    <div style="overflow:hidden; white-space:nowrap; text-overflow:ellipsis; max-width:180px; font-weight:600; color:#333; font-size:0.85rem;"><?= htmlspecialchars($p['nome']) ?></div>
-                                    <a href="?cliente_id=<?= $p['id'] ?>&tab=andamento" style="text-decoration:none; background:#ffebee; color:#d32f2f; padding:2px 8px; border-radius:10px; font-weight:bold; font-size:0.75rem; white-space:nowrap;">
-                                        <?= date('d/m', strtotime($p['ultima_mov'])) ?>
-                                    </a>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                    <?php endif; ?>
-                </div>
-            </div>
-
-
-        </div>
-
-        <!-- Mensagens PHP serão capturadas pelo JS abaixo -->
+    <main>
+        <!-- Main Content Area -->
 
         <?php if(isset($_GET['importar'])): ?>
             <div class="form-card">
@@ -524,93 +392,123 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             </div>
 
             <!-- TAB NAVIGATION -->
-            <!-- Styles for Tabs (High Contrast / Pill Style) -->
+            <!-- Styles for Tabs (Multi-Color) -->
             <style>
                 .tabs-container {
-                    margin-bottom: 25px;
-                    border-bottom: none; /* Removed line */
+                    margin-bottom: 0; /* Remove margin to connect with window below */
+                    border-bottom: none; 
                     display: flex;
-                    gap: 15px;
+                    gap: 10px;
                     overflow-x: auto;
-                    padding: 10px 5px 15px 5px; /* Added padding for shadows */
+                    padding: 10px 5px 0 5px; /* Bottom padding removed to sit on line */
+                    align-items: flex-end; /* Align tabs to bottom */
                 }
                 .tab-link {
-                    padding: 12px 25px;
+                    padding: 10px 20px;
                     text-decoration: none;
-                    color: #555;
+                    color: #666;
                     font-weight: 700;
-                    font-size: 1rem;
-                    border-radius: 50px; /* Pill shape */
-                    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy transition */
+                    font-size: 0.95rem;
+                    border-radius: 12px 12px 0 0; /* Top rounded only */
+                    transition: all 0.2s;
                     white-space: nowrap;
                     display: inline-flex;
                     align-items: center;
-                    gap: 10px;
-                    background: #ffffff;
+                    gap: 8px;
+                    background: #f8f9fa;
                     border: 1px solid #e0e0e0;
-                    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+                    border-bottom: none;
+                    opacity: 0.8;
+                    margin-bottom: -1px; /* Overlap border */
+                    position: relative;
+                    z-index: 1;
                 }
                 .tab-link:hover {
-                    transform: translateY(-3px);
-                    box-shadow: 0 8px 15px rgba(0,0,0,0.08);
-                    border-color: var(--color-primary);
-                    color: var(--color-primary);
-                }
-                .tab-link.active {
-                    background: var(--color-primary);
-                    color: #ffffff !important;
-                    border-color: var(--color-primary);
-                    box-shadow: 0 8px 20px rgba(27, 154, 128, 0.4); /* Glow matching primary color */
+                    opacity: 1;
                     transform: translateY(-2px);
                 }
-                
-                /* Icon tweak for active state */
-                .tab-link.active span, .tab-link.active i {
-                    color: white;
+                .tab-link.active {
+                    opacity: 1;
+                    background: #fff;
+                    color: #fff !important; /* Will be overridden by specific colors if needed, but lets use background */
+                    border: none;
+                    padding-top: 14px; /* Pop up effect */
+                    box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
+                    z-index: 10;
                 }
+                
+                /* 1. HISTÓRICO (Roxo/Indigo) */
+                .tab-link.t-hist.active { background: #6610f2; color: white !important; }
+                .tab-link.t-hist.active span { color: white; }
+                
+                /* 2. PENDÊNCIAS (Laranja/Warning) */
+                .tab-link.t-pend.active { background: #fd7e14; color: white !important; }
+                .tab-link.t-pend.active span { color: white; }
+
+                /* 3. FINANCEIRO (Verde/Success) */
+                .tab-link.t-fin.active { background: #198754; color: white !important; }
+                .tab-link.t-fin.active span { color: white; }
+
+                /* 4. ARQUIVOS (Azul/Info) */
+                .tab-link.t-arq.active { background: #0d6efd; color: white !important; }
+                .tab-link.t-arq.active span { color: white; }
+                
             </style>
+            
             <div class="tabs-container">
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="tab-link <?= ($active_tab=='andamento'||$active_tab=='cadastro')?'active':'' ?>">
-                    <span style="font-size:1.2rem;">📜</span> Histórico
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="tab-link t-hist <?= ($active_tab=='andamento'||$active_tab=='cadastro')?'active':'' ?>">
+                    <span>📜</span> Histórico
                 </a>
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias" class="tab-link <?= ($active_tab=='pendencias')?'active':'' ?>">
-                    <span style="font-size:1.2rem;">⚠️</span> Pendências
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias" class="tab-link t-pend <?= ($active_tab=='pendencias')?'active':'' ?>">
+                    <span>⚠️</span> Pendências
                 </a>
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=financeiro" class="tab-link <?= ($active_tab=='financeiro')?'active':'' ?>">
-                    <span style="font-size:1.2rem;">💰</span> Financeiro
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=financeiro" class="tab-link t-fin <?= ($active_tab=='financeiro')?'active':'' ?>">
+                    <span>💰</span> Financeiro
                 </a>
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=arquivos" class="tab-link <?= ($active_tab=='arquivos')?'active':'' ?>">
-                    <span style="font-size:1.2rem;">📂</span> Arquivos
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=arquivos" class="tab-link t-arq <?= ($active_tab=='arquivos')?'active':'' ?>">
+                    <span>📂</span> Arquivos
                 </a>
             </div>
 
             <!-- Modal Timeline e Andamento -->
             <?php require 'includes/modals/timeline.php'; ?>
             
+            <!-- WINDOW CONTENT CONTAINER -->
+            <?php 
+                // Define window color based on active tab
+                $win_border_color = '#ccc';
+                if($active_tab=='andamento'||$active_tab=='cadastro') $win_border_color = '#6610f2'; // Roxo
+                elseif($active_tab=='pendencias') $win_border_color = '#fd7e14'; // Laranja
+                elseif($active_tab=='financeiro') $win_border_color = '#198754'; // Verde
+                elseif($active_tab=='arquivos') $win_border_color = '#0d6efd'; // Azul
+            ?>
+
+            <div style="background:#fff; border-top: 4px solid <?= $win_border_color ?>; border-radius: 0 0 12px 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); padding: 25px; margin-bottom: 30px;">
+
             <!-- Script removed as logic is now backend-driven -->
 
             <?php if($active_tab == 'cadastro' || $active_tab == 'andamento'): ?>
-                <div class="form-card">
+                <div class=""> <!-- Removed inner card style since outer wrapper handles it -->
                     <!-- Unified Header with Actions -->
                     <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; margin-bottom:20px; gap:15px; border-bottom:1px solid #eee; padding-bottom:15px;">
                         <div>
-                            <h3 style="margin:0; font-size:1.3rem; color:var(--color-primary);">📜 Histórico Completo do Processo</h3>
+                            <h3 style="margin:0; font-size:1.3rem; color: #6610f2;">📜 Histórico Completo do Processo</h3>
                             <p style="margin:5px 0 0 0; color:#888; font-size:0.9rem;">Registre aqui todos os passos e comunicações.</p>
                         </div>
                         
                         <div style="display:flex; gap:10px; align-items:center;">
                              <!-- Botão Novo Andamento (Integrado) -->
-                            <button type="button" onclick="document.getElementById('modalAndamento').showModal()" style="padding:10px 20px; background:linear-gradient(135deg, #ffc107, #ffdb72); border:1px solid #e0a800; border-radius:30px; font-size:0.9rem; font-weight:700; color:#333; cursor:pointer; display:flex; align-items:center; gap:8px; transition:all 0.2s; box-shadow:0 3px 6px rgba(0,0,0,0.1);">
+                            <button type="button" onclick="document.getElementById('modalAndamento').showModal()" style="padding:10px 20px; background:linear-gradient(135deg, #6610f2, #8540f5); border:none; border-radius:30px; font-size:0.9rem; font-weight:700; color:white; cursor:pointer; display:flex; align-items:center; gap:8px; transition:all 0.2s; box-shadow:0 3px 6px rgba(102, 16, 242, 0.3);">
                                 <span style="font-size:1.2rem;">✨</span> Novo Andamento
                             </button>
                             
-
-
+ 
+ 
                              <!-- Botão Apagar Histórico (Perigo) -->
                             <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento&del_all_hist=true" 
                                onclick="return confirm('ATENÇÃO EXTREMA: \n\nVocê está prestes a APAGAR TODO O HISTÓRICO deste processo.\n\nIsso limpará todas as movimentações, datas e logs.\n\nTem certeza absoluta que deseja fazer isso?');"
                                style="background:#fff0f3; color:#dc3545; padding:10px 15px; border:1px solid #ffdee6; border-radius:30px; font-size:0.8rem; text-decoration:none; font-weight:700; display:flex; align-items:center; gap:5px; margin-left:10px;" title="Limpar Tudo">
-                               🗑️ Limpar
+                               ⏱️ Limpar
                             </a>
                         </div>
                     </div>
@@ -626,7 +524,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                     $row_style = "";
                                     $icon_type = "📌";
                                     if(($h['tipo_movimento']??'padrao') == 'fase_inicio') {
-                                        $row_style = "background:#e3f2fd; border-left:5px solid #0d6efd;";
+                                        $row_style = "background:#f3e8ff; border-left:5px solid #6610f2;"; // Styled for History
                                         $icon_type = "🚀";
                                     } elseif(($h['tipo_movimento']??'padrao') == 'documento') {
                                         $row_style = "background:#f8f9fa; border-left:5px solid #198754;";
@@ -671,10 +569,11 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
             <?php elseif($active_tab == 'pendencias'): ?>
 
-                <div class="form-card" style="border-left: 6px solid #ffc107;">
+                <!-- PENDÊNCIAS CONTENT (Laranja) -->
+                <div>
                     <div style="display:flex; justify-content:space-between; align-items:flex-start;">
                         <div>
-                            <h3 style="color:#b38600; margin-bottom:5px;">📋 Checklist de Pendências</h3>
+                            <h3 style="color:#fd7e14; margin-bottom:5px;">📋 Checklist de Pendências</h3>
                             <p style="color:var(--color-text-subtle); margin-bottom:20px;">Adicione itens que o cliente precisa resolver. O cliente verá esta lista.</p>
                         </div>
                         <?php 
@@ -703,21 +602,18 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             $msg_wpp_pend .= "\n📂 *Acesse sua Área do Cliente* para anexar documentos ou ver detalhes:\nhttps://vilela.eng.br/area-cliente/\n\nQualquer dúvida, estou à disposição por aqui!";
                         ?>
                         
-
-                        
-                        <!-- Botão Cobrar Cliente removido conforme solicitação -->
                     </div>
 
                     <!-- Novo Form de Inserção Rápida -->
-                    <form method="POST" style="background:#fff8e1; padding:20px; border-radius:8px; border:1px solid #ffeeba; margin-bottom:25px;">
+                    <form method="POST" style="background:#fff3e0; padding:20px; border-radius:12px; border:1px solid #ffe0b2; margin-bottom:25px;">
                         <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
-                        <h4 style="margin-top:0; color:#b38600;">➕ Adicionar Nova Pendência</h4>
+                        <h4 style="margin-top:0; color:#ef6c00;">➕ Adicionar Nova Pendência</h4>
                         <div style="display:flex; flex-direction:column; gap:10px;">
                             <div style="flex-grow:1;">
                                 <textarea name="descricao_pendencia" id="new_pendencia_editor" placeholder="Digite a descrição..." style="width:100%;"></textarea>
                             </div>
                             <div style="text-align:right;">
-                                <button type="submit" name="btn_adicionar_pendencia" class="btn-save btn-warning" style="width:auto; margin:0; padding:10px 25px; color:#000;">Adicionar Pendência</button>
+                                <button type="submit" name="btn_adicionar_pendencia" class="btn-save" style="width:auto; margin:0; padding:10px 25px; color:white; background: #fd7e14; border:none;">Adicionar Pendência</button>
                             </div>
                         </div>
                     </form>
@@ -726,7 +622,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     <div class="table-responsive">
                         <table style="width:100%; border-collapse:collapse;">
                             <thead>
-                                <tr style="border-bottom:2px solid #eee; background:#f9f9f9; color:#666;">
+                                <tr style="border-bottom:2px solid #eee; background:#fff8e1; color:#e65100;">
                                     <th style="padding:15px; text-align:left; width:60%;">Descrição</th>
                                     <th style="padding:15px; text-align:center;">Data</th>
                                     <th style="padding:15px; text-align:center;">Status</th>
@@ -790,7 +686,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                         </td>
                                         <td style="padding:15px; text-align:right;">
                                             <?php if(!$is_res): ?>
-                                                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias&toggle_pendencia=<?= $p['id'] ?>" class="btn-icon" style="background:#e8f5e9; color:#198754; border:1px solid #c3e6cb; margin-right:5px;" title="Marcar como Resolvido">✅</a>
+                                                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias&toggle_pendencia=<?= $p['id'] ?>" class="btn-icon" style="background:#fff3e0; color:#ef6c00; border:1px solid #ffe0b2; margin-right:5px;" title="Marcar como Resolvido">✅</a>
                                                 <button onclick="openEditPendencia(<?= $p['id'] ?>, '<?= addslashes(str_replace(["\r", "\n"], '', $p['descricao'])) // Encode seguro para JS inline ?>')" class="btn-icon" style="background:#e3f2fd; color:#0d6efd; border:1px solid #d1e7dd; margin-right:5px;" title="Editar">✏️</button>
                                             <?php else: ?>
                                                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias&toggle_pendencia=<?= $p['id'] ?>" class="btn-icon" style="background:#fff3cd; color:#856404; border:1px solid #ffeeba; margin-right:5px;" title="Reabrir Pendência">↩️</a>
@@ -810,10 +706,12 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
 
             <?php elseif($active_tab == 'arquivos'): ?>
-                <div class="form-card" style="border-left: 6px solid #2196f3;">
+                
+                <!-- ARQUIVOS CONTENT (Azul) -->
+                <div>
                     <div style="display:flex; justify-content:space-between; align-items:flex-start;">
                         <div>
-                            <h3 style="color:#1976d2;">📂 Arquivos do Cliente</h3>
+                            <h3 style="color:#0d6efd;">📂 Arquivos do Cliente</h3>
                             <p style="margin-bottom:20px; color:var(--color-text-subtle);">Central de links e pastas do Google Drive.</p>
                         </div>
                     </div>
@@ -825,7 +723,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             <input type="text" name="link_drive_pasta" value="<?= $detalhes['link_drive_pasta']??'' ?>" placeholder="https://drive.google.com/...">
                         </div>
 
-                        <button type="submit" name="btn_salvar_arquivos" class="btn-save" style="background:#1976d2; color:white; border:none; box-shadow:0 4px 10px rgba(25, 118, 210, 0.3);">Salvar Links</button>
+                        <button type="submit" name="btn_salvar_arquivos" class="btn-save" style="background:#0d6efd; color:white; border:none; box-shadow:0 4px 10px rgba(13, 110, 253, 0.3);">Salvar Links</button>
                     </form>
 
                     <?php 
@@ -854,16 +752,15 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
             <?php elseif($active_tab == 'financeiro'): ?>
 
-
-
-                <!-- Form de Adição -->
+                <!-- FINANCEIRO CONTENT (Verde) -->
+                <div>
                 <!-- Header e Botão Novo Lançamento -->
-                <div class="form-card" style="margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; padding:20px;">
+                <div style="margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; padding-bottom:15px; border-bottom:1px solid #e0e0e0;">
                     <div>
-                        <h3 style="margin:0; color:#2c3e50;">Fluxo Financeiro</h3>
+                        <h3 style="margin:0; color:#198754;">💰 Fluxo Financeiro</h3>
                         <p style="margin:5px 0 0 0; font-size:0.9rem; color:#666;">Gerencie honorários, taxas e despesas do processo.</p>
                     </div>
-                    <button type="button" onclick="document.getElementById('modalFinanceiro').showModal()" style="background:linear-gradient(135deg, #2196f3, #4dabf5); color:white; border:none; padding:12px 25px; border-radius:30px; font-weight:700; font-size:1rem; cursor:pointer; display:flex; align-items:center; gap:8px; box-shadow:0 4px 15px rgba(33, 150, 243, 0.3); transition:all 0.2s;">
+                    <button type="button" onclick="document.getElementById('modalFinanceiro').showModal()" style="background:linear-gradient(135deg, #198754, #20c997); color:white; border:none; padding:12px 25px; border-radius:30px; font-weight:700; font-size:1rem; cursor:pointer; display:flex; align-items:center; gap:8px; box-shadow:0 4px 15px rgba(25, 135, 84, 0.3); transition:all 0.2s;">
                         <span style="font-size:1.2rem;">➕</span> Novo Lançamento
                     </button>
                 </div>
@@ -881,17 +778,18 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     $fin_taxas = $pdo->prepare("SELECT * FROM processo_financeiro WHERE cliente_id=? AND categoria='taxas' ORDER BY data_vencimento ASC");
                     $fin_taxas->execute([$cliente_ativo['id']]);
 
-                    renderFinTable($fin_honorarios, "💰 Honorários e Serviços (Vilela Engenharia)", "#2196f3", $cliente_ativo['id']);
+                    renderFinTable($fin_honorarios, "💰 Honorários e Serviços (Vilela Engenharia)", "#198754", $cliente_ativo['id']);
                     renderFinTable($fin_taxas, "🏛️ Taxas e Multas Governamentais", "#efb524", $cliente_ativo['id']);
 
                 } catch (Exception $e) {
                     echo "<div style='color:red'>Erro ao carregar dados financeiros. Verifique se o Setup de Banco de Dados foi rodado. <br>". $e->getMessage() ."</div>";
                 }
                 ?>
-
-
+                </div>
 
             <?php endif; ?>
+            
+            </div> <!-- End of Colored Window Wrapper -->
 
         <?php else: ?>
             

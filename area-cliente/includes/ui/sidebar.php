@@ -26,6 +26,42 @@ $kpi_pre_pendentes = $kpi_pre_pendentes ?? 0;
                 <span style="background:#dc3545; color:white; padding:1px 8px; border-radius:12px; font-size:0.75rem; margin-left:auto; line-height:1.2; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight:bold;"><?= $kpi_pre_pendentes ?></span>
             <?php endif; ?>
         </button>
+
+        <!-- Widget: Aniversariantes -->
+        <?php 
+            $count_ani = count($aniversariantes ?? []);
+            // Mapeamento de Meses Simples
+            $meses_pt = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+            $mes_nome = $meses_pt[date('n')-1];
+        ?>
+        <div class="btn-menu" style="cursor:default; align-items: flex-start; flex-direction: column; gap: 5px; height: auto; padding: 12px 15px;">
+            <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+                <span style="display:flex; align-items:center; gap:10px; font-weight:600;">
+                    <span class="material-symbols-rounded" style="color:#fd7e14;">cake</span>
+                    Aniversariantes de <?= $mes_nome ?>
+                </span>
+                <span style="background:#fff3cd; color:#856404; padding:2px 8px; border-radius:10px; font-weight:bold; font-size:0.75rem;"><?= $count_ani ?></span>
+            </div>
+            <div style="font-size:0.75rem; color:#888; padding-left: 34px; width:100%;">
+                <?php if($count_ani == 0): ?>
+                    Ninguém por enquanto.
+                <?php else: ?>
+                    <?php foreach($aniversariantes as $ani): ?>
+                        <div style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">🎉 <?= htmlspecialchars(explode(' ',$ani['nome'])[0]) ?> (Dia <?= $ani['dia'] ?>)</div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <!-- Widget: Parados -->
+        <?php $count_par = count($parados ?? []); ?>
+        <div class="btn-menu" style="cursor:default; align-items:center; justify-content: space-between; height: auto; padding: 12px 15px;">
+            <span style="display:flex; align-items:center; gap:10px; font-weight:600;">
+                <span class="material-symbols-rounded" style="color:#dc3545;">timer_off</span>
+                 Parados (+15d)
+            </span>
+            <span style="background:#f8d7da; color:#dc3545; padding:2px 8px; border-radius:10px; font-weight:bold; font-size:0.75rem;"><?= $count_par ?></span>
+        </div>
         
         <h4 style="font-size:0.75rem; text-transform:uppercase; color:#adb5bd; font-weight:700; margin:15px 0 5px 10px;">Cadastro</h4>
         <!-- Botão Novo Cliente (Neutro) -->
