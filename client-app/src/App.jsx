@@ -214,18 +214,19 @@ function App() {
         {/* SCROLLABLE AREA */}
         <main className="flex-1 overflow-auto p-4 md:p-8 space-y-6 pb-24 md:pb-12 max-w-7xl mx-auto w-full">
 
-          <div className="mb-2">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 capitalize tracking-tight flex items-center gap-2">
-              {activeTab === 'inicial' ? `Olá, ${user?.name?.split(' ')[0]}!` : activeTab}
-              {activeTab === 'inicial' && <span className="text-2xl">👋</span>}
-            </h1>
-            {activeTab === 'inicial' && <p className="text-gray-500 mt-1">Aqui está o resumo atualizado do seu projeto.</p>}
-          </div>
+          {/* Title for non-inicial pages */}
+          {activeTab !== 'inicial' && (
+            <div className="mb-2">
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-800 capitalize tracking-tight flex items-center gap-2">
+                {activeTab}
+              </h1>
+            </div>
+          )}
 
           {/* === VIEW: INICIAL === */}
           {activeTab === 'inicial' && (
             <>
-              {/* === RED OBSERVATION ALERT (New) === */}
+              {/* === RED OBSERVATION ALERT === */}
               {processDetails.observation && (
                 <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r shadow-sm flex items-start gap-3 animate-fade-in-down">
                   <div className="text-red-600 mt-0.5"><AlertTriangle size={24} /></div>
@@ -238,9 +239,32 @@ function App() {
                 </div>
               )}
 
-              {/* Progress Bar (Light) */}
-              <div className="bg-white rounded-2xl p-6 md:p-8 border border-gray-100 shadow-sm relative overflow-hidden">
-                <ProgressBar currentPhase={DATA.currentPhase} />
+              {/* HERO SECTION (Process Highlight) */}
+              <div className="bg-gradient-to-br from-[#146c43] to-[#0d3b25] rounded-3xl p-6 md:p-8 mb-8 text-white shadow-xl relative overflow-hidden group">
+
+                {/* Background Decor */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+                <div className="absolute bottom-0 left-0 w-48 h-48 bg-black opacity-10 rounded-full blur-2xl -ml-10 -mb-10 pointer-events-none"></div>
+
+                <div className="relative z-10">
+                  {/* Greeting & Process Info */}
+                  <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+                    <div>
+                      <h1 className="text-2xl md:text-4xl font-bold mb-2 flex items-center gap-3">
+                        Olá, {user?.name?.split(' ')[0]}! <span className="animate-pulse">👋</span>
+                      </h1>
+                      <div className="flex items-center gap-3 text-white/80 text-sm font-medium">
+                        <span className="bg-white/10 px-3 py-1 rounded-full border border-white/10 backdrop-blur-sm">
+                          Processo #{processDetails.number || '0000'}
+                        </span>
+                        <span>{processDetails.object || 'Projeto Vilela'}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Integrated Progress Bar (Hero Mode) */}
+                  <ProgressBar currentPhase={DATA.currentPhase} mode="hero" />
+                </div>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
