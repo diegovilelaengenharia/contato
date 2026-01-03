@@ -17,11 +17,11 @@ $kpi_pre_pendentes = $kpi_pre_pendentes ?? 0;
             // Lógica de Cor: Amarelo se tiver pendências, Padrão (branco) se não.
             $alert_color_style = ($kpi_pre_pendentes > 0) ? 
                 'background: linear-gradient(135deg, #fff3cd, #ffecb5); color: #856404; border: 1px solid #ffeeba;' : 
-                'background: #fff; color: var(--color-text); border: 1px solid transparent;'; 
+                ''; 
         ?>
         <button onclick="document.getElementById('modalNotificacoes').showModal()" class="btn-menu" style="cursor:pointer; text-align:left; width:100%; font-family:inherit; font-size:inherit; transition: 0.3s; <?= $alert_color_style ?>">
             <span class="material-symbols-rounded">notifications</span>
-            Central de Avisos
+            Avisos
             <?php if($kpi_pre_pendentes > 0): ?>
                 <span style="background:#dc3545; color:white; padding:1px 8px; border-radius:12px; font-size:0.75rem; margin-left:auto; line-height:1.2; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight:bold;"><?= $kpi_pre_pendentes ?></span>
             <?php endif; ?>
@@ -32,32 +32,21 @@ $kpi_pre_pendentes = $kpi_pre_pendentes ?? 0;
             $count_ani = count($aniversariantes ?? []);
             // Mapeamento de Meses Simples
             $meses_pt = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-            
-            // Tooltip text generation
-            $ani_tooltip = "Aniversariantes de " . $meses_pt[date('n')-1] . ":\n";
-            if($count_ani == 0) { $ani_tooltip .= "Ninguém por enquanto."; } 
-            else { foreach($aniversariantes as $ani) { $ani_tooltip .= "- " . explode(' ',$ani['nome'])[0] . " (Dia " . $ani['dia'] . ")\n"; } }
         ?>
-        <div class="btn-menu" title="<?= htmlspecialchars($ani_tooltip) ?>" style="cursor:default; align-items: center; justify-content: space-between; height: auto; padding: 12px 15px;">
-            <span style="display:flex; align-items:center; gap:10px; font-weight:600;">
+        <div class="btn-menu" onclick="document.getElementById('modalAniversariantes').showModal()" style="cursor:pointer; justify-content: space-between;">
+            <span style="display:flex; align-items:center; gap:10px;">
                 <span class="material-symbols-rounded" style="color:#fd7e14;">cake</span>
-                Aniversariantes
+                Aniversários
             </span>
             <span style="background:#fff3cd; color:#856404; padding:2px 8px; border-radius:10px; font-weight:bold; font-size:0.75rem;"><?= $count_ani ?></span>
         </div>
 
         <!-- Widget: Parados (Simplificado) -->
-        <?php 
-            $count_par = count($parados ?? []); 
-            // Tooltip text generation
-            $par_tooltip = "Processos Parados (+15 dias):\n";
-            if($count_par == 0) { $par_tooltip .= "Tudo em dia!"; }
-            else { foreach($parados as $p) { $par_tooltip .= "- " . explode(' ',$p['nome'])[0] . " (" . date('d/m', strtotime($p['ultima_mov'])) . ")\n"; } }
-        ?>
-        <div class="btn-menu" title="<?= htmlspecialchars($par_tooltip) ?>" style="cursor:default; align-items:center; justify-content: space-between; height: auto; padding: 12px 15px;">
-            <span style="display:flex; align-items:center; gap:10px; font-weight:600;">
+        <?php $count_par = count($parados ?? []); ?>
+        <div class="btn-menu" onclick="document.getElementById('modalParados').showModal()" style="cursor:pointer; justify-content: space-between;">
+            <span style="display:flex; align-items:center; gap:10px;">
                 <span class="material-symbols-rounded" style="color:#dc3545;">timer_off</span>
-                 Parados (+15d)
+                 Parados
             </span>
             <span style="background:#f8d7da; color:#dc3545; padding:2px 8px; border-radius:10px; font-weight:bold; font-size:0.75rem;"><?= $count_par ?></span>
         </div>
@@ -86,25 +75,28 @@ $kpi_pre_pendentes = $kpi_pre_pendentes ?? 0;
         <?php foreach($clientes as $c): 
             $isActive = (isset($cliente_ativo) && $cliente_ativo['id'] == $c['id']);
             
-            // Dados do DB já são o Primeiro Nome (devido à migração)
-            // NEW: Show First 2 Names
+            // Simplificação do Nome (Primeiro e Último ou 2 Primeiros?)
+            // Usuário pediu "Davidson Nunes" de "Davidson Nunes Vilela" -> 2 Primeiros.
             $parts = explode(' ', trim($c['nome']));
-            $first_name = $parts[0] . (isset($parts[1]) ? ' ' . $parts[1] : '');
-            $first_name = htmlspecialchars($first_name);
-            
-            $initial = strtoupper(substr($first_name, 0, 1));
+            $simple_name = $parts[0];
+            if(count($parts) > 1) {
+                // Se o segundo nome for curto (de, da, do), pular para o próximo?
+                // Simplificação básica: 2 primeiros nomes.
+                $simple_name .= ' ' . $parts[1];
+            }
+            $simple_name = htmlspecialchars($simple_name);
             
             // Estilo
             $bg = $isActive ? 'var(--color-primary-light)' : '#fff';
             $border = $isActive ? '1px solid var(--color-primary)' : '1px solid transparent';
             $color = $isActive ? 'var(--color-primary)' : '#444';
         ?>
-            <a href="?cliente_id=<?= $c['id'] ?>" style="display:flex; align-items:center; gap:12px; padding:10px; background:<?= $bg ?>; border-radius:8px; text-decoration:none; color:<?= $color ?>; border:<?= $border ?>; transition:0.2s;" onmouseover="this.style.background='#f0f8f5'" onmouseout="this.style.background='<?= $bg ?>'">
-                <div style="width:32px; height:32px; background:<?= $isActive?'var(--color-primary)':'#eee' ?>; color:<?= $isActive?'#fff':'#777' ?>; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:0.9rem;">
+            <a href="?cliente_id=<?= $c['id'] ?>" class="btn-menu-client" style="display:flex; align-items:center; gap:12px; padding:10px; background:<?= $bg ?>; border-radius:8px; text-decoration:none; color:<?= $color ?>; border:<?= $border ?>; transition:0.2s;" onmouseover="this.style.background='#f0f8f5'" onmouseout="this.style.background='<?= $bg ?>'">
+                <div style="width:32px; height:32px; min-width:32px; background:<?= $isActive?'var(--color-primary)':'#eee' ?>; color:<?= $isActive?'#fff':'#777' ?>; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:0.9rem;">
                     <span class="material-symbols-rounded" style="font-size:1.1rem;">person</span>
                 </div>
                 <div style="flex:1; min-width:0;">
-                    <div style="font-weight:600; font-size:0.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><?= $first_name ?></div>
+                    <div style="font-weight:600; font-size:0.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="<?= htmlspecialchars($c['nome']) ?>"><?= $simple_name ?></div>
                     <div style="font-size:0.75rem; opacity:0.7;">ID #<?= str_pad($c['id'], 3, '0', STR_PAD_LEFT) ?></div>
                 </div>
             </a>

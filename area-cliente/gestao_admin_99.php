@@ -767,6 +767,9 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
                 <!-- Modais Financeiros -->
                 <?php require 'includes/modals/financeiro.php'; ?>
+                
+                <!-- Modais Widgets Sidebar -->
+                <?php require 'includes/modals/sidebar_widgets.php'; ?>
 
                 <!-- Tabelas -->
                 <?php 
