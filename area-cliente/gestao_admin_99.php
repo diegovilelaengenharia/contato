@@ -673,9 +673,23 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
                 <!-- Botão para Abrir Modal de Novo Andamento -->
                 <div style="margin-bottom:20px;">
-                    <button type="button" onclick="document.getElementById('modalAndamento').showModal()" class="btn-save" style="width:100%; padding:15px; background:linear-gradient(135deg, var(--color-primary) 0%, #2980b9 100%); border:none; border-radius:12px; font-size:1.1rem; font-weight:bold; color:white; cursor:pointer; text-transform:uppercase; letter-spacing:1px; box-shadow:0 4px 15px rgba(41, 128, 185, 0.4); display:flex; align-items:center; justify-content:center; gap:10px; transition:transform 0.2s;">
-                        <span>✨</span> Novo Andamento / Atualização
+                    <button type="button" onclick="document.getElementById('modalAndamento').showModal()" class="btn-save" style="width:100%; padding:10px 15px; background:white; border:1px solid #ddd; border-bottom:2px solid #ddd; border-radius:8px; font-size:0.95rem; font-weight:600; color:#555; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:all 0.2s;">
+                        <span style="font-size:1.1rem;">✨</span> Novo Andamento / Atualização
                     </button>
+                    <script>
+                        // Hover effect for the new button
+                        document.querySelector('button[onclick*="modalAndamento"]').addEventListener('mouseenter', function() {
+                            this.style.borderColor = 'var(--color-primary)';
+                            this.style.color = 'var(--color-primary)';
+                            this.style.background = '#f8f9fa';
+                        });
+                        document.querySelector('button[onclick*="modalAndamento"]').addEventListener('mouseleave', function() {
+                            this.style.borderColor = '#ddd';
+                            this.style.borderBottom = '2px solid #ddd';
+                            this.style.color = '#555';
+                            this.style.background = 'white';
+                        });
+                    </script>
                 </div>
 
                 <!-- MODAL DE NOVO ANDAMENTO -->
