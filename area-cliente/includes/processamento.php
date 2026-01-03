@@ -404,8 +404,15 @@ if (isset($_POST['novo_cliente'])) {
                 // Remove antigos
                 array_map('unlink', glob($dir . "avatar_{$nid}.*"));
                 
-                move_uploaded_file($_FILES['avatar_upload']['tmp_name'], $dir . "avatar_{$nid}.{$ext}");
-            }
+                if(move_uploaded_file($_FILES['avatar_upload']['tmp_name'], $dir . "avatar_{$nid}.{$ext}")) {
+                    // Update DB with relative path or full path logic
+                    // Matching editar_cliente logic: 'uploads/avatars/avatar_{id}.{ext}'
+                    $avatar_db_path = "uploads/avatars/avatar_{$nid}.{$ext}";
+                    // We are in includes/, so relative to root is ../uploads, but DB stores relative to root?
+                    // editar_cliente stored 'uploads/avatars/...'
+                    // Let's store consistent path.
+                    $pdo->prepare("UPDATE clientes SET foto_perfil = ? WHERE id = ?")->execute([$avatar_db_path, $nid]);
+                }
         }
         
         // REDIRECIONAMENTO IMEDIATO PARA EDITOR COMPLETÃO
