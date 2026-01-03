@@ -735,10 +735,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                 <span style="font-size:1.2rem;">✨</span> Novo Andamento
                             </button>
                             
-                            <!-- Botão Anexar (Secundário) -->
-                            <button type="button" onclick="document.getElementById('modalAndamento').showModal();" style="padding:10px 15px; background:white; border:1px solid #ddd; border-radius:30px; font-size:0.85rem; font-weight:600; color:#666; cursor:pointer; display:flex; align-items:center; gap:6px; transition:all 0.2s;" title="Atalho para documento">
-                                📂 Anexar Arquivo
-                            </button>
+
 
                              <!-- Botão Apagar Histórico (Perigo) -->
                             <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento&del_all_hist=true" 
