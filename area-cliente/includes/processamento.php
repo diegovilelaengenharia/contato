@@ -414,6 +414,7 @@ if (isset($_POST['novo_cliente'])) {
                     $pdo->prepare("UPDATE clientes SET foto_perfil = ? WHERE id = ?")->execute([$avatar_db_path, $nid]);
                 }
         }
+    }
         
         // REDIRECIONAMENTO IMEDIATO PARA EDITOR COMPLETÃO
         header("Location: editar_cliente.php?id=$nid&msg=welcome");
