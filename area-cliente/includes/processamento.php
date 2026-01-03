@@ -98,6 +98,10 @@ if (isset($_POST['atualizar_etapa'])) {
         } else {
              $sucesso = "Evento adicionado ao histórico!";
         }
+        
+        // PRG Pattern: Redirect to prevent form resubmission on F5
+        header("Location: ?cliente_id=$cid&tab=andamento&msg=mov_added");
+        exit;
 
     } catch(PDOException $e) {
         $erro = "Erro: " . $e->getMessage();
