@@ -30,6 +30,9 @@ $kpi_pre_pendentes = $kpi_pre_pendentes ?? 0;
         <!-- Widget: Aniversariantes (Simplificado) -->
         <?php 
             $count_ani = count($aniversariantes ?? []);
+            // Mapeamento de Meses Simples
+            $meses_pt = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+            
             // Tooltip text generation
             $ani_tooltip = "Aniversariantes de " . $meses_pt[date('n')-1] . ":\n";
             if($count_ani == 0) { $ani_tooltip .= "Ninguém por enquanto."; } 
