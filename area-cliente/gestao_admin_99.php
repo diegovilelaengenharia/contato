@@ -630,8 +630,8 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             
                             <div style="display:flex; flex-wrap:wrap; gap:15px; font-size:0.9rem; color:#666; margin-bottom:15px;">
                                 <span style="background:#f8f9fa; padding:2px 8px; border-radius:6px; border:1px solid #e9ecef;">🆔 #<?= str_pad($cliente_ativo['id'], 3, '0', STR_PAD_LEFT) ?></span>
-                                <span style="background:#f8f9fa; padding:2px 8px; border-radius:6px; border:1px solid #e9ecef;">📱 <?= $cliente_ativo['telefone'] ?></span>
-                                <span style="background:#f8f9fa; padding:2px 8px; border-radius:6px; border:1px solid #e9ecef;">📄 <?= $cliente_ativo['cpf_cnpj'] ?></span>
+                                <span style="background:#f8f9fa; padding:2px 8px; border-radius:6px; border:1px solid #e9ecef;">📱 <?= $detalhes['contato_tel'] ?? '--' ?></span>
+                                <span style="background:#f8f9fa; padding:2px 8px; border-radius:6px; border:1px solid #e9ecef;">📄 <?= $detalhes['cpf_cnpj'] ?? '--' ?></span>
                             </div>
 
                             <div style="display:flex; gap:10px; font-size:0.9rem; align-items:center;">
@@ -652,16 +652,19 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             if($found_idx === false) $found_idx = -1; // Nada iniciado
                             
                             // Mostrar apenas um resumo compacto ou lista completa? 
-                            // O usuário pediu timeline com 9 itens. Vamos fazer uma lista compacta.
+                            // O usuário pediu timeline com foco (ant, atual, prox) e esmaecer outros
                             foreach($fases_padrao as $i => $f): 
                                 $is_past = $i < $found_idx;
                                 $is_active = $i == $found_idx;
+                                $dist = abs($i - $found_idx);
+                                $opacity = ($dist <= 1 || $found_idx == -1) ? '1' : '0.3'; // Foco nos adjacentes
+                                
                                 $color = $is_active ? 'var(--color-primary)' : ($is_past ? '#198754' : '#ddd');
                                 $bg = $is_active ? '#e8f5e9' : 'transparent';
                                 $weight = $is_active ? '700' : '400';
                                 $icon = $is_past ? '✓' : ($is_active ? '➤' : '•');
                             ?>
-                                <div style="display:flex; align-items:center; gap:8px; padding:4px 8px; border-radius:4px; background:<?= $bg ?>; color:<?= ($is_active || $is_past) ? '#333' : '#aaa' ?>; font-size:0.8rem;">
+                                <div style="display:flex; align-items:center; gap:8px; padding:4px 8px; border-radius:4px; background:<?= $bg ?>; color:<?= ($is_active || $is_past) ? '#333' : '#aaa' ?>; font-size:0.8rem; opacity:<?= $opacity ?>; transition:opacity 0.3s;">
                                     <div style="font-weight:bold; color:<?= $color ?>; width:15px; text-align:center;"><?= $icon ?></div>
                                     <div style="flex:1; font-weight:<?= $weight ?>; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><?= $f ?></div>
                                 </div>
