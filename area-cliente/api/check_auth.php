@@ -1,4 +1,6 @@
 <?php
+// Force session cookie to be available to entire domain
+session_set_cookie_params(0, '/');
 session_start();
 header('Content-Type: application/json');
 

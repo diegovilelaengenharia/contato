@@ -1,4 +1,6 @@
 <?php
+// Force session cookie to be available to entire domain, preventing subdirectory issues
+session_set_cookie_params(0, '/');
 session_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
