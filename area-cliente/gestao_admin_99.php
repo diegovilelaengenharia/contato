@@ -524,6 +524,30 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             </div>
 
             <!-- TAB NAVIGATION -->
+            <!-- Styles for Tabs (Inline to ensure visibility) -->
+            <style>
+                .tab-link {
+                    padding: 10px 20px;
+                    text-decoration: none;
+                    color: #666;
+                    font-weight: 600;
+                    border-bottom: 3px solid transparent;
+                    transition: all 0.2s;
+                    white-space: nowrap;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
+                }
+                .tab-link:hover {
+                    background: #f8f9fa;
+                    color: var(--color-primary);
+                }
+                .tab-link.active {
+                    color: var(--color-primary);
+                    border-bottom-color: var(--color-primary);
+                    background: #e6f2ee;
+                }
+            </style>
             <div style="margin-bottom:20px; border-bottom:1px solid #ddd; display:flex; gap:20px; overflow-x:auto; padding-bottom:1px;">
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="tab-link <?= ($active_tab=='andamento'||$active_tab=='cadastro')?'active':'' ?>">📜 Histórico</a>
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias" class="tab-link <?= ($active_tab=='pendencias')?'active':'' ?>">⚠️ Pendências</a>
