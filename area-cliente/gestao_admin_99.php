@@ -524,35 +524,64 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             </div>
 
             <!-- TAB NAVIGATION -->
-            <!-- Styles for Tabs (Inline to ensure visibility) -->
+            <!-- Styles for Tabs (High Contrast / Pill Style) -->
             <style>
+                .tabs-container {
+                    margin-bottom: 25px;
+                    border-bottom: none; /* Removed line */
+                    display: flex;
+                    gap: 15px;
+                    overflow-x: auto;
+                    padding: 10px 5px 15px 5px; /* Added padding for shadows */
+                }
                 .tab-link {
-                    padding: 10px 20px;
+                    padding: 12px 25px;
                     text-decoration: none;
-                    color: #666;
-                    font-weight: 600;
-                    border-bottom: 3px solid transparent;
-                    transition: all 0.2s;
+                    color: #555;
+                    font-weight: 700;
+                    font-size: 1rem;
+                    border-radius: 50px; /* Pill shape */
+                    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy transition */
                     white-space: nowrap;
                     display: inline-flex;
                     align-items: center;
-                    gap: 8px;
+                    gap: 10px;
+                    background: #ffffff;
+                    border: 1px solid #e0e0e0;
+                    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
                 }
                 .tab-link:hover {
-                    background: #f8f9fa;
+                    transform: translateY(-3px);
+                    box-shadow: 0 8px 15px rgba(0,0,0,0.08);
+                    border-color: var(--color-primary);
                     color: var(--color-primary);
                 }
                 .tab-link.active {
-                    color: var(--color-primary);
-                    border-bottom-color: var(--color-primary);
-                    background: #e6f2ee;
+                    background: var(--color-primary);
+                    color: #ffffff !important;
+                    border-color: var(--color-primary);
+                    box-shadow: 0 8px 20px rgba(27, 154, 128, 0.4); /* Glow matching primary color */
+                    transform: translateY(-2px);
+                }
+                
+                /* Icon tweak for active state */
+                .tab-link.active span, .tab-link.active i {
+                    color: white;
                 }
             </style>
-            <div style="margin-bottom:20px; border-bottom:1px solid #ddd; display:flex; gap:20px; overflow-x:auto; padding-bottom:1px;">
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="tab-link <?= ($active_tab=='andamento'||$active_tab=='cadastro')?'active':'' ?>">📜 Histórico</a>
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias" class="tab-link <?= ($active_tab=='pendencias')?'active':'' ?>">⚠️ Pendências</a>
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=financeiro" class="tab-link <?= ($active_tab=='financeiro')?'active':'' ?>">💰 Financeiro</a>
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=arquivos" class="tab-link <?= ($active_tab=='arquivos')?'active':'' ?>">📂 Arquivos</a>
+            <div class="tabs-container">
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="tab-link <?= ($active_tab=='andamento'||$active_tab=='cadastro')?'active':'' ?>">
+                    <span style="font-size:1.2rem;">📜</span> Histórico
+                </a>
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias" class="tab-link <?= ($active_tab=='pendencias')?'active':'' ?>">
+                    <span style="font-size:1.2rem;">⚠️</span> Pendências
+                </a>
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=financeiro" class="tab-link <?= ($active_tab=='financeiro')?'active':'' ?>">
+                    <span style="font-size:1.2rem;">💰</span> Financeiro
+                </a>
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=arquivos" class="tab-link <?= ($active_tab=='arquivos')?'active':'' ?>">
+                    <span style="font-size:1.2rem;">📂</span> Arquivos
+                </a>
             </div>
 
             <!-- Modal Timeline e Andamento -->
