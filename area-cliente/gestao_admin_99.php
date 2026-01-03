@@ -523,6 +523,14 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 </div>
             </div>
 
+            <!-- TAB NAVIGATION -->
+            <div style="margin-bottom:20px; border-bottom:1px solid #ddd; display:flex; gap:20px; overflow-x:auto; padding-bottom:1px;">
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="tab-link <?= ($active_tab=='andamento'||$active_tab=='cadastro')?'active':'' ?>">📜 Histórico</a>
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias" class="tab-link <?= ($active_tab=='pendencias')?'active':'' ?>">⚠️ Pendências</a>
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=financeiro" class="tab-link <?= ($active_tab=='financeiro')?'active':'' ?>">💰 Financeiro</a>
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=arquivos" class="tab-link <?= ($active_tab=='arquivos')?'active':'' ?>">📂 Arquivos</a>
+            </div>
+
             <!-- Modal Timeline e Andamento -->
             <?php require 'includes/modals/timeline.php'; ?>
             
