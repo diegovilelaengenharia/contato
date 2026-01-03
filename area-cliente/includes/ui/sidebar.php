@@ -6,7 +6,7 @@ $kpi_pre_pendentes = $kpi_pre_pendentes ?? 0;
     ☰ Menu de Navegação
 </button>
 <aside class="sidebar" id="mobileSidebar" style="display:flex; flex-direction:column; height:calc(100vh - 45px); position:sticky; top:45px; overflow-y:auto; overflow-x:hidden;">
-    <h4 style="margin: 20px 0 10px 10px; color: var(--color-text-subtle); display:flex; align-items:center; gap:8px; font-size:0.8rem; text-transform:uppercase; font-weight:700;">📂 Meus Clientes</h4>
+
     <div class="client-list-fancy" style="padding:0 10px; max-height:40vh; overflow-y:auto; display:flex; flex-direction:column; gap:8px;">
         <?php foreach($clientes as $c): 
             $isActive = (isset($cliente_ativo) && $cliente_ativo['id'] == $c['id']);
