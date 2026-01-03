@@ -84,23 +84,7 @@ $kpi_pre_pendentes = $kpi_pre_pendentes ?? 0;
             <span style="background:#f8d7da; color:#dc3545; padding:2px 8px; border-radius:10px; font-weight:bold; font-size:0.75rem;"><?= $count_par ?></span>
         </div>
         
-        <h4 style="font-size:0.75rem; text-transform:uppercase; color:#adb5bd; font-weight:700; margin:15px 0 5px 10px;">Cadastro</h4>
-        <!-- Botão Novo Cliente (Neutro) -->
-        <a href="?novo=true" class="btn-menu <?= (isset($_GET['novo'])) ? 'active' : '' ?>">
-            <span class="material-symbols-rounded">person_add</span>
-            Novo Cliente
-        </a>
-        <a href="../cadastro.php" target="_blank" class="btn-menu">
-            <span class="material-symbols-rounded">public</span>
-            Pré-Cadastro ↗
-        </a>
-        <a href="?importar=true" class="btn-menu <?= (isset($_GET['importar'])) ? 'active' : '' ?>">
-            <span class="material-symbols-rounded">move_to_inbox</span>
-            Solicitações
-            <?php if(isset($kpi_pre_pendentes) && $kpi_pre_pendentes > 0): ?>
-                <span class="badge-count"><?= $kpi_pre_pendentes ?></span>
-            <?php endif; ?>
-        </a>
+
     </nav>
 
 
