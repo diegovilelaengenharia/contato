@@ -245,33 +245,7 @@ if (isset($_POST['btn_salvar_arquivos'])) {
 }
 
 // 5. Novo Cliente
-// 5. Novo Cliente
-if (false && isset($_POST['novo_cliente'])) { // Disabled (Legacy/Duplicate)
-    $nome = $_POST['nome'];
-    $senha = password_hash($_POST['senha'], PASSWORD_DEFAULT);
-    $cpf = $_POST['cpf_cnpj'] ?? '';
-    $tel = $_POST['telefone'] ?? '';
-    
-    try {
-        $stmt = $pdo->prepare("INSERT INTO clientes (nome, senha_hash, cpf_cnpj, telefone) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$nome, $senha, $cpf, $tel]);
-        $new_id = $pdo->lastInsertId();
-        
-        // Auto-create details entry
-        $pdo->prepare("INSERT INTO processo_detalhes (cliente_id, etapa_atual) VALUES (?, 'Protocolo e Autuação')")->execute([$new_id]);
 
-        // Upload Avatar if present
-        if(isset($_FILES['avatar_upload']) && $_FILES['avatar_upload']['error'] == 0) {
-            $ext = strtolower(pathinfo($_FILES['avatar_upload']['name'], PATHINFO_EXTENSION));
-            if(in_array($ext, ['jpg','jpeg','png','webp'])) {
-                move_uploaded_file($_FILES['avatar_upload']['tmp_name'], __DIR__ . "/../uploads/avatars/avatar_{$new_id}.{$ext}");
-            }
-        }
-        
-        header("Location: ?cliente_id=$new_id&msg=client_created");
-        exit;
-    } catch(PDOException $e) { $erro = "Erro ao criar cliente: " . $e->getMessage(); }
-}
 
 // 6. EDITAR CLIENTE (Aba Configurações)
 if (isset($_POST['btn_editar_cliente'])) {
