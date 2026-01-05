@@ -340,18 +340,23 @@ if (isset($_POST['novo_cliente']) || (isset($_POST['acao']) && $_POST['acao'] ==
     $senha_plain = $_POST['senha'] ?? $_POST['nova_senha']; // Support both if needed
     $tipo_login = $_POST['tipo_login'] ?? 'cpf'; // Default to cpf if not sent
 
-    // Lógica de Login Automático
+    // Lógica de Login (Agora prioriza o input explícito se vier)
     $usuario_final = '';
-    if ($tipo_login == 'cpf') {
-        $usuario_final = preg_replace('/[^0-9]/', '', $cpf);
-        if(empty($usuario_final)) throw new Exception("Para usar CPF como login, o campo CPF não pode estar vazio.");
+    if(!empty($_POST['usuario'])) {
+        $usuario_final = trim($_POST['usuario']);
     } else {
-        $usuario_final = preg_replace('/[^0-9]/', '', $tel);
-        if(empty($usuario_final)) throw new Exception("Para usar Telefone como login, o campo Telefone não pode estar vazio.");
+        // Fallback para lógica antiga (auto-geração)
+        if ($tipo_login == 'cpf') {
+            $usuario_final = preg_replace('/[^0-9]/', '', $cpf);
+        } else {
+            $usuario_final = preg_replace('/[^0-9]/', '', $tel);
+        }
     }
+    
+    if(empty($usuario_final)) throw new Exception("Login (Usuário) não pode ser vazio.");
 
     // Validação Básica
-    if(empty($nome_original) || empty($senha_plain)) throw new Exception("Nome e Senha são obrigatórios.");
+    if(empty($nome_original) || empty($senha_plain)) throw new Exception("Nome, Usuário e Senha são obrigatórios.");
 
     $pass = password_hash($senha_plain, PASSWORD_DEFAULT);
     
@@ -423,6 +428,21 @@ if (isset($_POST['novo_cliente']) || (isset($_POST['acao']) && $_POST['acao'] ==
              $_POST['contato_email'] ?? null
         ]);
 
+        // INSERÇÃO CAMPOS EXTRAS (NOVO)
+        if (isset($_POST['extra_titulos']) && is_array($_POST['extra_titulos'])) {
+            $titulos = $_POST['extra_titulos'];
+            $valores = $_POST['extra_valores'] ?? [];
+            $stmtInsEx = $pdo->prepare("INSERT INTO processo_campos_extras (cliente_id, titulo, valor) VALUES (?, ?, ?)");
+            
+            foreach ($titulos as $key => $titulo) {
+                $titulo_limpo = trim($titulo);
+                $valor_limpo = trim($valores[$key] ?? '');
+                if (!empty($titulo_limpo)) {
+                    $stmtInsEx->execute([$nid, $titulo_limpo, $valor_limpo]);
+                }
+            }
+        }
+
         // AVATAR UPLOAD (NOVO)
         if(isset($_FILES['avatar_upload']) && $_FILES['avatar_upload']['error'] == 0) {
             $ext = strtolower(pathinfo($_FILES['avatar_upload']['name'], PATHINFO_EXTENSION));
@@ -434,17 +454,13 @@ if (isset($_POST['novo_cliente']) || (isset($_POST['acao']) && $_POST['acao'] ==
                 // Remove antigos
                 array_map('unlink', glob($dir . "avatar_{$nid}.*"));
                 
-                if(move_uploaded_file($_FILES['avatar_upload']['tmp_name'], $dir . "avatar_{$nid}.{$ext}")) {
-                    // Update DB with relative path or full path logic
-                    // Matching editar_cliente logic: 'uploads/avatars/avatar_{id}.{ext}'
-                    $avatar_db_path = "uploads/avatars/avatar_{$nid}.{$ext}";
-                    // We are in includes/, so relative to root is ../uploads, but DB stores relative to root?
-                    // editar_cliente stored 'uploads/avatars/...'
-                    // Let's store consistent path.
-                    $pdo->prepare("UPDATE clientes SET foto_perfil = ? WHERE id = ?")->execute([$avatar_db_path, $nid]);
+                $new_name = "avatar_{$nid}.{$ext}";
+                if(move_uploaded_file($_FILES['avatar_upload']['tmp_name'], $dir . $new_name)) {
+                    // Update DB
+                     $pdo->prepare("UPDATE clientes SET foto_perfil = ? WHERE id = ?")->execute(["uploads/avatars/$new_name", $nid]);
                 }
+            }
         }
-    }
         
         // REDIRECIONAMENTO IMEDIATO PARA EDITOR COMPLETÃO
         header("Location: editar_cliente.php?id=$nid&msg=welcome");

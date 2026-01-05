@@ -71,14 +71,18 @@ $i_area = $detalhes['area_construida'] ?? '';
     <div class="form-grid">
         <div class="form-group"><label>Nome Completo (Titular)</label><input type="text" name="nome" value="<?= htmlspecialchars($d_nome) ?>" required placeholder="Ex: João da Silva"></div>
         <div class="form-group">
-            <label>Login de Acesso (Usuário) <?= $is_edit ? '' : '<span style="font-size:0.75rem; color:#888;">(Gerado Automático)</span>' ?></label>
-            <?php if($is_edit): ?>
-                <input type="text" name="usuario" value="<?= htmlspecialchars($d_usuario) ?>" required style="font-family:monospace; color:#2980b9;">
-            <?php else: ?>
-                <!-- Seleção de Login para Cadastro -->
-                <div style="display:flex; gap:10px; align-items:center; height:48px;">
-                     <label style="display:flex; align-items:center; gap:5px; font-size:0.85rem; cursor:pointer;"><input type="radio" name="tipo_login" value="cpf" checked> Usar CPF</label>
-                     <label style="display:flex; align-items:center; gap:5px; font-size:0.85rem; cursor:pointer;"><input type="radio" name="tipo_login" value="telefone"> Usar Telefone</label>
+            <label>Login de Acesso (Usuário) <span style="font-size:0.75rem; color:#888;">(Pode usar CPF ou Tel)</span></label>
+            <input type="text" name="usuario" id="campo_usuario" value="<?= htmlspecialchars($d_usuario) ?>" required style="font-family:monospace; color:#2980b9; font-weight:bold; letter-spacing:1px;" placeholder="Digite ou gere automático...">
+            
+            <?php if(!$is_edit): ?>
+                <!-- Helper de Geração Automática -->
+                <div style="display:flex; gap:15px; align-items:center; margin-top:5px;">
+                     <label style="display:flex; align-items:center; gap:5px; font-size:0.8rem; cursor:pointer; color:#666;">
+                        <input type="radio" name="auto_login_source" value="cpf" checked onchange="atualizarLoginAuto()"> Usar CPF
+                     </label>
+                     <label style="display:flex; align-items:center; gap:5px; font-size:0.8rem; cursor:pointer; color:#666;">
+                        <input type="radio" name="auto_login_source" value="tel" onchange="atualizarLoginAuto()"> Usar Telefone
+                     </label>
                 </div>
             <?php endif; ?>
         </div>
@@ -88,7 +92,7 @@ $i_area = $detalhes['area_construida'] ?? '';
     <!-- 2. DADOS PESSOAIS -->
     <h3 style="margin:20px 0 15px 0; color:var(--color-primary); border-bottom:1px solid #eee; padding-bottom:5px;">2. Dados Pessoais</h3>
     <div class="form-grid">
-        <div class="form-group"><label>CPF / CNPJ <span style="color:red">*</span></label><input type="text" name="cpf_cnpj" value="<?= htmlspecialchars($d_cpf) ?>" required></div>
+        <div class="form-group"><label>CPF / CNPJ <span style="color:red">*</span></label><input type="text" name="cpf_cnpj" value="<?= htmlspecialchars($d_cpf) ?>" required oninput="atualizarLoginAuto()"></div>
         <div class="form-group"><label>RG / Inscrição Estadual</label><input type="text" name="rg_ie" value="<?= htmlspecialchars($d_rg) ?>"></div>
         <div class="form-group"><label>Nacionalidade</label><input type="text" name="nacionalidade" value="<?= htmlspecialchars($d_nacionalidade) ?>"></div>
         <div class="form-group"><label>Data Nascimento</label><input type="date" name="data_nascimento" value="<?= htmlspecialchars($d_nasc) ?>"></div>
@@ -106,7 +110,7 @@ $i_area = $detalhes['area_construida'] ?? '';
             </select>
         </div>
         <div class="form-group"><label>Nome Cônjuge</label><input type="text" name="nome_conjuge" value="<?= htmlspecialchars($d_conjuge) ?>"></div>
-        <div class="form-group"><label>Telefone / WhatsApp</label><input type="text" name="contato_tel" value="<?= htmlspecialchars($d_tel) ?>"></div>
+        <div class="form-group"><label>Telefone / WhatsApp</label><input type="text" name="contato_tel" value="<?= htmlspecialchars($d_tel) ?>" oninput="atualizarLoginAuto()"></div>
         <div class="form-group"><label>Email</label><input type="email" name="contato_email" value="<?= htmlspecialchars($d_email) ?>"></div>
     </div>
 
@@ -151,38 +155,37 @@ $i_area = $detalhes['area_construida'] ?? '';
         <div class="form-group"><label>Área Construída (m²)</label><input type="text" name="area_construida" value="<?= htmlspecialchars($i_area) ?>"></div>
     </div>
 
-    <!-- SECTION 5: CUSTOM FIELDS (DINÂMICOS) -->
-    <?php if($is_edit): ?>
-        <div class="section-header" style="margin-top:20px;">
-            <div class="section-icon">📝</div>
-            <h2>Outras Informações</h2>
-        </div>
-        <div class="section-body">
-            <p style="font-size:0.9rem; color:#666; margin-bottom:20px;">Use esta seção para adicionar dados personalizados (Ex: CNH, Nome do Cônjuge, etc).</p>
-            
-            <div id="container-campos-extras" style="display:flex; flex-direction:column; gap:15px;">
-                <?php if(!empty($campos_extras)) foreach($campos_extras as $ex): ?>
-                    <div class="extra-field-row" style="background:#f9f9f9; padding:15px; border-radius:8px; border:1px solid #eee; display:flex; gap:15px; align-items:flex-end;">
-                        <div style="flex:1;">
-                            <label style="display:block; margin-bottom:5px; font-size:0.8rem; font-weight:bold; color:#555;">Título do Campo</label>
-                            <input type="text" name="extra_titulos[]" value="<?= htmlspecialchars($ex['titulo']) ?>" style="width:100%; border:1px solid #ddd; padding:10px; border-radius:6px;">
-                        </div>
-                        <div style="flex:2;">
-                            <label style="display:block; margin-bottom:5px; font-size:0.8rem; font-weight:bold; color:#555;">Informação / Valor</label>
-                            <input type="text" name="extra_valores[]" value="<?= htmlspecialchars($ex['valor']) ?>" style="width:100%; border:1px solid #ddd; padding:10px; border-radius:6px;">
-                        </div>
-                        <button type="button" onclick="this.parentElement.remove()" style="height:42px; width:42px; display:flex; align-items:center; justify-content:center; background:#fff; color:#e74c3c; border:1px solid #e74c3c; border-radius:6px; cursor:pointer;">
-                            <span class="material-symbols-rounded">delete</span>
-                        </button>
+    <!-- SECTION 5: CUSTOM FIELDS (DINÂMICOS) - UNIFIED -->
+    <div class="section-header" style="margin-top:20px;">
+        <div class="section-icon">📝</div>
+        <h2>Outras Informações</h2>
+    </div>
+    <div class="section-body">
+        <p style="font-size:0.9rem; color:#666; margin-bottom:20px;">Use esta seção para adicionar dados personalizados (Ex: CNH, Nome do Cônjuge, etc).</p>
+        
+        <div id="container-campos-extras" style="display:flex; flex-direction:column; gap:15px;">
+            <?php if(!empty($campos_extras)) foreach($campos_extras as $ex): ?>
+                <div class="extra-field-row" style="background:#f9f9f9; padding:15px; border-radius:8px; border:1px solid #eee; display:flex; gap:15px; align-items:flex-end;">
+                    <div style="flex:1;">
+                        <label style="display:block; margin-bottom:5px; font-size:0.8rem; font-weight:bold; color:#555;">Título do Campo</label>
+                        <input type="text" name="extra_titulos[]" value="<?= htmlspecialchars($ex['titulo']) ?>" style="width:100%; border:1px solid #ddd; padding:10px; border-radius:6px;">
                     </div>
-                <?php endforeach; ?>
-            </div>
-
-            <button type="button" onclick="addExtraField()" style="margin-top:20px; display:flex; align-items:center; gap:8px; background:#f0f8f5; color:#146c43; border:1px dashed #146c43; padding:12px 20px; border-radius:8px; cursor:pointer; width:100%; justify-content:center;">
-                <span class="material-symbols-rounded">add_circle</span> Adicionar Novo Campo
-            </button>
+                    <div style="flex:2;">
+                        <label style="display:block; margin-bottom:5px; font-size:0.8rem; font-weight:bold; color:#555;">Informação / Valor</label>
+                        <input type="text" name="extra_valores[]" value="<?= htmlspecialchars($ex['valor']) ?>" style="width:100%; border:1px solid #ddd; padding:10px; border-radius:6px;">
+                    </div>
+                    <button type="button" onclick="this.parentElement.remove()" style="height:42px; width:42px; display:flex; align-items:center; justify-content:center; background:#fff; color:#e74c3c; border:1px solid #e74c3c; border-radius:6px; cursor:pointer;">
+                        <span class="material-symbols-rounded">delete</span>
+                    </button>
+                </div>
+            <?php endforeach; ?>
         </div>
-    <?php endif; ?>
+
+        <button type="button" onclick="addExtraField()" style="margin-top:20px; display:flex; align-items:center; gap:8px; background:#f0f8f5; color:#146c43; border:1px dashed #146c43; padding:12px 20px; border-radius:8px; cursor:pointer; width:100%; justify-content:center;">
+            <span class="material-symbols-rounded">add_circle</span> Adicionar Novo Campo
+        </button>
+    </div>
+
 
     <!-- Sticky Footer -->
     <div class="<?= $is_edit ? 'sticky-footer' : '' ?>" style="<?= $is_edit ? '' : 'margin-top:20px;' ?>">
@@ -198,6 +201,29 @@ $i_area = $detalhes['area_construida'] ?? '';
 
     <!-- Scripts de Máscara (JS) -->
     <script>
+        // LOGIN AUTOMÁTICO (UI)
+        function atualizarLoginAuto() {
+            // Se o campo usuario já tem valor e o usuario digitou manualmente, talvez não devêssemos sobrescrever?
+            // Mas a regra é: Se estiver vazio ou se for uma geração automatica recente.
+            // Simplificação: Sempre atualiza se for "Create Mode" (input hidden acao=novo_cliente)
+            // Mas aqui só temos checkbox.
+            
+            const radioCpf = document.querySelector('input[name="auto_login_source"][value="cpf"]');
+            const radioTel = document.querySelector('input[name="auto_login_source"][value="tel"]');
+            
+            if(!radioCpf) return; // Não estamos no modo create
+
+            const inputCpf = document.querySelector('input[name="cpf_cnpj"]');
+            const inputTel = document.querySelector('input[name="contato_tel"]');
+            const inputUser = document.querySelector('input[name="usuario"]');
+            
+            if(radioCpf.checked && inputCpf) {
+                inputUser.value = inputCpf.value.replace(/\D/g, '');
+            } else if(radioTel && radioTel.checked && inputTel) {
+                inputUser.value = inputTel.value.replace(/\D/g, '');
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const maskPhone = (v) => v.replace(/\D/g, "").replace(/^(\d{2})(\d)/g, "($1) $2").replace(/(\d)(\d{4})$/, "$1-$2").substring(0, 15);
             const maskCpfCnpj = (v) => {
@@ -213,7 +239,10 @@ $i_area = $detalhes['area_construida'] ?? '';
 
             for (const [name, fn] of Object.entries(inputs)) {
                 document.querySelectorAll(`input[name="${name}"]`).forEach(input => {
-                    input.addEventListener('input', (e) => e.target.value = fn(e.target.value));
+                    input.addEventListener('input', (e) => {
+                        e.target.value = fn(e.target.value);
+                        atualizarLoginAuto(); // Update on input change too
+                    });
                 });
             }
         });
