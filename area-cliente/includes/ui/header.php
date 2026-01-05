@@ -7,5 +7,35 @@
     </div>
 </div>
 
-<!-- Header Removed per user request -->
-<div style="display:none;"></div>
+<!-- Top Fixed Navigation Bar -->
+<div class="top-nav-container">
+    
+    <!-- 1. Visão Geral -->
+    <a href="gestao_admin_99.php" class="top-nav-btn" style="border-color:var(--color-primary);">
+        <span class="material-symbols-rounded" style="color:var(--color-primary);">dashboard</span>
+        Visão Geral
+    </a>
+
+    <!-- 2. Atende Oliveira -->
+    <a href="https://oliveira.atende.net/atendenet?source=pwa" target="_blank" class="top-nav-btn">
+        <span class="material-symbols-rounded">support_agent</span>
+        Atende Oliveira
+    </a>
+
+    <!-- 3. Matrícula do Imóvel -->
+    <a href="https://ridigital.org.br/VisualizarMatricula/DefaultVM.aspx?from=menu" target="_blank" class="top-nav-btn">
+        <span class="material-symbols-rounded">assignment_ind</span>
+        Matrículas
+    </a>
+
+    <!-- 4. Avisos -->
+    <button onclick="document.getElementById('modalNotificacoes').showModal()" class="top-nav-btn" style="cursor:pointer;">
+        <span class="material-symbols-rounded">notifications</span>
+        Avisos
+        <?php if(isset($kpi_pre_pendentes) && $kpi_pre_pendentes > 0): ?>
+            <span class="fab-badge-top"><?= $kpi_pre_pendentes ?></span>
+        <?php endif; ?>
+    </button>
+
+</div>
+<div style="height:60px;"></div> <!-- Spacer to push content down -->
