@@ -243,16 +243,7 @@ $notify = $curr_settings['notify_email'] ?? 0;
                     </a>
                 </div>
 
-                <!-- Limpeza -->
-                <div style="flex:1; min-width:250px; background:#fff3cd; padding:15px; border-radius:8px; border:1px solid #ffecb5;">
-                    <h4 style="margin:0 0 10px 0; color:#856404;">🧹 Manutenção</h4>
-                    <p style="font-size:0.85rem; color:#856404; margin-bottom:15px;">Remove solicitações de pré-cadastro antigas (> 30 dias) e logs temporários.</p>
-                    <form method="POST" onsubmit="return confirm('Tem certeza? Isso apagará dados antigos.');">
-                        <button type="submit" name="clean_logs" class="btn-action" style="background:#856404; color:white;">
-                            <span class="material-symbols-rounded">cleaning_services</span> Limpar Sistema
-                        </button>
-                    </form>
-                </div>
+
 
             </div>
         </div>

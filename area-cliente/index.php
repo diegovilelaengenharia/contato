@@ -47,13 +47,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // CHECK MAINTENANCE MODE
     $stmtMaint = $pdo->query("SELECT setting_value FROM admin_settings WHERE setting_key = 'maintenance_mode'");
     $is_maint = $stmtMaint->fetchColumn();
+    
+    // If enabled, serve maintenance page (Exit immediately to prevent login form rendering)
     if($is_maint == 1) {
-        $erro = "⚠️ O sistema está em manutenção no momento. Tente novamente mais tarde.";
-    } else {
-        // 2. Se não for Admin, busca Cliente no banco
-        $stmt = $pdo->prepare("SELECT * FROM clientes WHERE usuario = ?");
-        $stmt->execute([$usuario]);
-        $user = $stmt->fetch();
+        require 'maintenance.php';
+        exit;
+    }
+
+    // 2. Se não for Admin, busca Cliente no banco
+    $stmt = $pdo->prepare("SELECT * FROM clientes WHERE usuario = ?");
+    $stmt->execute([$usuario]);
+    $user = $stmt->fetch();
     
         // Verifica a senha (usando hash seguro)
         if ($user && password_verify($senha, $user['senha'])) {
