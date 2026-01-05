@@ -1,7 +1,11 @@
-<?php
 session_name('CLIENTE_SESSID');
 session_start();
 require 'db.php'; // Database Connection
+
+// FORCE NO CACHE (Fix for immediate updates)
+header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1.
+header("Pragma: no-cache"); // HTTP 1.0.
+header("Expires: 0"); // Proxies.
 
 // Verify Login
 if (!isset($_SESSION['cliente_id'])) {
