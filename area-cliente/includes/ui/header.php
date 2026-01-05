@@ -57,7 +57,7 @@
                 <span class="material-symbols-rounded" style="font-size:1.1rem; vertical-align:middle; margin-right:5px; color:var(--color-primary);">person_add</span>
                 Novo Cadastro
             </a>
-            <a href="gestao_admin_99.php?novo&mode=precadastro" class="dropdown-item">
+            <a href="../cadastro.php" target="_blank" class="dropdown-item">
                 <span class="material-symbols-rounded" style="font-size:1.1rem; vertical-align:middle; margin-right:5px; color:#fd7e14;">assignment_ind</span>
                 Pré-Cadastro
             </a>
