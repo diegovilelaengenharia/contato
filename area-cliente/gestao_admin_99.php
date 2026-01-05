@@ -1036,47 +1036,5 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <!-- Modal Aprovar Removed (Included in cadastro.php) -->
-<!-- Floating Button: Visualizar Matrícula -->
-<a href="https://ridigital.org.br/VisualizarMatricula/DefaultVM.aspx?from=menu" target="_blank" title="Acessar Matrícula (RI Digital)" style="
-    position: fixed;
-    bottom: 100px;
-    right: 30px;
-    background: #6f42c1; /* Purple color */
-    color: white;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    text-decoration: none;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    transition: transform 0.2s, box-shadow 0.2s;
-" onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.3)'">
-    <span class="material-symbols-rounded" style="font-size:1.8rem;">description</span>
-</a>
-
-<!-- Floating Button: Oliveira Atende -->
-<a href="https://oliveira.atende.net/atendenet?source=pwa" target="_blank" title="Acessar Oliveira Atende" style="
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background: #009688; /* Teal color */
-    color: white;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    text-decoration: none;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    transition: transform 0.2s, box-shadow 0.2s;
-" onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.3)'">
-    <span class="material-symbols-rounded" style="font-size:1.8rem;">account_balance</span>
-</a>
-
 </body>
 </html>
