@@ -55,15 +55,7 @@
             <!-- New Internal Shortcuts -->
             <a href="gestao_admin_99.php?novo" class="dropdown-item">
                 <span class="material-symbols-rounded" style="font-size:1.1rem; vertical-align:middle; margin-right:5px; color:var(--color-primary);">person_add</span>
-                Novo Cadastro
-            </a>
-            <a href="../cadastro.php" target="_blank" class="dropdown-item">
-                <span class="material-symbols-rounded" style="font-size:1.1rem; vertical-align:middle; margin-right:5px; color:#fd7e14;">assignment_ind</span>
-                Pré-Cadastro
-            </a>
-            <a href="gestao_admin_99.php?importar" class="dropdown-item">
-                <span class="material-symbols-rounded" style="font-size:1.1rem; vertical-align:middle; margin-right:5px; color:#198754;">contact_mail</span>
-                Solicitações
+                Cadastrar Cliente
             </a>
             <div style="border-top:1px solid #eee; margin:5px 0;"></div>
             
