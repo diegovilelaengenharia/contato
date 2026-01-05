@@ -42,25 +42,7 @@
     </div>
     <div style="padding:20px; max-height:60vh; overflow-y:auto;">
         
-        <!-- 1. Novos Cadastros -->
-        <h4 style="border-bottom:1px solid #eee; padding-bottom:5px; color:#dc3545; margin-top:0;">📥 Solicitações Web (Pendentes)</h4>
-        <?php 
-        $notif_pre = $pdo->query("SELECT * FROM pre_cadastros WHERE status='pendente' ORDER BY data_solicitacao DESC LIMIT 5")->fetchAll();
-        if(count($notif_pre) > 0): ?>
-            <ul style="list-style:none; padding:0; margin-bottom:20px;">
-                <?php foreach($notif_pre as $np): ?>
-                    <li style="padding:10px; border-bottom:1px solid #f0f0f0; display:flex; justify-content:space-between; align-items:center;">
-                        <div>
-                            <strong><?= htmlspecialchars($np['nome']) ?></strong><br>
-                            <small style="color:#888;"><?= date('d/m H:i', strtotime($np['data_solicitacao'])) ?> • <?= htmlspecialchars($np['tipo_servico']) ?></small>
-                        </div>
-                        <a href="?importar=true" style="font-size:0.8rem; background:#dc3545; color:white; padding:4px 8px; text-decoration:none; border-radius:4px;">Ver</a>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        <?php else: ?>
-            <p style="color:#aaa; font-style:italic; font-size:0.9rem;">Nenhuma solicitação pendente.</p>
-        <?php endif; ?>
+
 
         <!-- 2. Últimas Movimentações -->
         <h4 style="border-bottom:1px solid #eee; padding-bottom:5px; color:var(--color-primary); margin-top:20px;">🔄 Últimas Alterações de Processo</h4>
