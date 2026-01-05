@@ -23,7 +23,9 @@ $cols_needed = [
     'valor_venal', 'area_total_final', 'foto_capa_obra',
     // New Technical Columns (Oliveira/MG Spec)
     'area_existente', 'area_acrescimo', 'area_permeavel',
-    'taxa_ocupacao', 'fator_aproveitamento', 'geo_coords'
+    'taxa_ocupacao', 'fator_aproveitamento', 'geo_coords',
+    // New Personal Fields
+    'data_nascimento', 'nome_conjuge'
 ];
 
 foreach($cols_needed as $col) {

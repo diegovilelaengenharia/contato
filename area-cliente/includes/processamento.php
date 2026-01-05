@@ -367,14 +367,41 @@ if (isset($_POST['novo_cliente'])) {
         $nid = $pdo->lastInsertId();
         
         // Inserção Detalhes (Campos não preenchidos vão vazios para serem completados na edição)
+        // Inserção Detalhes (Campos Expandidos)
         $pdo->prepare("INSERT INTO processo_detalhes (
             cliente_id, 
             cpf_cnpj, 
             contato_tel, 
             rg_ie, 
-            endereco_residencial, 
-            endereco_imovel
-        ) VALUES (?, ?, ?, ?, ?, ?)")->execute([$nid, $cpf, $tel, '', '', '']);
+            data_nascimento,
+            profissao,
+            estado_civil,
+            nome_conjuge,
+            tipo_servico,
+            imovel_rua,
+            imovel_numero, 
+            imovel_bairro,
+            imovel_cidade,
+            endereco_imovel,
+            endereco_residencial
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")->execute([
+            $nid, 
+            $cpf, 
+            $tel, 
+            $_POST['rg'] ?? null,
+            $_POST['data_nascimento'] ?? null,
+            $_POST['profissao'] ?? null,
+            $_POST['estado_civil'] ?? null,
+            $_POST['nome_conjuge'] ?? null,
+            $_POST['tipo_servico'] ?? null,
+            $_POST['imovel_rua'] ?? null,
+            $_POST['imovel_numero'] ?? null,
+            $_POST['imovel_bairro'] ?? null,
+            $_POST['imovel_cidade'] ?? null,
+            // Compõe endereço visual
+            ($_POST['imovel_rua'] ?? '') . ', ' . ($_POST['imovel_numero'] ?? '') . ' - ' . ($_POST['imovel_bairro'] ?? '') . ' - ' . ($_POST['imovel_cidade'] ?? ''),
+            '' // Endereço residencial vazio por enquanto no cadastro rápido
+        ]);
 
         // AVATAR UPLOAD (NOVO)
         if(isset($_FILES['avatar_upload']) && $_FILES['avatar_upload']['error'] == 0) {

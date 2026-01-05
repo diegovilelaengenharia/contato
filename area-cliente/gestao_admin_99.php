@@ -182,66 +182,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
         <main style="padding-bottom: 80px;"> <!-- Padding for fixed footer area -->
             
             <!-- NEW: Dashboard Alert Widgets REMOVED -->
-            <?php if(!isset($_GET['cliente_id']) && !isset($_GET['novo']) && !isset($_GET['importar'])): ?>
-                
-                <!-- Barra de Acesso Rápido -->
-                <div style="margin-bottom: 30px;">
-                    <h2 style="color:var(--color-text); font-size:1.5rem; margin-bottom:20px;">Acesso Rápido</h2>
-                    
-                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:20px;">
-                        
-                        <!-- 1. Cadastrar Novo Cliente -->
-                        <a href="?novo" style="text-decoration:none;">
-                            <div class="form-card" style="padding:25px; border-left:5px solid var(--color-primary); transition:transform 0.2s; display:flex; align-items:center; gap:15px; height:100%;">
-                                <div style="background:var(--color-primary-light); color:var(--color-primary); width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center;">
-                                    <span class="material-symbols-rounded" style="font-size:1.8rem;">person_add</span>
-                                </div>
-                                <div>
-                                    <h3 style="margin:0; color:var(--color-text); font-size:1.1rem;">Cadastrar Novo Cliente</h3>
-                                    <p style="margin:5px 0 0 0; color:#666; font-size:0.85rem;">Adicionar um novo cliente manualmente.</p>
-                                </div>
-                            </div>
-                        </a>
 
-                        <!-- 2. Pré-Cadastro -->
-                        <a href="?novo&mode=precadastro" style="text-decoration:none;">
-                            <div class="form-card" style="padding:25px; border-left:5px solid #fd7e14; transition:transform 0.2s; display:flex; align-items:center; gap:15px; height:100%;">
-                                <div style="background:#fff3e0; color:#fd7e14; width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center;">
-                                    <span class="material-symbols-rounded" style="font-size:1.8rem;">assignment_ind</span>
-                                </div>
-                                <div>
-                                    <h3 style="margin:0; color:var(--color-text); font-size:1.1rem;">Pré-Cadastro</h3>
-                                    <p style="margin:5px 0 0 0; color:#666; font-size:0.85rem;">Registro simplificado de lead/prospect.</p>
-                                </div>
-                            </div>
-                        </a>
-
-                        <!-- 3. Solicitações Online -->
-                        <a href="?importar" style="text-decoration:none; position:relative;">
-                            <div class="form-card" style="padding:25px; border-left:5px solid #198754; transition:transform 0.2s; display:flex; align-items:center; gap:15px; height:100%;">
-                                <div style="background:#d1e7dd; color:#198754; width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center;">
-                                    <span class="material-symbols-rounded" style="font-size:1.8rem;">contact_mail</span>
-                                </div>
-                                <div>
-                                    <h3 style="margin:0; color:var(--color-text); font-size:1.1rem;">Solicitações Online</h3>
-                                    <p style="margin:5px 0 0 0; color:#666; font-size:0.85rem;">Verificar pedidos de cadastro do site.</p>
-                                </div>
-                                <?php if(isset($kpi_pre_pendentes) && $kpi_pre_pendentes > 0): ?>
-                                    <div style="position:absolute; top:-10px; right:-10px; background:#dc3545; color:white; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; border:3px solid #f4f6f9; box-shadow:0 2px 5px rgba(0,0,0,0.2);">
-                                        <?= $kpi_pre_pendentes ?>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-                        </a>
-
-                    </div>
-                    
-                    <style>
-                        .form-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
-                    </style>
-                </div>
-
-            <?php endif; ?>
 
         <?php if(isset($_GET['importar'])): ?>
             <div class="form-card">
@@ -305,17 +246,32 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         </div>
                         
                         <div class="form-grid">
-                            <div class="form-group">
-                                <label>CPF / CNPJ <span id="req_cpf" style="color:red">*</span></label>
-                                <input type="text" name="cpf_cnpj" placeholder="Apenas números">
-                            </div>
-                            <div class="form-group">
-                                <label>Telefone <span id="req_tel" style="color:red"></span></label>
-                                <input type="text" name="telefone" placeholder="(XX) XXXXX-XXXX">
-                            </div>
+                            <div class="form-group"><label>CPF / CNPJ <span id="req_cpf" style="color:red">*</span></label><input type="text" name="cpf_cnpj" placeholder="Apenas números"></div>
+                            <div class="form-group"><label>RG / IE</label><input type="text" name="rg"></div>
+                            <div class="form-group"><label>Data Nascimento</label><input type="date" name="data_nascimento"></div>
+                            <div class="form-group"><label>Profissão</label><input type="text" name="profissao"></div>
+                            <div class="form-group"><label>Estado Civil</label><select name="estado_civil" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;"><option value="Solteiro(a)">Solteiro(a)</option><option value="Casado(a)">Casado(a)</option><option value="Divorciado(a)">Divorciado(a)</option><option value="Viúvo(a)">Viúvo(a)</option><option value="União Estável">União Estável</option></select></div>
+                            <div class="form-group"><label>Nome Cônjuge</label><input type="text" name="nome_conjuge" placeholder="Se casado(a)"></div>
+                            <div class="form-group"><label>Telefone <span id="req_tel" style="color:red"></span></label><input type="text" name="telefone" placeholder="(XX) XXXXX-XXXX"></div>
+                            <div class="form-group"><label>Email</label><input type="email" name="email" placeholder="cliente@email.com"></div>
+                        </div>
+
+                        <h3 style="margin:20px 0 10px 0; color:var(--color-primary); border-bottom:1px solid #eee; padding-bottom:5px;">Dados do Imóvel / Obra</h3>
+                        <div class="form-grid">
+                            <div class="form-group"><label>Rua</label><input type="text" name="imovel_rua"></div>
+                            <div class="form-group"><label>Número</label><input type="text" name="imovel_numero"></div>
+                            <div class="form-group"><label>Bairro</label><input type="text" name="imovel_bairro"></div>
+                            <div class="form-group"><label>Cidade/UF</label><input type="text" name="imovel_cidade"></div>
                             <div class="form-group" style="grid-column: span 2;">
-                                <label>Email (Opcional)</label>
-                                <input type="email" name="email" placeholder="cliente@email.com">
+                                <label>Tipo de Serviço</label>
+                                <select name="tipo_servico" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
+                                    <option value="Regularização de Imóvel">Regularização de Imóvel</option>
+                                    <option value="Projeto Arquitetônico">Projeto Arquitetônico</option>
+                                    <option value="Projeto Estrutural">Projeto Estrutural</option>
+                                    <option value="Desmembramento">Desmembramento / Unificação</option>
+                                    <option value="Laudo Técnico">Laudo Técnico</option>
+                                    <option value="Outros">Outros</option>
+                                </select>
                             </div>
                         </div>
                         
