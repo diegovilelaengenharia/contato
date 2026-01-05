@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['cliente_id'] = $user['id'];
         $_SESSION['cliente_nome'] = $user['nome'];
         session_write_close();
-        header("Location: dashboard.php");
+        header("Location: client-app/index.php");
         exit;
     } else {
         $erro = "Usuário ou senha inválidos!";
