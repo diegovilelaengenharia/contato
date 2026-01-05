@@ -24,33 +24,63 @@
                     "Emissão de Alvará",
                     "Entrega de Projetos"
                 ];
-                // Reuse logic from dashboard/session ideally, but recalculating here for safety or passing via JS is better. 
-                // For PHP simplicity, verify against DB (already open $pdo)
                 $db_cli_tl = $pdo->prepare("SELECT etapa FROM clientes WHERE id=?");
                 $db_cli_tl->execute([$_SESSION['cliente_id'] ?? 0]);
                 $res_cli_tl = $db_cli_tl->fetch();
-                echo htmlspecialchars($res_cli_tl['etapa'] ?? 'Não Iniciado');
-                $etapa_raw = $res_cli_tl['etapa'] ?? '';
+                $etapa_raw = $res_cli_tl['etapa'] ?? $fases_pd[0];
+                
+                // Calculate percentage based on phase index
+                $idx_atual = array_search($etapa_raw, $fases_pd);
+                if($idx_atual === false) $idx_atual = 0;
+                $perc_val = round((($idx_atual + 1) / count($fases_pd)) * 100);
+                
+                echo htmlspecialchars($etapa_raw);
                 ?>
             </div>
             
             <!-- PROGRESS BAR -->
             <div style="background:rgba(255,255,255,0.2); height:8px; border-radius:4px; overflow:hidden;">
-                 <div style="width:0%; height:100%; background:#ffd700; border-radius:4px; transition:width 1s;" id="modalProgressFill"></div>
+                 <div style="width:<?= $perc_val ?>%; height:100%; background:#ffd700; border-radius:4px; transition:width 1s;" id="modalProgressFill"></div>
             </div>
-            <script>
-                // Simple sync for modal progress
-                document.addEventListener('DOMContentLoaded', () => {
-                    const perc = document.getElementById('progressFill') ? document.getElementById('progressFill').style.width : '0%';
-                    setTimeout(() => {
-                        if(document.getElementById('modalProgressFill')) document.getElementById('modalProgressFill').style.width = perc;
-                    }, 800);
-                });
-            </script>
         </div>
 
-        <!-- VERTICAL STEPPER TIMELINE -->
-        <div class="timeline-container">
+        <!-- COMPLETE VERTICAL STANDARDIZED TIMELINE -->
+        <h3 style="margin:0 0 20px 0; font-size:1.1rem; color:#333; border-bottom:1px solid #eee; padding-bottom:10px;">Etapas do Processo</h3>
+        <div class="timeline-container-full" style="padding-left:15px; margin-bottom:40px;">
+            <?php 
+                foreach($fases_pd as $k => $fase): 
+                    $is_past = $k < $idx_atual;
+                    $is_curr = $k === $idx_atual;
+                    
+                    $dot_bg = $is_past ? 'var(--color-primary)' : ($is_curr ? 'white' : '#e9ecef');
+                    $dot_border = $is_past ? 'var(--color-primary)' : ($is_curr ? 'var(--color-primary)' : '#ccc');
+                    $dot_icon_col = $is_past ? 'white' : 'var(--color-primary)';
+                    $text_col = $is_past || $is_curr ? 'var(--text-main)' : 'var(--text-muted)';
+                    $font_wt = $is_curr ? '800' : '500';
+            ?>
+            <div style="display:flex; gap:15px; position:relative; padding-bottom:25px;">
+                <!-- Connector Line -->
+                <?php if($k < count($fases_pd)-1): ?>
+                <div style="position:absolute; left:11px; top:25px; bottom:0; width:2px; background:<?= $is_past ? 'var(--color-primary)' : '#eee' ?>; z-index:0;"></div>
+                <?php endif; ?>
+
+                <!-- Dot -->
+                <div style="width:24px; height:24px; border-radius:50%; background:<?= $dot_bg ?>; border:2px solid <?= $dot_border ?>; display:flex; align-items:center; justify-content:center; z-index:1; flex-shrink:0; color:<?= $dot_icon_col ?>; font-size:0.75rem; font-weight:bold;">
+                    <?php if($is_past): ?>✓<?php elseif($is_curr): ?>•<?php else: ?> <?php endif; ?>
+                </div>
+
+                <!-- Text -->
+                <div style="color:<?= $text_col ?>; font-weight:<?= $font_wt ?>; padding-top:2px;">
+                    <?= $fase ?>
+                    <?php if($is_curr): ?><span style="font-size:0.7rem; background:var(--color-primary); color:white; padding:2px 6px; border-radius:10px; margin-left:8px; vertical-align:middle;">EM ANDAMENTO</span><?php endif; ?>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+
+        <!-- REPORT: DETAILED HISTORY -->
+        <h3 style="margin:0 0 20px 0; font-size:1.1rem; color:#333; border-bottom:1px solid #eee; padding-bottom:10px;">Relatório de Histórico</h3>
+        <div class="timeline-container-history">
             <?php
              $stmt_hist = $pdo->prepare("SELECT * FROM processo_movimentacoes WHERE cliente_id = ? ORDER BY data_movimentacao DESC");
              $stmt_hist->execute([$_SESSION['cliente_id'] ?? 0]);
@@ -59,41 +89,14 @@
              if(empty($historico)): ?>
                 <div class="empty-state">Nenhuma movimentação registrada.</div>
              <?php else: 
-                foreach($historico as $index => $h): 
-                    // First item is "Active" visually
-                    $is_first = ($index === 0);
-                    $icon_bg = $is_first ? 'var(--color-primary)' : '#e9ecef';
-                    $icon_color = $is_first ? 'white' : 'var(--text-muted)';
-                    $border_col = $is_first ? 'var(--color-primary)' : 'var(--border-color)';
-                ?>
-                <div class="timeline-item">
-                    <div class="tl-icon" style="background:<?= $icon_bg ?>; color:<?= $icon_color ?>; border-color:<?= $border_col ?>;">
-                        <?= $is_first ? '✓' : '•' ?>
-                    </div>
-                    <div class="tl-content" <?= $is_first ? 'style="border-left:4px solid var(--color-primary);"' : '' ?>>
-                        <span class="tl-date"><?= date('d/m/Y', strtotime($h['data_movimentacao'])) ?></span>
-                        <div class="tl-title"><?= htmlspecialchars($h['titulo']) ?></div>
-                        <div class="tl-body"><?= htmlspecialchars($h['descricao']) ?></div>
-                    </div>
+                foreach($historico as $h): ?>
+                <div class="history-item" style="border-left:3px solid #ccc;">
+                    <div class="history-date"><?= date('d/m/Y', strtotime($h['data_movimentacao'])) ?></div>
+                    <div class="history-title"><?= htmlspecialchars($h['titulo']) ?></div>
+                    <div class="history-desc"><?= htmlspecialchars($h['descricao']) ?></div>
                 </div>
                 <?php endforeach; 
              endif; ?>
-        </div>
-
-        <!-- LISTA DE FASES (Future Steps) -->
-        <h3 style="margin:30px 0 15px 0; font-size:1.1rem; color:#666;">Próximas Etapas</h3>
-        <div style="opacity:0.6;">
-            <?php 
-            $found_current = false;
-            foreach($fases_padrao as $fs): 
-                if($fs == $etapa_raw) { $found_current = true; continue; } // Skip past/current
-                if(!$found_current) continue; 
-            ?>
-            <div style="display:flex; gap:15px; margin-bottom:15px; padding-left:10px;">
-                <div style="width:20px; text-align:center; color:#ccc;">○</div>
-                <div style="font-weight:600; color:#888;"><?= $fs ?></div>
-            </div>
-            <?php endforeach; ?>
         </div>
         
     </div>
