@@ -45,13 +45,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // CHECK MAINTENANCE MODE
-    $stmtMaint = $pdo->query("SELECT setting_value FROM admin_settings WHERE setting_key = 'maintenance_mode'");
-    $is_maint = $stmtMaint->fetchColumn();
-    
-    // If enabled, serve maintenance page (Exit immediately to prevent login form rendering)
-    if($is_maint == 1) {
-        require 'maintenance.php';
-        exit;
+    try {
+        $stmtMaint = $pdo->query("SELECT setting_value FROM admin_settings WHERE setting_key = 'maintenance_mode'");
+        // If table doesn't exist or query fails, it goes to catch
+        if ($stmtMaint) {
+            $is_maint = $stmtMaint->fetchColumn();
+            
+            // If enabled, serve maintenance page (Exit immediately to prevent login form rendering)
+            if($is_maint == 1) {
+                require 'maintenance.php';
+                exit;
+            }
+        }
+    } catch (Exception $e) {
+        // Table likely doesn't exist yet (Migration hasn't run). Ignore maintenance mode.
+        // Proceed to login.
     }
 
     // 2. Se não for Admin, busca Cliente no banco
