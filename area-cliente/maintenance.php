@@ -2,6 +2,9 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estamos em Manutenção | Vilela Engenharia</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -106,7 +109,7 @@
         </div>
 
         <div style="margin-top: 20px; font-size: 0.8rem; color: #aaa;">
-            Equipe Vilela Engenharia • <a href="index.php?admin=1" style="color:#aaa; text-decoration:none;">Acesso Administrativo</a>
+            Equipe Vilela Engenharia • <a href="?bypass=1" style="color:#aaa; text-decoration:none;">Acesso Administrativo</a>
         </div>
     </div>
 </body>

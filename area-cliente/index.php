@@ -38,10 +38,10 @@ try {
         $is_maint = $stmtMaint->fetchColumn();
         if($is_maint == 1) {
             // MAINTENANCE LOGIC
-            // 1. If bypass param exists (?admin=1), show login form (do not exit).
+            // 1. If bypass param exists (?bypass=1), show login form (do not exit).
             // 2. If it's a POST request (Login Attempt), verify later.
             // 3. Otherwise, show maintenance page.
-            if (!isset($_GET['admin']) && $_SERVER['REQUEST_METHOD'] !== 'POST') {
+            if (!isset($_GET['bypass']) && $_SERVER['REQUEST_METHOD'] !== 'POST') {
                 require 'maintenance.php';
                 exit;
             }
