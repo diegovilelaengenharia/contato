@@ -819,113 +819,128 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 </div>
             </div>
 
-            <!-- KPI Cards Compactos -->
-            <style>
-                .kpi-grid-compact {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-                    gap: 15px;
-                    margin-bottom: 30px;
-                }
-                .kpi-card-compact {
-                    background: var(--color-surface); 
-                    border: 1px solid var(--color-border);
-                    border-radius: 12px;
-                    padding: 15px;
-                    display: flex;
-                    align-items: center;
-                    gap: 15px;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
-                    transition: transform 0.2s;
-                }
-                .kpi-card-compact:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
-                .kpi-icon-box {
-                    width: 48px; height: 48px;
-                    border-radius: 10px;
-                    display: flex; align-items: center; justify-content: center;
-                    font-size: 1.5rem;
-                    flex-shrink: 0;
-                }
-                .kpi-content div:first-child { font-size: 1.4rem; font-weight: 800; line-height: 1; margin-bottom: 2px; }
-                .kpi-content div:last-child { font-size: 0.85rem; color: var(--color-text-subtle); font-weight: 600; line-height: 1.2; }
-            </style>
-
-            <div class="kpi-grid-compact">
+            <!-- KPI Cards Premium -->
+            <div class="kpi-grid-premium">
                 <!-- 1. Clientes -->
-                <div class="kpi-card-compact">
-                    <div class="kpi-icon-box" style="background:#e3f2fd; color:#2196f3;">👥</div>
-                    <div class="kpi-content">
-                        <div style="color:#2196f3;"><?= $kpi_total_clientes ?></div>
-                        <div>Clientes Ativos</div>
+                <div class="kpi-card-premium" style="--card-color:#0d6efd; --card-bg-light:#e7f1ff;">
+                    <div class="kpi-icon-wrapper">
+                        <span class="material-symbols-rounded">group</span>
+                    </div>
+                    <div>
+                        <div class="kpi-value"><?= $kpi_total_clientes ?></div>
+                        <div class="kpi-label">Clientes Ativos</div>
                     </div>
                 </div>
 
                 <!-- 2. Obras -->
-                <div class="kpi-card-compact">
-                    <div class="kpi-icon-box" style="background:#fff3cd; color:#ffc107;">🏗️</div>
-                    <div class="kpi-content">
-                        <div style="color:#ffc107;"><?= $kpi_proc_ativos ?></div>
-                        <div>Obras/Processos</div>
+                <div class="kpi-card-premium" style="--card-color:#ffc107; --card-bg-light:#fff9e6;">
+                    <div class="kpi-icon-wrapper">
+                        <span class="material-symbols-rounded">engineering</span>
+                    </div>
+                    <div>
+                        <div class="kpi-value"><?= $kpi_proc_ativos ?></div>
+                        <div class="kpi-label">Obras em Andamento</div>
                     </div>
                 </div>
 
                 <!-- 3. Solicitações -->
-                <div class="kpi-card-compact" style="cursor: pointer;" onclick="if(<?= $kpi_pre_pendentes ?> > 0) window.location.href='?importar=true'">
-                    <div class="kpi-icon-box" style="background:#f8d7da; color:#dc3545;">📥</div>
-                    <div class="kpi-content">
-                        <div style="color:#dc3545;"><?= $kpi_pre_pendentes ?></div>
-                        <div>Novos Pedidos</div>
+                <div class="kpi-card-premium" style="--card-color:#dc3545; --card-bg-light:#ffeef0; cursor:pointer;" onclick="if(<?= $kpi_pre_pendentes ?> > 0) window.location.href='?importar=true'">
+                    <div class="kpi-icon-wrapper">
+                        <span class="material-symbols-rounded">inbox</span>
+                    </div>
+                    <div>
+                        <div class="kpi-value"><?= $kpi_pre_pendentes ?></div>
+                        <div class="kpi-label">Novos Pedidos</div>
+                    </div>
+                    <?php if($kpi_pre_pendentes > 0): ?>
+                        <div style="position:absolute; top:20px; right:20px; width:10px; height:10px; background:#dc3545; border-radius:50%; box-shadow:0 0 0 3px rgba(220,53,69,0.2);"></div>
+                    <?php endif; ?>
+                </div>
+
+                <!-- 4. Recebíveis -->
+                <div class="kpi-card-premium" style="--card-color:#198754; --card-bg-light:#e8f7ed;">
+                    <div class="kpi-icon-wrapper">
+                        <span class="material-symbols-rounded">savings</span>
+                    </div>
+                    <div>
+                        <div class="kpi-value" style="font-size:1.5rem;">R$ <?= number_format($kpi_fin_pendente ?? 0, 2, ',', '.') ?></div>
+                        <div class="kpi-label">A Receber (Futuro)</div>
                     </div>
                 </div>
 
-                <!-- 4. Recebíveis (Futuro) -->
-                <div class="kpi-card-compact">
-                    <div class="kpi-icon-box" style="background:#d1e7dd; color:#198754;">💰</div>
-                    <div class="kpi-content">
-                        <div style="color:#198754; font-size:1.1rem;"><?= number_format($kpi_fin_pendente ?? 0, 2, ',', '.') ?></div>
-                        <div>A Receber (Futuro)</div>
-                    </div>
-                </div>
-                
-                <!-- 5. Atrasados (Alerta) - Só aparece se tiver -->
+                <!-- 5. Atrasados (Alerta) -->
                 <?php if(($kpi_fin_atrasado ?? 0) > 0): ?>
-                <div class="kpi-card-compact" style="border-color:#dc3545;">
-                    <div class="kpi-icon-box" style="background:#dc3545; color:white;">⚠️</div>
-                    <div class="kpi-content">
-                        <div style="color:#dc3545; font-size:1.1rem;"><?= number_format($kpi_fin_atrasado ?? 0, 2, ',', '.') ?></div>
-                        <div>EM ATRASO</div>
+                <div class="kpi-card-premium" style="--card-color:#dc3545; --card-bg-light:#fff;">
+                    <div class="kpi-icon-wrapper" style="background:#dc3545; color:white;">
+                        <span class="material-symbols-rounded">warning</span>
+                    </div>
+                    <div>
+                        <div class="kpi-value" style="color:#dc3545; font-size:1.5rem;">R$ <?= number_format($kpi_fin_atrasado ?? 0, 2, ',', '.') ?></div>
+                        <div class="kpi-label">EM ATRASO</div>
                     </div>
                 </div>
                 <?php endif; ?>
-
             </div>
 
-            <!-- Tabela Geral de Clientes -->
-            <div class="form-card">
-                <h3>📋 Situação da Carteira de Clientes</h3>
+            <!-- Tabela Geral de Clientes (Enhanced) -->
+            <div class="form-card" style="box-shadow: 0 4px 20px rgba(0,0,0,0.02); border:1px solid #eee;">
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #f0f0f0; padding-bottom:15px; margin-bottom:15px;">
+                    <h3 style="margin:0; font-size:1.1rem; color:#444;">📋 Carteira de Clientes</h3>
+                    <div style="font-size:0.85rem; color:#888;">
+                        <?= count($clientes) ?> registros
+                    </div>
+                </div>
+                
                 <div class="table-responsive">
-                    <table style="width:100%; border-collapse:collapse; margin-top:15px;">
-                        <thead>
-                            <tr style="background:#f8f9fa; border-bottom:2px solid #ddd;">
-                                <th style="padding:12px; text-align:left;">Cliente</th>
-                                <th style="padding:12px; text-align:left;">Fase Atual</th>
-                                <th style="padding:12px; text-align:left;">Contato</th>
-                                <th style="padding:12px; text-align:center;">Ação</th>
-                            </tr>
-                        </thead>
+                    <table style="width:100%; border-collapse:collapse; min-width:800px;">
                         <tbody>
                             <?php foreach($clientes as $c): 
-                                // Busca detalhes rápidos (poderia ser otimizado com JOIN, mas mantendo simples)
+                                // Detalhes do Processo
                                 $dt = $pdo->query("SELECT etapa_atual, contato_tel FROM processo_detalhes WHERE cliente_id={$c['id']}")->fetch();
-                                $etapa = $dt['etapa_atual'] ?? '<span style="color:#ccc; font-style:italic;">Não iniciado</span>';
+                                $etapa = $dt['etapa_atual'] ?? null;
                                 $tel = $dt['contato_tel'] ?? '--';
+
+                                // Cálculo de Progresso
+                                $total_fases = count($fases_padrao);
+                                $fase_index = $etapa ? array_search($etapa, $fases_padrao) : -1;
+                                $porcentagem = ($fase_index !== false && $fase_index >= 0) ? round((($fase_index + 1) / $total_fases) * 100) : 0;
+                                
+                                // Badge Color Logic
+                                $badge_class = 'neutral';
+                                if($porcentagem == 100) $badge_class = 'success';
+                                elseif($porcentagem > 0) $badge_class = 'warning';
+                                
+                                // Display Text
+                                $display_etapa = $etapa ?? 'Não iniciado';
                             ?>
-                            <tr style="border-bottom:1px solid #eee;">
-                                <td style="padding:12px; font-weight:bold; color:var(--color-primary);"><?= htmlspecialchars($c['nome']) ?></td>
-                                <td style="padding:12px;"><?= $etapa ?></td>
-                                <td style="padding:12px;"><?= $tel ?></td>
-                                <td style="padding:12px; text-align:center;">
-                                    <a href="?cliente_id=<?= $c['id'] ?>" class="btn-save btn-info" style="padding:5px 10px; font-size:0.85rem; text-decoration:none;">Gerenciar ➡️</a>
+                            <tr style="border-bottom:1px solid #f9f9f9; transition:background 0.2s;">
+                                <td style="padding:15px; width:60px;">
+                                    <div style="width:40px; height:40px; background:#f0f2f5; border-radius:10px; display:flex; align-items:center; justify-content:center; color:#666; font-weight:bold;">
+                                        <?= strtoupper(substr($c['nome'], 0, 2)) ?>
+                                    </div>
+                                </td>
+                                <td style="padding:15px;">
+                                    <div style="font-weight:600; color:#333; font-size:0.95rem;"><?= htmlspecialchars($c['nome']) ?></div>
+                                    <div style="font-size:0.8rem; color:#888; margin-top:3px;"><?= $tel ?></div>
+                                </td>
+                                <td style="padding:15px;">
+                                    <span class="status-badge <?= $badge_class ?>">
+                                        <?= $display_etapa ?>
+                                    </span>
+                                </td>
+                                <td style="padding:15px; width:150px;">
+                                    <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:#888; margin-bottom:4px;">
+                                        <span>Progresso</span>
+                                        <span><?= $porcentagem ?>%</span>
+                                    </div>
+                                    <div class="table-progress-track">
+                                        <div class="table-progress-fill" style="width:<?= $porcentagem ?>%;"></div>
+                                    </div>
+                                </td>
+                                <td style="padding:15px; text-align:right;">
+                                    <a href="?cliente_id=<?= $c['id'] ?>" class="btn-save" style="background:white; border:1px solid #dee2e6; color:#555; padding:8px 16px; border-radius:20px; font-size:0.85rem; box-shadow:none;">
+                                        Gerenciar ➡️
+                                    </a>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
