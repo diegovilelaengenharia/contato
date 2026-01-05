@@ -1,11 +1,15 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require 'includes/init.php';
 require 'includes/schema.php';
 
 // --- Logic to Determine Mode (Create vs Edit) ---
 $cliente_id = $_GET['id'] ?? null;
-$cliente = null;
-$detalhes = null;
+$cliente = [];
+$detalhes = [];
 $campos_extras = [];
 $is_edit = false;
 
