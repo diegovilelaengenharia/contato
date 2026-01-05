@@ -815,88 +815,169 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             <div style="margin-bottom:30px; display:flex; justify-content:space-between; align-items:flex-end;">
                 <div>
                     <h2 style="color:var(--color-primary); margin-bottom:5px;">Visão Geral do Escritório</h2>
-                    <p style="color:var(--color-text-subtle);">Resumo de atividades e indicadores de performance.</p>
+                    <p style="color:var(--color-text-subtle);">Central de Comando e Inteligência.</p>
                 </div>
             </div>
 
-            <!-- KPI Cards Compactos -->
-            <style>
-                .kpi-grid-compact {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-                    gap: 15px;
-                    margin-bottom: 30px;
-                }
-                .kpi-card-compact {
-                    background: var(--color-surface); 
-                    border: 1px solid var(--color-border);
-                    border-radius: 12px;
-                    padding: 15px;
-                    display: flex;
-                    align-items: center;
-                    gap: 15px;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
-                    transition: transform 0.2s;
-                }
-                .kpi-card-compact:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
-                .kpi-icon-box {
-                    width: 48px; height: 48px;
-                    border-radius: 10px;
-                    display: flex; align-items: center; justify-content: center;
-                    font-size: 1.5rem;
-                    flex-shrink: 0;
-                }
-                .kpi-content div:first-child { font-size: 1.4rem; font-weight: 800; line-height: 1; margin-bottom: 2px; }
-                .kpi-content div:last-child { font-size: 0.85rem; color: var(--color-text-subtle); font-weight: 600; line-height: 1.2; }
-            </style>
-
-            <div class="kpi-grid-compact">
-                <!-- 1. Clientes -->
-                <div class="kpi-card-compact">
-                    <div class="kpi-icon-box" style="background:#e3f2fd; color:#2196f3;">👥</div>
-                    <div class="kpi-content">
-                        <div style="color:#2196f3;"><?= $kpi_total_clientes ?></div>
-                        <div>Clientes Ativos</div>
-                    </div>
-                </div>
-
-                <!-- 2. Obras -->
-                <div class="kpi-card-compact">
-                    <div class="kpi-icon-box" style="background:#fff3cd; color:#ffc107;">🏗️</div>
-                    <div class="kpi-content">
-                        <div style="color:#ffc107;"><?= $kpi_proc_ativos ?></div>
-                        <div>Obras/Processos</div>
-                    </div>
-                </div>
-
-                <!-- 3. Solicitações -->
-                <div class="kpi-card-compact" style="cursor: pointer;" onclick="if(<?= $kpi_pre_pendentes ?> > 0) window.location.href='?importar=true'">
-                    <div class="kpi-icon-box" style="background:#f8d7da; color:#dc3545;">📥</div>
-                    <div class="kpi-content">
-                        <div style="color:#dc3545;"><?= $kpi_pre_pendentes ?></div>
-                        <div>Novos Pedidos</div>
-                    </div>
-                </div>
-
-                <!-- 4. Recebíveis (Futuro) -->
-                <div class="kpi-card-compact">
-                    <div class="kpi-icon-box" style="background:#d1e7dd; color:#198754;">💰</div>
-                    <div class="kpi-content">
-                        <div style="color:#198754; font-size:1.1rem;"><?= number_format($kpi_fin_pendente ?? 0, 2, ',', '.') ?></div>
-                        <div>A Receber (Futuro)</div>
-                    </div>
+            <!-- Botão Gigante de Status -->
+            <div onclick="document.getElementById('modalRelatorioGestao').showModal()" style="
+                background: linear-gradient(135deg, #146c43 0%, #0d47a1 100%);
+                color: white;
+                padding: 40px;
+                border-radius: 20px;
+                cursor: pointer;
+                box-shadow: 0 10px 30px rgba(20, 108, 67, 0.25);
+                transition: transform 0.3s, box-shadow 0.3s;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 40px;
+                position: relative;
+                overflow: hidden;
+            ">
+                <!-- Background Decoration -->
+                <div style="position:absolute; right:-50px; top:-50px; width:200px; height:200px; background:rgba(255,255,255,0.1); border-radius:50%;"></div>
+                
+                <div style="z-index: 2;">
+                    <div style="text-transform:uppercase; font-size:0.9rem; letter-spacing:1px; opacity:0.9; margin-bottom:10px;">Relatório de Inteligência</div>
+                    <h1 style="margin:0; font-size:2.5rem; font-weight:800; line-height:1.2;">Status da Empresa</h1>
+                    <div style="margin-top:10px; font-size:1.1rem; opacity:0.9;">Clique para ver análise completa</div>
                 </div>
                 
-                <!-- 5. Atrasados (Alerta) - Só aparece se tiver -->
-                <?php if(($kpi_fin_atrasado ?? 0) > 0): ?>
-                <div class="kpi-card-compact" style="border-color:#dc3545;">
-                    <div class="kpi-icon-box" style="background:#dc3545; color:white;">⚠️</div>
-                    <div class="kpi-content">
-                        <div style="color:#dc3545; font-size:1.1rem;"><?= number_format($kpi_fin_atrasado ?? 0, 2, ',', '.') ?></div>
-                        <div>EM ATRASO</div>
-                    </div>
+                <div style="z-index: 2; text-align:right;">
+                    <div style="font-size:3.5rem;">📊</div>
                 </div>
-                <?php endif; ?>
+            </div>
+
+            <!-- MODAL RELATÓRIO DE GESTÃO -->
+            <dialog id="modalRelatorioGestao" style="
+                width: 90%;
+                max-width: 900px;
+                border: none;
+                border-radius: 16px;
+                padding: 0;
+                box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            ">
+                <div style="padding: 30px; background: #f8f9fa;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                        <div>
+                            <h2 style="margin:0; color:#146c43;">Relatório de Eficiência - CEO</h2>
+                            <p style="margin:5px 0 0 0; color:#666;">Análise automática do seu escritório hoje.</p>
+                        </div>
+                        <button onclick="document.getElementById('modalRelatorioGestao').close()" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:#666;">✕</button>
+                    </div>
+
+                    <?php
+                    // LÓGICA DE INTELIGÊNCIA (Conselheiro)
+                    $score_eficiencia = 100;
+                    $pending_actions = [];
+                    $advices = [];
+
+                    // 1. Check Financeiro
+                    if(($kpi_fin_atrasado ?? 0) > 0) {
+                        $score_eficiencia -= 20;
+                        $pending_actions[] = ["crit", "Cobrar inadimplentes (R$ ".number_format($kpi_fin_atrasado, 2, ',', '.').")"];
+                        $advices[] = "O fluxo de caixa está comprometido por atrasos. Prioridade zero é cobrar.";
+                    }
+
+                    // 2. Check Novos Pedidos
+                    if(($kpi_pre_pendentes ?? 0) > 0) {
+                        $score_eficiencia -= 10;
+                        $pending_actions[] = ["warn", "Analisar $kpi_pre_pendentes novos pedidos pendentes."];
+                    }
+
+                    // 3. Check Obras Ativas
+                    if($kpi_proc_ativos < 3) { // Exemplo de meta baixa
+                        $advices[] = "Você tem poucas obras ativas ($kpi_proc_ativos). Separe tempo para marketing/networking hoje.";
+                    }
+
+                    // 4. Recebíveis Futuros
+                    if(($kpi_fin_pendente ?? 0) > 5000) {
+                        $advices[] = "Bom pipeline financeiro (R$ " . number_format($kpi_fin_pendente, 2, ',', '.') . "). Garanta que as obras avancem para faturar.";
+                    }
+
+                    // Score min 0
+                    if($score_eficiencia < 0) $score_eficiencia = 0;
+                    
+                    // Cor do Score
+                    $score_color = '#198754';
+                    if($score_eficiencia < 80) $score_color = '#ffc107';
+                    if($score_eficiencia < 50) $score_color = '#dc3545';
+                    ?>
+
+                    <div style="display:grid; grid-template-columns: 1fr 2fr; gap:20px; margin-bottom:30px;">
+                        
+                        <!-- Coluna 1: Score Geral -->
+                        <div style="background:white; padding:20px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.05); text-align:center;">
+                            <h4 style="margin:0 0 15px 0; color:#555;">Nível de Eficiência</h4>
+                            <div style="
+                                width:120px; height:120px; 
+                                border-radius:50%; 
+                                border: 8px solid <?= $score_color ?>;
+                                display:flex; align-items:center; justify-content:center;
+                                margin:0 auto;
+                                font-size:2.5rem; font-weight:800; color:<?= $score_color ?>;
+                            ">
+                                <?= $score_eficiencia ?>
+                            </div>
+                            <p style="margin-top:15px; color:#888; font-size:0.9rem;">Baseado em pendências e finanças.</p>
+                        </div>
+
+                        <!-- Coluna 2: Conselheiro -->
+                        <div style="background:white; padding:20px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.05);">
+                            <h4 style="margin:0 0 15px 0; color:#555;">💡 O que fazer hoje? (Plano de Ação)</h4>
+                            
+                            <?php if(empty($pending_actions)): ?>
+                                <div style="color:#198754; font-weight:600; display:flex; align-items:center; gap:10px;">
+                                    <span>✅</span> Tudo em dia! Aproveite para prospectar ou descansar.
+                                </div>
+                            <?php else: ?>
+                                <ul style="list-style:none; padding:0; margin:0;">
+                                <?php foreach($pending_actions as $action): 
+                                    $bg = $action[0] == 'crit' ? '#ffebee' : '#fff3e0';
+                                    $col = $action[0] == 'crit' ? '#c62828' : '#e65100';
+                                ?>
+                                    <li style="
+                                        background: <?= $bg ?>; color: <?= $col ?>;
+                                        padding: 10px 15px; border-radius: 8px; margin-bottom: 8px;
+                                        font-weight: 600; font-size: 0.95rem;
+                                        display: flex; align-items: center; gap: 10px;
+                                    ">
+                                        <span><?= $action[0] == 'crit' ? '🔥' : '⚠️' ?></span>
+                                        <?= $action[1] ?>
+                                    </li>
+                                <?php endforeach; ?>
+                                </ul>
+                            <?php endif; ?>
+
+                            <div style="margin-top:20px; padding-top:15px; border-top:1px solid #eee;">
+                                <h5 style="margin:0 0 5px 0; color:#555;">Conselho do Dia:</h5>
+                                <?php foreach($advices as $adv): ?>
+                                    <p style="font-style:italic; color:#666; font-size:0.9rem; margin:5px 0;">"<?= $adv ?>"</p>
+                                <?php endforeach; ?>
+                                <?php if(empty($advices)) echo '<p style="font-style:italic; color:#666;">"Mantenha o bom trabalho!"</p>'; ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dados Financeiros Rápidos -->
+                    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:15px;">
+                        <div style="background:#e8f7ed; padding:15px; border-radius:10px; text-align:center;">
+                            <div style="color:#198754; font-size:0.85rem; font-weight:700;">A RECEBER (FUTURO)</div>
+                            <div style="font-size:1.4rem; font-weight:800; color:#198754; margin-top:5px;">R$ <?= number_format($kpi_fin_pendente ?? 0, 2, ',', '.') ?></div>
+                        </div>
+                        <div style="background:#fff3cd; padding:15px; border-radius:10px; text-align:center;">
+                            <div style="color:#856404; font-size:0.85rem; font-weight:700;">FATURADO (HOJE)</div>
+                            <div style="font-size:1.4rem; font-weight:800; color:#856404; margin-top:5px;">R$ 0,00</div> <!-- Placeholder para expandir -->
+                        </div>
+                        <div style="background:#f8d7da; padding:15px; border-radius:10px; text-align:center;">
+                            <div style="color:#721c24; font-size:0.85rem; font-weight:700;">EM ATRASO</div>
+                            <div style="font-size:1.4rem; font-weight:800; color:#721c24; margin-top:5px;">R$ <?= number_format($kpi_fin_atrasado ?? 0, 2, ',', '.') ?></div>
+                        </div>
+                    </div>
+
+                </div>
+            </dialog>
 
             </div>
 
