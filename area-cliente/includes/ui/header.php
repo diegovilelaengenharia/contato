@@ -52,6 +52,22 @@
             <span class="material-symbols-rounded" style="font-size:1rem; margin-left:5px; color:#aaa;">expand_more</span>
         </button>
         <div class="top-nav-dropdown-menu" style="width:220px;">
+            <!-- New Internal Shortcuts -->
+            <a href="gestao_admin_99.php?novo" class="dropdown-item">
+                <span class="material-symbols-rounded" style="font-size:1.1rem; vertical-align:middle; margin-right:5px; color:var(--color-primary);">person_add</span>
+                Novo Cadastro
+            </a>
+            <a href="gestao_admin_99.php?novo&mode=precadastro" class="dropdown-item">
+                <span class="material-symbols-rounded" style="font-size:1.1rem; vertical-align:middle; margin-right:5px; color:#fd7e14;">assignment_ind</span>
+                Pré-Cadastro
+            </a>
+            <a href="gestao_admin_99.php?importar" class="dropdown-item">
+                <span class="material-symbols-rounded" style="font-size:1.1rem; vertical-align:middle; margin-right:5px; color:#198754;">contact_mail</span>
+                Solicitações
+            </a>
+            <div style="border-top:1px solid #eee; margin:5px 0;"></div>
+            
+            <!-- External Links -->
             <a href="https://oliveira.atende.net/atendenet?source=pwa" target="_blank" class="dropdown-item">
                 <span class="material-symbols-rounded" style="font-size:1.1rem; vertical-align:middle; margin-right:5px; color:#009688;">support_agent</span>
                 Atende Oliveira
@@ -63,20 +79,23 @@
         </div>
     </div>
 
-    <!-- 4. Avisos -->
-    <button onclick="document.getElementById('modalNotificacoes').showModal()" class="top-nav-btn" style="cursor:pointer; margin-right:15px;">
-        <span class="material-symbols-rounded" style="color:#fd7e14;">notifications</span>
-        Avisos
-        <?php if(isset($kpi_pre_pendentes) && $kpi_pre_pendentes > 0): ?>
-            <span class="fab-badge-top"><?= $kpi_pre_pendentes ?></span>
-        <?php endif; ?>
-    </button>
+
 
     <!-- SPACER to push Avatar to right -->
     <div style="flex-grow:1;"></div>
 
     <!-- 5. Perfil (Avatar) -->
-    <div class="top-nav-dropdown" style="position:relative;">
+    <div style="display:flex; align-items:center; gap:10px;">
+        
+        <!-- NEW: Avisos (Circular) -->
+        <button onclick="document.getElementById('modalNotificacoes').showModal()" style="position:relative; width:40px; height:40px; border-radius:50%; border:1px solid #ddd; background:white; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.05); transition:all 0.2s;" title="Avisos">
+            <span class="material-symbols-rounded" style="color:#fd7e14; font-size:1.4rem;">notifications</span>
+            <?php if(isset($kpi_pre_pendentes) && $kpi_pre_pendentes > 0): ?>
+                <span style="position:absolute; top:-2px; right:-2px; background:#dc3545; color:white; font-size:0.7rem; font-weight:bold; height:18px; min-width:18px; padding:0 4px; border-radius:10px; display:flex; align-items:center; justify-content:center; border:2px solid white;"><?= $kpi_pre_pendentes ?></span>
+            <?php endif; ?>
+        </button>
+
+        <div class="top-nav-dropdown" style="position:relative;">
         <button class="nav-avatar-btn" onclick="toggleTopNavDropdown(this)" style="cursor:pointer; padding:0; overflow:hidden;" title="Meu Perfil">
             <img src="assets/avatar_admin.jpg" alt="DV" style="width:100%; height:100%; object-fit:cover; display:block;">
         </button>
@@ -100,6 +119,8 @@
                 Sair
             </a>
         </div>
+    </div>
+
     </div>
 
 </div>
