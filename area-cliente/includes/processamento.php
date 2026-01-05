@@ -463,7 +463,7 @@ if (isset($_POST['novo_cliente']) || (isset($_POST['acao']) && $_POST['acao'] ==
         }
         
         // REDIRECIONAMENTO IMEDIATO PARA EDITOR COMPLETÃO
-        header("Location: editar_cliente.php?id=$nid&msg=welcome");
+        header("Location: ../gerenciar_cliente.php?id=$nid&msg=welcome");
         exit;
 
     } catch (Exception $e) { 
@@ -614,7 +614,7 @@ if (isset($_POST['btn_confirmar_aprovacao'])) {
             $pdo->commit();
             
             // Redireciona para edição do novo cliente
-            header("Location: editar_cliente.php?id=$novo_id&new=1");
+            header("Location: ../gerenciar_cliente.php?id=$novo_id&new=1");
             exit;
         }
 
@@ -748,12 +748,12 @@ if (isset($_POST['acao']) && $_POST['acao'] == 'editar_cliente_completo') {
         }
 
         $pdo->commit();
-        header("Location: ../editar_cliente.php?id=$cliente_id&msg=success_update");
+        header("Location: ../gerenciar_cliente.php?id=$cliente_id&msg=success_update");
         exit;
 
     } catch (Exception $e) {
         if ($pdo->inTransaction()) $pdo->rollBack();
-        header("Location: ../editar_cliente.php?id=$cliente_id&msg=error&details=" . urlencode($e->getMessage()));
+        header("Location: ../gerenciar_cliente.php?id=$cliente_id&msg=error&details=" . urlencode($e->getMessage()));
         exit;
     }
 }

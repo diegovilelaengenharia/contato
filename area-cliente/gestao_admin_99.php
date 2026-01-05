@@ -217,18 +217,8 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             </div>
 
         <?php elseif(isset($_GET['novo'])): ?>
-            <div class="form-card">
-                <h2>Cadastrar Novo Cliente</h2>
-                <p style="color:#666; font-size:0.9rem; margin-bottom:20px;">Preencha o formulário completo para criar o cliente com todas as informações.</p>
-                
-                <?php 
-                // Contexto para template (Vazio para indicar Criação)
-                $cliente = null; 
-                $detalhes = null; 
-                $campos_extras = null;
-                include 'includes/form_cliente_template.php'; 
-                ?>
-            </div>
+            <!-- Legacy block removed. Redirecting to gerenciar_cliente.php -->
+            <script>window.location.href='gerenciar_cliente.php';</script>
 
         <?php elseif($cliente_ativo): ?>
             <?php
@@ -305,7 +295,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             </div>
                             
                             <div style="display:flex; gap:10px; font-size:0.9rem; align-items:center; margin-top:10px;">
-                                <a href="editar_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save" style="background:var(--color-primary-light); color:var(--color-primary); border:none; padding:5px 12px; font-size:0.8rem; box-shadow:none;">✏️ Editar Cadastro</a>
+                                <a href="gerenciar_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save" style="background:var(--color-primary-light); color:var(--color-primary); border:none; padding:5px 12px; font-size:0.8rem; box-shadow:none;">✏️ Editar Cadastro</a>
                                 <a href="relatorio_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save" style="background:#e2e6ea; color:#444; border:none; padding:5px 12px; font-size:0.8rem; box-shadow:none;">⚠️ Resumo PDF</a>
                                 <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" class="btn-delete-confirm" data-confirm-text="Excluir cliente?" style="color:#dc3545; text-decoration:none; font-weight:700; font-size:0.8rem; margin-left:10px;">🗑️ Excluir</a>
                             </div>

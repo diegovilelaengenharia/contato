@@ -53,9 +53,9 @@
         </button>
         <div class="top-nav-dropdown-menu" style="width:220px;">
             <!-- New Internal Shortcuts -->
-            <a href="gestao_admin_99.php?novo" class="dropdown-item">
-                <span class="material-symbols-rounded" style="font-size:1.1rem; vertical-align:middle; margin-right:5px; color:var(--color-primary);">person_add</span>
-                Cadastrar Cliente
+            <a href="gerenciar_cliente.php" class="dropdown-item">
+                <span class="material-symbols-rounded">person_add</span>
+                Novo Cliente
             </a>
             <div style="border-top:1px solid #eee; margin:5px 0;"></div>
             
