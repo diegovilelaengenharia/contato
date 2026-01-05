@@ -129,18 +129,24 @@ try {
             </button>
 
             <!-- 2. PENDÊNCIAS -->
-            <button class="app-button" onclick="openModal('modalPendencias')">
-                <div class="app-btn-icon" style="background:#fff3cd; color:#856404;">⚠️</div>
+            <?php 
+                $has_pendency = $pendencias_count > 0;
+                $p_style = $has_pendency ? "background:#fff5f5; border:2px solid #dc3545;" : "";
+                $p_icon_bg = $has_pendency ? "#dc3545" : "#fff3cd";
+                $p_icon_col = $has_pendency ? "white" : "#856404";
+            ?>
+            <button class="app-button" onclick="openModal('modalPendencias')" style="<?= $p_style ?>">
+                <div class="app-btn-icon" style="background:<?= $p_icon_bg ?>; color:<?= $p_icon_col ?>;">⚠️</div>
                 <div class="app-btn-content">
-                    <span class="app-btn-title">Pendências</span>
-                    <?php if($pendencias_count > 0): ?>
-                        <span class="app-btn-desc" style="color:#dc3545; font-weight:600;"><?= $pendencias_count ?> item(ns) pendente(s)</span>
+                    <span class="app-btn-title" style="<?= $has_pendency ? 'color:#dc3545; font-weight:700;' : '' ?>">Pendências</span>
+                    <?php if($has_pendency): ?>
+                        <span class="app-btn-desc" style="color:#dc3545; font-weight:600;"><?= $pendencias_count ?> Ação(ões) Necessária(s)</span>
                     <?php else: ?>
                         <span class="app-btn-desc">Tudo em dia!</span>
                     <?php endif; ?>
                 </div>
-                <?php if($pendencias_count > 0): ?>
-                    <div style="background:#dc3545; color:white; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:bold;"><?= $pendencias_count ?></div>
+                <?php if($has_pendency): ?>
+                    <div style="background:#dc3545; color:white; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.85rem; font-weight:bold; box-shadow:0 2px 5px rgba(220,53,69,0.4);"><?= $pendencias_count ?></div>
                 <?php else: ?>
                     <div style="color:#198754; font-size:1.2rem;">✅</div>
                 <?php endif; ?>
