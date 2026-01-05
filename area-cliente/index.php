@@ -30,6 +30,35 @@ try {
 
 $erro = '';
 
+// CHECK MAINTENANCE MODE (Global Scope)
+try {
+    $stmtMaint = $pdo->query("SELECT setting_value FROM admin_settings WHERE setting_key = 'maintenance_mode'");
+    if ($stmtMaint) {
+        $is_maint = $stmtMaint->fetchColumn();
+        if($is_maint == 1) {
+            // Check if it's an admin trying to login?
+            // Actually, if maintenance is ON, we usually redirect everything.
+            // But we need to allow ADMIN to login.
+            // If it's a POST request with admin credentials, we might want to bypass?
+            // OR we rely on the fact that admin accesses 'gestao_admin_99.php' directly if session exists?
+            
+            // Let's implement a "Bypass for Login" logic if needed, but for now, 
+            // the user said "Block clients". 
+            // If I block here, NO ONE can login, including Admin.
+            // Except if I check if it's a POST request... 
+            
+            // Allow POST requests to proceed (so admin can login).
+            // Maintenance page only for GET?
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                require 'maintenance.php';
+                exit;
+            }
+        }
+    }
+} catch (Exception $e) {
+    // Ignore if table missing
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usuario = $_POST['usuario'];
     $senha = $_POST['senha'];
@@ -44,23 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // CHECK MAINTENANCE MODE
-    try {
-        $stmtMaint = $pdo->query("SELECT setting_value FROM admin_settings WHERE setting_key = 'maintenance_mode'");
-        // If table doesn't exist or query fails, it goes to catch
-        if ($stmtMaint) {
-            $is_maint = $stmtMaint->fetchColumn();
-            
-            // If enabled, serve maintenance page (Exit immediately to prevent login form rendering)
-            if($is_maint == 1) {
-                require 'maintenance.php';
-                exit;
-            }
-        }
-    } catch (Exception $e) {
-        // Table likely doesn't exist yet (Migration hasn't run). Ignore maintenance mode.
-        // Proceed to login.
-    }
+
 
     // 2. Se não for Admin, busca Cliente no banco
     $stmt = $pdo->prepare("SELECT * FROM clientes WHERE usuario = ?");
