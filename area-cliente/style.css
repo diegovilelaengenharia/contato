@@ -796,51 +796,313 @@ a {
     color: var(--text-muted);
 }
 
-.badge {
-
-    /* --- ASSISTANT TIPS (Virtual Assistant) --- */
-    .assistant-tip {
-        background: #e3f2fd;
-        border-left: 4px solid #2196f3;
-        border-radius: 12px;
-        padding: 15px;
-        margin-bottom: 25px;
-        display: flex;
-        gap: 15px;
-        align-items: flex-start;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    }
-
-    .at-icon {
-        font-size: 24px;
-        background: white;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
-
-    .at-content {
-        flex: 1;
-        font-size: 0.9rem;
-        color: #0d47a1;
-        line-height: 1.5;
-    }
-
-    .at-content strong {
-        display: block;
-        margin-bottom: 3px;
-        color: #0d47a1;
-    }
-
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
+/* --- APP VERTICAL BUTTONS (NEW) --- */
+.app-action-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
 }
+
+.app-button {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    cursor: pointer;
+    box-shadow: var(--shadow-card);
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-align: left;
+    width: 100%;
+}
+
+.app-button:active {
+    transform: scale(0.98);
+}
+
+.app-btn-icon {
+    width: 50px;
+    height: 50px;
+    background: var(--bg-app);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: var(--color-primary);
+    flex-shrink: 0;
+}
+
+.app-btn-content {
+    flex: 1;
+}
+
+.app-btn-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-main);
+    display: block;
+    margin-bottom: 2px;
+}
+
+.app-btn-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.2;
+}
+
+/* --- FULL SCREEN MODALS --- */
+dialog.app-modal {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    border: none;
+    background: var(--bg-app);
+    padding: 0;
+    margin: 0;
+    display: block;
+    /* Hidden by default via [open] */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+}
+
+dialog.app-modal[open] {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.app-modal-header {
+    background: var(--bg-card);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.app-modal-header h2 {
+    font-size: 1.2rem;
+    color: var(--color-primary);
+}
+
+.btn-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-muted);
+}
+
+.app-modal-content {
+    padding: 20px;
+    overflow-y: auto;
+    height: calc(100vh - 60px);
+}
+
+/* --- PROGRESS BAR COMPONENT --- */
+.progress-container {
+    background: var(--bg-card);
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: var(--shadow-soft);
+    margin-bottom: 25px;
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.progress-track {
+    height: 12px;
+    background: #e9ecef;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+    border-radius: 6px;
+    transition: width 1s ease-out;
+}
+
+/* --- HISTORY & PENDENCY LISTS --- */
+.history-item,
+.pendency-card,
+.fin-item {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--border-color);
+}
+
+.history-date {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.history-title {
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 5px;
+}
+
+.history-desc {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.btn-upload {
+    display: block;
+    width: 100%;
+    background: var(--bg-app);
+    border: 2px dashed var(--color-primary);
+    color: var(--color-primary);
+    padding: 12px;
+    text-align: center;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.btn-upload input[type="file"] {
+    display: none;
+}
+
+/* --- FINANCE BADGES --- */
+.fin-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.fin-info {
+    flex: 1;
+}
+
+.fin-value {
+    text-align: right;
+    font-weight: 700;
+}
+
+.fin-badge {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-top: 2px;
+}
+
+.st-pago .fin-badge {
+    background: #d1e7dd;
+    color: #0f5132;
+}
+
+.st-atra .fin-badge {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.st-pend .fin-badge {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.finance-summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.fin-card {
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.fin-card.pago {
+    background: #d1e7dd;
+    color: #0f5132;
+}
+
+.fin-card.pendente {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.fin-card span {
+    display: block;
+    font-size: 0.8rem;
+    opacity: 0.9;
+}
+
+.fin-card strong {
+    display: block;
+    font-size: 1.2rem;
+    margin-top: 5px;
+}
+
+/* --- ASSISTANT TIPS (Virtual Assistant) --- */
+.assistant-tip {
+    background: #e3f2fd;
+    border-left: 4px solid #2196f3;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 25px;
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.at-icon {
+    font-size: 24px;
+    background: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.at-content {
+    flex: 1;
+    font-size: 0.9rem;
+    color: #0d47a1;
+    line-height: 1.5;
+}
+
+.at-content strong {
+    display: block;
+    margin-bottom: 3px;
+    color: #0d47a1;
+}
+
+
 
 /* --- ANIMATIONS --- */
 @keyframes fadeInUp {
@@ -973,10 +1235,11 @@ a {
 .login-container {
     background: var(--bg-card);
     max-width: 420px;
-    margin: 60px auto 40px; /* Center horizontally, space from top */
+    margin: 60px auto 40px;
+    /* Center horizontally, space from top */
     padding: 40px;
     border-radius: 24px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
     text-align: center;
     position: relative;
     border: 1px solid var(--border-color);
@@ -1096,6 +1359,6 @@ a {
 }
 
 .back-link:hover {
-    background: rgba(0,0,0,0.05);
+    background: rgba(0, 0, 0, 0.05);
     color: var(--text-main);
 }
