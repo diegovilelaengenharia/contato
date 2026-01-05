@@ -616,17 +616,7 @@ if (isset($_POST['btn_salvar_tudo'])) {
                 } catch (Exception $e) { /* Ignore if exists */ }
             ?>
 
-            <!-- OBSERVATION WARNING BOX -->
-            <div class="section-header" style="background:#fff5f5; border-color:#fed7d7;">
-                <div class="section-icon" style="background:#fed7d7; color:#c53030;">📢</div>
-                <h2 style="color:#c53030;">Avisos em Destaque (Texto Vermelho)</h2>
-            </div>
-            <div class="section-body" style="background:#fff5f5;">
-                <div class="form-group">
-                    <label style="color:#c53030;">Mensagem para o Cliente (Aparecerá em destaque no topo)</label>
-                    <textarea name="observacoes_gerais" rows="3" style="width:100%; padding:15px; border:1px solid #fc8181; border-radius:8px; font-size:1.1rem; color:#c53030;" placeholder="Digite aqui um aviso importante, ex: 'Processo parado aguardando taxa'"><?= htmlspecialchars($detalhes['observacoes_gerais']??'') ?></textarea>
-                </div>
-            </div>
+
 
             <div class="section-header" style="margin-top:20px;">
                 <div class="section-icon">🏠</div>
