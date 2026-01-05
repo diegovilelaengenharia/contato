@@ -63,177 +63,16 @@ try {
 $tipos_pessoa = ['Fisica', 'Juridica'];
 $estados_civil = ['Solteiro', 'Casado', 'Divorciado', 'Viuvo', 'Uniao Estavel'];
 
-// Salvar Alterações
-if (isset($_POST['btn_salvar_tudo'])) {
-    try {
-        // DEBUG: Gravar POST em arquivo para análise
-        // file_put_contents('debug_post.log', print_r($_POST, true)); 
-        
-        // --- UPLOAD LOGIC ---
-        // 1. Avatar (Profile)
-        $upload_debug = "";
-        if(isset($_FILES['avatar_upload']) && $_FILES['avatar_upload']['error'] == 0) {
-            $ext = strtolower(pathinfo($_FILES['avatar_upload']['name'], PATHINFO_EXTENSION));
-            if(in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
-                $new_name = 'avatar_' . $cliente_id . '.' . $ext;
-                $target = 'uploads/avatars/' . $new_name;
-                
-                // Permission Check
-                if(!is_dir('uploads/avatars/')) {
-                    mkdir('uploads/avatars/', 0755, true);
-                    $upload_debug .= "Criou pasta. ";
-                }
-                
-                if(!is_writable('uploads/avatars/')) {
-                    $upload_debug .= "SEM PERMISSÃO DE ESCRITA! ";
-                }
-
-                // Remove existing
-                $existing = glob("uploads/avatars/avatar_{$cliente_id}.*");
-                $upload_debug .= "Encontrados antigos: " . count($existing) . ". ";
-                foreach($existing as $f) unlink($f);
-                
-                if(move_uploaded_file($_FILES['avatar_upload']['tmp_name'], $target)) {
-                    $upload_debug .= "Upload OK ($new_name). ";
-                    // Update DB to ensure consistency across all APIs
-                    try {
-                        $pdo->prepare("UPDATE clientes SET foto_perfil=? WHERE id=?")->execute([$target, $cliente_id]);
-                        $upload_debug .= "DB Updated. ";
-                    } catch(Exception $e) {
-                        $upload_debug .= "DB Update Fail: " . $e->getMessage();
-                    }
-                } else {
-                    $upload_debug .= "move_uploaded_file falhou. Error: " . $_FILES['avatar_upload']['error'];
-                }
-            } else {
-                 $upload_debug .= "Extensão inválida: $ext. ";
-            }
-        } elseif(isset($_FILES['avatar_upload'])) {
-             // $upload_debug .= "Upload Error Code: " . $_FILES['avatar_upload']['error'];
-        }
-
-        // 2. Work Cover (Foto Capa Obra)
-        if(isset($_FILES['foto_capa_obra']) && $_FILES['foto_capa_obra']['error'] == 0) {
-            $ext = strtolower(pathinfo($_FILES['foto_capa_obra']['name'], PATHINFO_EXTENSION));
-            if(in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
-                $new_name = 'capa_obra_' . $cliente_id . '_' . time() . '.' . $ext;
-                $target = 'uploads/obras/' . $new_name;
-                if(!is_dir('uploads/obras/')) mkdir('uploads/obras/', 0755, true);
-                if(move_uploaded_file($_FILES['foto_capa_obra']['tmp_name'], $target)) {
-                    $pdo->prepare("UPDATE processo_detalhes SET foto_capa_obra=? WHERE cliente_id=?")->execute([$target, $cliente_id]);
-                }
-            }
-        }
-
-        
-        // DDL causes implicit commit in MySQL, so run it before transaction
-        $pdo->exec("CREATE TABLE IF NOT EXISTS processo_campos_extras (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            cliente_id INT NOT NULL,
-            titulo VARCHAR(255) NOT NULL,
-            valor TEXT,
-            FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
-        )");
-
-        $pdo->beginTransaction();
-
-        // 1. Atualizar Clientes (Login)
-        // 1. Atualizar Clientes (Login + Nome)
-        if (!empty($_POST['nova_senha'])) {
-            $nova_senha_hash = password_hash($_POST['nova_senha'], PASSWORD_DEFAULT);
-            $stmtUp = $pdo->prepare("UPDATE clientes SET nome=?, usuario=?, senha=? WHERE id=?");
-            $stmtUp->execute([trim($_POST['nome']), $_POST['usuario'], $nova_senha_hash, $cliente_id]);
-        } else {
-            $stmtUp = $pdo->prepare("UPDATE clientes SET nome=?, usuario=? WHERE id=?");
-            $stmtUp->execute([trim($_POST['nome']), $_POST['usuario'], $cliente_id]);
-        }
-
-        // 2. Atualizar Detalhes
-        if ($detalhes) {
-            $sqlDet = "UPDATE processo_detalhes SET 
-                tipo_pessoa=?, cpf_cnpj=?, rg_ie=?, nacionalidade=?, data_nascimento=?, contato_email=?, contato_tel=?, 
-                res_rua=?, res_numero=?, res_bairro=?, res_complemento=?, res_cidade=?, res_uf=?,
-                profissao=?, estado_civil=?, imovel_rua=?, imovel_numero=?,
-                imovel_bairro=?, imovel_complemento=?, imovel_cidade=?, imovel_uf=?, inscricao_imob=?,
-                num_matricula=?, imovel_area_lote=?, area_construida=?,
-                
-                processo_objeto=?, processo_numero=?, area_total_final=?,
-                valor_venal=?, area_existente=?, area_acrescimo=?, area_permeavel=?, taxa_ocupacao=?, fator_aproveitamento=?, geo_coords=?,
-                observacoes_gerais=?
-                WHERE cliente_id=?";
-        } else {
-            $sqlDet = "INSERT INTO processo_detalhes (
-                tipo_pessoa, cpf_cnpj, rg_ie, nacionalidade, data_nascimento, contato_email, contato_tel, 
-                res_rua, res_numero, res_bairro, res_complemento, res_cidade, res_uf,
-                profissao, estado_civil, imovel_rua, imovel_numero,
-                imovel_bairro, imovel_complemento, imovel_cidade, imovel_uf, inscricao_imob,
-                num_matricula, imovel_area_lote, area_construida, 
-                processo_objeto, processo_numero, area_total_final,
-                valor_venal, area_existente, area_acrescimo, area_permeavel, taxa_ocupacao, fator_aproveitamento, geo_coords,
-                observacoes_gerais,
-                cliente_id
-            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        }
-        
-        $stmtDetUp = $pdo->prepare($sqlDet);
-        $stmtDetUp->execute([
-            $_POST['tipo_pessoa'], $_POST['cpf_cnpj'], $_POST['rg_ie'], $_POST['nacionalidade']??'', $_POST['data_nascimento'] ?: null, $_POST['contato_email'], $_POST['contato_tel'],
-            $_POST['res_rua'], $_POST['res_numero'], $_POST['res_bairro'], $_POST['res_complemento'], $_POST['res_cidade'], $_POST['res_uf'],
-            $_POST['profissao'], $_POST['estado_civil'], $_POST['imovel_rua'], $_POST['imovel_numero'],
-            $_POST['imovel_bairro'], $_POST['imovel_complemento'], $_POST['imovel_cidade'], $_POST['imovel_uf'], $_POST['inscricao_imob'],
-            $_POST['num_matricula'], $_POST['imovel_area_lote'], $_POST['area_construida'],
-            
-            $_POST['processo_objeto'] ?? null, $_POST['processo_numero'] ?? null, $_POST['area_total_final'] ?? null,
-            $_POST['valor_venal'] ?? null, $_POST['area_existente'] ?? null, $_POST['area_acrescimo'] ?? null, $_POST['area_permeavel'] ?? null,
-            $_POST['taxa_ocupacao'] ?? null, $_POST['fator_aproveitamento'] ?? null, $_POST['geo_coords'] ?? null,
-            $_POST['observacoes_gerais'] ?? null,
-
-            $cliente_id
-        ]);
-
-        // 3. Atualizar Campos Extras
-        // (Tabela verificada antes da transação)
-
-        $pdo->prepare("DELETE FROM processo_campos_extras WHERE cliente_id = ?")->execute([$cliente_id]);
-        
-        if (isset($_POST['extra_titulos']) && is_array($_POST['extra_titulos'])) {
-            $titulos = $_POST['extra_titulos'];
-            $valores = $_POST['extra_valores'] ?? [];
-            
-            $stmtInsEx = $pdo->prepare("INSERT INTO processo_campos_extras (cliente_id, titulo, valor) VALUES (?, ?, ?)");
-            
-            foreach ($titulos as $key => $titulo) {
-                // Remove espaços em branco e verifica se tem conteudo
-                $titulo_limpo = trim($titulo);
-                $valor_limpo = trim($valores[$key] ?? '');
-                
-                if (!empty($titulo_limpo)) {
-                    $stmtInsEx->execute([$cliente_id, $titulo_limpo, $valor_limpo]);
-                }
-            }
-        }
-
-        $pdo->commit();
-        echo "<script>
-            alert('✅ Alterações salvas! " . addslashes($upload_debug) . "');
-            // window.close(); // Desabilitado por solicitação
-            // Recarrega a página para mostrar dados atualizados
-            window.location.href = 'editar_cliente.php?id=" . $cliente_id . "&success=1';
-        </script>";
-        
-        // Recarregar dados
-        $stmt->execute([$cliente_id]); $cliente = $stmt->fetch();
-        $stmt->execute([$cliente_id]); $cliente = $stmt->fetch();
-        $stmtDet->execute([$cliente_id]); $detalhes = $stmtDet->fetch();
-        $stmtEx->execute([$cliente_id]); $campos_extras = $stmtEx->fetchAll();
-
-    } catch (Exception $e) {
-        if ($pdo->inTransaction()) {
-            $pdo->rollBack();
-        }
-        echo "<script>alert('❌ Erro ao salvar: " . addslashes($e->getMessage()) . "');</script>";
-    }
+// Msg Feedback
+$msg_alert = "";
+if(isset($_GET['msg'])) {
+    if($_GET['msg'] == 'success_update') $msg_alert = "<script>alert('✅ Dados atualizados com sucesso!');</script>";
+    if($_GET['msg'] == 'welcome') $msg_alert = "<script>alert('✅ Cliente criado com sucesso! Continue editando abaixo.');</script>";
+    if($_GET['msg'] == 'error') $msg_alert = "<script>alert('❌ Erro: " . htmlspecialchars($_GET['details'] ?? 'Desconhecido') . "');</script>";
 }
+if(isset($_GET['new']) && $_GET['new']==1) $msg_alert = "<script>alert('✅ Cadastro aprovado! Complete os dados agora.');</script>";
+
+echo $msg_alert;
 ?>
 
 <!DOCTYPE html>
@@ -455,7 +294,9 @@ if (isset($_POST['btn_salvar_tudo'])) {
 </head>
 <body>
 
-    <form method="POST" enctype="multipart/form-data" class="main-wrapper">
+    <form action="includes/processamento.php" method="POST" enctype="multipart/form-data" class="main-wrapper">
+        <input type="hidden" name="acao" value="editar_cliente_completo">
+        <input type="hidden" name="cliente_id" value="<?= $cliente_id ?>">
         
         <!-- Top Bar -->
         <div class="top-bar">
