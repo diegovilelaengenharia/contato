@@ -36,7 +36,7 @@
                 <div style="padding:10px; color:#666; font-size:0.9rem;">Nenhum cliente</div>
             <?php else: ?>
                 <?php foreach($clientes_nav as $cnav): ?>
-                    <a href="gerenciar_cliente.php?id=<?= $cnav['id'] ?>" class="dropdown-item">
+                    <a href="gestao_admin_99.php?cliente_id=<?= $cnav['id'] ?>" class="dropdown-item">
                         <?= htmlspecialchars($cnav['nome']) ?>
                     </a>
                 <?php endforeach; ?>

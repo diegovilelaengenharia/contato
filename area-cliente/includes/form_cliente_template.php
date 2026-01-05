@@ -199,12 +199,7 @@ $i_area = $detalhes['area_construida'] ?? '';
     <div class="<?= $is_edit ? 'sticky-footer' : '' ?>" style="<?= $is_edit ? '' : 'margin-top:20px;' ?>">
         <?php if($is_edit): ?>
             <span style="font-size:0.9rem; color:var(--text-sub); margin-right:auto;">⚠️ Todas as alterações são salvas imediatamente no banco.</span>
-            <div style="display:flex; gap:10px;">
-                <a href="relatorio_cliente.php?id=<?= $cliente['id'] ?>" target="_blank" class="btn-secondary" style="background:#555; color:white; text-decoration:none; padding:10px 20px; border-radius:8px; display:flex; align-items:center; gap:5px;">
-                    <span class="material-symbols-rounded">picture_as_pdf</span> Gerar PDF
-                </a>
-                <a href="gestao_admin_99.php?cliente_id=<?= $cliente['id'] ?>&tab=andamento" class="btn-close" style="background:none; text-decoration:none;">Cancelar</a>
-            </div>
+            <a href="gestao_admin_99.php?cliente_id=<?= $cliente['id'] ?>&tab=andamento" class="btn-close" style="background:none; text-decoration:none;">Cancelar</a>
         <?php endif; ?>
         
         <button type="submit" name="<?= $btn_name ?>" class="btn-save" style="<?= $is_edit ? '' : 'width:100%; justify-content:center;' ?>">
