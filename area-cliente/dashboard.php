@@ -143,12 +143,13 @@ try {
     <!-- ================================================================= -->
 
     <!-- 1. MODAL LINHA DO TEMPO -->
-    <dialog id="modalTimeline" class="app-modal">
+    <div id="modalTimeline" class="app-modal">
         <div class="app-modal-header">
             <h2>⏳ Linha do Tempo</h2>
             <button onclick="closeModal('modalTimeline')" class="btn-close">✕</button>
         </div>
         <div class="app-modal-content">
+            <!-- CONTENT REMAIN SAME -->
             <!-- STATUS HEADER -->
             <div style="background:linear-gradient(135deg, var(--color-primary), var(--color-primary-dark)); color:white; padding:25px; border-radius:16px; margin-bottom:30px; text-align:center; box-shadow:0 10px 20px rgba(20, 108, 67, 0.2);">
                 <div style="font-size:0.9rem; opacity:0.8; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px;">Fase Atual</div>
@@ -211,11 +212,11 @@ try {
                 <?php endforeach; 
              endif; ?>
         </div>
-    </dialog>
+    </div>
 
 
     <!-- 2. MODAL PENDÊNCIAS -->
-    <dialog id="modalPendencias" class="app-modal">
+    <div id="modalPendencias" class="app-modal">
         <div class="app-modal-header">
             <h2>⚠️ Pendências</h2>
             <button onclick="closeModal('modalPendencias')" class="btn-close">✕</button>
@@ -248,11 +249,11 @@ try {
                 <?php endforeach; 
             endif; ?>
         </div>
-    </dialog>
+    </div>
 
 
     <!-- 3. MODAL FINANCEIRO -->
-    <dialog id="modalFinanceiro" class="app-modal">
+    <div id="modalFinanceiro" class="app-modal">
         <div class="app-modal-header">
             <h2>💰 Financeiro</h2>
             <button onclick="closeModal('modalFinanceiro')" class="btn-close">✕</button>
@@ -298,11 +299,11 @@ try {
                 </div>
             <?php endforeach; endif; ?>
         </div>
-    </dialog>
+    </div>
 
 
     <!-- 4. MODAL DOCUMENTOS -->
-    <dialog id="modalDocumentos" class="app-modal">
+    <div id="modalDocumentos" class="app-modal">
         <div class="app-modal-header">
             <h2>📂 Documentos</h2>
             <button onclick="closeModal('modalDocumentos')" class="btn-close">✕</button>
@@ -330,7 +331,7 @@ try {
                 </div>
             <?php endif; ?>
         </div>
-    </dialog>
+    </div>
 
 
     <!-- JAVASCRIPT GLOBAL -->
@@ -338,30 +339,32 @@ try {
         function openModal(id) {
             const modal = document.getElementById(id);
             if(modal) {
-                modal.showModal();
-                document.body.style.overflow = 'hidden'; // Prevent body scroll
+                // modal.showModal(); // REMOVED DIALOG API
+                modal.classList.add('active'); // ADD CLASS
+                document.body.style.overflow = 'hidden'; 
+                
+                // Trigger Progress bar if timeline
+                if(id === 'modalTimeline') {
+                     setTimeout(() => {
+                        const fill = document.getElementById('progressFill');
+                        const text = document.getElementById('progressText'); // If exists
+                        if(fill) fill.style.width = '<?= $porcentagem ?>%';
+                    }, 100);
+                }
+                
             } else {
-                alert('Erro: Modal não encontrado (' + id + ')');
+                console.error('Modal não encontrado:', id);
             }
         }
 
         function closeModal(id) {
             const modal = document.getElementById(id);
             if(modal) {
-                modal.close();
-                document.body.style.overflow = ''; // Restore body scroll
+                // modal.close(); // REMOVED DIALOG API
+                modal.classList.remove('active'); // REMOVE CLASS
+                document.body.style.overflow = ''; 
             }
         }
-        
-        // Close on backdrop click
-        document.querySelectorAll('dialog').forEach(d => {
-            d.addEventListener('click', (e) => {
-                if(e.target === d) {
-                    d.close();
-                    document.body.style.overflow = '';
-                }
-            });
-        });
     </script>
 
 </body>
