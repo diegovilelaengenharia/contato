@@ -69,35 +69,44 @@ body {
 .fab-container {
     position: fixed;
     bottom: 30px;
-    right: 30px;
+    left: 20px;
+    /* Moved to LEFT */
     z-index: 2000;
     display: flex;
     flex-direction: column-reverse;
-    align-items: center;
+    align-items: flex-start;
+    /* Align Left */
     gap: 12px;
 }
 
 .fab-main {
-    width: 56px;
-    height: 56px;
-    background: var(--color-primary);
-    color: white;
+    width: 48px;
+    /* Smaller Size (was 56) */
+    height: 48px;
+    background: #ffffff;
+    /* White (More Discreet) */
+    color: var(--color-primary);
     border-radius: 50%;
-    box-shadow: 0 4px 12px rgba(20, 108, 67, 0.4);
-    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--color-primary-light);
+    /* Subtle Border */
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
 .fab-main:hover {
-    transform: scale(1.1);
+    transform: scale(1.05);
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
 }
 
 .fab-main .material-symbols-rounded {
-    font-size: 28px;
+    font-size: 24px;
+    /* Slightly smaller icon */
     transition: transform 0.3s;
 }
 
@@ -113,7 +122,10 @@ body {
     visibility: hidden;
     transform: translateY(20px) scale(0.8);
     transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
-    align-items: flex-end; /* Align labels to right */
+    align-items: flex-start;
+    /* Align Items Left */
+    margin-left: 2px;
+    /* Slight offset alignment */
 }
 
 .fab-container.active .fab-menu {
@@ -127,15 +139,18 @@ body {
     align-items: center;
     gap: 10px;
     text-decoration: none;
+    flex-direction: row-reverse;
+    /* Icon First, then Label */
 }
 
 .fab-btn {
-    width: 45px;
-    height: 45px;
+    width: 40px;
+    /* Smaller sub-buttons */
+    height: 40px;
     background: white;
     color: var(--color-text-subtle);
     border-radius: 50%;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     border: none;
     display: flex;
     align-items: center;
@@ -151,7 +166,7 @@ body {
 }
 
 .fab-label {
-    background: rgba(0,0,0,0.7);
+    background: rgba(0, 0, 0, 0.7);
     color: white;
     padding: 4px 10px;
     border-radius: 4px;
@@ -161,12 +176,32 @@ body {
     opacity: 0;
     transition: 0.2s;
     pointer-events: none;
-    margin-right: 5px;
+    display: block;
+    /* Ensure visibility logic works */
+    margin-left: 5px;
+    margin-right: 0;
 }
+
+/* Show label on hover or when menu active? 
+   Standard Speed Dial: Labels always visible or hover?
+   Mobile: Can't hover. Let's make them visible when menu is active if desired, 
+   OR rely on the icon. User didn't specify. 
+   Existing logic: opacity 0, hover->1. 
+   On Mobile, you tap FAB -> Menu opens. You see Icons. You tap Icon.
+   If you hold? 
+   Let's make Labels Visible automatically when Menu is Open for better UX on mobile?
+   Or keep as is (hover only). 
+   "Discreet" implies minimal noise. Let's keep hover/focus logic but fix the direction.
+*/
 
 .fab-item:hover .fab-label {
     opacity: 1;
 }
+
+/* Make labels appear on RIGHT of button now */
+/* Order is [Label] [Button] (reversed by flex-direction) -> [Button] [Label] */
+/* Original: Label Margin Right. Now: Label Margin Left? */
+
 
 /* Badge on FAB */
 .fab-badge {
@@ -856,6 +891,7 @@ body {
     padding-left: 5px;
     padding-right: 5px;
 }
+
 /* --- Sidebar Collapsed State (Desktop) --- */
 html.sidebar-collapsed .admin-container {
     grid-template-columns: 80px 1fr;
@@ -865,11 +901,12 @@ html.sidebar-collapsed .admin-container {
 html.sidebar-collapsed .sidebar {
     padding: 20px 10px;
     transition: 0.3s ease;
-    width: 80px; /* Force width */
+    width: 80px;
+    /* Force width */
 }
 
 /* Hide Text */
-html.sidebar-collapsed .sidebar-menu h4, 
+html.sidebar-collapsed .sidebar-menu h4,
 html.sidebar-collapsed .menu-text,
 html.sidebar-collapsed .sidebar h5,
 html.sidebar-collapsed .sidebar div[style*='font-size:0.7rem'] {
@@ -880,7 +917,8 @@ html.sidebar-collapsed .sidebar div[style*='font-size:0.7rem'] {
 html.sidebar-collapsed .sidebar-menu .btn-menu {
     justify-content: center;
     padding: 12px 0;
-    position: relative; /* For badges */
+    position: relative;
+    /* For badges */
 }
 
 html.sidebar-collapsed .sidebar-menu .btn-menu .material-symbols-rounded {
@@ -929,14 +967,14 @@ html.sidebar-collapsed .sidebar div[style*='margin-top:auto'] {
     justify-content: center;
     cursor: pointer;
     z-index: 100;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
     color: var(--color-primary);
     transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .sidebar-toggler:hover {
     transform: scale(1.1);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
     background: var(--color-primary);
     color: white;
     border-color: var(--color-primary);
@@ -977,7 +1015,8 @@ html.sidebar-collapsed .sidebar-toggler .material-symbols-rounded {
 */
 
 html.sidebar-collapsed .sidebar-toggler {
-    right: -12px; /* Pull it slightly out if possible, or keep it inside */
+    right: -12px;
+    /* Pull it slightly out if possible, or keep it inside */
 }
 
 /* Override inline style for overflow to allow button to show? */
@@ -986,18 +1025,21 @@ html.sidebar-collapsed .sidebar-toggler {
 /* Current inline: overflow-y:auto; overflow-x:hidden; */
 /* Force visible overflow for x? */
 .sidebar {
-    overflow: visible !important; 
+    overflow: visible !important;
 }
+
 /* But if content is long, we need scroll. */
 /* Solution: The scrollbar should be on a container INSIDE the sidebar for the content, leaving the shell static. */
 /* Or, for simplicity now: Position the button 'inside' the visual box, top right corner. */
 
 .sidebar-toggler {
-    right: 10px; /* Inside */
+    right: 10px;
+    /* Inside */
     top: 10px;
 }
 
 
 /* Remove old sidebar styles that might conflict */
-.sidebar { display: none !important; }
-
+.sidebar {
+    display: none !important;
+}
