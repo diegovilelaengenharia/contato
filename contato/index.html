@@ -82,67 +82,69 @@
 
         /* REMOVIDO: .about-section-contact */
 
-        /* Ajuste do botão whatsapp no header (solitário agora) */
+        /* Ajuste do botão whatsapp e bio lado a lado */
         body .hero-actions {
             display: flex;
             justify-content: center;
-            margin-top: 16px;
+            align-items: center;
+            gap: 12px;
+            margin-top: 24px;
             width: 100%;
+            flex-wrap: wrap;
         }
 
         body .hero-whatsapp {
             min-width: unset !important;
             width: auto;
-            padding: 10px 24px;
-            font-size: 0.9rem;
+            padding: 12px 24px;
+            font-size: 1rem;
             white-space: nowrap;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-            /* Manter estilo de botão pílula */
             border-radius: 50px;
+            flex: 1;
+            text-align: center;
+            max-width: 220px;
         }
 
         /* Float Button Save Contact */
         .floating-btn--vcard {
             background-color: #333;
-            /* Cor escura/neutra para diferenciar */
         }
 
         .floating-btn--vcard:hover {
             background-color: #000;
         }
 
-        /* Tagline Final - Limpa e Corporativa */
+        /* Tagline Final - Maior destaque */
         .tagline {
             text-align: center;
-            margin: 20px auto 0;
-            font-size: 0.9rem;
+            margin: 32px auto 0;
+            font-size: 1rem;
             font-weight: 500;
             max-width: 90%;
             display: block;
             color: var(--color-text-subtle);
-            /* Cor discreta como o logo */
             letter-spacing: 0.5px;
         }
 
-        /* Novo Layout: Logo + Info lado a lado */
+        /* Novo Layout: Logo + Info lado a lado - MAIOR */
         .header-profile-row {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 20px;
-            /* Espaço entre logo e texto */
+            gap: 24px;
             text-align: left;
-            margin-bottom: 8px;
-            max-width: 400px;
-            /* Limite de largura */
+            margin-bottom: 12px;
+            max-width: 600px;
+            /* Mais largo */
             margin-left: auto;
             margin-right: auto;
         }
 
         .header-profile-row .logo img {
-            width: 110px;
-            /* Reduzido para caber lado a lado */
-            height: 110px;
+            width: 140px;
+            /* Maior */
+            height: 140px;
             object-fit: contain;
         }
 
@@ -151,23 +153,23 @@
             flex-direction: column;
             justify-content: center;
             align-items: flex-start;
-            /* Alinhado à esquerda */
         }
 
         .engineer-info .label-responsibility {
             display: block;
-            font-size: 0.65rem;
+            font-size: 0.75rem;
+            /* Maior */
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.2px;
             color: #999;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
             font-weight: 700;
         }
 
         .engineer-info h2 {
-            margin: 0 0 4px;
-            font-size: 1.3rem;
-            /* Fonte ajustada */
+            margin: 0 0 6px;
+            font-size: 1.6rem;
+            /* Maior */
             color: var(--color-text);
             font-weight: 700;
             line-height: 1.1;
@@ -175,35 +177,44 @@
 
         .engineer-info .crea-badge {
             display: inline-block;
-            font-size: 0.8rem;
+            font-size: 0.95rem;
+            /* Maior */
             color: var(--color-text-subtle);
-            margin-bottom: 6px;
+            margin-bottom: 0px;
             font-weight: 400;
         }
 
-        /* Botão Sobre Mim Verde e Discreto */
+        /* Botão Sobre Mim agora nos Actions */
         .btn-bio-green {
-            background: rgba(19, 111, 92, 0.08);
-            border: 1px solid transparent;
+            background: white;
+            border: 1px solid var(--color-primary);
             color: var(--color-primary);
-            padding: 6px 18px;
-            /* Compacto */
+            padding: 11px 24px;
+            /* Altura similar ao whats */
             border-radius: 50px;
-            font-size: 0.85rem;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
             display: inline-block;
+            flex: 1;
+            text-align: center;
+            max-width: 180px;
+            white-space: nowrap;
         }
 
         .btn-bio-green:hover {
             background: var(--color-primary);
             color: white;
-            transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(19, 111, 92, 0.2);
         }
 
-        /* Estilos Globais do Header Container */
+        /* Estilos Globais do Header Container - Preenchido */
+        .hero {
+            padding: 60px 20px 40px;
+            /* Mais espaço vertical */
+        }
+
         .engineer-card {
             background: transparent;
             box-shadow: none;
@@ -213,6 +224,7 @@
             max-width: 100%;
             width: 100%;
             text-align: center;
+            position: relative;
         }
 
         /* Remover detalhe decorativo */
@@ -221,30 +233,25 @@
         }
 
         /* Ajuste para telas muito pequenas - Stack vertical se precisar */
-        @media (max-width: 350px) {
-            .header-profile-row {
-                flex-direction: column;
-                text-align: center;
-                gap: 8px;
-            }
-
-            .engineer-info {
-                align-items: center;
+        @media (max-width: 400px) {
+            .header-profile-row .logo img {
+                width: 110px;
+                height: 110px;
             }
 
             .engineer-info h2 {
                 font-size: 1.4rem;
             }
-        }
 
-        @media (max-width: 360px) {
             body .hero-actions {
-                flex-wrap: wrap;
+                flex-direction: column;
+                gap: 12px;
             }
 
             body .hero-whatsapp,
-            body .hero-vcard {
-                flex: 1 1 100%;
+            .btn-bio-green {
+                width: 100%;
+                max-width: 100%;
             }
         }
     </style>
@@ -266,14 +273,15 @@
                     <span class="label-responsibility">Engenheiro Responsável</span>
                     <h2>Diego T. N. Vilela</h2>
                     <span class="crea-badge">Engenheiro Civil &middot; CREA 235.474/D</span>
-                    <button class="btn-bio-green" onclick="openBioModal()">Sobre mim</button>
                 </div>
             </div>
 
             <!-- Botões e Tagline (Abaixo) -->
             <div class="engineer-card">
-                <!-- Ações -->
+                <!-- Ações: Sobre Mim + Whats -->
                 <div class="hero-actions">
+                    <button class="btn-bio-green" onclick="openBioModal()">Sobre mim</button>
+
                     <a class="hero-whatsapp" href="https://wa.me/5535984529577?text=Ola%20Diego%20Vilela"
                         target="_blank" rel="noopener">
                         (35) 98452-9577
