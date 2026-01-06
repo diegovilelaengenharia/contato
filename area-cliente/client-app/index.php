@@ -81,6 +81,11 @@ $pendencias_count = $stmt_pend_count->fetchColumn();
 
     <div class="app-container">
         
+        <!-- LOGO HEADER -->
+        <div style="text-align:center; margin-bottom:20px;">
+            <img src="../../assets/logo.png" alt="Vilela Engenharia" style="max-height:80px;">
+        </div>
+        
         <!-- HEADER PROFILE -->
         <header style="display:flex; align-items:center; gap:15px; margin-bottom:30px; background:white; padding:15px; border-radius:16px; box-shadow:0 2px 10px rgba(0,0,0,0.03);">
             <!-- Avatar -->
@@ -129,6 +134,15 @@ $pendencias_count = $stmt_pend_count->fetchColumn();
                     </div>
                 </div>
             </div>
+             <!-- BELL ICON -->
+            <div style="position:absolute; top:20px; right:20px; cursor:pointer;" title="Notificações">
+                <div style="position:relative;">
+                    <span style="font-size:1.5rem;">🔔</span>
+                    <?php if($pendencias_count > 0): ?>
+                        <span style="position:absolute; top:-5px; right:-5px; background:red; color:white; font-size:0.6rem; width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold;"><?= $pendencias_count ?></span>
+                    <?php endif; ?>
+                </div>
+            </div>
         </header>
 
         <!-- MAIN MENU GRID (Vertical "App" Style) -->
@@ -147,22 +161,23 @@ $pendencias_count = $stmt_pend_count->fetchColumn();
             <!-- 2. PENDÊNCIAS -->
             <?php 
                 $has_pendency = $pendencias_count > 0;
-                $p_style = $has_pendency ? "background:#fff5f5; border:2px solid #dc3545;" : "";
-                $p_icon_bg = $has_pendency ? "#dc3545" : "#fff3cd";
-                $p_icon_col = $has_pendency ? "white" : "#856404";
+                // Subtle style for notification (not full red)
+                $p_style = $has_pendency ? "border-left: 4px solid #dc3545;" : ""; 
+                $p_icon_bg = "#fff3cd"; // Default warning color
+                $p_icon_col = "#856404";
             ?>
             <a href="pendencias.php" class="app-button" style="<?= $p_style ?>">
                 <div class="app-btn-icon" style="background:<?= $p_icon_bg ?>; color:<?= $p_icon_col ?>;">⚠️</div>
                 <div class="app-btn-content">
                     <span class="app-btn-title" style="<?= $has_pendency ? 'color:#dc3545; font-weight:700;' : '' ?>">Pendências</span>
                     <?php if($has_pendency): ?>
-                        <span class="app-btn-desc" style="color:#dc3545; font-weight:600;"><?= $pendencias_count ?> Ação(ões) Necessária(s)</span>
+                        <span class="app-btn-desc" style="color:#dc3545; font-weight:600;"><?= $pendencias_count ?> Nova(s) atualização(ões)</span>
                     <?php else: ?>
                         <span class="app-btn-desc">Tudo em dia!</span>
                     <?php endif; ?>
                 </div>
                 <?php if($has_pendency): ?>
-                    <div style="background:#dc3545; color:white; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.85rem; font-weight:bold; box-shadow:0 2px 5px rgba(220,53,69,0.4);"><?= $pendencias_count ?></div>
+                    <div style="background:#dc3545; color:white; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:bold;"><?= $pendencias_count ?></div>
                 <?php else: ?>
                     <div style="color:#198754; font-size:1.2rem;">✅</div>
                 <?php endif; ?>
@@ -195,7 +210,14 @@ $pendencias_count = $stmt_pend_count->fetchColumn();
             Desenvolvido por <strong>Diego T. N. Vilela</strong> (v2.7 Multi-page)
         </div>
 
+        <div class="floating-buttons">
+            <a href="https://wa.me/5535984529577?text=Ola%20Engenheiro,%20tenho%20uma%20divida%20sobre%20o%20processo" class="floating-btn floating-btn--whatsapp" target="_blank" title="Falar com Engenheiro">
+                <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.66 15.14L2 22l5-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.08-1.13l-.29-.18-3 .79.8-2.91-.19-.3A8 8 0 1 1 12 20zm4.37-5.73-.52-.26a1.32 1.32 0 0 0-1.15.04l-.4.21a.5.5 0 0 1-.49 0 8.14 8.14 0 0 1-2.95-2.58.5.5 0 0 1 0-.49l.21-.4a1.32 1.32 0 0 0 .04-1.15l-.26-.52a1.32 1.32 0 0 0-1.18-.73h-.37a1 1 0 0 0-1 .86 3.47 3.47 0 0 0 .18 1.52A10.2 10.2 0 0 0 13 15.58a3.47 3.47 0 0 0 1.52.18 1 1 0 0 0 .86-1v-.37a1.32 1.32 0 0 0-.73-1.18z"></path></svg>
+            </a>
+            <a href="https://www.instagram.com/diegovilela.eng/" class="floating-btn floating-btn--instagram" target="_blank" title="Instagram">
+                <svg viewBox="0 0 24 24"><path d="M7 3h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4zm0 2a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm5 3.5A3.5 3.5 0 1 1 8.5 12 3.5 3.5 0 0 1 12 8.5zm0 5A1.5 1.5 0 1 0 10.5 12 1.5 1.5 0 0 0 12 13.5zm4.25-6.75a1 1 0 1 1-1-1 1 1 0 0 1 1 1z"></path></svg>
+            </a>
+        </div>
     </div>
-
 </body>
 </html>
