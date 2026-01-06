@@ -69,7 +69,7 @@ try {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.6);
-            z-index: 9999;
+            z-index: 20000;
             align-items: center;
             justify-content: center;
             padding: 20px;
@@ -164,7 +164,7 @@ try {
         <div class="app-action-grid">
             
             <!-- 1. TIMELINE -->
-            <button class="app-button" onclick="openModal('modalTimeline')">
+            <button type="button" class="app-button" onclick="openModal('modalTimeline')" style="cursor: pointer;">
                 <div class="app-btn-icon" style="background:#e3f2fd; color:#0d47a1;">⏳</div>
                 <div class="app-btn-content">
                     <span class="app-btn-title">Linha do Tempo</span>
@@ -226,7 +226,7 @@ try {
 
         <!-- DEVELOPER CREDIT -->
         <div style="text-align:center; margin-top:50px; opacity:0.6; font-size:0.8rem;">
-            Desenvolvido por <strong>Diego T. N. Vilela</strong> (v2.1)
+            Desenvolvido por <strong>Diego T. N. Vilela</strong> (v2.2)
         </div>
 
     </div>
@@ -470,14 +470,8 @@ try {
                 modal.classList.add('active'); // ADD CLASS
                 document.body.style.overflow = 'hidden'; 
                 
-                // Trigger Progress bar if timeline
-                if(id === 'modalTimeline') {
-                     setTimeout(() => {
-                        const fill = document.getElementById('progressFill');
-                        const text = document.getElementById('progressText'); // If exists
-                        if(fill) fill.style.width = '<?= $porcentagem ?>%';
-                    }, 100);
-                }
+                // Trigger Progress bar if timeline (REMOVED DEAD CODE)
+                // if(id === 'modalTimeline') { ... }
                 
             } else {
                 console.error('Modal não encontrado:', id);
