@@ -141,17 +141,36 @@
             font-weight: 400;
         }
 
-        /* Tagline Final - Texto Menor */
-        .tagline {
-            text-align: center;
-            margin: 24px auto 0;
-            font-size: 0.85rem;
-            /* Menor */
-            font-weight: 500;
+        /* Tagline com Efeito Marquee (Rolagem) */
+        .tagline-container {
+            width: 100%;
+            overflow: hidden;
+            background: transparent;
+            margin: 20px auto 12px;
+            position: relative;
             max-width: 90%;
-            display: block;
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        }
+
+        .tagline {
+            display: inline-block;
+            white-space: nowrap;
+            animation: scroll-left 15s linear infinite;
+            padding-left: 100%;
+            font-size: 0.9rem;
             color: var(--color-text-subtle);
-            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        @keyframes scroll-left {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
         }
 
         /* Ajuste do botão whatsapp e bio lado a lado */
@@ -261,6 +280,13 @@
 
             <!-- Botões e Tagline -->
             <div class="engineer-card">
+
+                <!-- Tagline Agora ACIMA dos botões com Marquee -->
+                <div class="tagline-container">
+                    <p class="tagline">Seu imóvel 100% regularizado: do projeto à averbação
+                        &nbsp;&nbsp;&bull;&nbsp;&nbsp; Seu imóvel 100% regularizado: do projeto à averbação</p>
+                </div>
+
                 <!-- Ações: Whats invertido com Sobre Mim -->
                 <div class="hero-actions">
                     <a class="hero-whatsapp" href="https://wa.me/5535984529577?text=Ola%20Diego%20Vilela"
@@ -270,9 +296,6 @@
 
                     <button class="btn-bio-green" onclick="openBioModal()">Sobre mim</button>
                 </div>
-
-                <!-- Tagline Menor -->
-                <p class="tagline">Seu imóvel 100% regularizado: do projeto à averbação</p>
             </div>
 
         </header>
