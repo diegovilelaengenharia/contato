@@ -82,32 +82,33 @@
 
         /* REMOVIDO: .about-section-contact */
 
-        /* Ajuste para Botões lado a lado */
+        /* Ajuste do botão whatsapp no header (solitário agora) */
         body .hero-actions {
-            flex-direction: row;
-            flex-wrap: nowrap;
-            /* Tenta manter na mesma linha */
-            gap: 12px;
+            display: flex;
             justify-content: center;
             margin-top: 16px;
-            /* Espaço entre bio e botões */
             width: 100%;
         }
 
-        body .hero-whatsapp,
-        body .hero-vcard {
+        body .hero-whatsapp {
             min-width: unset !important;
-            /* Remove largura mínima forçada */
             width: auto;
-            flex: 1;
-            /* Faz eles dividirem espaço igual */
-            padding: 12px 10px;
-            /* Compactar um pouco para caber */
-            font-size: 0.85rem;
-            /* Ajuste para caber */
+            padding: 10px 24px;
+            font-size: 0.9rem;
             white-space: nowrap;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-            /* Sombra suave */
+            /* Manter estilo de botão pílula */
+            border-radius: 50px;
+        }
+
+        /* Float Button Save Contact */
+        .floating-btn--vcard {
+            background-color: #333;
+            /* Cor escura/neutra para diferenciar */
+        }
+
+        .floating-btn--vcard:hover {
+            background-color: #000;
         }
 
         /* Tagline Final - Limpa e Corporativa */
@@ -277,7 +278,6 @@
                         target="_blank" rel="noopener">
                         (35) 98452-9577
                     </a>
-                    <a class="hero-vcard" href="../assets/diego-vilela.vcf" download>Salve contato</a>
                 </div>
 
                 <!-- Tagline Limpa e Corporativa -->
@@ -372,6 +372,17 @@
         </footer>
 
         <div class="floating-buttons">
+            <!-- Botão Salvar Contato (NOVO) -->
+            <a href="../assets/diego-vilela.vcf" class="floating-btn floating-btn--vcard" download
+                aria-label="Salvar Contato">
+                <svg viewBox="0 0 24 24" role="presentation" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="8.5" cy="7" r="4"></circle>
+                    <line x1="20" y1="8" x2="20" y2="14"></line>
+                    <line x1="23" y1="11" x2="17" y2="11"></line>
+                </svg>
+            </a>
             <a href="https://wa.me/5535984529577?text=Ola%20Vilela%20Engenharia"
                 class="floating-btn floating-btn--whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp">
                 <svg viewBox="0 0 24 24" role="presentation">
