@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $erro = "Usuário ou senha inválidos!";
             }
-        }
+
     } catch(Exception $e) {
         $erro = "Usuário ou senha inválidos!";
     }
