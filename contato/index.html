@@ -89,7 +89,8 @@
             /* Tenta manter na mesma linha */
             gap: 12px;
             justify-content: center;
-            margin-top: 24px;
+            margin-top: 16px;
+            /* Reduzido pois a tagline estará aqui */
         }
 
         body .hero-whatsapp,
@@ -108,16 +109,30 @@
             /* Sombra suave */
         }
 
-        /* Tagline mais limpa (sem caixa amarela) */
+        /* Tagline com Animação e Nova Posição */
         .tagline {
-            background: transparent !important;
-            border: none !important;
-            padding: 0 !important;
-            color: #b48308 !important;
-            /* Mantém o dourado */
-            font-weight: 500 !important;
-            margin-top: 8px !important;
-            font-size: 0.95rem !important;
+            text-align: center;
+            margin: 16px auto 0;
+            /* Espaço acima */
+            font-size: 0.95rem;
+            font-weight: 600;
+
+            /* Efeito Dourado Brilhante (Shimmer) */
+            background: linear-gradient(90deg, #b48308 0%, #edd892 50%, #b48308 100%);
+            background-size: 200% auto;
+            color: #b48308;
+            /* Fallback */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+
+            animation: shine 4s linear infinite;
+        }
+
+        @keyframes shine {
+            to {
+                background-position: 200% center;
+            }
         }
 
         /* Estilos do Cartão do Engenheiro - Premium */
@@ -221,8 +236,7 @@
             </picture>
 
             <div class="heading">
-                <!-- Informação da Empresa -->
-                <p class="tagline">Seu imóvel 100% regularizado: do projeto à averbação</p>
+                <!-- Informação da Empresa (Tagline Movida para baixo) -->
             </div>
 
             <!-- Janela do Engenheiro Responsável -->
@@ -233,6 +247,9 @@
                 <br>
                 <button class="btn-bio-green" onclick="openBioModal()">Sobre mim</button>
             </div>
+
+            <!-- Tagline Animada em Nova Posição -->
+            <p class="tagline">Seu imóvel 100% regularizado: do projeto à averbação</p>
 
             <div class="hero-actions">
                 <a class="hero-whatsapp" href="https://wa.me/5535984529577?text=Ola%20Diego%20Vilela" target="_blank"
