@@ -30,26 +30,15 @@ try {
 
 $erro = '';
 
-// CHECK MAINTENANCE MODE (Global Scope)
-// CHECK MAINTENANCE MODE (Global Scope)
-try {
-    $stmtMaint = $pdo->query("SELECT setting_value FROM admin_settings WHERE setting_key = 'maintenance_mode'");
-    if ($stmtMaint) {
-        $is_maint = $stmtMaint->fetchColumn();
-        if($is_maint == 1) {
-            // MAINTENANCE LOGIC
-            // 1. If bypass param exists (?bypass=1), show login form (do not exit).
-            // 2. If it's a POST request (Login Attempt), verify later.
-            // 3. Otherwise, show maintenance page.
-            if (!isset($_GET['bypass']) && $_SERVER['REQUEST_METHOD'] !== 'POST') {
-                require 'maintenance.php';
-                exit;
-            }
-        }
-    }
-} catch (Exception $e) {
-    // Ignore if table missing
+// 0. QUICK CHECK: ADMIN ALREADY LOGGED IN?
+// Bypass everything and go to dashboard
+if (isset($_SESSION['admin_logado']) && $_SESSION['admin_logado'] === true) {
+    header("Location: gestao_admin_99.php");
+    exit;
 }
+
+// MAINTENANCE CHECK REMOVED FROM HERE TO ALLOW LOGIN FORM VISIBILITY
+// Logic moved to inside POST handling below
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usuario = $_POST['usuario'];
@@ -72,7 +61,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $stmtMaint = $pdo->query("SELECT setting_value FROM admin_settings WHERE setting_key = 'maintenance_mode'");
         if ($stmtMaint && $stmtMaint->fetchColumn() == 1) {
-            $erro = "⚠️ Sistema em Manutenção. Acesso exclusivo para administradores.";
+            // MOSTRAR AVISO DE MANUTENÇÃO (PÁGINA COMPLETA)
+            require 'maintenance.php';
+            exit;
         } else {
             // 2. Se não for Admin, busca Cliente no banco
             $stmt = $pdo->prepare("SELECT * FROM clientes WHERE usuario = ?");
