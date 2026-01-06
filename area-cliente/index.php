@@ -61,10 +61,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $stmtMaint = $pdo->query("SELECT setting_value FROM admin_settings WHERE setting_key = 'maintenance_mode'");
         if ($stmtMaint && $stmtMaint->fetchColumn() == 1) {
-            // MOSTRAR AVISO DE MANUTENÇÃO (PÁGINA COMPLETA)
-            require 'maintenance.php';
-            exit;
-        } else {
+            
+            // SE FOR ADMIN TENTANDO LOGAR (E ERROU A SENHA), NÃO MOSTRA MANUTENÇÃO, MOSTRA ERRO
+            if ($usuario !== 'admin' && $usuario !== 'vilela') {
+                 // MOSTRAR AVISO DE MANUTENÇÃO (PÁGINA COMPLETA) PARA CLIENTES
+                require 'maintenance.php';
+                exit;
+            }
+        }
+        
+        // Se não caiu no exit acima, continua tentando logar (vai dar erro de senha se não for admin)
             // 2. Se não for Admin, busca Cliente no banco
             $stmt = $pdo->prepare("SELECT * FROM clientes WHERE usuario = ?");
             $stmt->execute([$usuario]);
