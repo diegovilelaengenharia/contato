@@ -147,22 +147,31 @@
         .tagline-container {
             width: 100%;
             overflow: hidden;
-            background: transparent;
-            margin: 20px auto 12px;
+            background: rgba(19, 111, 92, 0.1);
+            /* Verde claro (tom do logo) */
+            margin: 24px auto 16px;
             position: relative;
-            max-width: 90%;
-            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            max-width: 95%;
+            /* Levemente maior */
+            border-radius: 8px;
+            /* Cantos suaves */
+            padding: 8px 0;
+            /* Espaço interno */
+            mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
         }
 
         .tagline {
             display: inline-block;
             white-space: nowrap;
-            animation: scroll-left 15s linear infinite;
+            animation: scroll-left 20s linear infinite;
+            /* Mais lento para ler melhor */
             padding-left: 100%;
-            font-size: 0.9rem;
-            color: var(--color-text-subtle);
-            font-weight: 500;
+            font-size: 1rem;
+            /* Aumentado */
+            color: var(--color-primary-strong);
+            /* Verde mais forte para contraste */
+            font-weight: 600;
         }
 
         @keyframes scroll-left {
@@ -273,7 +282,10 @@
                 <!-- Tagline Agora ACIMA dos botões com Marquee -->
                 <div class="tagline-container">
                     <p class="tagline">Seu imóvel 100% regularizado: do projeto à averbação
-                        &nbsp;&nbsp;&bull;&nbsp;&nbsp; Seu imóvel 100% regularizado: do projeto à averbação</p>
+                        &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+                        Procure-nos e regularize já seu imóvel &nbsp;&nbsp;&bull;&nbsp;&nbsp; Seu imóvel 100%
+                        regularizado:
+                        do projeto à averbação &nbsp;&nbsp;&bull;&nbsp;&nbsp; Procure-nos e regularize já seu imóvel</p>
                 </div>
 
                 <!-- Ações: Whats invertido com Sobre Mim -->
