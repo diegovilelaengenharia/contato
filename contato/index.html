@@ -89,7 +89,7 @@
             /* Tenta manter na mesma linha */
             gap: 12px;
             justify-content: center;
-            margin-top: 24px;
+            margin-top: 16px;
             /* Espaço entre bio e botões */
             width: 100%;
         }
@@ -110,97 +110,85 @@
             /* Sombra suave */
         }
 
-        /* Tagline com Animação - No Final */
+        /* Tagline Final - Limpa e Corporativa */
         .tagline {
             text-align: center;
-            margin: 24px auto 0;
-            /* Espaço acima dos botões */
-            font-size: 0.95rem;
-            font-weight: 600;
+            margin: 20px auto 0;
+            font-size: 0.9rem;
+            font-weight: 500;
             max-width: 90%;
             display: block;
-            /* Garantir quebra de linha */
-
-            /* Efeito Dourado Brilhante (Shimmer) */
-            background: linear-gradient(90deg, #b48308 0%, #edd892 50%, #b48308 100%);
-            background-size: 200% auto;
-            color: #b48308;
-            /* Fallback */
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-
-            animation: shine 4s linear infinite;
+            color: var(--color-text-subtle);
+            /* Cor discreta como o logo */
+            letter-spacing: 0.5px;
         }
 
-        @keyframes shine {
-            to {
-                background-position: 200% center;
-            }
+        /* Novo Layout: Logo + Info lado a lado */
+        .header-profile-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            /* Espaço entre logo e texto */
+            text-align: left;
+            margin-bottom: 8px;
+            max-width: 400px;
+            /* Limite de largura */
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        /* Container da Marca (Apenas Logo agora) */
-        .brand-section {
-            margin-bottom: 16px;
-            text-align: center;
+        .header-profile-row .logo img {
+            width: 110px;
+            /* Reduzido para caber lado a lado */
+            height: 110px;
+            object-fit: contain;
         }
 
-        /* Estilos do Engenheiro - SEM BORDA/CARD VISUAL */
-        .engineer-card {
-            background: transparent;
-            box-shadow: none;
-            border: none;
-            padding: 0;
-            margin: 0 auto;
-            max-width: 100%;
-            width: 100%;
-            text-align: center;
-            position: relative;
+        .engineer-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            /* Alinhado à esquerda */
         }
 
-        /* Remover detalhe decorativo */
-        .engineer-card::before {
-            display: none;
-        }
-
-        .engineer-card .label-responsibility {
+        .engineer-info .label-responsibility {
             display: block;
             font-size: 0.65rem;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 1px;
             color: #999;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             font-weight: 700;
         }
 
-        .engineer-card h2 {
+        .engineer-info h2 {
             margin: 0 0 4px;
-            font-size: 1.5rem;
-            /* Aumentei um pouco já que está solto */
+            font-size: 1.3rem;
+            /* Fonte ajustada */
             color: var(--color-text);
             font-weight: 700;
+            line-height: 1.1;
         }
 
-        .engineer-card .crea-badge {
+        .engineer-info .crea-badge {
             display: inline-block;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: var(--color-text-subtle);
-            background: transparent;
-            padding: 0;
-            border-radius: 0;
-            margin-bottom: 16px;
+            margin-bottom: 6px;
             font-weight: 400;
         }
 
         /* Botão Sobre Mim Verde e Discreto */
         .btn-bio-green {
             background: rgba(19, 111, 92, 0.08);
-            /* Fundo verde bem clarinho */
             border: 1px solid transparent;
             color: var(--color-primary);
-            padding: 8px 24px;
+            padding: 6px 18px;
+            /* Compacto */
             border-radius: 50px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -214,7 +202,40 @@
             box-shadow: 0 4px 12px rgba(19, 111, 92, 0.2);
         }
 
-        /* Ajuste para telas muito pequenas quebrarem se precisar */
+        /* Estilos Globais do Header Container */
+        .engineer-card {
+            background: transparent;
+            box-shadow: none;
+            border: none;
+            padding: 0;
+            margin: 0 auto;
+            max-width: 100%;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Remover detalhe decorativo */
+        .engineer-card::before {
+            display: none;
+        }
+
+        /* Ajuste para telas muito pequenas - Stack vertical se precisar */
+        @media (max-width: 350px) {
+            .header-profile-row {
+                flex-direction: column;
+                text-align: center;
+                gap: 8px;
+            }
+
+            .engineer-info {
+                align-items: center;
+            }
+
+            .engineer-info h2 {
+                font-size: 1.4rem;
+            }
+        }
+
         @media (max-width: 360px) {
             body .hero-actions {
                 flex-wrap: wrap;
@@ -232,21 +253,24 @@
     <div class="page">
         <header class="hero" role="banner">
 
-            <!-- BLOCO 1: Marca (Só Logo) -->
-            <div class="brand-section">
+            <!-- Container Novo: Logo + Info lado a lado -->
+            <div class="header-profile-row">
+                <!-- Marca -->
                 <picture class="logo">
                     <img src="../assets/logo.png" alt="Logotipo da Vilela Engenharia" width="160" height="160">
                 </picture>
+
+                <!-- Informações Pessoais -->
+                <div class="engineer-info">
+                    <span class="label-responsibility">Engenheiro Responsável</span>
+                    <h2>Diego T. N. Vilela</h2>
+                    <span class="crea-badge">Engenheiro Civil &middot; CREA 235.474/D</span>
+                    <button class="btn-bio-green" onclick="openBioModal()">Sobre mim</button>
+                </div>
             </div>
 
-            <!-- BLOCO 2: Info Engenheiro (Sem Card Visual) -->
+            <!-- Botões e Tagline (Abaixo) -->
             <div class="engineer-card">
-                <span class="label-responsibility">Engenheiro Responsável</span>
-                <h2>Diego T. N. Vilela</h2>
-                <span class="crea-badge">Engenheiro Civil &middot; CREA 235.474/D</span>
-                <br>
-                <button class="btn-bio-green" onclick="openBioModal()">Sobre mim</button>
-
                 <!-- Ações -->
                 <div class="hero-actions">
                     <a class="hero-whatsapp" href="https://wa.me/5535984529577?text=Ola%20Diego%20Vilela"
@@ -256,7 +280,7 @@
                     <a class="hero-vcard" href="../assets/diego-vilela.vcf" download>Salve contato</a>
                 </div>
 
-                <!-- Tagline agora aqui embaixo -->
+                <!-- Tagline Limpa e Corporativa -->
                 <p class="tagline">Seu imóvel 100% regularizado: do projeto à averbação</p>
             </div>
 
