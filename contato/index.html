@@ -46,313 +46,182 @@
            mas o padrão usa img/svg que geralmente tem cor própria. 
            Se for SVG com fill white, precisaria ajustar para uma cor escura. 
            Como estamos usando PNG, não afeta o ícone em si. */
-    </style>
-</head>
+        /* Ajuste para Bio no rodapé - Centralizado e Bonito */
+        .about-section-contact {
+            text-align: center;
+            margin-top: 32px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 20px;
+            padding: 32px 20px;
+        }
 
-<body>
-    <div class="page">
-        <header class="hero" role="banner">
-            <picture class="logo">
-                <img src="../assets/logo.png" alt="Logotipo da Vilela Engenharia" width="160" height="160">
-            </picture>
+        .about-section-contact .about-container {
+            flex-direction: column !important;
+            /* Força coluna mesmo em desktop */
+            gap: 16px;
+        }
 
-            <div class="heading">
-                <span class="badge">Engenheiro Civil &middot; CREA 235.474/D</span>
-                <h1>Diego T. N. Vilela</h1>
-                <p class="tagline">Seu imóvel 100% regularizado: do projeto à averbação</p>
-            </div>
+        .about-section-contact .about-content p {
+            max-width: 600px;
+            margin: 0 auto 12px;
+            font-size: 1rem;
+            color: var(--color-text-subtle);
+            line-height: 1.6;
+        }
 
-            <div class="hero-actions">
-                <a class="hero-whatsapp" href="https://wa.me/5535984529577?text=Ola%20Diego%20Vilela" target="_blank"
-                    rel="noopener">
-                    (35) 98452-9577
-                </a>
-                <a class="hero-vcard" href="../assets/diego-vilela.vcf" download>Salve meu contato</a>
-            </div>
-        </header>
+        .about-section-contact .about-image img {
+            border: 4px solid var(--color-primary);
+            box-shadow: 0 4px 12px rgba(19, 111, 92, 0.2);
+        }
 
-        <main class="content">
+        </head><body><div class="page"><header class="hero" role="banner"><picture class="logo"><img src="../assets/logo.png" alt="Logotipo da Vilela Engenharia" width="160" height="160"></picture><div class="heading"><span class="badge">Engenheiro Civil &middot;
+        CREA 235.474/D</span><h1>Diego T. N. Vilela</h1><p class="tagline">Seu imóvel 100% regularizado: do projeto à averbação</p></div><div class="hero-actions"><a class="hero-whatsapp" href="https://wa.me/5535984529577?text=Ola%20Diego%20Vilela" target="_blank"
+        rel="noopener">(35) 98452-9577 </a><a class="hero-vcard" href="../assets/diego-vilela.vcf" download>Salve meu contato</a></div></header><main class="content">< !-- 1. Regularizações --><section class="links"><h2 class="section-heading">Regularizações de Imóveis</h2><ul class="links-grid"><li><button class="link-card link-card--city" onclick="openModal('Prefeitura')"><span class="icon" aria-hidden="true"><img src="../assets/icon-prefeitura.png" alt="" width="28" height="28"></span><span class="text"><span class="title">Prefeitura</span><span class="subtitle">Projetos de Regularização</span></span></button></li><li><button class="link-card link-card--federal" onclick="openModal('Receita Federal')"><span class="icon" aria-hidden="true"><img src="../assets/icon-receita.png" alt="" width="28" height="28"></span><span class="text"><span class="title">Receita Federal</span><span class="subtitle">CND e regularização de obras</span></span></button></li><li><button class="link-card link-card--registry" onclick="openModal('Cartório de Imóveis')"><span class="icon" aria-hidden="true"><img src="../assets/icon-cartorio.png" alt="" width="28" height="28"></span><span class="text"><span class="title">Cartório de Imóveis</span><span class="subtitle">Averbação e escritura</span></span></button></li></ul></section>< !-- 2. Engenharia --><section class="links"><h2 class="section-heading">Projetos de Engenharia</h2><ul class="links-grid"><li><button class="link-card link-card--engineering" onclick="openModal('Projetos de Engenharia')"><span class="icon" aria-hidden="true"><img src="../assets/icon-projetos-new.png" alt="" width="28" height="28"></span><span class="text"><span class="title">Projetos de Engenharia</span><span class="subtitle">Arquitetônico,
+        Estrutural e mais</span></span></button></li></ul></section>< !-- 3. Consultoria (NOVO) --><section class="links"><h2 class="section-heading">Consultoria Técnica</h2><ul class="links-grid"><li><button class="link-card link-card--consultancy" onclick="openModal('Consultoria')"><span class="icon" aria-hidden="true">< !-- Usando PNG para manter padrão visual (duplicado de projetos, mas consistente) --><img src="../assets/icon-projetos-new.png" alt="" width="28" height="28"></span><span class="text"><span class="title">Consultoria e Laudos</span><span class="subtitle">Vistorias,
+        Laudos e Perícia</span></span></button></li></ul></section>< < !-- 4. Sobre Mim (Movido para o final) --><section id="sobre" class="about-section about-section-contact" aria-label="Sobre Diego Vilela"><div class="about-container"><div class="about-image"><img src="../assets/foto-diego-new.jpg" alt="Foto de Diego Vilela" width="140" height="140" loading="lazy"></div><div class="about-content"><h2>Olá,
+        sou Diego Vilela</h2><p>Com formação pela <strong>Universidade Federal de São João Del Rei (UFSJ)</strong>e experiência como <strong>Analista de Projetos na Prefeitura de Oliveira</strong>,
+        uno o rigor técnico à eficácia processual.</p><p>Meu compromisso é garantir que seu projeto ou regularização siga o caminho mais <strong style="color: var(--color-primary-strong);">eficiente</strong>,
+        evitando atrasos e custos desnecessários.</p><p>Estou à disposição para servir e ajudar você a legalizar seu patrimônio com máxima confiança.</p></div></div></section></main><footer class="footer"><small>&copy;
+        <span id="year">2025</span>Vilela Engenharia. Todos os direitos reservados.</small></footer><div class="floating-buttons"><a href="https://wa.me/5535984529577?text=Ola%20Vilela%20Engenharia"
+        class="floating-btn floating-btn--whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 24 24" role="presentation"><path d="M12 2a10 10 0 0 0-8.66 15.14L2 22l5-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.08-1.13l-.29-.18-3 .79.8-2.91-.19-.3A8 8 0 1 1 12 20zm4.37-5.73-.52-.26a1.32 1.32 0 0 0-1.15.04l-.4.21a.5.5 0 0 1-.49 0 8.14 8.14 0 0 1-2.95-2.58.5.5 0 0 1 0-.49l.21-.4a1.32 1.32 0 0 0 .04-1.15l-.26-.52a1.32 1.32 0 0 0-1.18-.73h-.37a1 1 0 0 0-1 .86 3.47 3.47 0 0 0 .18 1.52A10.2 10.2 0 0 0 13 15.58a3.47 3.47 0 0 0 1.52.18 1 1 0 0 0 .86-1v-.37a1.32 1.32 0 0 0-.73-1.18z"></path></svg></a><a href="https://www.instagram.com/diegovilela.eng/" class="floating-btn floating-btn--instagram"
+        target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" role="presentation"><path d="M7 3h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4zm0 2a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm5 3.5A3.5 3.5 0 1 1 8.5 12 3.5 3.5 0 0 1 12 8.5zm0 5A1.5 1.5 0 1 0 10.5 12 1.5 1.5 0 0 0 12 13.5zm4.25-6.75a1 1 0 1 1-1-1 1 1 0 0 1 1 1z"></path></svg></a></div>< !-- Modal de Serviços (Cópia da estrutura original + ajuste ID) --><div id="serviceModal" class="modal" aria-hidden="true"><div class="modal__overlay" tabindex="-1" data-micromodal-close></div><div class="modal__content" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><button class="modal__close" aria-label="Fechar modal" data-micromodal-close><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></button><header class="modal__header"><h2 id="modalTitle">Selecione os serviços</h2><p class="modal__subtitle">Marque os itens que você precisa:</p></header><div id="serviceListContainer" class="service-list"></div><div class="modal-footer"><button id="whatsappSubmit" class="btn-whatsapp-longo"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M17.472 14.382C17.175 14.233 15.714 13.515 15.442 13.415C15.169 13.316 14.971 13.267 14.772 13.565C14.575 13.862 14.005 14.531 13.832 14.729C13.659 14.928 13.485 14.952 13.188 14.804C12.891 14.654 11.933 14.341 10.798 13.329C9.915 12.541 9.318 11.568 9.145 11.27C8.972 10.973 9.127 10.812 9.276 10.664C9.41 10.531 9.574 10.317 9.722 10.144C9.871 9.97 9.92 9.846 10.02 9.648C10.12 9.45 10.07 9.277 9.995 9.128C9.92 8.979 9.326 7.516 9.079 6.921C8.837 6.342 8.592 6.421 8.41 6.411C8.237 6.403 8.039 6.403 7.84 6.403C7.642 6.403 7.32 6.477 7.048 6.775C6.776 7.072 6.008 7.791 6.008 9.254C6.008 10.716 7.073 12.129 7.221 12.328C7.37 12.526 9.317 15.527 12.298 16.814C13.007 17.12 13.56 17.303 13.992 17.439C14.71 17.666 15.358 17.634 15.869 17.557C16.439 17.472 17.626 16.838 17.874 16.144C18.122 15.45 18.122 14.855 18.047 14.731C17.973 14.607 17.775 14.533 17.478 14.384H17.472ZM12.05 24C9.879 24 7.838 23.453 6.032 22.487L5.798 22.342L1.514 23.375L3.804 19.191L3.651 18.948C2.553 17.195 1.978 15.149 1.978 13.047C1.978 7.495 6.495 2.979 12.054 2.979C14.745 2.98 17.274 4.028 19.175 5.929C21.077 7.831 22.125 10.36 22.125 13.051C22.125 18.603 17.608 23.12 12.05 23.12V24ZM12.054 0C4.844 0 0 4.844 0 12.053C0 14.683 0.853 17.115 2.315 19.102L0 27.553L8.676 25.278C10.573 26.312 12.72 26.855 14.912 26.855H14.918C22.129 26.855 27.973 21.011 27.973 13.802C27.973 6.593 22.129 0.749 14.918 0.749H12.054Z"
+        fill="white" /></svg><span style="flex-grow: 1; text-align: center;">Falar com Diego Vilela</span></button></div></div></div><script> // Lógica Inline Global (Removemos IIFE para garantir escopo)
 
-            <!-- 1. Regularizações -->
-            <section class="links">
-                <h2 class="section-heading">Regularizações de Imóveis</h2>
-                <ul class="links-grid">
-                    <li>
-                        <button class="link-card link-card--city" onclick="openModal('Prefeitura')">
-                            <span class="icon" aria-hidden="true">
-                                <img src="../assets/icon-prefeitura.png" alt="" width="28" height="28">
-                            </span>
-                            <span class="text">
-                                <span class="title">Prefeitura</span>
-                                <span class="subtitle">Projetos de Regularização</span>
-                            </span>
-                        </button>
-                    </li>
-                    <li>
-                        <button class="link-card link-card--federal" onclick="openModal('Receita Federal')">
-                            <span class="icon" aria-hidden="true">
-                                <img src="../assets/icon-receita.png" alt="" width="28" height="28">
-                            </span>
-                            <span class="text">
-                                <span class="title">Receita Federal</span>
-                                <span class="subtitle">CND e regularização de obras</span>
-                            </span>
-                        </button>
-                    </li>
-                    <li>
-                        <button class="link-card link-card--registry" onclick="openModal('Cartório de Imóveis')">
-                            <span class="icon" aria-hidden="true">
-                                <img src="../assets/icon-cartorio.png" alt="" width="28" height="28">
-                            </span>
-                            <span class="text">
-                                <span class="title">Cartório de Imóveis</span>
-                                <span class="subtitle">Averbação e escritura</span>
-                            </span>
-                        </button>
-                    </li>
-                </ul>
-            </section>
-
-            <!-- 2. Engenharia -->
-            <section class="links">
-                <h2 class="section-heading">Projetos de Engenharia</h2>
-                <ul class="links-grid">
-                    <li>
-                        <button class="link-card link-card--engineering" onclick="openModal('Projetos de Engenharia')">
-                            <span class="icon" aria-hidden="true">
-                                <img src="../assets/icon-projetos-new.png" alt="" width="28" height="28">
-                            </span>
-                            <span class="text">
-                                <span class="title">Projetos de Engenharia</span>
-                                <span class="subtitle">Arquitetônico, Estrutural e mais</span>
-                            </span>
-                        </button>
-                    </li>
-                </ul>
-            </section>
-
-            <!-- 3. Consultoria (NOVO) -->
-            <section class="links">
-                <h2 class="section-heading">Consultoria Técnica</h2>
-                <ul class="links-grid">
-                    <li>
-                        <button class="link-card link-card--consultancy" onclick="openModal('Consultoria')">
-                            <span class="icon" aria-hidden="true">
-                                <!-- Usando PNG para manter padrão visual (duplicado de projetos, mas consistente) -->
-                                <img src="../assets/icon-projetos-new.png" alt="" width="28" height="28">
-                            </span>
-                            <span class="text">
-                                <span class="title">Consultoria e Laudos</span>
-                                <span class="subtitle">Vistorias, Laudos e Perícia</span>
-                            </span>
-                        </button>
-                    </li>
-                </ul>
-            </section>
-
-            <!-- 4. Sobre Mim (Movido para o final) -->
-            <section id="sobre" class="about-section" aria-label="Sobre Diego Vilela">
-                <div class="about-container">
-                    <div class="about-image">
-                        <img src="../assets/foto-diego-new.jpg" alt="Foto de Diego Vilela" width="140" height="140"
-                            loading="lazy">
-                    </div>
-                    <div class="about-content">
-                        <h2>Olá, sou Diego Vilela</h2>
-                        <p>Com formação pela Universidade Federal de São João Del Rei (UFSJ) e experiência como Analista
-                            de Projetos na Prefeitura de Oliveira, uno o rigor técnico à eficácia processual.</p>
-                        <p>Meu compromisso é garantir que seu projeto ou regularização siga o caminho mais
-                            <strong>eficiente</strong>, <strong>evitando atrasos</strong> e <strong>custos
-                                desnecessários</strong>.
-                        </p>
-                        <p>Estou à disposição para servir e ajudar você a legalizar seu patrimônio com máxima confiança.
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-        </main>
-
-        <footer class="footer">
-            <small>&copy; <span id="year">2025</span> Vilela Engenharia. Todos os direitos reservados.</small>
-        </footer>
-
-        <div class="floating-buttons">
-            <a href="https://wa.me/5535984529577?text=Ola%20Vilela%20Engenharia"
-                class="floating-btn floating-btn--whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp">
-                <svg viewBox="0 0 24 24" role="presentation">
-                    <path
-                        d="M12 2a10 10 0 0 0-8.66 15.14L2 22l5-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.08-1.13l-.29-.18-3 .79.8-2.91-.19-.3A8 8 0 1 1 12 20zm4.37-5.73-.52-.26a1.32 1.32 0 0 0-1.15.04l-.4.21a.5.5 0 0 1-.49 0 8.14 8.14 0 0 1-2.95-2.58.5.5 0 0 1 0-.49l.21-.4a1.32 1.32 0 0 0 .04-1.15l-.26-.52a1.32 1.32 0 0 0-1.18-.73h-.37a1 1 0 0 0-1 .86 3.47 3.47 0 0 0 .18 1.52A10.2 10.2 0 0 0 13 15.58a3.47 3.47 0 0 0 1.52.18 1 1 0 0 0 .86-1v-.37a1.32 1.32 0 0 0-.73-1.18z">
-                    </path>
-                </svg>
-            </a>
-            <a href="https://www.instagram.com/diegovilela.eng/" class="floating-btn floating-btn--instagram"
-                target="_blank" rel="noopener" aria-label="Instagram">
-                <svg viewBox="0 0 24 24" role="presentation">
-                    <path
-                        d="M7 3h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4zm0 2a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm5 3.5A3.5 3.5 0 1 1 8.5 12 3.5 3.5 0 0 1 12 8.5zm0 5A1.5 1.5 0 1 0 10.5 12 1.5 1.5 0 0 0 12 13.5zm4.25-6.75a1 1 0 1 1-1-1 1 1 0 0 1 1 1z">
-                    </path>
-                </svg>
-            </a>
-        </div>
-
-        <!-- Modal de Serviços (Cópia da estrutura original + ajuste ID) -->
-        <div id="serviceModal" class="modal" aria-hidden="true">
-            <div class="modal__overlay" tabindex="-1" data-micromodal-close></div>
-            <div class="modal__content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-                <button class="modal__close" aria-label="Fechar modal" data-micromodal-close>
-                    <svg viewBox="0 0 24 24">
-                        <path
-                            d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z">
-                        </path>
-                    </svg>
-                </button>
-                <header class="modal__header">
-                    <h2 id="modalTitle">Selecione os serviços</h2>
-                    <p class="modal__subtitle">Marque os itens que você precisa:</p>
-                </header>
-                <div id="serviceListContainer" class="service-list"></div>
-                <div class="modal-footer">
-                    <button id="whatsappSubmit" class="btn-whatsapp-longo">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                            <path
-                                d="M17.472 14.382C17.175 14.233 15.714 13.515 15.442 13.415C15.169 13.316 14.971 13.267 14.772 13.565C14.575 13.862 14.005 14.531 13.832 14.729C13.659 14.928 13.485 14.952 13.188 14.804C12.891 14.654 11.933 14.341 10.798 13.329C9.915 12.541 9.318 11.568 9.145 11.27C8.972 10.973 9.127 10.812 9.276 10.664C9.41 10.531 9.574 10.317 9.722 10.144C9.871 9.97 9.92 9.846 10.02 9.648C10.12 9.45 10.07 9.277 9.995 9.128C9.92 8.979 9.326 7.516 9.079 6.921C8.837 6.342 8.592 6.421 8.41 6.411C8.237 6.403 8.039 6.403 7.84 6.403C7.642 6.403 7.32 6.477 7.048 6.775C6.776 7.072 6.008 7.791 6.008 9.254C6.008 10.716 7.073 12.129 7.221 12.328C7.37 12.526 9.317 15.527 12.298 16.814C13.007 17.12 13.56 17.303 13.992 17.439C14.71 17.666 15.358 17.634 15.869 17.557C16.439 17.472 17.626 16.838 17.874 16.144C18.122 15.45 18.122 14.855 18.047 14.731C17.973 14.607 17.775 14.533 17.478 14.384H17.472ZM12.05 24C9.879 24 7.838 23.453 6.032 22.487L5.798 22.342L1.514 23.375L3.804 19.191L3.651 18.948C2.553 17.195 1.978 15.149 1.978 13.047C1.978 7.495 6.495 2.979 12.054 2.979C14.745 2.98 17.274 4.028 19.175 5.929C21.077 7.831 22.125 10.36 22.125 13.051C22.125 18.603 17.608 23.12 12.05 23.12V24ZM12.054 0C4.844 0 0 4.844 0 12.053C0 14.683 0.853 17.115 2.315 19.102L0 27.553L8.676 25.278C10.573 26.312 12.72 26.855 14.912 26.855H14.918C22.129 26.855 27.973 21.011 27.973 13.802C27.973 6.593 22.129 0.749 14.918 0.749H12.054Z"
-                                fill="white" />
-                        </svg>
-                        <span style="flex-grow: 1; text-align: center;">Falar com Diego Vilela</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-
-        <script>
-            // Lógica Inline Global (Removemos IIFE para garantir escopo)
-
-            const servicesData = {
-                'Prefeitura': [
-                    "Alvará de Construção (Obra Nova)",
-                    "Regularização de Obra (Anistia)",
-                    "Habite-se",
-                    "Alvará de Reforma/Demolição",
-                    "Desmembramento/Remembramento",
-                    "Usucapião (Fase Municipal)"
+        const servicesData= {
+            'Prefeitura': [ "Alvará de Construção (Obra Nova)",
+                "Regularização de Obra (Anistia)",
+                "Habite-se",
+                "Alvará de Reforma/Demolição",
+                "Desmembramento/Remembramento",
+                "Usucapião (Fase Municipal)"
                 ],
-                'Receita Federal': [
-                    "CNO (Cadastro Nacional de Obras)",
-                    "SERO (Aferição de Obras)",
-                    "CND de Obra (INSS)",
-                    "Regularização de CPF/CNPJ"
+                'Receita Federal': [ "CNO (Cadastro Nacional de Obras)",
+                "SERO (Aferição de Obras)",
+                "CND de Obra (INSS)",
+                "Regularização de CPF/CNPJ"
                 ],
-                'Cartório de Imóveis': [
-                    "Averbação de Construção",
-                    "Instituição de Condomínio",
-                    "Retificação de Área",
-                    "Registro de Usucapião",
-                    "Unificação/Desmembramento"
+                'Cartório de Imóveis': [ "Averbação de Construção",
+                "Instituição de Condomínio",
+                "Retificação de Área",
+                "Registro de Usucapião",
+                "Unificação/Desmembramento"
                 ],
-                'Projetos de Engenharia': [
-                    "Projeto Arquitetônico",
-                    "Projeto Estrutural",
-                    "Projetos Complementares",
-                    "Laudo Técnico"
+                'Projetos de Engenharia': [ "Projeto Arquitetônico",
+                "Projeto Estrutural",
+                "Projetos Complementares",
+                "Laudo Técnico"
                 ],
-                'Consultoria': [
-                    "Laudo Técnico de Reforma",
-                    "Laudo de Vistoria (Entrega de Chaves)",
-                    "Consultoria Técnica em Obras",
-                    "Perícia de Engenharia"
+                'Consultoria': [ "Laudo Técnico de Reforma",
+                "Laudo de Vistoria (Entrega de Chaves)",
+                "Consultoria Técnica em Obras",
+                "Perícia de Engenharia"
                 ]
-            };
+        }
 
-            const myPhoneNumber = "5535984529577";
-            const modal = document.getElementById('serviceModal');
-            const bioModal = document.getElementById('bioModal');
-            const modalTitle = document.getElementById('modalTitle');
-            const serviceListContainer = document.getElementById('serviceListContainer');
-            const whatsappSubmitBtn = document.getElementById('whatsappSubmit');
+        ;
 
-            let currentCategory = '';
+        const myPhoneNumber="5535984529577";
+        const modal=document.getElementById('serviceModal');
+        const bioModal=document.getElementById('bioModal');
+        const modalTitle=document.getElementById('modalTitle');
+        const serviceListContainer=document.getElementById('serviceListContainer');
+        const whatsappSubmitBtn=document.getElementById('whatsappSubmit');
 
-            // Open Service Modal
-            function openModal(category) {
-                currentCategory = category;
-                modalTitle.textContent = category;
-                serviceListContainer.innerHTML = '';
+        let currentCategory='';
 
-                if (servicesData[category]) {
-                    servicesData[category].forEach((service, index) => {
-                        const label = document.createElement('label');
-                        label.className = 'service-option';
+        // Open Service Modal
+        function openModal(category) {
+            currentCategory=category;
+            modalTitle.textContent=category;
+            serviceListContainer.innerHTML='';
 
-                        const checkbox = document.createElement('input');
-                        checkbox.type = 'checkbox';
-                        checkbox.value = service;
+            if (servicesData[category]) {
+                servicesData[category].forEach((service, index)=> {
+                        const label=document.createElement('label');
+                        label.className='service-option';
+
+                        const checkbox=document.createElement('input');
+                        checkbox.type='checkbox';
+                        checkbox.value=service;
                         checkbox.classList.add('service-item-checkbox');
 
-                        const span = document.createElement('span');
-                        span.textContent = service;
+                        const span=document.createElement('span');
+                        span.textContent=service;
 
                         label.appendChild(checkbox);
                         label.appendChild(span);
                         serviceListContainer.appendChild(label);
                     });
-                }
-
-                modal.classList.add('is-open');
-                modal.removeAttribute('aria-hidden');
-                document.body.classList.add('modal-open');
-            };
-
-            function closeModal() {
-                modal.classList.remove('is-open');
-                modal.setAttribute('aria-hidden', 'true');
-                document.body.classList.remove('modal-open');
             }
 
-            // Bio Modal Logic removed
+            modal.classList.add('is-open');
+            modal.removeAttribute('aria-hidden');
+            document.body.classList.add('modal-open');
+        }
 
-            document.querySelectorAll('[data-micromodal-close]').forEach(btn => {
+        ;
+
+        function closeModal() {
+            modal.classList.remove('is-open');
+            modal.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('modal-open');
+        }
+
+        // Bio Modal Logic removed
+
+        document.querySelectorAll('[data-micromodal-close]').forEach(btn=> {
                 btn.addEventListener('click', function () {
-                    closeModal();
-                });
+                        closeModal();
+                    });
             });
 
-            if (whatsappSubmitBtn) {
-                whatsappSubmitBtn.addEventListener('click', () => {
-                    const selectedServices = Array.from(serviceListContainer.querySelectorAll('input[type="checkbox"]:checked'))
-                        .map(cb => cb.value);
+        if (whatsappSubmitBtn) {
+            whatsappSubmitBtn.addEventListener('click', ()=> {
+                    const selectedServices=Array.from(serviceListContainer.querySelectorAll('input[type="checkbox"]:checked')) .map(cb=> cb.value);
 
-                    let message = '';
+                    let message='';
+
                     if (selectedServices.length > 0) {
-                        message = `Oi Diego! Vim pelo cartão digital. Tenho interesse em *${currentCategory}*:\n\n- ${selectedServices.join('\n- ')}`;
-                    } else {
-                        message = `Oi Diego! Vim pelo cartão digital. Tenho interesse em *${currentCategory}*.`;
+                        message=`Oi Diego ! Vim pelo cartão digital. Tenho interesse em *$ {
+                            currentCategory
+                        }
+
+                        *:\n\n- $ {
+                            selectedServices.join('\n- ')
+                        }
+
+                        `;
                     }
 
-                    const url = `https://wa.me/${myPhoneNumber}?text=${encodeURIComponent(message)}`;
+                    else {
+                        message=`Oi Diego ! Vim pelo cartão digital. Tenho interesse em *$ {
+                            currentCategory
+                        }
+
+                        *.`;
+                    }
+
+                    const url=`https: //wa.me/${myPhoneNumber}?text=${encodeURIComponent(message)}`;
                     window.open(url, '_blank');
                     closeModal();
                 });
-            }
+        }
 
-            // Copyright Year
-            const yearSpan = document.getElementById('year');
-            if (yearSpan) {
-                yearSpan.textContent = new Date().getFullYear();
-            }
+        // Copyright Year
+        const yearSpan=document.getElementById('year');
 
-            // --- FORÇAR ATUALIZAÇÃO ---
-            // Remove Service Workers antigos para garantir que o cliente receba a versão nova
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.getRegistrations().then(function (registrations) {
+        if (yearSpan) {
+            yearSpan.textContent=new Date().getFullYear();
+        }
+
+        // --- FORÇAR ATUALIZAÇÃO ---
+        // Remove Service Workers antigos para garantir que o cliente receba a versão nova
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function (registrations) {
                     for (let registration of registrations) {
                         registration.unregister();
                     }
                 });
-            }
-        </script>
-</body>
+        }
 
-</html>
-```
+        </script></body></html>```
