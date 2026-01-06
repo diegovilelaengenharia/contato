@@ -67,18 +67,7 @@
             line-height: 1.6;
         }
 
-        font-size: 0.9rem;
-        font-weight: 600;
-        text-decoration: underline;
-        cursor: pointer;
-        margin-top: 8px;
-        padding: 4px 8px;
-        transition: color 0.2s;
-        }
 
-        .header-bio-trigger:hover {
-            color: var(--color-primary);
-        }
 
         /* REMOVIDO: .about-section-contact */
 
@@ -135,10 +124,23 @@
         .engineer-info .crea-badge {
             display: inline-block;
             font-size: 0.85rem;
-            /* Levemente menor */
             color: var(--color-text-subtle);
             margin-bottom: 0px;
             font-weight: 400;
+        }
+
+        /* Link no Nome */
+        .name-link {
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            border-bottom: 1px dashed transparent;
+        }
+
+        .name-link:hover {
+            opacity: 0.7;
+            border-bottom-color: var(--color-text);
         }
 
         /* Tagline com Efeito Marquee (Rolagem) */
@@ -273,7 +275,9 @@
                 <!-- Informações Pessoais (Abaixo, menor) -->
                 <div class="engineer-info">
                     <span class="label-responsibility">Engenheiro Responsável</span>
-                    <h2>Diego T. N. Vilela</h2>
+                    <a href="sobre.html" class="name-link">
+                        <h2>Diego T. N. Vilela</h2>
+                    </a>
                     <span class="crea-badge">Engenheiro Civil &middot; CREA 235.474/D</span>
                 </div>
             </div>
@@ -293,8 +297,6 @@
                         target="_blank" rel="noopener">
                         (35) 98452-9577
                     </a>
-
-                    <button class="btn-bio-green" onclick="openBioModal()">Sobre mim</button>
                 </div>
             </div>
 
@@ -445,35 +447,7 @@
         </div>
     </div>
 
-    <!-- Modal Bio (Sobre Mim) -->
-    <div id="bioModal" class="modal" aria-hidden="true" style="z-index: 9999;">
-        <div class="modal__overlay" tabindex="-1" onclick="closeBioModal()"></div>
-        <div class="modal__content" role="dialog" aria-modal="true" style="max-width: 500px;">
-            <button class="modal__close" aria-label="Fechar modal" onclick="closeBioModal()">
-                <svg viewBox="0 0 24 24">
-                    <path
-                        d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z">
-                    </path>
-                </svg>
-            </button>
-            <div style="text-align: center; margin-bottom: 20px;">
-                <img src="../assets/foto-diego-new.jpg" alt="Diego Vilela"
-                    style="width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--color-primary); object-fit: cover;">
-                <h2 style="margin: 12px 0 4px; color: var(--color-primary-strong);">Diego T. N. Vilela</h2>
-                <span style="font-size: 0.9rem; color: #666;">Engenheiro Civil</span>
-            </div>
-            <div style="line-height: 1.7; color: var(--color-text-subtle);">
-                <p style="margin-bottom: 16px;">Olá, sou <strong>Diego Vilela</strong>.</p>
-                <p style="margin-bottom: 16px;">Com formação pela <strong>Universidade Federal de São João Del Rei
-                        (UFSJ)</strong> e experiência como <strong>Analista de Projetos na Prefeitura de
-                        Oliveira</strong>, uno o rigor técnico à eficácia processual.</p>
-                <p style="margin-bottom: 16px;">Meu compromisso é garantir que seu projeto ou regularização siga o
-                    caminho mais <strong style="color: var(--color-primary-strong);">eficiente</strong>, evitando
-                    atrasos e custos desnecessários.</p>
-                <p>Estou à disposição para servir e ajudar você a legalizar seu patrimônio com máxima confiança.</p>
-            </div>
-        </div>
-    </div>
+
 
     <script>
         const servicesData = {
@@ -516,7 +490,7 @@
         const modalTitle = document.getElementById('modalTitle');
         const serviceListContainer = document.getElementById('serviceListContainer');
         const whatsappSubmitBtn = document.getElementById('whatsappSubmit');
-        const bioModal = document.getElementById('bioModal');
+
 
         let currentCategory = '';
 
@@ -556,27 +530,9 @@
             document.body.classList.remove('modal-open');
         }
 
-        // Bio Modal Logic
-        function openBioModal() {
-            if (bioModal) {
-                bioModal.classList.add('is-open');
-                bioModal.removeAttribute('aria-hidden');
-                document.body.classList.add('modal-open');
-            }
-        }
-
-        function closeBioModal() {
-            if (bioModal) {
-                bioModal.classList.remove('is-open');
-                bioModal.setAttribute('aria-hidden', 'true');
-                document.body.classList.remove('modal-open');
-            }
-        }
-
         document.querySelectorAll('[data-micromodal-close]').forEach(btn => {
             btn.addEventListener('click', function () {
                 closeModal();
-                closeBioModal();
             });
         });
 

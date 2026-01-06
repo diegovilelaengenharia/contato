@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sobre Mim | Diego Vilela</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../style.css?v=8">
+
+    <style>
+        body {
+            background-color: var(--bg-color);
+            color: var(--color-text);
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            /* Top align */
+            padding: 40px 20px;
+        }
+
+        .bio-container {
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 40px 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .profile-img {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 4px solid var(--color-primary);
+            object-fit: cover;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: var(--color-primary-strong);
+            margin: 0 0 8px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: #666;
+            display: block;
+            margin-bottom: 24px;
+            font-weight: 500;
+        }
+
+        .bio-text {
+            text-align: left;
+            line-height: 1.8;
+            color: var(--color-text-subtle);
+            font-size: 1.05rem;
+            margin-bottom: 32px;
+        }
+
+        .bio-text p {
+            margin-bottom: 16px;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background-color: var(--color-primary);
+            color: white;
+            text-decoration: none;
+            padding: 12px 32px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 12px rgba(19, 111, 92, 0.3);
+        }
+
+        .btn-back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(19, 111, 92, 0.4);
+            background-color: var(--color-primary-strong);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bio-container">
+        <img src="../assets/foto-diego-new.jpg" alt="Diego Vilela" class="profile-img">
+
+        <h1>Diego T. N. Vilela</h1>
+        <span class="subtitle">Engenheiro Civil</span>
+
+        <div class="bio-text">
+            <p>Olá, sou <strong>Diego Vilela</strong>.</p>
+            <p>Com formação pela <strong>Universidade Federal de São João Del Rei (UFSJ)</strong> e experiência como
+                <strong>Analista de Projetos na Prefeitura de Oliveira</strong>, uno o rigor técnico à eficácia
+                processual.</p>
+            <p>Meu compromisso é garantir que seu projeto ou regularização siga o caminho mais <strong
+                    style="color: var(--color-primary-strong);">eficiente</strong>, evitando atrasos e custos
+                desnecessários.</p>
+            <p>Estou à disposição para servir e ajudar você a legalizar seu patrimônio com máxima confiança.</p>
+        </div>
+
+        <a href="index.html" class="btn-back">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7" />
+            </svg>
+            Voltar
+        </a>
+    </div>
+
+</body>
+
+</html>
