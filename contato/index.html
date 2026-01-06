@@ -80,7 +80,8 @@
             justify-content: center;
             gap: 12px;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 4px;
+            /* Margem reduzida */
             margin-left: auto;
             margin-right: auto;
         }
@@ -149,9 +150,11 @@
             overflow: hidden;
             background: #e0f2f1;
             /* Verde Claro Fundo */
-            margin: 24px auto 16px;
+            margin: 8px auto 12px;
+            /* Margem reduzida drasticamente */
             position: relative;
-            max-width: 95%;
+            max-width: 98%;
+            /* Aproveitar largura */
             /* Levemente maior */
             border-radius: 8px;
             /* Cantos suaves */
@@ -193,14 +196,115 @@
         /* Ajuste do botão whatsapp e bio lado a lado */
         body .hero-actions {
             display: flex;
-            flex-direction: column;
-            /* Forçar vertical: Salvar Contato em cima */
+            flex-direction: row;
+            /* Volta para linha (lado a lado) */
             justify-content: center;
             align-items: center;
-            gap: 16px;
-            /* Mais espaço entre os botões */
-            margin-top: 12px;
+            gap: 10px;
+            /* Gap menor */
+            margin-top: 8px;
+            /* Menos margem topo */
             width: 100%;
+            flex-wrap: wrap;
+        }
+
+        body .hero-whatsapp {
+            min-width: unset !important;
+            width: auto;
+            padding: 10px 20px;
+            /* Padding reduzido */
+            font-size: 0.95rem;
+            /* Fonte levemente menor */
+            white-space: nowrap;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            border-radius: 50px;
+            flex: 1;
+            text-align: center;
+            max-width: 220px;
+        }
+
+
+        /* Float Button Save Contact - Agora no Header (Estilo Discreto Amarelo) e compactado */
+        .hero-vcard {
+            background-color: #fffdf5;
+            color: #b48308;
+            border: 1px solid rgba(239, 181, 36, 0.3);
+            transition: all 0.3s ease;
+            padding: 10px 20px;
+            /* Padding ajustado */
+            border-radius: 50px;
+            font-size: 0.95rem;
+            /* Fonte ajustada */
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            flex: 1;
+            max-width: 220px;
+        }
+
+        .hero-vcard:hover {
+            background-color: #fff8e1;
+            border-color: rgba(239, 181, 36, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 181, 36, 0.15);
+        }
+
+        .floating-btn--vcard {
+            background-color: #333;
+        }
+
+        /* Estilos Globais do Header Container - Compacto */
+        .hero {
+            padding: 24px 16px 20px;
+            /* Padding MUITO reduzido */
+        }
+
+        /* Overrides para compactar a página toda */
+        .content {
+            margin-top: 24px !important;
+            /* Aproxima seções do topo */
+            gap: 24px !important;
+            /* Menos espaço entre seções */
+        }
+
+        .section-heading {
+            margin: 0 0 12px;
+            /* Menos espaço abaixo do título */
+            font-size: 1.15rem;
+        }
+
+        .engineer-card {
+            background: transparent;
+            box-shadow: none;
+            border: none;
+            padding: 0;
+            margin: 0 auto;
+            max-width: 100%;
+            width: 100%;
+            text-align: center;
+            position: relative;
+        }
+
+        .engineer-card::before {
+            display: none;
+        }
+
+        @media (max-width: 400px) {
+            body .hero-actions {
+                flex-direction: row;
+                /* Tenta manter lado a lado mesmo no mobile */
+                gap: 8px;
+            }
+
+            body .hero-whatsapp,
+            .hero-vcard {
+                padding: 10px 12px;
+                /* Compactar botões no mobile */
+                font-size: 0.85rem;
+            }
         }
 
         body .hero-whatsapp {
@@ -265,19 +369,6 @@
         .engineer-card::before {
             display: none;
         }
-
-        @media (max-width: 400px) {
-            body .hero-actions {
-                flex-direction: column;
-                gap: 12px;
-            }
-
-            body .hero-whatsapp,
-            .btn-bio-green {
-                width: 100%;
-                max-width: 100%;
-            }
-        }
     </style>
 </head>
 
@@ -286,7 +377,7 @@
         <header class="hero" role="banner">
 
             <!-- Container Novo: Logo + Info Vertical -->
-            <div class="header-profile-row">
+            <div class="header-profile-row" style="margin-bottom: 4px;">
                 <!-- Marca (Primeiro) -->
                 <picture class="logo">
                     <img src="../assets/logo.png" alt="Logotipo da Vilela Engenharia" width="160" height="160">
@@ -316,6 +407,11 @@
 
                 <!-- Ações: Whats invertido com Sobre Mim -->
                 <div class="hero-actions">
+                    <a class="hero-whatsapp" href="https://wa.me/5535984529577?text=Ola%20Diego%20Vilela"
+                        target="_blank" rel="noopener">
+                        (35) 98452-9577
+                    </a>
+
                     <a href="../assets/diego-vilela.vcf" class="hero-vcard" download>
                         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -325,11 +421,6 @@
                             <line x1="23" y1="11" x2="17" y2="11"></line>
                         </svg>
                         Salvar Contato
-                    </a>
-
-                    <a class="hero-whatsapp" href="https://wa.me/5535984529577?text=Ola%20Diego%20Vilela"
-                        target="_blank" rel="noopener">
-                        (35) 98452-9577
                     </a>
                 </div>
             </div>
