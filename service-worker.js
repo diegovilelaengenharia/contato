@@ -1,66 +1,26 @@
-const CACHE_NAME = 'vilela-links-v6';
-const ASSETS = [
-    './',
-    './index.html',
-    './style.css',
-    './assets/logo.png',
-    './assets/diego-vilela.vcf',
-    './manifest.json'
-];
+const CACHE_NAME = 'vilela-links-cleanup-v7';
 
 self.addEventListener('install', (event) => {
-    event.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
-    );
+    // Force immediate activation
     self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
+    // Delete ALL caches associated with this scope
     event.waitUntil(
-        caches.keys().then((keys) =>
-            Promise.all(
-                keys.map((key) => {
-                    if (key !== CACHE_NAME) {
-                        return caches.delete(key);
-                    }
-                    return undefined;
-                })
-            )
-        )
+        caches.keys().then((keyList) => {
+            return Promise.all(keyList.map((key) => {
+                console.log('Service Worker: Removing old cache', key);
+                return caches.delete(key);
+            }));
+        })
     );
+    // Take control of all clients immediately
     self.clients.claim();
 });
 
 self.addEventListener('fetch', (event) => {
-    if (event.request.method !== 'GET') {
-        return;
-    }
-
-    const requestUrl = new URL(event.request.url);
-    if (requestUrl.origin !== self.location.origin) {
-        return;
-    }
-
-    // Network First Strategy
-    event.respondWith(
-        fetch(event.request)
-            .then((networkResponse) => {
-                const clonedResponse = networkResponse.clone();
-                caches.open(CACHE_NAME).then((cache) => {
-                    cache.put(event.request, clonedResponse);
-                });
-                return networkResponse;
-            })
-            .catch(() => {
-                return caches.match(event.request).then((cachedResponse) => {
-                    if (cachedResponse) {
-                        return cachedResponse;
-                    }
-                    if (event.request.mode === 'navigate') {
-                        return caches.match('./index.html');
-                    }
-                    return undefined;
-                });
-            })
-    );
+    // Network Only - By-pass cache completely
+    // This ensures we never serve stale content
+    event.respondWith(fetch(event.request));
 });
