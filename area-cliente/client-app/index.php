@@ -43,6 +43,8 @@ try {
     // 3. FETCH NEXT PAYMENT
     $stmt_fin = $pdo->prepare("SELECT valor, data_vencimento FROM processo_financeiro WHERE cliente_id = ? AND status != 'pago' ORDER BY data_vencimento ASC LIMIT 1");
     $stmt_fin->execute([$cliente_id]);
+    $next_bill = $stmt_fin->fetch();
+    
     // 4. FETCH EXTRA DETAILS (Address, CPF, Phone)
     $stmt_det = $pdo->prepare("SELECT * FROM processo_detalhes WHERE cliente_id = ?");
     $stmt_det->execute([$cliente_id]);
@@ -218,7 +220,7 @@ try {
                     <span class="app-btn-title">Documentos</span>
                     <span class="app-btn-desc">Acessar Projetos</span>
                 </div>
-            </button> <!-- CHANGED DIV TO BUTTON for Accessibility/Touch -->
+            </button> 
 
         </div>
 
@@ -240,19 +242,7 @@ try {
             <button onclick="closeModal('modalTimeline')" class="btn-close">✕</button>
         </div>
         <div class="app-modal-content">
-            <!-- CONTENT REMAIN SAME -->
-            <!-- STATUS HEADER -->
-            <div style="background:linear-gradient(135deg, var(--color-primary), var(--color-primary-dark)); color:white; padding:25px; border-radius:16px; margin-bottom:30px; text-align:center; box-shadow:0 10px 20px rgba(20, 108, 67, 0.2);">
-                <div style="font-size:0.9rem; opacity:0.8; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px;">Fase Atual</div>
-                <div style="font-size:1.6rem; font-weight:800; line-height:1.2; margin-bottom:15px;">
-                    <?= htmlspecialchars($etapa_atual) ?>
-                </div>
-                <!-- PROGRESS BAR -->
-                <div style="background:rgba(255,255,255,0.2); height:8px; border-radius:4px; overflow:hidden;">
-                     <div style="width:<?= $porcentagem ?>%; height:100%; background:#ffd700; border-radius:4px; transition:width 1s;"></div>
-                </div>
-            </div>
-
+            
             <!-- DETALHES DO PROCESSO (NOVO) -->
             <?php if ($detalhes): ?>
             <div style="background:#f8f9fa; border:1px solid #e9ecef; border-radius:12px; padding:20px; margin-bottom:30px;">
@@ -284,19 +274,19 @@ try {
             </div>
             <?php endif; ?>
 
-            <!-- TIMELINE STEPPER (MELHORADO) -->
+            <!-- TIMELINE STEPPER -->
             <h3 style="margin:0 0 20px 0; font-size:1.1rem; color:#333; border-bottom:1px solid #eee; padding-bottom:10px;">Etapas</h3>
-            <div class="timeline-container-full" style="padding-left:15px; margin-bottom:40px;">
+            <div class="timeline-container-full" style="padding-left:15px; margin-bottom:30px;">
                 <?php 
                     foreach($fases_padrao as $k => $fase): 
                         $is_past = $k < $fase_index;
                         $is_curr = $k === $fase_index;
-                        // Cores
-                        $dot_bg = $is_past ? '#198754' : ($is_curr ? 'white' : '#e9ecef'); // Verde Check para passado
+                        
+                        $dot_bg = $is_past ? '#198754' : ($is_curr ? 'white' : '#e9ecef');
                         $dot_border = $is_past ? '#198754' : ($is_curr ? 'var(--color-primary)' : '#ccc');
                         $dot_icon_color = $is_past ? 'white' : ($is_curr ? 'var(--color-primary)' : '#999');
                         $line_color = '#e9ecef';
-                        if ($is_past) $line_color = '#198754'; // Linha verde se já passou
+                        if ($is_past) $line_color = '#198754';
                         
                         $text_style = $is_curr ? 'font-weight:700; color:var(--color-primary);' : ($is_past ? 'color:#198754;' : 'color:#999;');
                 ?>
@@ -333,7 +323,7 @@ try {
 
              if(empty($historico)): ?>
                 <div class="empty-state" style="text-align:center; padding:30px; color:#999; border:2px dashed #eee; border-radius:12px;">
-                    Nehuma movimentação registrada.
+                    Nenhuma movimentação registrada.
                 </div>
              <?php else: 
                 foreach($historico as $h): ?>
@@ -348,7 +338,6 @@ try {
                 </div>
                 <?php endforeach; 
              endif; ?>
-
         </div>
     </div>
 
