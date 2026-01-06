@@ -165,12 +165,17 @@
             display: inline-block;
             white-space: nowrap;
             animation: scroll-left 20s linear infinite;
-            /* Mais lento para ler melhor */
             padding-left: 100%;
             font-size: 1rem;
             color: #004d40;
             /* Verde Escuro Texto */
             font-weight: 700;
+            background: transparent;
+            /* Remove fundo amarelo do style.css */
+            border: none;
+            /* Remove borda amarela do style.css */
+            margin: 0;
+            /* Remove margem do style.css se necessário */
         }
 
 
@@ -213,7 +218,25 @@
 
 
 
-        /* Float Button Save Contact */
+        /* Float Button Save Contact - Agora no Header (Estilo Discreto Amarelo) */
+        .hero-vcard {
+            background-color: #fffdf5;
+            /* Fundo Creme muito suave */
+            color: #b48308;
+            /* Dourado Escuro para texto */
+            border: 1px solid rgba(239, 181, 36, 0.3);
+            /* Borda sutil */
+            transition: all 0.3s ease;
+        }
+
+        .hero-vcard:hover {
+            background-color: #fff8e1;
+            /* Amarelo um pouco mais presente no hover */
+            border-color: rgba(239, 181, 36, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 181, 36, 0.15);
+        }
+
         .floating-btn--vcard {
             background-color: #333;
         }
