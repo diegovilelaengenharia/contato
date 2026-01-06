@@ -226,7 +226,7 @@ try {
 
         <!-- DEVELOPER CREDIT -->
         <div style="text-align:center; margin-top:50px; opacity:0.6; font-size:0.8rem;">
-            Desenvolvido por <strong>Diego T. N. Vilela</strong>
+            Desenvolvido por <strong>Diego T. N. Vilela</strong> (v2.1)
         </div>
 
     </div>
