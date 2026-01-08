@@ -62,31 +62,9 @@ if($drive_link) {
         .floating-btn:active { transform: scale(0.95); }
 
         body { background: #f4f6f8; }
-        
-        /* HEADER - BLUE THEME (Premium) */
-        .page-header {
-            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%); /* Light Blue/Cyan Gradient */
-            border-bottom: none;
-            padding: 30px 25px; 
-            border-bottom-left-radius: 30px; 
-            border-bottom-right-radius: 30px;
-            box-shadow: 0 10px 30px rgba(13, 202, 240, 0.15); 
-            margin-bottom: 30px;
-            display: flex; align-items: center; justify-content: space-between;
-            color: #006064; /* Dark Cyan Text */
-            position: relative;
-            overflow: hidden;
-            border: 1px solid #bcecf5;
-        }
-        
-        .page-header::after {
-            content: ''; position: absolute; top: -50px; right: -50px;
-            width: 150px; height: 150px; background: rgba(255,255,255,0.4);
-            border-radius: 50%; pointer-events: none;
-        }
 
         .btn-back {
-            text-decoration: none; color: #006064; font-weight: 600; 
+            text-decoration: none; color: var(--color-primary); font-weight: 600; 
             display: flex; align-items: center; gap: 8px;
             padding: 10px 20px; 
             background: white; 
@@ -94,16 +72,11 @@ if($drive_link) {
             transition: 0.3s;
             font-size: 0.95rem;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            border: 1px solid #bcecf5;
+            border: 1px solid #dee2e6;
         }
         .btn-back:hover { background: #e6fcff; transform: translateX(-3px); }
         .btn-back:active { transform: scale(0.95); }
-        
-        .header-title-box {
-            display: flex; flex-direction: column; align-items: flex-end; text-align: right;
-        }
-        .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #006064; }
-        .header-title-sub { font-size: 0.8rem; opacity: 0.8; font-weight: 500; margin-top: 2px; color: #00838f; }
+
 
         .drive-card {
             background: white;
@@ -152,24 +125,19 @@ if($drive_link) {
 
     <div class="app-container" style="padding: 0;">
         
-        <!-- HEADER -->
-        <div class="page-header">
-            <!-- Left: Back Button -->
-            <a href="index.php" class="btn-back">
-                <span class="material-symbols-rounded">arrow_back</span> Voltar
-            </a>
-
-            <!-- Right: Title & Icon -->
-            <div style="display:flex; align-items:center; gap:15px; z-index:2;">
-                 <div class="header-title-box">
-                    <span class="header-title-main">Documentos</span>
-                    <span class="header-title-sub">Arquivos do Projeto</span>
-                 </div>
-                 
-                 <!-- Icon -->
-                 <div style="background: white; border:1px solid #dee2e6; color: #0dcaf0; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+        <!-- HEADER STANDARD (Green) -->
+        <div class="app-card" style="border-radius: 0 0 20px 20px; margin-top: -30px; padding-top: 40px; border-top: none; background: white; margin-bottom: 25px;">
+            <div class="app-header-row" style="border-bottom:none; margin-bottom:0;">
+                <div>
+                     <a href="index.php" style="text-decoration: none; color: var(--text-muted); font-size: 0.9rem; display: flex; align-items: center; gap: 5px; margin-bottom: 5px;">
+                        <span class="material-symbols-rounded" style="font-size: 1.1rem;">arrow_back</span> Voltar
+                    </a>
+                    <h2 class="app-title">Documentos</h2>
+                    <p class="app-subtitle">Arquivos do Projeto</p>
+                </div>
+                <div style="background: #e0f7fa; color: #006064; width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
                     📂
-                 </div>
+                </div>
             </div>
         </div>
         

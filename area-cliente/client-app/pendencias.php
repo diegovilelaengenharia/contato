@@ -141,100 +141,27 @@ function get_pendency_files($p_id) {
         .floating-btn:active { transform: scale(0.95); }
 
         body { background: #f4f6f8; }
-        
-        /* HEADER - RED THEME (Premium) */
-        .page-header {
-            background: linear-gradient(135deg, #f8d7da 0%, #f1aeb5 100%); /* Light Red Gradient */
-            border-bottom: none;
-            padding: 30px 25px; 
-            border-bottom-left-radius: 30px; 
-            border-bottom-right-radius: 30px;
-            box-shadow: 0 10px 30px rgba(220, 53, 69, 0.15); 
-            margin-bottom: 30px;
-            display: flex; align-items: center; justify-content: space-between;
-            color: #842029; /* Dark Red Text */
-            position: relative;
-            overflow: hidden;
-            border: 1px solid #f5c2c7;
-        }
-        
-        .page-header::after {
-            content: ''; position: absolute; top: -50px; right: -50px;
-            width: 150px; height: 150px; background: rgba(255,255,255,0.4);
-            border-radius: 50%; pointer-events: none;
-        }
 
-        .btn-back {
-            text-decoration: none; color: #842029; font-weight: 600; 
-            display: flex; align-items: center; gap: 8px;
-            padding: 10px 20px; 
-            background: white; 
-            border-radius: 25px;
-            transition: 0.3s;
-            font-size: 0.95rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            border: 1px solid #f5c2c7;
-        }
-        .btn-back:hover { background: #fff5f5; transform: translateX(-3px); }
-        
-        .header-title-box {
-            display: flex; flex-direction: column; align-items: flex-end; text-align: right;
-        }
-        .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #58151c; }
-        .header-title-sub { font-size: 0.8rem; opacity: 0.8; font-weight: 500; margin-top: 2px; color: #842029; }
-
-        .status-badge {
-            padding: 4px 10px; border-radius: 20px;
-            font-size: 0.7rem; font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .btn-action-text {
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            width: 100%; padding: 12px;
-            border-radius: 12px;
-            font-weight: 600; font-size: 0.95rem;
-            text-decoration: none;
-            cursor: pointer;
-            transition: transform 0.1s;
-        }
-        .btn-action-text:active { transform: scale(0.98); }
-
-        .empty-state {
-            text-align: center; padding: 40px; color: #999;
-        }
-        
-        .section-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #555;
-            margin: 30px 0 15px 0;
-            display: flex; align-items: center; gap: 8px;
-        }
+        /* Custom adjustments for this page if needed, but relying on style.css for main layout */
     </style>
 </head>
 <body>
 
     <div class="app-container">
         
-        <!-- HEADER -->
-        <div class="page-header">
-            <!-- Left: Back Button -->
-            <a href="index.php" class="btn-back">
-                <span class="material-symbols-rounded">arrow_back</span> Voltar
-            </a>
-
-            <!-- Right: Title & Icon -->
-            <div style="display:flex; align-items:center; gap:15px; z-index:2;">
-                 <div class="header-title-box">
-                    <span class="header-title-main">Pendências</span>
-                    <span class="header-title-sub">Ações Necessárias</span>
-                 </div>
-                 
-                 <!-- Icon -->
-                 <div style="background: white; border:1px solid #f5c2c7; color: #dc3545; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(220, 53, 69, 0.1);">
+        <!-- HEADER STANDARD (Green) -->
+        <div class="app-card" style="border-radius: 0 0 20px 20px; margin-top: -30px; padding-top: 40px; border-top: none; background: white;">
+            <div class="app-header-row" style="border-bottom:none; margin-bottom:0;">
+                <div>
+                     <a href="index.php" style="text-decoration: none; color: var(--text-muted); font-size: 0.9rem; display: flex; align-items: center; gap: 5px; margin-bottom: 5px;">
+                        <span class="material-symbols-rounded" style="font-size: 1.1rem;">arrow_back</span> Voltar
+                    </a>
+                    <h2 class="app-title">Pendências</h2>
+                    <p class="app-subtitle">Ações necessárias para o processo.</p>
+                </div>
+                <div style="background: var(--color-primary-light); color: var(--color-primary-dark); width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
                     ⚠️
-                 </div>
+                </div>
             </div>
         </div>
 
@@ -263,7 +190,7 @@ function get_pendency_files($p_id) {
 
                 <!-- 1. HISTÓRICO DE RESOLUÇÕES (TOPO) -->
                 <?php if(count($resolvidas) > 0): ?>
-                    <h3 class="section-title" style="margin-bottom:20px;">
+                    <h3 class="app-title" style="font-size:1.1rem; margin-bottom:15px; display:flex; align-items:center; gap:8px;">
                         <span class="material-symbols-rounded" style="color:#198754;">history</span> Histórico de Resoluções
                     </h3>
                     
@@ -271,45 +198,42 @@ function get_pendency_files($p_id) {
                         <?php foreach($resolvidas as $p): 
                              $time = strtotime($p['data_criacao']);
                              $day = date('d', $time);
-                             $month = date('M', $time); // Jan, Feb... (English, but we can map if needed or leave as is, usually user wants PT-BR. Let's try numerical or simple array map)
+                             $month = date('M', $time); 
                              $months_pt = ['Jan'=>'JAN','Feb'=>'FEV','Mar'=>'MAR','Apr'=>'ABR','May'=>'MAI','Jun'=>'JUN','Jul'=>'JUL','Aug'=>'AGO','Sep'=>'SET','Oct'=>'OUT','Nov'=>'NOV','Dec'=>'DEZ'];
                              $month_pt = $months_pt[$month] ?? strtoupper($month);
                              $year = date('Y', $time);
                              
                              $anexos = get_pendency_files($p['id']);
                         ?>
-                        <div style="display: flex; gap: 20px; margin-bottom: 20px; align-items: flex-start;">
+                        <div style="display: flex; gap: 15px; margin-bottom: 20px; align-items: flex-start;">
                             <!-- Data Column -->
-                            <div style="text-align: center; min-width: 60px; padding-top: 5px;">
-                                <div style="font-size: 1.6rem; font-weight: 800; color: #333; line-height: 1; letter-spacing: -1px;"><?= $day ?></div>
-                                <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; font-weight: 700; margin-top: 2px;"><?= $month_pt ?></div>
-                                <div style="font-size: 0.65rem; color: #aaa; font-weight: 600;"><?= $year ?></div>
+                            <div style="text-align: center; min-width: 50px; padding-top: 5px;">
+                                <div style="font-size: 1.4rem; font-weight: 800; color: var(--color-primary); line-height: 1;"><?= $day ?></div>
+                                <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; font-weight: 700;"><?= $month_pt ?></div>
                             </div>
                             
                             <!-- Card Column -->
-                            <div style="flex: 1; background: white; border: 1px solid #e9ecef; border-radius: 16px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); position: relative;">
-                                <!-- Status Badge (Optional, but nice) -->
-                                <div style="font-size: 0.7rem; font-weight: 700; color: #198754; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;">
-                                    ✅ Resolvido
-                                </div>
+                            <div class="app-card" style="flex: 1; padding: 15px; border-top: 1px solid #eee; border-left: 4px solid var(--color-success); border-radius: 12px; margin-bottom: 0;">
+                                <!-- Status Badge -->
+                                <span class="app-badge success" style="margin-bottom: 8px;">✅ Resolvido</span>
 
-                                <h4 style="margin: 0 0 8px 0; font-size: 1.1rem; color: #198754; font-weight: 700;">
+                                <h4 style="margin: 8px 0; font-size: 1rem; color: var(--color-primary-dark); font-weight: 700;">
                                     <?= htmlspecialchars($p['titulo']) ?>
                                 </h4>
                                 
                                 <?php if(!empty($p['descricao'])): ?>
-                                    <div style="font-size: 0.9rem; color: #555; line-height: 1.5; margin-bottom: 15px;">
+                                    <div style="font-size: 0.9rem; color: #555; line-height: 1.5; margin-bottom: 10px;">
                                         <?= $p['descricao'] ?>
                                     </div>
                                 <?php endif; ?>
 
                                 <!-- Arquivos -->
                                 <?php if(!empty($anexos)): ?>
-                                    <div style="border-top: 1px solid #f0f0f0; padding-top: 10px; display: flex; flex-wrap: wrap; gap: 10px;">
+                                    <div style="border-top: 1px solid #f0f0f0; padding-top: 10px; display: flex; flex-wrap: wrap; gap: 8px;">
                                         <?php foreach($anexos as $arq): ?>
-                                            <a href="<?= $arq['path'] ?>" target="_blank" style="text-decoration:none; color:#666; font-size:0.8rem; display: inline-flex; align-items: center; gap: 6px; background: #f8f9fa; padding: 6px 12px; border-radius: 20px; border: 1px solid #e9ecef;">
-                                                <span class="material-symbols-rounded" style="font-size:16px; color: #aaa;">description</span>
-                                                <?= (strlen($arq['name']) > 25) ? substr($arq['name'], 0, 22) . '...' : $arq['name'] ?>
+                                            <a href="<?= $arq['path'] ?>" target="_blank" style="text-decoration:none; color:#666; font-size:0.8rem; display: inline-flex; align-items: center; gap: 5px; background: #f8f9fa; padding: 4px 10px; border-radius: 15px; border: 1px solid #e9ecef;">
+                                                <span class="material-symbols-rounded" style="font-size:14px;">description</span>
+                                                <?= (strlen($arq['name']) > 20) ? substr($arq['name'], 0, 18) . '...' : $arq['name'] ?>
                                             </a>
                                         <?php endforeach; ?>
                                     </div>
@@ -323,7 +247,7 @@ function get_pendency_files($p_id) {
 
                 <!-- 2. PENDÊNCIAS EM ABERTO (EMBAIXO) -->
                 <?php if(count($abertas) > 0): ?>
-                    <h3 class="section-title" style="margin-top: 15px; margin-bottom: 10px;">
+                    <h3 class="app-title" style="font-size:1.1rem; margin-top: 15px; margin-bottom: 15px; display:flex; align-items:center; gap:8px;">
                         <span class="material-symbols-rounded" style="color:#e65100;">warning</span> Pendências em Aberto
                     </h3>
 
@@ -335,42 +259,42 @@ function get_pendency_files($p_id) {
                         // Cores
                         if($has_attachment) {
                              $status_label = "Em Análise";
-                             $bg_badge = "#0d6efd"; $bg_card = "#f0f8ff"; $border_card = "#cce5ff"; $text_title = "#084298";
+                             $badge_class = "info";
                         } else {
                              $status_label = "Pendente";
-                             $bg_badge = "#ffc107"; $bg_card = "#fff9d6"; $border_card = "#ffeeba"; $text_title = "#856404";
+                             $badge_class = "warning";
                         }
                     ?>
-                    <div style="background: <?= $bg_card ?>; border: 1px solid <?= $border_card ?>; border-radius: 12px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                    <div class="app-card" style="border-top: 1px solid #eee; border-left: 4px solid #ffc107; padding: 20px;">
                         
                         <!-- Header Compacto -->
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
-                            <span style="font-size: 0.75rem; font-weight: 700; color: #666;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                            <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">
                                 📅 <?= $data_criacao ?>
                             </span>
-                             <span style="background: <?= $bg_badge ?>; color: <?= ($status_label=='Pendente')?'#333':'white' ?>; padding: 2px 8px; border-radius: 8px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase;">
+                             <span class="app-badge <?= $badge_class ?>">
                                 <?= $status_label ?>
                             </span>
                         </div>
 
-                        <h3 style="margin: 0 0 8px 0; font-size: 1.1rem; font-weight: 800; color: <?= $text_title ?>; line-height: 1.2;">
+                        <h3 class="app-title" style="font-size:1.1rem; margin-bottom:10px;">
                             <?= htmlspecialchars($p['titulo']) ?>
                         </h3>
 
-                        <!-- Descrição (HTML FIXED) -->
+                        <!-- Descrição -->
                         <?php if(!empty($p['descricao'])): ?>
-                            <div style="font-size: 0.9rem; color: #444; margin-bottom: 12px; line-height: 1.4;">
+                            <div class="app-subtitle" style="color:#555; margin-bottom:15px; line-height:1.5;">
                                 <?= $p['descricao'] ?>
                             </div>
                         <?php endif; ?>
     
                         <!-- Arquivos Enviados -->
                         <?php if($has_attachment): ?>
-                            <div style="margin-bottom: 12px; background: rgba(255,255,255,0.6); padding: 8px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.05);">
-                                <strong style="display:block; font-size:0.75rem; margin-bottom:5px; color:#555;">Arquivos Enviados:</strong>
-                                <div style="display:flex; flex-wrap:wrap; gap:5px;">
+                            <div style="margin-bottom: 15px; background: #f8f9fa; padding: 10px; border-radius: 8px; border: 1px solid #e9ecef;">
+                                <strong style="display:block; font-size:0.75rem; margin-bottom:8px; color:#666;">Arquivos Enviados:</strong>
+                                <div style="display:flex; flex-wrap:wrap; gap:8px;">
                                 <?php foreach($anexos as $arq): ?>
-                                    <div style="display:inline-flex; align-items:center; gap:5px; background:white; padding:4px 8px; border-radius:6px; border:1px solid #ddd;">
+                                    <div style="display:inline-flex; align-items:center; gap:5px; background:white; padding:5px 10px; border-radius:6px; border:1px solid #ddd;">
                                         <a href="<?= $arq['path'] ?>" target="_blank" style="color:#0d6efd; text-decoration:none; font-size:0.8rem; display: flex; align-items: center; gap: 3px;">
                                             📎 <?= $arq['name'] ?>
                                         </a>
@@ -380,22 +304,21 @@ function get_pendency_files($p_id) {
                                             <input type="hidden" name="file_name" value="<?= htmlspecialchars($arq['name']) ?>">
                                             <input type="hidden" name="pendencia_id" value="<?= $p['id'] ?>">
                                             <button type="submit" style="background:none; border:none; cursor:pointer; padding:0; display:flex; color:#dc3545;" title="Apagar">
-                                                <span class="material-symbols-rounded" style="font-size:1rem;">delete</span>
+                                                <span class="material-symbols-rounded" style="font-size:1.1rem;">delete</span>
                                             </button>
                                         </form>
                                     </div>
                                 <?php endforeach; ?>
                                 </div>
-                                <div style="font-size:0.7rem; color:#888; margin-top:4px;">*Aguardando análise.</div>
+                                <div style="font-size:0.7rem; color:#888; margin-top:5px;">*Aguardando análise pelo escritório.</div>
                             </div>
                         <?php endif; ?>
     
-                        <!-- Área de Ação Simplificada (Botão Pequeno) -->
-                        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 10px;">
-                            <!-- Botão Resolver (Pequeno) -->
-                            <button onclick="openResolveModal(<?= $p['id'] ?>, '<?= htmlspecialchars($p['titulo'], ENT_QUOTES) ?>')" style="background: #0d6efd; color: white; border: none; border-radius: 6px; padding: 6px 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 0.8rem; box-shadow: 0 2px 5px rgba(13,110,253,0.2);">
-                                <span class="material-symbols-rounded" style="font-size: 1rem;">cloud_upload</span>
-                                Resolver
+                        <!-- Área de Ação -->
+                        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; border-top: 1px solid #eee; padding-top: 15px;">
+                            <button onclick="openResolveModal(<?= $p['id'] ?>, '<?= htmlspecialchars($p['titulo'], ENT_QUOTES) ?>')" style="background: var(--color-primary); color: white; border: none; border-radius: 8px; padding: 10px 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                                <span class="material-symbols-rounded" style="font-size: 1.1rem;">cloud_upload</span>
+                                Enviar Arquivos
                             </button>
                         </div>
     
