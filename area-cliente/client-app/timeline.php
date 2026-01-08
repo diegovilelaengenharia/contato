@@ -62,14 +62,22 @@ if($fase_index === false) $fase_index = 0;
         /* Override basic settings for full page view */
         body { background: #f4f6f8; }
         .page-header {
-            background:white; padding:15px; border-radius:16px; 
-            box-shadow:0 2px 10px rgba(0,0,0,0.03); margin-bottom:20px;
-            display:flex; align-items:center; gap:10px;
+            background:#fff; /* White */
+            border-bottom: 3px solid #198754; /* Green Border */
+            padding: 25px 20px; 
+            border-bottom-left-radius: 0; 
+            border-bottom-right-radius: 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+            margin-bottom: 25px;
+            display: flex; align-items: center; gap: 10px;
+            color: #333;
         }
         .btn-back {
-            text-decoration:none; color:#666; font-weight:600; 
-            display:flex; align-items:center; gap:5px;
-            padding:8px 12px; background:#f8f9fa; border-radius:8px;
+            text-decoration: none; color: #666; font-weight: 600; 
+            display: flex; align-items: center; gap: 5px;
+            padding: 6px 12px; background: #f0f0f0; border-radius: 8px;
+            transition: 0.2s;
+            font-size: 0.9rem;
         }
     </style>
 </head>
@@ -87,7 +95,7 @@ if($fase_index === false) $fase_index = 0;
             <a href="index.php" class="btn-back">
                 <span>←</span> Voltar
             </a>
-            <h1 style="font-size:1.2rem; margin:0; color:#146c43;">Linha do Tempo</h1>
+            <h1 style="font-size:1.2rem; margin:0; color:#198754;">Linha do Tempo</h1>
         </div>
 
         <!-- CONTEÚDO DA TIMELINE (Portado do Modal) -->

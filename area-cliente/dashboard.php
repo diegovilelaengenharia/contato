@@ -163,33 +163,34 @@ try {
             
             <!-- 1. TIMELINE -->
             <button class="app-button" onclick="openModal('modalTimeline')">
-                <div class="app-btn-icon" style="background:#e3f2fd; color:#0d47a1;">⏳</div>
+                <div class="app-btn-icon" style="background:#e9ecef; color:#198754;">⏳</div>
                 <div class="app-btn-content">
-                    <span class="app-btn-title">Linha do Tempo</span>
-                    <span class="app-btn-desc"><?= htmlspecialchars($etapa_atual) ?></span>
+                    <span class="app-btn-title" style="color:#333;">Linha do Tempo</span>
+                    <span class="app-btn-desc" style="color:#666;"><?= htmlspecialchars($etapa_atual) ?></span>
                 </div>
-                <div style="font-weight:800; color:#0d47a1;"><?= $porcentagem ?>%</div>
+                <div style="font-weight:800; color:#198754;"><?= $porcentagem ?>%</div>
             </button>
 
             <!-- 2. PENDÊNCIAS -->
             <?php 
                 $has_pendency = $pendencias_count > 0;
-                $p_style = $has_pendency ? "background:#fff5f5; border:2px solid #dc3545;" : "";
-                $p_icon_bg = $has_pendency ? "#dc3545" : "#fff3cd";
-                $p_icon_col = $has_pendency ? "white" : "#856404";
+                // Red for Pendencies (Issue), Green/Gray for No Issues
+                $p_style = $has_pendency ? "border-left: 5px solid #dc3545;" : "border-left: 5px solid #198754;";
+                $p_icon_bg = $has_pendency ? "#f8d7da" : "#d1e7dd";
+                $p_icon_col = $has_pendency ? "#842029" : "#0f5132";
             ?>
             <button class="app-button" onclick="openModal('modalPendencias')" style="<?= $p_style ?>">
                 <div class="app-btn-icon" style="background:<?= $p_icon_bg ?>; color:<?= $p_icon_col ?>;">⚠️</div>
                 <div class="app-btn-content">
-                    <span class="app-btn-title" style="<?= $has_pendency ? 'color:#dc3545; font-weight:700;' : '' ?>">Pendências</span>
+                    <span class="app-btn-title" style="<?= $has_pendency ? 'color:#dc3545; font-weight:700;' : 'color:#198754; font-weight:600;' ?>">Pendências</span>
                     <?php if($has_pendency): ?>
                         <span class="app-btn-desc" style="color:#dc3545; font-weight:600;"><?= $pendencias_count ?> Ação(ões) Necessária(s)</span>
                     <?php else: ?>
-                        <span class="app-btn-desc">Tudo em dia!</span>
+                        <span class="app-btn-desc" style="color:#198754;">Tudo em dia!</span>
                     <?php endif; ?>
                 </div>
                 <?php if($has_pendency): ?>
-                    <div style="background:#dc3545; color:white; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.85rem; font-weight:bold; box-shadow:0 2px 5px rgba(220,53,69,0.4);"><?= $pendencias_count ?></div>
+                    <div style="background:#dc3545; color:white; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:bold;"><?= $pendencias_count ?></div>
                 <?php else: ?>
                     <div style="color:#198754; font-size:1.2rem;">✅</div>
                 <?php endif; ?>
@@ -197,28 +198,28 @@ try {
 
             <!-- 3. FINANCEIRO -->
             <button class="app-button" onclick="openModal('modalFinanceiro')">
-                <div class="app-btn-icon" style="background:#d1e7dd; color:#146c43;">💰</div>
+                <div class="app-btn-icon" style="background:#fff3cd; color:#856404;">💰</div>
                 <div class="app-btn-content">
-                    <span class="app-btn-title">Financeiro</span>
+                    <span class="app-btn-title" style="color:#333;">Financeiro</span>
                     <?php if($next_bill): ?>
-                        <span class="app-btn-desc">
+                        <span class="app-btn-desc" style="color:#666;">
                             Próx: <?= date('d/m', strtotime($next_bill['data_vencimento'])) ?> 
                             (R$ <?= number_format($next_bill['valor'], 2, ',', '.') ?>)
                         </span>
                     <?php else: ?>
-                        <span class="app-btn-desc">Nenhum pagamento futuro</span>
+                        <span class="app-btn-desc" style="color:#888;">Nenhum pagamento futuro</span>
                     <?php endif; ?>
                 </div>
             </button>
 
             <!-- 4. DOCUMENTOS -->
             <button class="app-button" onclick="openModal('modalDocumentos')">
-                <div class="app-btn-icon" style="background:#e0e0e0; color:#333;">📂</div>
+                <div class="app-btn-icon" style="background:#e2e3e5; color:#383d41;">📂</div>
                 <div class="app-btn-content">
-                    <span class="app-btn-title">Documentos</span>
-                    <span class="app-btn-desc">Acessar Projetos</span>
+                    <span class="app-btn-title" style="color:#333;">Documentos</span>
+                    <span class="app-btn-desc" style="color:#666;">Acessar Projetos</span>
                 </div>
-            </button> <!-- CHANGED DIV TO BUTTON for Accessibility/Touch -->
+            </button>
 
         </div>
 

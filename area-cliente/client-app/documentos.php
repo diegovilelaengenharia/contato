@@ -52,21 +52,23 @@ if($drive_link) {
         body { background: #f4f6f8; }
         
         .page-header {
-            background: linear-gradient(135deg, #0d6efd, #0b5ed7); /* Blue Gradient for Docs */
+            background: #fff;
+            border-bottom: 3px solid #6c757d; /* Gray Border */
             padding: 25px 20px; 
-            border-bottom-left-radius: 25px; 
-            border-bottom-right-radius: 25px;
-            box-shadow: 0 4px 15px rgba(13, 110, 253, 0.2); 
+            border-bottom-left-radius: 0; 
+            border-bottom-right-radius: 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
             margin-bottom: 25px;
             display: flex; align-items: center; gap: 10px;
-            color: white;
+            color: #333;
         }
         
         .btn-back {
-            text-decoration: none; color: white; font-weight: 600; 
+            text-decoration: none; color: #666; font-weight: 600; 
             display: flex; align-items: center; gap: 5px;
-            padding: 8px 12px; background: rgba(255,255,255,0.2); border-radius: 12px;
+            padding: 6px 12px; background: #f0f0f0; border-radius: 8px;
             transition: 0.2s;
+            font-size: 0.9rem;
         }
         .btn-back:active { transform: scale(0.95); }
 
