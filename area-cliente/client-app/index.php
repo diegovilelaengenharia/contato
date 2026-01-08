@@ -152,18 +152,15 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
         <!-- HEADER PREMIUM v4.0 -->
         <header class="premium-header">
             
-            <!-- CLIENT AREA TITLE -->
-            <div style="margin-bottom: 20px; border-left: 4px solid #ffc107; padding-left: 10px;">
-                <h6 style="font-size: 0.75rem; color: #198754; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; margin: 0;">Área do Cliente</h6>
-                <div style="font-size: 0.7rem; color: #888; margin-top: 2px;">Vilela Engenharia</div>
+            <!-- CLIENT AREA TITLE (Centered & Larger) -->
+            <div style="text-align: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid rgba(0,0,0,0.05);">
+                <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.8rem; font-weight: 700; color: #198754; text-transform: uppercase; letter-spacing: 1px; margin: 0;">Área do Cliente</h2>
+                <div style="font-family: 'Outfit', sans-serif; font-size: 1rem; color: #ffc107; font-weight: 500; letter-spacing: 0.5px; margin-top: 5px;">Vilela Engenharia</div>
             </div>
 
-            <div class="ph-profile">
+            <div class="ph-profile" style="flex-wrap: wrap;">
                 <?php 
                     $avatarPath = $cliente['foto_perfil'] ?? '';
-                    // Admin returns path like "uploads/clientes/ID/foto.jpg"
-                    // We are in "area-cliente/client-app/index.php"
-                    // We need to go up to "area-cliente/" to find "uploads/"
                     if($avatarPath && !str_starts_with($avatarPath, '../') && !str_starts_with($avatarPath, 'http')) {
                         $avatarPath = '../' . $avatarPath;
                     }
@@ -174,16 +171,39 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                     <div class="ph-avatar">👤</div>
                 <?php endif; ?>
                 
-                <div class="ph-info">
+                <div class="ph-info" style="margin-right: auto;">
                     <p>Bem-vindo(a),</p>
                     <h1><?= htmlspecialchars(explode(' ', $cliente['nome'])[0]) ?></h1>
                     <a href="logout.php" class="btn-logout">Sair da conta</a>
+                </div>
+
+                <!-- MOVED CONTACT INFO -->
+                <div style="display:flex; flex-direction:column; gap:8px; margin-left:15px;">
+                     <?php if(!empty($detalhes['contato_tel'])): ?>
+                        <div class="ph-row">
+                            <div class="ph-icon-box" style="font-size:0.9rem; width:20px; height:20px;">📞</div>
+                            <div style="line-height:1.1;">
+                                <div style="font-size:0.65rem; color:#999; text-transform:uppercase; font-weight:700;">Telefone</div>
+                                <span style="font-weight:600; color:#333; font-size:0.85rem;"><?= htmlspecialchars($detalhes['contato_tel']) ?></span>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <?php if(!empty($detalhes['cpf_cnpj'])): ?>
+                        <div class="ph-row">
+                            <div class="ph-icon-box" style="font-size:0.9rem; width:20px; height:20px;">🆔</div>
+                            <div style="line-height:1.1;">
+                                <div style="font-size:0.65rem; color:#999; text-transform:uppercase; font-weight:700;">CPF</div>
+                                <span style="font-size:0.8rem; color:#333; font-weight:600;"><?= htmlspecialchars($detalhes['cpf_cnpj']) ?></span>
+                            </div>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
 
             <div class="ph-details-grid">
                 <?php if(!empty($detalhes['endereco_imovel'])): ?>
-                    <div class="ph-row" style="margin-bottom:10px;">
+                    <div class="ph-row" style="margin-bottom:0;">
                         <div class="ph-icon-box">📍</div>
                         <div style="line-height:1.2;">
                             <div style="font-size:0.7rem; color:#999; text-transform:uppercase; font-weight:700;">Local da Obra</div>
@@ -191,28 +211,6 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                         </div>
                     </div>
                 <?php endif; ?>
-                
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                     <?php if(!empty($detalhes['contato_tel'])): ?>
-                        <div class="ph-row">
-                            <div class="ph-icon-box">📞</div>
-                            <div style="line-height:1.2;">
-                                <div style="font-size:0.7rem; color:#999; text-transform:uppercase; font-weight:700;">Telefone</div>
-                                <span style="font-weight:600; color:#333;"><?= htmlspecialchars($detalhes['contato_tel']) ?></span>
-                            </div>
-                        </div>
-                    <?php endif; ?>
-                    
-                    <?php if(!empty($detalhes['cpf_cnpj'])): ?>
-                        <div class="ph-row">
-                            <div class="ph-icon-box">🆔</div>
-                            <div style="line-height:1.2;">
-                                <div style="font-size:0.7rem; color:#999; text-transform:uppercase; font-weight:700;">CPF</div>
-                                <span style="font-size:0.85rem; color:#333; font-weight:600;"><?= htmlspecialchars($detalhes['cpf_cnpj']) ?></span>
-                            </div>
-                        </div>
-                    <?php endif; ?>
-                </div>
             </div>
         </header>
 
