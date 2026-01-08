@@ -45,6 +45,11 @@ $i_mat = $detalhes['num_matricula'] ?? '';
 $i_lote = $detalhes['imovel_area_lote'] ?? ($detalhes['area_terreno'] ?? '');
 $i_area = $detalhes['area_construida'] ?? '';
 
+// Dados do Processo
+$p_num = $detalhes['numero_processo'] ?? '';
+$p_data = $detalhes['data_inicio'] ?? '';
+$p_obj = $detalhes['objeto_processo'] ?? '';
+
 ?>
 
 <form action="<?= $action_url ?>" method="POST" enctype="multipart/form-data" class="main-wrapper" style="<?= $is_edit ? '' : 'box-shadow:none; padding:0;' ?>">
@@ -54,6 +59,22 @@ $i_area = $detalhes['area_construida'] ?? '';
     <?php endif; ?>
 
     <!-- 1. ACESSO -->
+<!-- ... (existing form content) ... -->
+
+    <div class="form-grid" style="margin-top:15px; background:#f8f9fa; padding:15px; border-radius:8px;">
+        <div class="form-group"><label>Inscrição Imobiliária (IPTU)</label><input type="text" name="inscricao_imob" value="<?= htmlspecialchars($i_iptu) ?>"></div>
+        <div class="form-group"><label>Matrícula Cartório</label><input type="text" name="num_matricula" value="<?= htmlspecialchars($i_mat) ?>"></div>
+        <div class="form-group"><label>Área do Lote (m²)</label><input type="text" name="imovel_area_lote" value="<?= htmlspecialchars($i_lote) ?>"></div>
+        <div class="form-group"><label>Área Construída (m²)</label><input type="text" name="area_construida" value="<?= htmlspecialchars($i_area) ?>"></div>
+    </div>
+
+    <!-- 5. DADOS DO PROCESSO (NOVO) -->
+    <h3 style="margin:20px 0 15px 0; color:var(--color-primary); border-bottom:1px solid #eee; padding-bottom:5px;">5. Dados do Processo</h3>
+    <div class="form-grid">
+        <div class="form-group"><label>Número do Processo</label><input type="text" name="processo_numero" value="<?= htmlspecialchars($p_num) ?>" placeholder="Ex: 2024/0058"></div>
+        <div class="form-group"><label>Data de Início</label><input type="date" name="data_inicio" value="<?= htmlspecialchars($p_data) ?>"></div>
+        <div class="form-group" style="grid-column: span 2;"><label>Objeto do Processo</label><input type="text" name="processo_objeto" value="<?= htmlspecialchars($p_obj) ?>" placeholder="Ex: Regularização Residencial Unifamiliar"></div>
+    </div>
     <h3 style="margin:0 0 15px 0; color:var(--color-primary); border-bottom:1px solid #eee; padding-bottom:5px;">1. Acesso & Fotos</h3>
     <div style="display:flex; gap:20px; margin-bottom:20px;">
         <div style="flex:1;">

@@ -389,10 +389,12 @@ if (isset($_POST['novo_cliente']) || (isset($_POST['acao']) && $_POST['acao'] ==
             imovel_rua, imovel_numero, imovel_bairro, imovel_complemento, imovel_cidade, imovel_uf,
             inscricao_imob, num_matricula, imovel_area_lote, area_construida,
             
+            processo_numero, data_inicio, processo_objeto,
+
             endereco_imovel,
             endereco_residencial,
             contato_email
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")->execute([
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")->execute([
             $nid, 
             $cpf, 
             $tel, 
@@ -421,6 +423,10 @@ if (isset($_POST['novo_cliente']) || (isset($_POST['acao']) && $_POST['acao'] ==
             $_POST['num_matricula'] ?? null,
             $_POST['imovel_area_lote'] ?? null,
             $_POST['area_construida'] ?? null,
+
+            $_POST['processo_numero'] ?? null,
+            $_POST['data_inicio'] ?? null,
+            $_POST['processo_objeto'] ?? null,
 
             // Compõe endereços visuais
             ($_POST['imovel_rua'] ?? '') . ', ' . ($_POST['imovel_numero'] ?? '') . ' - ' . ($_POST['imovel_bairro'] ?? '') . ' - ' . ($_POST['imovel_cidade'] ?? '') . '/' . ($_POST['imovel_uf'] ?? ''),
@@ -690,6 +696,7 @@ if (isset($_POST['acao']) && $_POST['acao'] == 'editar_cliente_completo') {
             // New Fields (Doc Auto)
             $_POST['cpf_conjuge'] ?? null,
             $_POST['eh_procurador'] ?? 0,
+            $_POST['data_inicio'] ?? null, // [NEW] Data Início
 
             // Concatenações Automáticas para manter compatibilidade visual
             ($_POST['imovel_rua'] ?? '') . ', ' . ($_POST['imovel_numero'] ?? '') . ' - ' . ($_POST['imovel_bairro'] ?? '') . ' - ' . ($_POST['imovel_cidade'] ?? '') . '/' . ($_POST['imovel_uf'] ?? ''),
@@ -714,7 +721,7 @@ if (isset($_POST['acao']) && $_POST['acao'] == 'editar_cliente_completo') {
                 processo_objeto=?, processo_numero=?, area_total_final=?,
                 valor_venal=?, area_existente=?, area_acrescimo=?, area_permeavel=?, taxa_ocupacao=?, fator_aproveitamento=?, geo_coords=?,
                 observacoes_gerais=?,
-                cpf_conjuge=?, eh_procurador=?,
+                cpf_conjuge=?, eh_procurador=?, data_inicio=?, 
                 endereco_imovel=?, endereco_residencial=?
                 WHERE cliente_id=?";
         } else {
@@ -728,10 +735,10 @@ if (isset($_POST['acao']) && $_POST['acao'] == 'editar_cliente_completo') {
                 processo_objeto, processo_numero, area_total_final,
                 valor_venal, area_existente, area_acrescimo, area_permeavel, taxa_ocupacao, fator_aproveitamento, geo_coords,
                 observacoes_gerais,
-                cpf_conjuge, eh_procurador,
+                cpf_conjuge, eh_procurador, data_inicio,
                 endereco_imovel, endereco_residencial,
                 cliente_id
-            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         }
         
         $pdo->prepare($sqlDet)->execute($paramsDet);

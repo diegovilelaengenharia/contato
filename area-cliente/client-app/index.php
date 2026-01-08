@@ -103,8 +103,8 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- STYLES -->
-    <link rel="stylesheet" href="css/style.css?v=4.6">
-    <link rel="stylesheet" href="css/header-premium.css?v=4.6">
+    <link rel="stylesheet" href="css/style.css?v=4.7">
+    <link rel="stylesheet" href="css/header-premium.css?v=4.7">
     
     <style>
         /* MODAL DE NOTIFICAÇÕES */
@@ -154,8 +154,18 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             
             <!-- CLIENT AREA TITLE -->
             <!-- CLIENT AREA TITLE (Centered & Larger) -->
+            <!-- CLIENT AREA TITLE (Centered & Larger) -->
             <div style="text-align: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid rgba(0,0,0,0.05);">
                 <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.8rem; font-weight: 700; color: #198754; text-transform: uppercase; letter-spacing: 1px; margin: 0;">Área do Cliente</h2>
+                
+                <?php 
+                    $procNum = $detalhes['numero_processo'] ?? '---';
+                    $procAno = !empty($detalhes['data_inicio']) ? date('Y', strtotime($detalhes['data_inicio'])) : date('Y');
+                ?>
+                <div style="font-family: 'Outfit', sans-serif; font-size: 0.9rem; color: #666; font-weight: 500; margin-top: 5px;">
+                    Processo: <span style="color:#333; font-weight:700;"><?= htmlspecialchars($procNum) ?></span> / <?= $procAno ?>
+                </div>
+
             </div>
 
             <div class="ph-profile">
@@ -189,6 +199,16 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             
             <div class="app-action-grid">
                 
+                <!-- CLIENT DATA (SUMMARY) -->
+                <a href="../../exportar_resumo.php" target="_blank" class="app-button" style="border-left: 5px solid #0dcaf0;">
+                    <div class="app-btn-icon" style="background:#e0f8fc; color:#0dcaf0;">📋</div>
+                    <div class="app-btn-content">
+                        <span class="app-btn-title">Dados do Cliente</span>
+                        <span class="app-btn-desc">Resumo do Processo</span>
+                    </div>
+                    <div style="font-weight:800; color:#0dcaf0; font-size:1.4rem;">➔</div>
+                </a>
+
                 <!-- TIMELINE -->
                 <a href="timeline.php" class="app-button">
                     <div class="app-btn-icon" style="background:#f0f4f8; color:#5c7c93;">🧭</div>
