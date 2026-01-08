@@ -251,65 +251,60 @@ function get_pendency_files($p_id) {
 
                 <!-- 1. HISTÓRICO DE RESOLUÇÕES (TOPO) -->
                 <?php if(count($resolvidas) > 0): ?>
-                    <h3 class="section-title" style="margin-bottom:10px;">
+                    <h3 class="section-title" style="margin-bottom:20px;">
                         <span class="material-symbols-rounded" style="color:#198754;">history</span> Histórico de Resoluções
                     </h3>
                     
-                    <div style="background: white; border-radius: 12px; border: 1px solid #c3e6cb; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
-                        <div style="overflow-x: auto;">
-                            <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
-                                <thead>
-                                    <tr style="background: #e8f5e9; color: #155724;">
-                                        <th style="padding: 12px 10px; text-align: left; font-weight: 700; border-bottom: 2px solid #c3e6cb; white-space: nowrap;">Data</th>
-                                        <th style="padding: 12px 10px; text-align: left; font-weight: 700; border-bottom: 2px solid #c3e6cb;">Pendência</th>
-                                        <th style="padding: 12px 10px; text-align: left; font-weight: 700; border-bottom: 2px solid #c3e6cb;">Arquivos</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach($resolvidas as $p): 
-                                         $data_criacao = date('d/m/Y', strtotime($p['data_criacao']));
-                                         $anexos = get_pendency_files($p['id']);
-                                    ?>
-                                    <tr style="border-bottom: 1px solid #eee;">
-                                        <!-- Data -->
-                                        <td style="padding: 12px 10px; vertical-align: top; color: #555;">
-                                            <?= $data_criacao ?>
-                                        </td>
-                                        
-                                        <!-- Pendência -->
-                                        <td style="padding: 12px 10px; vertical-align: top;">
-                                            <div style="font-weight: 700; color: #155724; margin-bottom: 3px;">
-                                                <?= htmlspecialchars($p['titulo']) ?>
-                                            </div>
-                                            <?php if(!empty($p['descricao'])): ?>
-                                                <div style="font-size: 0.8rem; color: #666; line-height: 1.3;">
-                                                    <?= nl2br(htmlspecialchars($p['descricao'])) ?>
-                                                </div>
-                                            <?php endif; ?>
-                                        </td>
-                                        
-                                        <!-- Arquivos -->
-                                        <td style="padding: 12px 10px; vertical-align: top;">
-                                            <?php if(!empty($anexos)): ?>
-                                                <div style="display:flex; flex-direction: column; gap: 5px;">
-                                                <?php foreach($anexos as $arq): ?>
-                                                    <a href="<?= $arq['path'] ?>" target="_blank" style="text-decoration:none; color:#198754; font-size:0.75rem; display: flex; align-items: center; gap: 4px; white-space: nowrap;">
-                                                        <span class="material-symbols-rounded" style="font-size:14px;">attachment</span> 
-                                                        <?= (strlen($arq['name']) > 15) ? substr($arq['name'], 0, 12) . '...' : $arq['name'] ?>
-                                                    </a>
-                                                <?php endforeach; ?>
-                                                </div>
-                                            <?php else: ?>
-                                                <div style="text-align:center;">
-                                                    <span class="material-symbols-rounded" style="color: #e9ecef; font-size: 1.4rem;" title="Nenhum arquivo anexado">description</span>
-                                                </div>
-                                            <?php endif; ?>
-                                        </td>
-                                    </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
+                    <div class="history-list">
+                        <?php foreach($resolvidas as $p): 
+                             $time = strtotime($p['data_criacao']);
+                             $day = date('d', $time);
+                             $month = date('M', $time); // Jan, Feb... (English, but we can map if needed or leave as is, usually user wants PT-BR. Let's try numerical or simple array map)
+                             $months_pt = ['Jan'=>'JAN','Feb'=>'FEV','Mar'=>'MAR','Apr'=>'ABR','May'=>'MAI','Jun'=>'JUN','Jul'=>'JUL','Aug'=>'AGO','Sep'=>'SET','Oct'=>'OUT','Nov'=>'NOV','Dec'=>'DEZ'];
+                             $month_pt = $months_pt[$month] ?? strtoupper($month);
+                             $year = date('Y', $time);
+                             
+                             $anexos = get_pendency_files($p['id']);
+                        ?>
+                        <div style="display: flex; gap: 20px; margin-bottom: 20px; align-items: flex-start;">
+                            <!-- Data Column -->
+                            <div style="text-align: center; min-width: 60px; padding-top: 5px;">
+                                <div style="font-size: 1.6rem; font-weight: 800; color: #333; line-height: 1; letter-spacing: -1px;"><?= $day ?></div>
+                                <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; font-weight: 700; margin-top: 2px;"><?= $month_pt ?></div>
+                                <div style="font-size: 0.65rem; color: #aaa; font-weight: 600;"><?= $year ?></div>
+                            </div>
+                            
+                            <!-- Card Column -->
+                            <div style="flex: 1; background: white; border: 1px solid #e9ecef; border-radius: 16px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); position: relative;">
+                                <!-- Status Badge (Optional, but nice) -->
+                                <div style="font-size: 0.7rem; font-weight: 700; color: #198754; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;">
+                                    ✅ Resolvido
+                                </div>
+
+                                <h4 style="margin: 0 0 8px 0; font-size: 1.1rem; color: #198754; font-weight: 700;">
+                                    <?= htmlspecialchars($p['titulo']) ?>
+                                </h4>
+                                
+                                <?php if(!empty($p['descricao'])): ?>
+                                    <div style="font-size: 0.9rem; color: #555; line-height: 1.5; margin-bottom: 15px;">
+                                        <?= $p['descricao'] ?>
+                                    </div>
+                                <?php endif; ?>
+
+                                <!-- Arquivos -->
+                                <?php if(!empty($anexos)): ?>
+                                    <div style="border-top: 1px solid #f0f0f0; padding-top: 10px; display: flex; flex-wrap: wrap; gap: 10px;">
+                                        <?php foreach($anexos as $arq): ?>
+                                            <a href="<?= $arq['path'] ?>" target="_blank" style="text-decoration:none; color:#666; font-size:0.8rem; display: inline-flex; align-items: center; gap: 6px; background: #f8f9fa; padding: 6px 12px; border-radius: 20px; border: 1px solid #e9ecef;">
+                                                <span class="material-symbols-rounded" style="font-size:16px; color: #aaa;">description</span>
+                                                <?= (strlen($arq['name']) > 25) ? substr($arq['name'], 0, 22) . '...' : $arq['name'] ?>
+                                            </a>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
                         </div>
+                        <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
 
@@ -350,10 +345,10 @@ function get_pendency_files($p_id) {
                             <?= htmlspecialchars($p['titulo']) ?>
                         </h3>
 
-                        <!-- Descrição -->
+                        <!-- Descrição (HTML FIXED) -->
                         <?php if(!empty($p['descricao'])): ?>
                             <div style="font-size: 0.9rem; color: #444; margin-bottom: 12px; line-height: 1.4;">
-                                <?= nl2br(htmlspecialchars($p['descricao'])) ?>
+                                <?= $p['descricao'] ?>
                             </div>
                         <?php endif; ?>
     
@@ -383,18 +378,18 @@ function get_pendency_files($p_id) {
                             </div>
                         <?php endif; ?>
     
-                        <!-- Área de Ação (Botões) -->
-                            <!-- Botão Abrir Modal de Resolução (Compact) -->
-                            <button onclick="openResolveModal(<?= $p['id'] ?>, '<?= htmlspecialchars($p['titulo'], ENT_QUOTES) ?>')" style="flex: 1; min-width: 0; background: #0d6efd; color: white; border: none; border-radius: 8px; padding: 10px 8px; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; transition: 0.2s; font-size: 0.75rem; text-align: center;">
-                                <span class="material-symbols-rounded" style="font-size: 1.2rem;">cloud_upload</span>
-                                <span style="line-height: 1.1;"><?= $has_attachment ? 'Enviar outro' : 'Resolver / Anexar' ?></span>
-                            </button>
-                            
-                            <!-- Botão Whatsapp Compacto -->
-                            <a href="<?= getWhatsappLink($p['titulo']) ?>" target="_blank" class="btn-action-text" style="flex: 1; min-width: 0; background: #e9ecef; color: #25D366; border: 1px solid #ced4da; font-size: 0.75rem; padding: 10px 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; border-radius: 8px; text-decoration: none; text-align: center; font-weight: 600;">
-                                <span class="material-symbols-rounded" style="font-size: 1.2rem;">chat</span>
-                                <span style="line-height: 1.1;">Fale c/ Eng.</span>
+                        <!-- Área de Ação Simplificada (Botão Pequeno) -->
+                        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 10px;">
+                            <!-- Botão Whatsapp Link -->
+                            <a href="<?= getWhatsappLink($p['titulo']) ?>" target="_blank" style="font-size: 0.8rem; color: #198754; text-decoration: none; display: flex; align-items: center; gap: 4px; font-weight:600; padding: 5px 10px; border-radius: 6px;">
+                                <span class="material-symbols-rounded" style="font-size: 1.1rem;">chat</span> Fale c/ Eng.
                             </a>
+
+                            <!-- Botão Resolver (Pequeno) -->
+                            <button onclick="openResolveModal(<?= $p['id'] ?>, '<?= htmlspecialchars($p['titulo'], ENT_QUOTES) ?>')" style="background: #0d6efd; color: white; border: none; border-radius: 6px; padding: 6px 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 0.8rem; box-shadow: 0 2px 5px rgba(13,110,253,0.2);">
+                                <span class="material-symbols-rounded" style="font-size: 1rem;">cloud_upload</span>
+                                Resolver
+                            </button>
                         </div>
     
                     </div>
