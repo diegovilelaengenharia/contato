@@ -88,19 +88,20 @@ function getWhatsappLink($pendency_desc) {
     
     <style>
         body { background: #f4f6f8; }
+        /* HEADER PADRONIZADO (Verde Brand) */
         .page-header {
-            background: #f8d7da; /* Light Red */
+            background: #e8f5e9; /* Light Green Standard */
             border-bottom: none;
             padding: 25px 20px; 
             border-bottom-left-radius: 20px; 
             border-bottom-right-radius: 20px;
-            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.1); 
+            box-shadow: 0 4px 15px rgba(25, 135, 84, 0.1); 
             margin-bottom: 25px;
-            display: flex; align-items: center; gap: 10px;
-            color: #842029;
+            display: flex; align-items: center; justify-content: space-between;
+            color: #146c43;
         }
         .btn-back {
-            text-decoration: none; color: #842029; font-weight: 600; 
+            text-decoration: none; color: #146c43; font-weight: 600; 
             display: flex; align-items: center; gap: 5px;
             padding: 8px 16px; background: #fff; border-radius: 20px;
             transition: 0.2s;
@@ -178,7 +179,6 @@ function getWhatsappLink($pendency_desc) {
                 <a href="index.php" class="btn-back"><span>←</span> Voltar</a>
                 <h1 style="font-size:1.2rem; margin:0;">Pendências</h1>
             </div>
-            <div class="app-btn-icon" style="background:#fce8e6; color:#dc3545;">⚠️</div>
         </div>
 
         <?php if(isset($msg_success)): ?>
@@ -190,69 +190,92 @@ function getWhatsappLink($pendency_desc) {
             <?php if(empty($pendencias)): ?>
                 <div style="text-align:center; padding:40px; color:#999;">
                     <span style="font-size:2rem; display:block; margin-bottom:10px;">🎉</span>
-                    Nenhuma pendência encontrada.
+                    <h3 style="color:#333; margin:0;">Tudo Certo!</h3>
+                    <div style="font-size:0.9rem; margin-top:5px;">Nenhuma pendência encontrada.</div>
                 </div>
             <?php else: ?>
-                
-                <div style="display: flex; flex-direction: column; gap: 20px;">
+                <!-- NEW CARD LAYOUT -->
+                <div style="display: flex; flex-direction: column; gap: 20px; padding-bottom: 20px;">
                     <?php foreach($pendencias as $p): 
-                        $status_class = 'st-pendente';
-                        $status_label = 'Pendente';
-                        if($p['status'] == 'resolvido') { $status_class = 'st-resolvido'; $status_label = 'Resolvido'; }
-                        elseif($p['status'] == 'em_analise') { $status_class = 'st-analise'; $status_label = 'Encaminhado'; }
-                    ?>
-                    
-                    <div class="card-pendency" style="background: white; border-radius: 20px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee;">
+                        $status = $p['status'];
+                        $is_resolvido = ($status == 'resolvido');
                         
-                        <!-- Header: Descrição e Status -->
-                        <div style="margin-bottom: 15px;">
-                             <div style="font-weight: 600; font-size: 1.05rem; color: #333; margin-bottom: 5px; line-height: 1.4;">
-                                <?= htmlspecialchars($p['titulo']) ?>
-                             </div>
-                             <?php if($p['descricao']): ?>
-                                <div style="font-size: 0.9rem; color: #777; margin-bottom: 10px;">
-                                    <?= htmlspecialchars($p['descricao']) ?>
-                                </div>
-                             <?php endif; ?>
-                             
-                             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
-                                <span style="font-size: 0.85rem; color: #999;">
-                                    <?= date('d/m/Y', strtotime($p['data_criacao'])) ?>
+                        // Cores Dinâmicas
+                        // Verde para Resolvido, Amarelo para Pendente/Outros
+                        $bg_card = $is_resolvido ? '#d1e7dd' : '#fff9d6'; 
+                        $border_card = $is_resolvido ? '#badbcc' : '#ffeeba';
+                        $text_title = $is_resolvido ? '#0f5132' : '#856404';
+                        
+                        // Formatação Data
+                        $data_criacao = date('d/m/Y', strtotime($p['data_criacao']));
+                    ?>
+                    <div style="background: <?= $bg_card ?>; border: 1px solid <?= $border_card ?>; border-radius: 16px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                        
+                        <!-- Header do Card: Título e Status -->
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                            <div>
+                                <!-- DATA EVIDENTE -->
+                                <span style="display: block; font-size: 0.8rem; font-weight: 700; color: #555; margin-bottom: 4px; opacity: 0.7;">
+                                    📅 <?= $data_criacao ?>
                                 </span>
-                                <span class="status-badge <?= $status_class ?>" style="font-size: 0.75rem;">
-                                    <?= $status_label ?>
-                                </span>
-                             </div>
+                                <!-- TÍTULO GRANDE E NEGRITO -->
+                                <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800; color: <?= $text_title ?>; line-height: 1.3;">
+                                    <?= htmlspecialchars($p['titulo']) ?>
+                                </h3>
+                            </div>
+                            
+                            <?php if($is_resolvido): ?>
+                                 <span style="background: #198754; color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Resolvido</span>
+                            <?php else: ?>
+                                 <span style="background: #ffc107; color: #333; padding: 4px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Pendente</span>
+                            <?php endif; ?>
                         </div>
 
-                        <!-- Actions Row -->
-                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px; border-top: 1px solid #f9f9f9; padding-top: 15px;">
-                            
-                            <!-- 1. Botão Anexar (Se não resolvido) -->
-                            <?php if($p['status'] != 'resolvido'): ?>
-                                <form method="POST" enctype="multipart/form-data" style="margin:0;">
-                                    <input type="hidden" name="pendencia_id" value="<?= $p['id'] ?>">
-                                    <input type="file" name="arquivo_pendencia" id="file_<?= $p['id'] ?>" style="display:none;" onchange="this.form.submit()">
-                                    
-                                    <button type="button" onclick="document.getElementById('file_<?= $p['id'] ?>').click()" class="btn-action-text" style="background: #f0f2f5; color: #333; border: 1px solid #ccc;">
-                                        <span class="material-symbols-rounded">attach_file</span>
-                                        Anexar Arquivo
-                                    </button>
-                                </form>
-                            <?php endif; ?>
+                        <!-- Descrição -->
+                        <?php if(!empty($p['descricao'])): ?>
+                            <div style="font-size: 0.95rem; color: #444; margin-bottom: 15px; line-height: 1.5; font-weight: 500;">
+                                <?= nl2br(htmlspecialchars($p['descricao'])) ?>
+                            </div>
+                        <?php endif; ?>
 
-                            <!-- 2. Botão Whatsapp -->
-                            <a href="<?= getWhatsappLink($p['titulo']) ?>" target="_blank" class="btn-action-text" style="background: #d1e7dd; color: #0f5132; border: 1px solid #badbcc;">
-                                <span class="material-symbols-rounded">chat</span>
-                                Fale com o Engenheiro
+                        <!-- Ações (Upload/Whatsapp) -->
+                        <?php if(!$is_resolvido): ?>
+                        <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px;">
+                            
+                            <!-- Form Upload -->
+                            <form action="pendencias.php" method="POST" enctype="multipart/form-data" style="background: rgba(255,255,255,0.6); padding: 15px; border-radius: 12px; border: 1px dashed <?= $text_title ?>; margin-bottom:0;">
+                                <input type="hidden" name="pendencia_id" value="<?= $p['id'] ?>">
+                                
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.85rem; color: #333;">Anexar Comprovante/Arquivo:</label>
+                                <div style="display: flex; gap: 10px;">
+                                    <input type="file" name="arquivo_pendencia" required style="font-size: 0.85rem; width: 100%; border-radius: 6px; border: 1px solid #ccc; background: #fff; padding:5px;">
+                                </div>
+                                <button type="submit" name="upload_arquivo" style="margin-top: 10px; width: 100%; padding: 10px; background: #0d6efd; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                    <span class="material-symbols-rounded">cloud_upload</span> Enviar Arquivo
+                                </button>
+                            </form>
+
+                            <!-- Botão Whatsapp -->
+                             <?php
+                                // Helper simplificado caso a função nao exista no escopo
+                                $wpp_text = "Ola, sobre a pendencia: " . $p['titulo'];
+                             ?>
+                            <a href="https://wa.me/5535984529577?text=<?= urlencode($wpp_text) ?>" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px; background: #25D366; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <span style="font-size: 1.2rem;">📱</span> Fale com o Engenheiro
                             </a>
 
                         </div>
+                        <?php else: ?>
+                            <!-- Se resolvido -->
+                             <div style="margin-top: 10px; font-size: 0.85rem; color: #0f5132; background: rgba(255,255,255,0.4); padding: 8px; border-radius: 8px; display: flex; align-items: center; gap: 6px;">
+                                <span class="material-symbols-rounded" style="font-size: 1rem;">check_circle</span>
+                                <span>Pendência regularizada.</span>
+                             </div>
+                        <?php endif; ?>
 
                     </div>
                     <?php endforeach; ?>
                 </div>
-
             <?php endif; ?>
         </div>
 

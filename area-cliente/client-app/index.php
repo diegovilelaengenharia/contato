@@ -305,15 +305,15 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
         </div>
 
         <!-- FOOTER PREMIUM -->
-        <footer class="premium-footer" style="padding: 30px 20px; background: #fff; border-top: 1px solid #eee; margin-top: 0; margin-bottom: 25px; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px;">
+        <footer class="premium-footer" style="padding: 20px 20px; background: #fff; border-top: 1px solid #eee; margin-top: 0; margin-bottom: 25px; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px;">
             <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
                 <!-- Logo -->
                 <div style="flex-shrink: 0;">
-                    <img src="../../assets/logo.png" alt="Vilela Engenharia" style="max-height: 50px; opacity: 1;">
+                    <img src="../../assets/logo.png" alt="Vilela Engenharia" style="max-height: 45px; opacity: 1;">
                 </div>
                 
                 <!-- Vertical Divider (Optional, subtle) -->
-                <div style="width:1px; height:40px; background:#eee;"></div>
+                <div style="width:1px; height:35px; background:#eee;"></div>
 
                 <!-- Info -->
                 <div style="text-align: left;">
@@ -322,7 +322,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                     <span style="display:block; font-size: 0.75rem; color: #666; line-height:1;">CREA 235.474/D</span>
                 </div>
             </div>
-            <div style="margin-top: 20px; font-size: 0.7rem; color: #ccc; text-align: center;">
+            <div style="margin-top: 15px; font-size: 0.7rem; color: #ccc; text-align: center;">
                 &copy; <?= date('Y') ?> Vilela Engenharia
             </div>
         </footer>
