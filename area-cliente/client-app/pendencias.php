@@ -383,27 +383,19 @@ function get_pendency_files($p_id) {
                             </div>
                         <?php endif; ?>
     
-                        <!-- Área de Ação (Upload + Chat) -->
-                        <div style="border-top: 1px dashed <?= $border_card ?>; padding-top: 12px; margin-top: 10px;">
+                        <!-- Área de Ação (Botões) -->
+                        <div style="border-top: 1px dashed <?= $border_card ?>; padding-top: 12px; margin-top: 10px; display: flex; gap: 10px;">
                             
-                            <!-- Form Upload Compacto -->
-                            <form action="pendencias.php" method="POST" enctype="multipart/form-data" style="margin-bottom: 10px;">
-                                <input type="hidden" name="pendencia_id" value="<?= $p['id'] ?>">
-                                <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.8rem; color: #333;">
-                                    <?= $has_attachment ? 'Enviar outro arquivo:' : 'Anexar Solução:' ?>
-                                </label>
-                                <div style="display: flex; gap: 5px;">
-                                    <input type="file" name="arquivo_pendencia" required style="font-size: 0.8rem; flex-grow: 1; border-radius: 6px; border: 1px solid #ccc; background: #fff; padding: 4px;">
-                                    <button type="submit" name="upload_arquivo" style="background: #0d6efd; color: white; border: none; border-radius: 6px; padding: 0 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center;">
-                                        <span class="material-symbols-rounded">cloud_upload</span>
-                                    </button>
-                                </div>
-                            </form>
+                            <!-- Botão Abrir Modal de Resolução -->
+                            <button onclick="openResolveModal(<?= $p['id'] ?>, '<?= htmlspecialchars($p['titulo'], ENT_QUOTES) ?>')" style="flex: 1; background: #0d6efd; color: white; border: none; border-radius: 8px; padding: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s;">
+                                <span class="material-symbols-rounded">cloud_upload</span>
+                                <?= $has_attachment ? 'Enviar outro arquivo' : 'Resolver / Anexar' ?>
+                            </button>
                             
                             <!-- Botão Whatsapp Compacto -->
-                            <a href="<?= getWhatsappLink($p['titulo']) ?>" target="_blank" class="btn-action-text" style="background: #e9ecef; color: #25D366; border: 1px solid #ced4da; font-size: 0.85rem; padding: 8px;">
+                            <a href="<?= getWhatsappLink($p['titulo']) ?>" target="_blank" class="btn-action-text" style="flex: 1; background: #e9ecef; color: #25D366; border: 1px solid #ced4da; font-size: 0.85rem; padding: 8px; display: flex; align-items: center; justify-content: center; gap: 6px; border-radius: 8px; text-decoration: none;">
                                 <span class="material-symbols-rounded">chat</span>
-                                Fale com o Engenheiro
+                                Fale c/ Eng.
                             </a>
                         </div>
     
@@ -412,6 +404,106 @@ function get_pendency_files($p_id) {
                 <?php endif; ?>
 
             </div>
+
+             <!-- WHATSAPP CTA -->
+            <div style="text-align: center; margin-top: 20px; padding-bottom: 20px;">
+                 <a href="https://wa.me/5535984529577?text=Ola,%20tenho%20duvidas%20sobre%20as%20pendencias." style="display:inline-block; font-size: 0.85rem; color: #146c43; text-decoration: none; font-weight: 600; padding: 10px 20px; background: #d1e7dd; border-radius: 20px;">
+                    Dúvidas sobre as pendências? Fale conosco.
+                </a>
+            </div>
+            
+    </div>
+
+    <!-- MODAL DE RESOLUÇÃO -->
+    <div id="resolveModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeResolveModal()">&times;</span>
+            
+            <div style="text-align: center; margin-bottom: 20px;">
+                <span class="material-symbols-rounded" style="font-size: 3rem; color: #0d6efd; background: #eff6ff; padding: 15px; border-radius: 50%;">cloud_upload</span>
+                <h3 style="margin: 15px 0 5px 0; color: #333;">Resolver Pendência</h3>
+                <p id="modalPendencyTitle" style="color: #666; font-size: 0.9rem; margin: 0;">Titulo da Pendência</p>
+            </div>
+
+            <form action="pendencias.php" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="pendencia_id" id="modalPendencyId" value="">
+                
+                <label style="display: block; text-align: left; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: #333;">
+                    Selecione o arquivo/comprovante:
+                </label>
+                
+                <div style="border: 2px dashed #ccc; padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 20px; background: #fafafa; position: relative;" onclick="document.getElementById('fileInput').click()">
+                    <span class="material-symbols-rounded" style="color: #999; font-size: 2rem; display: block; margin-bottom: 5px;">folder_open</span>
+                    <span style="color: #555; font-size: 0.9rem;">Clique para escolher o arquivo</span>
+                    <input type="file" name="arquivo_pendencia" id="fileInput" required style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;">
+                </div>
+                <!-- File Name Display -->
+                <div id="fileNameDisplay" style="font-size: 0.85rem; color: #0d6efd; margin-bottom: 15px; font-weight: 500; display: none;"></div>
+
+                <button type="submit" name="upload_arquivo" style="width: 100%; padding: 14px; background: #0d6efd; color: white; border: none; border-radius: 12px; font-weight: 600; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);">
+                    Enviar Arquivo
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 1000;
+            display: flex; align-items: center; justify-content: center;
+            backdrop-filter: blur(5px);
+            padding: 20px;
+        }
+        .modal-content {
+            background: white; width: 100%; max-width: 400px;
+            padding: 30px; border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            position: relative;
+            animation: slideUp 0.3s ease-out;
+        }
+        .close-modal {
+            position: absolute; top: 15px; right: 20px;
+            font-size: 2rem; color: #aaa; cursor: pointer;
+            line-height: 1;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+
+    <script>
+        function openResolveModal(id, title) {
+            document.getElementById('modalPendencyId').value = id;
+            document.getElementById('modalPendencyTitle').innerText = title;
+            document.getElementById('resolveModal').style.display = 'flex';
+        }
+
+        function closeResolveModal() {
+            document.getElementById('resolveModal').style.display = 'none';
+        }
+
+        // Close on outside click
+        document.getElementById('resolveModal').addEventListener('click', function(e) {
+            if (e.target === this) closeResolveModal();
+        });
+
+        // Show filename
+        document.getElementById('fileInput').addEventListener('change', function() {
+            var fileName = this.files[0] ? this.files[0].name : '';
+            var display = document.getElementById('fileNameDisplay');
+            if(fileName) {
+                display.style.display = 'block';
+                display.innerText = '📎 ' + fileName;
+            } else {
+                display.style.display = 'none';
+            }
+        });
+    </script>
+
+</body>
+</html>
 
              <!-- WHATSAPP CTA -->
             <div style="text-align: center; margin-top: 20px; padding-bottom: 20px;">
