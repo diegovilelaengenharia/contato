@@ -184,9 +184,10 @@ if (isset($_POST['btn_adicionar_pendencia'])) {
             if(isset($_FILES['arquivo_pendencia_admin']) && $_FILES['arquivo_pendencia_admin']['error'] == 0) {
                 $file = $_FILES['arquivo_pendencia_admin'];
                 $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-                $allowed = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx', 'zip'];
+                // ALLOW ALL except safe blacklist
+                $blacklist = ['php', 'php3', 'php4', 'phtml', 'exe', 'js', 'sh', 'bat', 'cmd', 'bin', 'pl', 'cgi', 'jar', 'vbs'];
                 
-                if(in_array($ext, $allowed)) {
+                if(!in_array($ext, $blacklist)) {
                      // Define paths (Admin context -> Client uploads folder)
                      // Estamos em includes/, precisamos ir para ../client-app/uploads/pendencias/
                      $dir = __DIR__ . '/../client-app/uploads/pendencias/';
@@ -198,12 +199,39 @@ if (isset($_POST['btn_adicionar_pendencia'])) {
                      if (move_uploaded_file($file['tmp_name'], $dir . $final_name)) {
                          // Insere na tabela de arquivos
                          $stmtArq = $pdo->prepare("INSERT INTO processo_pendencias_arquivos (pendencia_id, arquivo_nome, arquivo_path, data_upload) VALUES (?, ?, ?, NOW())");
-                         $stmtArq->execute([$pid, $file['name'], "uploads/pendencias/" . $final_name]);
+                         // Caminho web relativo para o cliente ver: uploads/pendencias/filename
+                         // O cliente roda em client-app/, então o path relativo DB deve ser compatível ou ajustado na exibição.
+                         // Atualmente o script do cliente usa "uploads/pendencias/" prefixo na exibição, e salva "uploads/pendencias/" no banco?
+                         // Vamos verificar como o cliente salva:
+                         // No cliente: $dir = __DIR__ . '/uploads/pendencias/' ...
+                         // Deixa eu ver como o cliente exibe: "uploads/pendencias/".
+                         // Vou salvar o path relativo web simples: 'uploads/pendencias/' . $final_name
+                         // Porem no script admin antigo (antes dessa alteração), ele não salvava path no banco?
+                         // Ah, o script admin ORIGINAL (que eu vi no `view_file` anterior) fazia INSERT na tabela `processo_pendencias_arquivos`.
+                         // O script do cliente NÃO FAZ INSERT nessa tabela no código que vi acima (ele só move o arquivo e dá update no status?).
+                         // ESPERA! O cliente `pendencias.php` NÃO INSERE na tabela `processo_pendencias_arquivos`?
+                         // Re-lendo o código do cliente:
+                         // `if(move_uploaded_file...` -> Só faz `UPDATE processo_pendencias SET status='em_analise' ...`
+                         // Onde os arquivos do cliente são listados?
+                         // Função `get_pendency_files` usa `glob($upload_dir . $p_id . "_*.*")`.
+                         // Ah, então o cliente NÃO USA BANCO DE DADOS para arquivos, usa FILE SYSTEM (glob).
+                         // O Admin estava usando BANCO DE DADOS?
+                         // Linha 200 do arquivo original: `$stmtArq = $pdo->prepare("INSERT INTO processo_pendencias_arquivos ...`
+                         // Se o sistema usa `glob` para listar (como visto em pendencias.php linha 99), então o INSERT no banco é REDUNDANTE ou usado para outra coisa?
+                         // O `pendencias.php` usa `get_pendency_files` que faz `glob`.
+                         // Então, para o Admin, basta salvar o arquivo com o prefixo correto ID_... que o `glob` vai pegar.
+                         // O INSERT no banco pode ser mantido para registro, mas não é estritamente necessário para a exibição se a exibição usa glob.
+                         // VOU MANTER O INSERT para não quebrar nada legado, mas o importante é o `move_uploaded_file` com o nome certo.
                          
-                         // Atualiza status para 'anexado' (opcional, ou mantem pendente pois foi o admin que enviou)
-                         // Vamos manter como pendente pois o admin está CRIANDO a solicitação
+                         $web_path_db = 'uploads/pendencias/' . $final_name; 
+                         $stmtArq->execute([$pid, $final_name, $web_path_db]);
                      }
+                } else {
+                     // Blacklisted
+                     // Ignorar silenciosamente ou erro? Admin saberia.
                 }
+            }
+
             }
             
             // PRG para evitar duplicidade

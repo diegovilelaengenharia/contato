@@ -39,9 +39,10 @@ if(isset($_FILES['arquivo_pendencia']) && isset($_POST['pendencia_id'])) {
     
     if($file['error'] === 0) {
         $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-        $allowed = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx', 'zip'];
+        // ALLOW ALL FILES except executables
+        $blacklist = ['php', 'php3', 'php4', 'phtml', 'exe', 'js', 'sh', 'bat', 'cmd', 'bin', 'pl', 'cgi', 'jar', 'vbs'];
         
-        if(in_array($ext, $allowed)) {
+        if(!in_array($ext, $blacklist)) {
              // Create Dir
              $dir = __DIR__ . '/uploads/pendencias/';
              if(!is_dir($dir)) mkdir($dir, 0755, true);
@@ -63,7 +64,7 @@ if(isset($_FILES['arquivo_pendencia']) && isset($_POST['pendencia_id'])) {
                  $msg_error = "Erro ao mover arquivo para pasta de uploads.";
              }
         } else {
-            $msg_error = "Formato inválido.";
+            $msg_error = "Formato de arquivo inseguro bloqueado pelo servidor.";
         }
     }
 }
