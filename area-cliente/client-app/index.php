@@ -147,52 +147,15 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
 </head>
 <body>
 
-    <!-- NOTIFICATION MODAL -->
-    <div id="modalNotificacoes" onclick="if(event.target === this) this.classList.remove('open')">
-        <div class="notification-box">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <h3 style="margin:0; font-size:1.2rem;">🔔 Notificações</h3>
-                <button onclick="document.getElementById('modalNotificacoes').classList.remove('open')" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
-            </div>
-            
-            <?php if(empty($notificacoes)): ?>
-                <div style="text-align:center; padding:30px; color:#999;">
-                    <div style="font-size:2rem; opacity:0.3;">🔕</div>
-                    <p>Nenhuma nova notificação.</p>
-                </div>
-            <?php else: ?>
-                <div style="max-height:300px; overflow-y:auto;">
-                    <?php foreach($notificacoes as $n): 
-                        $icone = '📌';
-                        if($n['tipo'] == 'alerta') $icone = '⚠️';
-                        if($n['tipo'] == 'financeiro') $icone = '💰';
-                    ?>
-                        <a href="<?= $n['link'] ?>" class="notif-item">
-                            <span class="notif-icon"><?= $icone ?></span>
-                            <div>
-                                <div style="font-weight:600; font-size:1rem;"><?= htmlspecialchars($n['msg']) ?></div>
-                                <div style="font-size:0.8rem; color:#aaa; margin-top:2px;">Clique para ver detalhes</div>
-                            </div>
-                        </a>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
-        </div>
-    </div>
-
-
     <div class="app-container" style="padding: 0;"> <!-- Remove padding here, controlled by inner elements -->
         
         <!-- HEADER PREMIUM v4.0 -->
         <header class="premium-header">
-            <!-- Bell Notification -->
-            <div onclick="document.getElementById('modalNotificacoes').classList.add('open')" style="position:absolute; top:25px; right:20px; cursor:pointer; background:rgba(255,255,255,0.2); padding:10px; border-radius:50%; backdrop-filter:blur(5px); z-index:10;" title="Notificações">
-                <div style="position:relative;">
-                    <span style="font-size:1.6rem;">🔔</span>
-                    <?php if($total_notif > 0): ?>
-                        <span style="position:absolute; top:-2px; right:-2px; background:#ffc107; color:#333; font-size:0.7rem; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; border:2px solid rgba(255,255,255,0.5);"><?= $total_notif ?></span>
-                    <?php endif; ?>
-                </div>
+            
+            <!-- CLIENT AREA TITLE -->
+            <div style="margin-bottom: 20px; border-left: 4px solid #ffc107; padding-left: 10px;">
+                <h6 style="font-size: 0.75rem; color: #198754; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; margin: 0;">Área do Cliente</h6>
+                <div style="font-size: 0.7rem; color: #888; margin-top: 2px;">Vilela Engenharia</div>
             </div>
 
             <div class="ph-profile">
