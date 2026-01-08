@@ -181,39 +181,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                 </div>
             </div>
 
-            <div class="ph-details-grid">
-                <?php if(!empty($detalhes['endereco_imovel'])): ?>
-                    <div class="ph-row" style="margin-bottom:10px;">
-                        <div class="ph-icon-box">📍</div>
-                        <div style="line-height:1.2;">
-                            <div style="font-size:0.7rem; color:#999; text-transform:uppercase; font-weight:700;">Local da Obra</div>
-                            <span style="font-weight:600; color:#333; display:block;"><?= htmlspecialchars($detalhes['endereco_imovel']) ?></span>
-                        </div>
-                    </div>
-                <?php endif; ?>
-                
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                     <?php if(!empty($detalhes['contato_tel'])): ?>
-                        <div class="ph-row">
-                            <div class="ph-icon-box">📞</div>
-                            <div style="line-height:1.2;">
-                                <div style="font-size:0.7rem; color:#999; text-transform:uppercase; font-weight:700;">Telefone</div>
-                                <span style="font-weight:600; color:#333;"><?= htmlspecialchars($detalhes['contato_tel']) ?></span>
-                            </div>
-                        </div>
-                    <?php endif; ?>
-                    
-                    <?php if(!empty($detalhes['cpf_cnpj'])): ?>
-                        <div class="ph-row">
-                            <div class="ph-icon-box">🆔</div>
-                            <div style="line-height:1.2;">
-                                <div style="font-size:0.7rem; color:#999; text-transform:uppercase; font-weight:700;">CPF</div>
-                                <span style="font-size:0.85rem; color:#333; font-weight:600;"><?= htmlspecialchars($detalhes['cpf_cnpj']) ?></span>
-                            </div>
-                        </div>
-                    <?php endif; ?>
-                </div>
-            </div>
+
         </header>
 
         <!-- MAIN CONTENT (With Padding) -->
