@@ -68,6 +68,14 @@ $obs_atual = $stmt_obs->fetchColumn();
     <link rel="stylesheet" href="css/style.css?v=3.2"> 
     
     <style>
+        /* FORCE SOCIAL UPDATE v2 */
+        .floating-social-container { position: fixed; bottom: 25px; right: 25px; display: flex; flex-direction: column; gap: 15px; z-index: 99999 !important; }
+        .social-btn { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; box-shadow: 0 4px 12px rgba(0,0,0,0.25); position: relative; border: none !important; transition: transform 0.3s; }
+        .social-btn:hover { transform: scale(1.1); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+        .social-btn svg { width: 32px; height: 32px; fill: white; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1)); }
+        .social-btn.whatsapp { background-color: #25D366 !important; }
+        .social-btn.instagram { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%) !important; }
+
         /* Override basic settings for full page view */
         body { background: #f4f6f8; }
         .page-header {
