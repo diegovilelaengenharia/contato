@@ -255,39 +255,60 @@ function get_pendency_files($p_id) {
                         <span class="material-symbols-rounded" style="color:#198754;">history</span> Histórico de Resoluções
                     </h3>
                     
-                    <?php foreach($resolvidas as $p): 
-                         $data_criacao = date('d/m/Y', strtotime($p['data_criacao']));
-                         $anexos = get_pendency_files($p['id']);
-                    ?>
-                    <div style="background: #e8f5e9; border: 1px solid #c3e6cb; border-radius: 12px; padding: 12px; position: relative;">
-                        <!-- Icon Check -->
-                        <div style="position: absolute; top: 12px; right: 12px;">
-                            <span class="material-symbols-rounded" style="color:#198754; font-size:1.5rem;">check_circle</span>
+                    <div style="background: white; border-radius: 12px; border: 1px solid #c3e6cb; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                                <thead>
+                                    <tr style="background: #e8f5e9; color: #155724;">
+                                        <th style="padding: 12px 10px; text-align: left; font-weight: 700; border-bottom: 2px solid #c3e6cb; white-space: nowrap;">Data</th>
+                                        <th style="padding: 12px 10px; text-align: left; font-weight: 700; border-bottom: 2px solid #c3e6cb;">Pendência</th>
+                                        <th style="padding: 12px 10px; text-align: left; font-weight: 700; border-bottom: 2px solid #c3e6cb;">Arquivos</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach($resolvidas as $p): 
+                                         $data_criacao = date('d/m/Y', strtotime($p['data_criacao']));
+                                         $anexos = get_pendency_files($p['id']);
+                                    ?>
+                                    <tr style="border-bottom: 1px solid #eee;">
+                                        <!-- Data -->
+                                        <td style="padding: 12px 10px; vertical-align: top; color: #555;">
+                                            <?= $data_criacao ?>
+                                        </td>
+                                        
+                                        <!-- Pendência -->
+                                        <td style="padding: 12px 10px; vertical-align: top;">
+                                            <div style="font-weight: 700; color: #155724; margin-bottom: 3px;">
+                                                <?= htmlspecialchars($p['titulo']) ?>
+                                            </div>
+                                            <?php if(!empty($p['descricao'])): ?>
+                                                <div style="font-size: 0.8rem; color: #666; line-height: 1.3;">
+                                                    <?= nl2br(htmlspecialchars($p['descricao'])) ?>
+                                                </div>
+                                            <?php endif; ?>
+                                        </td>
+                                        
+                                        <!-- Arquivos -->
+                                        <td style="padding: 12px 10px; vertical-align: top;">
+                                            <?php if(!empty($anexos)): ?>
+                                                <div style="display:flex; flex-direction: column; gap: 5px;">
+                                                <?php foreach($anexos as $arq): ?>
+                                                    <a href="<?= $arq['path'] ?>" target="_blank" style="text-decoration:none; color:#198754; font-size:0.75rem; display: flex; align-items: center; gap: 4px; white-space: nowrap;">
+                                                        <span class="material-symbols-rounded" style="font-size:14px;">attachment</span> 
+                                                        <?= (strlen($arq['name']) > 15) ? substr($arq['name'], 0, 12) . '...' : $arq['name'] ?>
+                                                    </a>
+                                                <?php endforeach; ?>
+                                                </div>
+                                            <?php else: ?>
+                                                <span style="color: #ccc; font-size: 0.8rem;">-</span>
+                                            <?php endif; ?>
+                                        </td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
                         </div>
-
-                        <div style="padding-right: 30px;">
-                            <h4 style="margin: 0 0 2px 0; font-size: 1rem; color: #155724; font-weight: 700;">
-                                <?= htmlspecialchars($p['titulo']) ?>
-                            </h4>
-                            <span style="font-size: 0.75rem; font-weight: 600; color: #198754; opacity: 0.8;">
-                                Concluído em: <?= $data_criacao ?>
-                            </span>
-                        </div>
-
-                        <?php if(!empty($anexos)): ?>
-                            <div style="margin-top:8px; padding-top:8px; border-top:1px dashed #c3e6cb;">
-                                <strong style="font-size:0.75rem; color:#198754; display:block; margin-bottom:4px;">Arquivos Anexados:</strong>
-                                <div style="display:flex; flex-wrap:wrap; gap:6px;">
-                                <?php foreach($anexos as $arq): ?>
-                                    <a href="<?= $arq['path'] ?>" target="_blank" style="text-decoration:none; background:white; color:#198754; padding:4px 8px; border-radius:6px; font-size:0.75rem; border:1px solid #c3e6cb; display: flex; align-items: center; gap: 4px;">
-                                        <span class="material-symbols-rounded" style="font-size:14px;">attachment</span> <?= $arq['name'] ?>
-                                    </a>
-                                <?php endforeach; ?>
-                                </div>
-                            </div>
-                        <?php endif; ?>
                     </div>
-                    <?php endforeach; ?>
                 <?php endif; ?>
 
 
