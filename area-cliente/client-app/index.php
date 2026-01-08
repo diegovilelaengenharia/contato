@@ -193,17 +193,10 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                 <div class="ph-info">
                     <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.7); font-weight:700;">Área do Cliente</div>
                     <h1><?= htmlspecialchars(explode(' ', $cliente['nome'])[0]) ?></h1> <!-- Primeiro Nome only for clean look -->
-                    
-                    <?php 
-                        $procNum = $detalhes['numero_processo'] ?? '---';
-                        $procAno = !empty($detalhes['data_inicio']) ? date('Y', strtotime($detalhes['data_inicio'])) : date('Y');
-                    ?>
-                    <div class="ph-proc"><?= htmlspecialchars($procNum) ?>/<?= $procAno ?></div>
                 </div>
             </div>
 
             <div class="ph-actions">
-                <span class="ph-badge"><?= htmlspecialchars($detalhes['etapa_atual'] ?? 'Ativo') ?></span>
                 <a href="logout.php" class="ph-logout">
                     <span class="material-symbols-rounded" style="font-size:1.1rem;">logout</span>
                     <span>Sair</span>
@@ -224,10 +217,30 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                         <span class="app-btn-title">Dados do Cliente</span>
                         <span class="app-btn-desc">Resumo do Processo</span>
                     </div>
+                <!-- LOGIC: Fetch Latest Pendency and Finance -->
+                 <?php
+                    // Latest Pendency Name
+                    $stmt_last_pend = $pdo->prepare("SELECT titulo FROM processo_pendencias WHERE cliente_id = ? AND status != 'resolvido' ORDER BY data_criacao DESC LIMIT 1");
+                    $stmt_last_pend->execute([$cliente_id]);
+                    $last_pend_name = $stmt_last_pend->fetchColumn(); 
+
+                    // Latest Finance Name
+                     $stmt_last_fin = $pdo->prepare("SELECT titulo FROM processo_financeiro WHERE cliente_id = ? AND (status = 'pendente' OR status = 'atrasado') ORDER BY data_vencimento ASC LIMIT 1");
+                    $stmt_last_fin->execute([$cliente_id]);
+                    $last_fin_name = $stmt_last_fin->fetchColumn();
+                ?>
+
+                <!-- 1. RESUMO -->
+                <a href="../../area-cliente/relatorio_cliente.php?id=<?= $cliente['id'] ?>" target="_blank" class="app-button" style="border-left-color: #0d6efd;">
+                    <div class="app-btn-icon" style="background:#e0f8fc; color:#0d6efd;">📋</div>
+                    <div class="app-btn-content">
+                        <span class="app-btn-title">Resumo do Processo</span>
+                        <span class="app-btn-desc">Visualize os dados principais</span>
+                    </div>
                     <div class="app-btn-arrow" style="color:#0d6efd;">➔</div>
                 </a>
 
-                <!-- TIMELINE -->
+                <!-- 2. TIMELINE -->
                 <a href="timeline.php" class="app-button" style="border-left-color: #198754;">
                     <div class="app-btn-icon" style="background:#e8f5e9; color:#198754;">🧭</div>
                     <div class="app-btn-content">
@@ -236,53 +249,57 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                             <div class="bar" style="width: <?= $porcentagem ?>%; height:100%; background:#198754;"></div>
                         </div>
                         <span class="app-btn-desc" style="margin-top:5px;">
-                            <?= htmlspecialchars($etapa_atual) ?> (<?= $porcentagem ?>%)
+                            <?= htmlspecialchars($etapa_atual) ?> - <?= $porcentagem ?>%
                         </span>
                     </div>
                     <div class="app-btn-arrow" style="color:#198754;">➔</div>
                 </a>
 
-                <!-- PENDÊNCIAS -->
+                <!-- 3. PENDÊNCIAS -->
                 <?php 
-                    $has_pendency = $pend_qtd > 0;
-                    $p_color = $has_pendency ? '#dc3545' : '#198754';
+                    $p_color = ($pend_qtd > 0) ? '#dc3545' : '#198754';
                 ?>
                 <a href="pendencias.php" class="app-button" style="border-left-color: <?= $p_color ?>;">
-                    <div class="app-btn-icon" style="background:<?= $has_pendency ? '#fce8e6' : '#e8f5e9' ?>; color:<?= $p_color ?>;">⚠️</div>
+                    <div class="app-btn-icon" style="background:<?= ($pend_qtd > 0) ? '#fce8e6' : '#e8f5e9' ?>; color:<?= $p_color ?>;">⚠️</div>
                     <div class="app-btn-content">
-                        <span class="app-btn-title" style="<?= $has_pendency ? 'color:#dc3545;' : '' ?>">Pendências</span>
-                        <?php if($has_pendency): ?>
-                            <span class="app-btn-desc" style="color:#dc3545; font-weight:600;"><?= $pend_qtd ?> Ação(ões) Necessária(s)</span>
+                        <span class="app-btn-title" style="<?= ($pend_qtd > 0) ? 'color:#dc3545;' : '' ?>">Pendências</span>
+                        <?php if($pend_qtd > 0): ?>
+                            <span class="app-btn-desc" style="color:#dc3545; font-weight:600;">
+                                <?= htmlspecialchars(mb_strimwidth($last_pend_name, 0, 30, "...")) ?>
+                            </span>
                         <?php else: ?>
-                            <span class="app-btn-desc">Tudo em dia!</span>
+                            <span class="app-btn-desc">Nenhuma pendência recente</span>
                         <?php endif; ?>
                     </div>
-                    <?php if($has_pendency): ?>
+                    <?php if($pend_qtd > 0): ?>
                         <span class="badge-count" style="background:#dc3545;"><?= $pend_qtd ?></span>
                     <?php else: ?>
-                        <div class="app-btn-arrow" style="color:<?= $p_color ?>;">➔</div>
+                         <div class="app-btn-arrow" style="color:<?= $p_color ?>;">➔</div>
                     <?php endif; ?>
                 </a>
 
-                <!-- FINANCEIRO -->
-                <?php 
-                    $has_fin = $fin_qtd > 0;
-                ?>
+                <!-- 4. FINANCEIRO -->
                 <a href="financeiro.php" class="app-button" style="border-left-color: #ffc107;">
                     <div class="app-btn-icon" style="background:#fff3cd; color:#ffc107;">💰</div>
                     <div class="app-btn-content">
                         <span class="app-btn-title">Financeiro</span>
-                        <span class="app-btn-desc"><?= $has_fin ? "$fin_qtd Pagamento(s) Pendente(s)" : "Faturas e Recibos" ?></span>
+                         <?php if($fin_qtd > 0): ?>
+                            <span class="app-btn-desc" style="color:#d9a406; font-weight:600;">
+                                <?= htmlspecialchars(mb_strimwidth($last_fin_name, 0, 30, "...")) ?>
+                            </span>
+                        <?php else: ?>
+                            <span class="app-btn-desc">Nenhum pagamento pendente</span>
+                        <?php endif; ?>
                     </div>
                     <div class="app-btn-arrow" style="color:#ffc107;">➔</div>
                 </a>
                 
-                <!-- DOCUMENTOS -->
+                <!-- 5. DOCUMENTOS -->
                 <a href="documentos.php" class="app-button" style="border-left-color: #0dcaf0;">
                     <div class="app-btn-icon" style="background:#d1ecf1; color:#0dcaf0;">📂</div>
                     <div class="app-btn-content">
-                        <span class="app-btn-title">Documentos</span>
-                        <span class="app-btn-desc">Projetos e Contratos</span>
+                        <span class="app-btn-title">Documentos Finais</span>
+                        <span class="app-btn-desc">Acesso aos documentos digitais</span>
                     </div>
                     <div class="app-btn-arrow" style="color:#0dcaf0;">➔</div>
                 </a>
