@@ -92,7 +92,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Área do Cliente | Vilela Engenharia</title>
+    <title>Área do Cliente</title>
     
     <!-- FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -302,13 +302,13 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
 
         <!-- FOOTER PREMIUM -->
         <footer class="premium-footer">
-            <img src="../../assets/logo.png" alt="Vilela Engenharia" class="pf-logo">
             <div class="pf-text">
-                <span class="pf-strong">Eng. Diego T. N. Vilela</span>
-                CREA 235.474/D
+                <span class="pf-strong" style="font-size: 1.1rem; color: #333;">Engenheiro Responsável</span>
+                <span style="display:block; font-size: 1.2rem; font-weight: 700; color: #146c43; margin: 5px 0;">Diego T. N. Vilela</span>
+                <span style="display:block; font-size: 0.9rem; color: #666;">Engenheiro Civil · CREA 235.474/D</span>
             </div>
-            <div style="margin-top: 20px; font-size: 0.8rem; opacity: 0.5;">
-                &copy; <?= date('Y') ?> Todos os direitos reservados.
+            <div style="margin-top: 20px; font-size: 0.75rem; opacity: 0.5;">
+                &copy; <?= date('Y') ?>
             </div>
         </footer>
 

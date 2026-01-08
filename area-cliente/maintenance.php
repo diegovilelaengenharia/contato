@@ -6,7 +6,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estamos em Manutenção | Vilela Engenharia</title>
+    <title>Estamos em Manutenção</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -89,13 +89,12 @@
 </head>
 <body>
     <div class="maint-card">
-        <img src="../assets/logo.png" alt="Vilela Engenharia" class="logo">
         
         <!-- Ícone removido a pedido -->
 
         <h1>Atualização Programada</h1>
         <p>
-            Estamos otimizando nossa Área do Cliente para atendê-lo melhor.<br>
+            Estamos otimizando a Área do Cliente para atendê-lo melhor.<br>
             O acesso retornará em instantes.
         </p>
 
@@ -105,7 +104,7 @@
         </div>
 
         <div style="margin-top: 25px; font-size: 0.9rem; color: #888;">
-            Equipe Vilela Engenharia
+            Equipe Técnica
         </div>
 
         <div style="margin-top: 20px;">

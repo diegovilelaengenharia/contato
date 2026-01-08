@@ -48,7 +48,7 @@ if($fase_index === false) $fase_index = 0;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Linha do Tempo | Vilela Engenharia</title>
+    <title>Linha do Tempo</title>
     
     <!-- FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

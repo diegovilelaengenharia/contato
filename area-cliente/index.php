@@ -99,12 +99,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Área do Cliente | Vilela Engenharia</title>
+    <title>Área do Cliente</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css?v=<?= time() ?>">
-    <link rel="icon" href="../assets/logo.png" type="image/png">
 
 </head>
 
@@ -120,7 +119,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="login-container">
         <div class="logo-area">
-            <img src="../assets/logo.png" alt="Vilela Engenharia">
             <h1>Área do Cliente</h1>
             <p>Acesse seus projetos e documentos</p>
         </div>

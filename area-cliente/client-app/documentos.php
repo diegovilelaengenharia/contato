@@ -38,7 +38,7 @@ if($drive_link) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Documentos | Vilela Engenharia</title>
+    <title>Documentos</title>
     
     <!-- FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
