@@ -46,7 +46,7 @@ function formatMoney($val) {
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
     
     <!-- STYLES -->
-    <link rel="stylesheet" href="css/style.css?v=2.7.4">
+    <link rel="stylesheet" href="css/style.css?v=<?= time() ?>">
     
     <style>
         body { background: #f4f6f8; }
