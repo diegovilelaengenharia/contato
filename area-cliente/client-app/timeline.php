@@ -30,12 +30,15 @@ $detalhes = $stmt_det->fetch(PDO::FETCH_ASSOC);
 
 // DEFINIÇÃO DAS FASES (Mantendo consistência com index.php)
 $fases_padrao = [
-    'Levantamento de Dados',
-    'Desenvolvimento de Projetos',
-    'Aprovação na Prefeitura',
-    'Pagamento de Taxas',
-    'Emissão de Alvará',
-    'Entrega de Projetos'
+    'Abertura de Processo (Guichê)',
+    'Fiscalização (Parecer Fiscal)',
+    'Triagem (Documentos Necessários)',
+    'Comunicado de Pendências (Triagem)',
+    'Análise Técnica (Engenharia)',
+    'Comunicado (Pendências e Taxas)',
+    'Confecção de Documentos',
+    'Avaliação (ITBI/Averbação)',
+    'Processo Finalizado (Documentos Prontos)'
 ];
 
 $etapa_atual = $detalhes['etapa_atual'] ?? 'Levantamento de Dados';
@@ -85,10 +88,7 @@ if($fase_index === false) $fase_index = 0;
 
     <div class="app-container">
         
-        <!-- LOGO HEADER -->
-        <div style="text-align:center; margin-bottom:20px;">
-            <img src="../../assets/logo.png" alt="Vilela Engenharia" style="max-height:80px;">
-        </div>
+
 
         <!-- HEADER COM BOTÃO VOLTAR -->
         <div class="page-header">
@@ -133,30 +133,32 @@ if($fase_index === false) $fase_index = 0;
             <?php endif; ?>
 
             <!-- TIMELINE STEPPER -->
-            <h3 style="margin:0 0 20px 0; font-size:1.1rem; color:#333; border-bottom:1px solid #eee; padding-bottom:10px;">Etapas</h3>
+            <h3 style="margin:0 0 20px 0; font-size:1.1rem; color:#333; border-bottom:1px solid #eee; padding-bottom:10px;">Todas as Etapas</h3>
             <div class="timeline-container-full" style="padding-left:15px; margin-bottom:30px;">
                 <?php 
                     foreach($fases_padrao as $k => $fase): 
                         $is_past = $k < $fase_index;
                         $is_curr = $k === $fase_index;
                         
-                        $dot_bg = $is_past ? '#198754' : ($is_curr ? 'white' : '#e9ecef');
-                        $dot_border = $is_past ? '#198754' : ($is_curr ? 'var(--color-primary)' : '#ccc');
-                        $dot_icon_color = $is_past ? 'white' : ($is_curr ? 'var(--color-primary)' : '#999');
-                        $line_color = '#e9ecef';
-                        if ($is_past) $line_color = '#198754';
+                        // Icons based on status
+                        $icon_display = '▫️'; // Default/Future
+                        if($is_past) $icon_display = '✅';
+                        if($is_curr) $icon_display = '📍';
                         
-                        $text_style = $is_curr ? 'font-weight:700; color:var(--color-primary);' : ($is_past ? 'color:#198754;' : 'color:#999;');
+                        $text_style = $is_curr ? 'font-weight:700; color:#333;' : ($is_past ? 'color:#198754;' : 'color:#999;');
+                        
+                        // Line Line
+                        $line_color = ($is_past) ? '#198754' : '#e9ecef';
                 ?>
                 <div style="display:flex; gap:15px; position:relative; padding-bottom:30px;">
                     <!-- Line -->
                     <?php if($k < count($fases_padrao)-1): ?>
-                    <div style="position:absolute; left:12px; top:28px; bottom:0; width:3px; background:<?= $line_color ?>; z-index:0;"></div>
+                    <div style="position:absolute; left:11px; top:30px; bottom:0; width:2px; background:<?= $line_color ?>; z-index:0;"></div>
                     <?php endif; ?>
                     
-                    <!-- Dot -->
-                    <div style="width:28px; height:28px; border-radius:50%; background:<?= $dot_bg ?>; border:3px solid <?= $dot_border ?>; display:flex; align-items:center; justify-content:center; z-index:1; flex-shrink:0; font-size:0.8rem; font-weight:bold; color:<?= $dot_icon_color ?>; transition: all 0.3s ease;">
-                        <?php if($is_past): ?>✓<?php elseif($is_curr): ?>•<?php else: ?> <?php endif; ?>
+                    <!-- Icon -->
+                    <div style="width:24px; height:24px; display:flex; align-items:center; justify-content:center; z-index:1; flex-shrink:0; font-size:1.2rem; background:#fff;">
+                        <?= $icon_display ?>
                     </div>
                     
                     <!-- Text -->
@@ -165,37 +167,58 @@ if($fase_index === false) $fase_index = 0;
                             <?= $fase ?>
                         </span>
                         <?php if($is_curr): ?>
-                            <span style="font-size:0.7rem; background:var(--color-primary); color:white; padding:3px 8px; border-radius:12px; font-weight:600; text-transform:uppercase; margin-top:4px; display:inline-block;">Em Andamento</span>
+                            <span style="font-size:0.7rem; background:#ffc107; color:#333; padding:2px 8px; border-radius:12px; font-weight:700; text-transform:uppercase; margin-top:4px; display:inline-block;">Em Andamento</span>
                         <?php endif; ?>
                     </div>
                 </div>
                 <?php endforeach; ?>
             </div>
 
-            <!-- HISTORY -->
-            <h3 style="margin:0 0 20px 0; font-size:1.1rem; color:#333; border-bottom:1px solid #eee; padding-bottom:10px;">Movimentações Recentes</h3>
+            <!-- HISTÓRICO COMPLETO (REAL) -->
+            <h3 style="margin:30px 0 20px 0; font-size:1.1rem; color:#333; border-bottom:1px solid #eee; padding-bottom:10px;">📜 Histórico do Processo</h3>
              <?php
-             $stmt_hist = $pdo->prepare("SELECT * FROM processo_movimentacoes WHERE cliente_id = ? ORDER BY data_movimentacao DESC");
+             // Usando a tabela REAL do Admin (processo_movimentos)
+             $stmt_hist = $pdo->prepare("SELECT * FROM processo_movimentos WHERE cliente_id = ? ORDER BY data_movimento DESC");
              $stmt_hist->execute([$cliente_id]);
              $historico = $stmt_hist->fetchAll(PDO::FETCH_ASSOC);
 
              if(empty($historico)): ?>
                 <div class="empty-state" style="text-align:center; padding:30px; color:#999; border:2px dashed #eee; border-radius:12px;">
-                    Nenhuma movimentação registrada.
+                    Nenhum registro no histórico.
                 </div>
-             <?php else: 
-                foreach($historico as $h): ?>
-                <div class="history-item" style="border-left:4px solid var(--color-primary); padding:15px 20px; margin-bottom:15px; background:white; border-radius:8px; box-shadow:0 3px 6px rgba(0,0,0,0.04);">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                        <span style="font-weight:700; color:#333; font-size:1rem;"><?= htmlspecialchars($h['titulo']) ?></span>
-                        <span style="font-size:0.8rem; color:#666; font-weight:600; background:#f0f0f0; padding:2px 8px; border-radius:4px; height:fit-content;"><?= date('d/m/Y', strtotime($h['data_movimentacao'])) ?></span>
-                    </div>
-                    <?php if(!empty($h['descricao'])): ?>
-                        <div style="font-size:0.9rem; color:#555; line-height:1.5; margin-top:5px;"><?= nl2br(htmlspecialchars($h['descricao'])) ?></div>
-                    <?php endif; ?>
+             <?php else: ?>
+                <div style="overflow-x:auto;">
+                    <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+                        <thead>
+                            <tr style="background:#f8f9fa; text-align:left; color:#666;">
+                                <th style="padding:12px; border-bottom:2px solid #e9ecef;">Data</th>
+                                <th style="padding:12px; border-bottom:2px solid #e9ecef;">Evento</th>
+                                <th style="padding:12px; border-bottom:2px solid #e9ecef;">Descrição</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach($historico as $h): 
+                                $parts = explode("||COMENTARIO_USER||", $h['descricao']);
+                                $desc_principal = $parts[0];
+                            ?>
+                            <tr style="border-bottom:1px solid #eee;">
+                                <td style="padding:12px; color:#555; font-weight:600; vertical-align:top; white-space:nowrap;">
+                                    <?= date('d/m/Y H:i', strtotime($h['data_movimento'])) ?>
+                                </td>
+                                <td style="padding:12px; vertical-align:top;">
+                                    <span style="display:inline-block; background:#e9ecef; color:#333; padding:4px 10px; border-radius:12px; font-weight:700; font-size:0.8rem;">
+                                        <?= htmlspecialchars($h['titulo_fase']) ?>
+                                    </span>
+                                </td>
+                                <td style="padding:12px; color:#666; vertical-align:top; line-height:1.5;">
+                                    <?= $desc_principal ?>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
                 </div>
-                <?php endforeach; 
-             endif; ?>
+             <?php endif; ?>
 
         </div>
         </div>

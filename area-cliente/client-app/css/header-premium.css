@@ -1,12 +1,11 @@
 /* --- HEADER PREMIUM v4.2 (Traditional Engineering) --- */
 .premium-header {
-    background: #f8f9fa;
-    /* Clean light gray */
+    background: #eaf4ed;
+    /* Light Green Tint (Logo Palette) */
     color: #333;
     border-bottom: 3px solid #198754;
     /* Standard Engineering Green */
     border-bottom-left-radius: 0;
-    /* More squared for traditional look */
     border-bottom-right-radius: 0;
     padding: 20px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
@@ -80,9 +79,11 @@
 
 .btn-logout {
     font-size: 0.75rem;
-    color: #666;
+    color: #dc3545;
+    /* Red */
     text-decoration: none;
-    border: 1px solid #ccc;
+    border: 1px solid #dc3545;
+    /* Red Border */
     padding: 4px 12px;
     border-radius: 4px;
     /* Squared */
@@ -91,13 +92,13 @@
     margin-top: 5px;
     background: #fff;
     text-transform: uppercase;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .btn-logout:hover {
-    background: #eee;
-    color: #333;
-    border-color: #bbb;
+    background: #dc3545;
+    color: #fff;
+    border-color: #dc3545;
 }
 
 /* Details Grid - Traditional */
@@ -127,8 +128,8 @@
     width: 24px;
     height: 24px;
     background: transparent;
-    color: #198754;
-    /* Green Icons */
+    color: #4a8b5c;
+    /* Softer Green Icons */
     border-radius: 0;
     display: flex;
     align-items: center;

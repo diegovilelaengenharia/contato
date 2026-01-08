@@ -72,12 +72,15 @@ $total_notif = count($notificacoes);
 
 // DEFINIÇÃO DAS FASES (Para Timeline Card)
 $fases_padrao = [
-    'Levantamento de Dados',
-    'Desenvolvimento de Projetos',
-    'Aprovação na Prefeitura',
-    'Pagamento de Taxas',
-    'Emissão de Alvará',
-    'Entrega de Projetos'
+    'Abertura de Processo (Guichê)',
+    'Fiscalização (Parecer Fiscal)',
+    'Triagem (Documentos Necessários)',
+    'Comunicado de Pendências (Triagem)',
+    'Análise Técnica (Engenharia)',
+    'Comunicado (Pendências e Taxas)',
+    'Confecção de Documentos',
+    'Avaliação (ITBI/Averbação)',
+    'Processo Finalizado (Documentos Prontos)'
 ];
 
 $etapa_atual = $detalhes['etapa_atual'] ?? 'Levantamento de Dados';
@@ -217,9 +220,12 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
 
             <div class="ph-details-grid">
                 <?php if(!empty($detalhes['endereco_imovel'])): ?>
-                    <div class="ph-row">
+                    <div class="ph-row" style="margin-bottom:10px;">
                         <div class="ph-icon-box">📍</div>
-                        <span><?= htmlspecialchars($detalhes['endereco_imovel']) ?></span>
+                        <div style="line-height:1.2;">
+                            <div style="font-size:0.7rem; color:#999; text-transform:uppercase; font-weight:700;">Local da Obra</div>
+                            <span style="font-weight:600; color:#333; display:block;"><?= htmlspecialchars($detalhes['endereco_imovel']) ?></span>
+                        </div>
                     </div>
                 <?php endif; ?>
                 
@@ -227,14 +233,20 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                      <?php if(!empty($detalhes['contato_tel'])): ?>
                         <div class="ph-row">
                             <div class="ph-icon-box">📞</div>
-                            <span><?= htmlspecialchars($detalhes['contato_tel']) ?></span>
+                            <div style="line-height:1.2;">
+                                <div style="font-size:0.7rem; color:#999; text-transform:uppercase; font-weight:700;">Telefone</div>
+                                <span style="font-weight:600; color:#333;"><?= htmlspecialchars($detalhes['contato_tel']) ?></span>
+                            </div>
                         </div>
                     <?php endif; ?>
                     
                     <?php if(!empty($detalhes['cpf_cnpj'])): ?>
                         <div class="ph-row">
                             <div class="ph-icon-box">🆔</div>
-                            <span style="font-size:0.85rem;"><?= htmlspecialchars($detalhes['cpf_cnpj']) ?></span>
+                            <div style="line-height:1.2;">
+                                <div style="font-size:0.7rem; color:#999; text-transform:uppercase; font-weight:700;">CPF</div>
+                                <span style="font-size:0.85rem; color:#333; font-weight:600;"><?= htmlspecialchars($detalhes['cpf_cnpj']) ?></span>
+                            </div>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -248,25 +260,25 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                 
                 <!-- TIMELINE -->
                 <a href="timeline.php" class="app-button">
-                    <div class="app-btn-icon" style="background:#e3f2fd; color:#0d47a1;">⏳</div>
+                    <div class="app-btn-icon" style="background:#f0f4f8; color:#5c7c93;">⏳</div>
                     <div class="app-btn-content">
                         <span class="app-btn-title">Linha do Tempo</span>
                         <span class="app-btn-desc"><?= htmlspecialchars($etapa_atual) ?> (<?= $porcentagem ?>%)</span>
                     </div>
-                    <div style="font-weight:800; color:#0d47a1; font-size:1.4rem;">➔</div>
+                    <div style="font-weight:800; color:#5c7c93; font-size:1.4rem;">➔</div>
                 </a>
 
                 <!-- PENDÊNCIAS -->
                 <?php 
                     $has_pendency = $pend_qtd > 0;
-                    $p_style = $has_pendency ? "border-left: 6px solid #dc3545;" : ""; 
+                    $p_style = $has_pendency ? "border-left: 6px solid #dba7a7;" : ""; 
                 ?>
                 <a href="pendencias.php" class="app-button" style="<?= $p_style ?>">
-                    <div class="app-btn-icon" style="background:<?= $has_pendency ? '#ffebee' : '#fff3cd' ?>; color:<?= $has_pendency ? '#c62828' : '#856404' ?>;">⚠️</div>
+                    <div class="app-btn-icon" style="background:<?= $has_pendency ? '#fdf2f2' : '#fcf8e8' ?>; color:<?= $has_pendency ? '#c25e5e' : '#9e8538' ?>;">⚠️</div>
                     <div class="app-btn-content">
-                        <span class="app-btn-title" style="<?= $has_pendency ? 'color:#dc3545; font-weight:800;' : '' ?>">Pendências</span>
+                        <span class="app-btn-title" style="<?= $has_pendency ? 'color:#c25e5e; font-weight:800;' : '' ?>">Pendências</span>
                         <?php if($has_pendency): ?>
-                            <span class="app-btn-desc" style="color:#dc3545; font-weight:600;"><?= $pend_qtd ?> Ação(ões) Necessária(s)</span>
+                            <span class="app-btn-desc" style="color:#d97575; font-weight:600;"><?= $pend_qtd ?> Ação(ões) Necessária(s)</span>
                         <?php else: ?>
                             <span class="app-btn-desc">Tudo em dia!</span>
                         <?php endif; ?>
@@ -278,22 +290,22 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                     $has_fin = $fin_qtd > 0;
                 ?>
                 <a href="financeiro.php" class="app-button">
-                    <div class="app-btn-icon" style="background:#d1e7dd; color:#146c43;">💰</div>
+                    <div class="app-btn-icon" style="background:#eaf4ed; color:#4a8b5c;">💰</div>
                     <div class="app-btn-content">
                         <span class="app-btn-title">Financeiro</span>
                         <span class="app-btn-desc"><?= $has_fin ? "$fin_qtd Pagamento(s) Pendente(s)" : "Faturas e Recibos" ?></span>
                     </div>
-                    <div style="color:#146c43; font-size:1.4rem;">➔</div>
+                    <div style="color:#4a8b5c; font-size:1.4rem;">➔</div>
                 </a>
 
                 <!-- DOCUMENTOS -->
                 <a href="documentos.php" class="app-button">
-                    <div class="app-btn-icon" style="background:#fff3cd; color:#856404;">📂</div>
+                    <div class="app-btn-icon" style="background:#fff8e6; color:#a1832d;">📂</div>
                     <div class="app-btn-content">
                         <span class="app-btn-title">Documentos</span>
                         <span class="app-btn-desc">Projetos e Contratos</span>
                     </div>
-                    <div style="color:#856404; font-size:1.4rem;">➔</div>
+                    <div style="color:#a1832d; font-size:1.4rem;">➔</div>
                 </a> 
 
             </div>
@@ -301,14 +313,22 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
         </div>
 
         <!-- FOOTER PREMIUM -->
-        <footer class="premium-footer">
-            <div class="pf-text">
-                <span class="pf-strong" style="font-size: 1.1rem; color: #333;">Engenheiro Responsável</span>
-                <span style="display:block; font-size: 1.2rem; font-weight: 700; color: #146c43; margin: 5px 0;">Diego T. N. Vilela</span>
-                <span style="display:block; font-size: 0.9rem; color: #666;">Engenheiro Civil · CREA 235.474/D</span>
+        <footer class="premium-footer" style="padding: 30px 20px; background: #fff; border-top: 1px solid #eee;">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px;">
+                <!-- Left: Logo -->
+                <div style="flex-shrink: 0;">
+                    <img src="../../assets/logo.png" alt="Vilela Engenharia" style="max-height: 55px; opacity: 1;">
+                </div>
+                
+                <!-- Right: Info -->
+                <div style="text-align: right;">
+                    <span style="display:block; font-size: 0.7rem; color: #999; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Engenheiro Responsável</span>
+                    <span style="display:block; font-size: 1.05rem; font-weight: 700; color: #333; margin: 3px 0;">Diego T. N. Vilela</span>
+                    <span style="display:block; font-size: 0.85rem; color: #666;">Engenheiro Civil · CREA 235.474/D</span>
+                </div>
             </div>
-            <div style="margin-top: 20px; font-size: 0.75rem; opacity: 0.5;">
-                &copy; <?= date('Y') ?>
+            <div style="margin-top: 15px; font-size: 0.7rem; color: #ccc; text-align: center;">
+                &copy; <?= date('Y') ?> Vilela Engenharia. Todos os direitos reservados.
             </div>
         </footer>
 
