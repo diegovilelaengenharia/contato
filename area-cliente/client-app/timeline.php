@@ -247,36 +247,36 @@ $obs_atual = $stmt_obs->fetchColumn();
                     Nenhum registro no histórico.
                 </div>
              <?php else: ?>
-                <div style="display:flex; flex-direction:column; gap:10px;">
+                <div style="display:flex; flex-direction:column; gap:20px;">
                     <?php foreach($historico as $h): 
                         $parts = explode("||COMENTARIO_USER||", $h['descricao']);
                         $desc_principal = $parts[0];
+                        $data_mov = strtotime($h['data_movimento']);
                     ?>
-                    <details style="background:white; border:1px solid #eee; border-radius:12px; overflow:hidden; transition:all 0.2s;">
-                        <summary style="display:grid; grid-template-columns: 80px 1fr; gap:15px; padding:15px; cursor:pointer; list-style:none; align-items:center;">
-                            <!-- Date Column (Narrow) -->
-                            <div style="font-size:0.8rem; font-weight:700; color:#999; text-align:center; display:flex; flex-direction:column; line-height:1.2;">
-                                <span style="font-size:1rem; color:#333;"><?= date('d', strtotime($h['data_movimento'])) ?></span>
-                                <span><?= date('M', strtotime($h['data_movimento'])) ?></span>
-                                <span style="font-size:0.7rem; font-weight:400;"><?= date('Y', strtotime($h['data_movimento'])) ?></span>
-                            </div>
-
-                            <!-- Title (Expandable Arrow implied) -->
-                            <div style="display:flex; align-items:center; justify-content:space-between;">
-                                <span style="font-weight:600; color:#333; font-size:0.95rem;">
-                                    <?= htmlspecialchars($h['titulo_fase']) ?>
-                                </span>
-                                <span class="material-symbols-rounded" style="color:#ccc; font-size:1.2rem;">expand_more</span>
-                            </div>
-                        </summary>
-                        
-                        <!-- Content (Description) -->
-                        <div style="padding:0 15px 15px 110px; border-top:1px solid #f8f9fa;">
-                             <p style="margin:10px 0 0 0; font-size:0.9rem; color:#666; line-height:1.6;">
-                                <?= $desc_principal ?>
-                             </p>
+                    <div style="display:flex; gap:15px; align-items:flex-start;">
+                        <!-- Date Column -->
+                        <div style="display:flex; flex-direction:column; align-items:center; min-width:50px; padding-top: 5px;">
+                            <span style="font-size:1.1rem; font-weight:700; color:#333; line-height:1;"><?= date('d', $data_mov) ?></span>
+                            <span style="font-size:0.75rem; text-transform:uppercase; color:#999; font-weight:600;"><?= date('M', $data_mov) ?></span>
+                            <span style="font-size:0.65rem; color:#ccc;"><?= date('Y', $data_mov) ?></span>
+                            <!-- Vertical Line (Visual Connector) -->
+                            <div style="width:2px; background:#e0e0e0; flex:1; margin-top:8px; border-radius:1px;"></div>
                         </div>
-                    </details>
+
+                        <!-- Content Card -->
+                        <div style="background:white; border:1px solid #efefef; border-radius:12px; padding:15px; flex:1; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
+                            <h4 style="margin:0 0 8px 0; color:#146c43; font-size:0.95rem; font-weight:700;">
+                                <?= htmlspecialchars($h['titulo_fase']) ?>
+                            </h4>
+                            <?php if(!empty($desc_principal)): ?>
+                                <div style="font-size:0.9rem; color:#555; line-height:1.5;">
+                                    <?= nl2br(htmlspecialchars($desc_principal)) ?>
+                                </div>
+                            <?php else: ?>
+                                <span style="font-size:0.8rem; color:#ccc; font-style:italic;">Sem observações adicionais.</span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
                     <?php endforeach; ?>
                 </div>
              <?php endif; ?>

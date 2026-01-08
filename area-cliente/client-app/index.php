@@ -162,8 +162,21 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             
             <div style="display: flex; align-items: center; justify-content: space-between;">
                 <div class="ph-content" style="flex: 1;">
+                    <!-- AVATAR (Re-added, small) -->
+                    <?php 
+                        $avatarPath = $cliente['foto_perfil'] ?? '';
+                        if($avatarPath && !str_starts_with($avatarPath, '../') && !str_starts_with($avatarPath, 'http')) $avatarPath = '../' . $avatarPath;
+                    ?>
+                    <div class="ph-avatar-box" style="width: 45px; height: 45px; margin-right: 12px;">
+                        <?php if($avatarPath && file_exists($avatarPath) && !is_dir($avatarPath)): ?>
+                            <img src="<?= htmlspecialchars($avatarPath) ?>?v=<?= time() ?>" style="width:100%; height:100%; object-fit:cover;">
+                        <?php else: ?>
+                            <span style="font-size:1.2rem; color:white;">👤</span>
+                        <?php endif; ?>
+                    </div>
+
                     <div class="ph-info">
-                        <h1 style="margin:0; font-size:1.4rem;">Olá, <?= htmlspecialchars(explode(' ', $cliente['nome'])[0]) ?></h1>
+                        <h1 style="margin:0; font-size:1.4rem;">Olá, <?= htmlspecialchars(explode(' ', $cliente['nome'])[0]) ?>!</h1>
                     </div>
                 </div>
 
@@ -279,13 +292,11 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                 </a>
 
                 <!-- 6. RESUMO (MOVED & RESTYLED) -->
-                <a href="../../area-cliente/relatorio_cliente.php?id=<?= $cliente['id'] ?>" target="_blank" class="app-button" style="border: 2px dashed #0d6efd; background: #f8fbff;">
-                    <div class="app-btn-icon" style="background:#0d6efd; color:#fff;">🖨️</div>
+                <a href="../../area-cliente/relatorio_cliente.php?id=<?= $cliente['id'] ?>" target="_blank" class="app-button" style="background: #fff3cd; border: 1px solid #ffecb5; padding: 12px 15px; min-height: auto;">
+                    <div class="app-btn-icon" style="background: rgba(255, 193, 7, 0.2); color: #856404; width: 32px; height: 32px; font-size: 1.1rem; flex-shrink: 0;">🖨️</div>
                     <div class="app-btn-content">
-                        <span class="app-btn-title" style="color:#0d6efd;">Imprimir Resumo do Processo</span>
-                        <span class="app-btn-desc">Gerar PDF completo</span>
+                        <span class="app-btn-title" style="color: #856404; font-size: 0.85rem; line-height: 1.3;">Clique aqui e imprima o resumo do processo em PDF</span>
                     </div>
-                    <div class="app-btn-arrow" style="color:#0d6efd;">➔</div>
                 </a>
 
             </div>
