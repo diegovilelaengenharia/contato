@@ -103,8 +103,8 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- STYLES -->
-    <link rel="stylesheet" href="css/style.css?v=2.7.4">
-    <link rel="stylesheet" href="css/header-premium.css?v=4.0">
+    <link rel="stylesheet" href="css/style.css?v=4.6">
+    <link rel="stylesheet" href="css/header-premium.css?v=4.6">
     
     <style>
         /* MODAL DE NOTIFICAÇÕES */
@@ -153,9 +153,9 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
         <header class="premium-header">
             
             <!-- CLIENT AREA TITLE -->
-            <div style="margin-bottom: 20px; border-left: 4px solid #ffc107; padding-left: 10px;">
-                <h6 style="font-size: 0.75rem; color: #198754; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; margin: 0;">Área do Cliente</h6>
-                <div style="font-size: 0.7rem; color: #888; margin-top: 2px;">Vilela Engenharia</div>
+            <!-- CLIENT AREA TITLE (Centered & Larger) -->
+            <div style="text-align: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid rgba(0,0,0,0.05);">
+                <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.8rem; font-weight: 700; color: #198754; text-transform: uppercase; letter-spacing: 1px; margin: 0;">Área do Cliente</h2>
             </div>
 
             <div class="ph-profile">

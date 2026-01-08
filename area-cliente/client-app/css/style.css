@@ -15,8 +15,8 @@
     --color-danger: #dc3545;
 
     /* --- UI BASICS --- */
-    --bg-app: #f4f6f8;
-    /* Slightly more elegant gray */
+    --bg-app: #dce1e6;
+    /* Darker gray for desktop background contrast */
     --bg-card: #ffffff;
     --bg-nav: #ffffff;
     --text-main: #1a1a1a;
@@ -81,15 +81,26 @@ a {
 }
 
 /* --- APP LAYOUT --- */
+/* --- APP LAYOUT --- */
 .app-container {
     width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    min-height: 100vh;
+    max-width: 500px;
+    /* Reduced from 600px for tighter mobile feel */
+    margin: 30px auto;
+    /* Added top/bottom margin */
+    padding: 0;
+    /* Padding handled by children */
+    min-height: calc(100vh - 60px);
     position: relative;
-    /* Ensure no horizontal overflow */
     overflow-x: hidden;
+    background-color: #f9f9f9;
+    /* App background */
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+    /* Drop shadow to simulate device */
+    border-radius: 20px;
+    /* Rounded corners for the 'device' */
+    overflow: hidden;
+    /* Clip header corners */
 }
 
 /* Fix for very small screens */
