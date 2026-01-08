@@ -130,30 +130,30 @@ function get_pendency_files($p_id) {
     <style>
         body { background: #f4f6f8; }
         
-        /* HEADER - GRAY THEME (PREMIUM) */
+        /* HEADER - RED THEME (Premium) */
         .page-header {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); /* Light Gray Gradient */
+            background: linear-gradient(135deg, #f8d7da 0%, #f1aeb5 100%); /* Light Red Gradient */
             border-bottom: none;
             padding: 30px 25px; 
             border-bottom-left-radius: 30px; 
             border-bottom-right-radius: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
+            box-shadow: 0 10px 30px rgba(220, 53, 69, 0.15); 
             margin-bottom: 30px;
             display: flex; align-items: center; justify-content: space-between;
-            color: #343a40; /* Dark Text */
+            color: #842029; /* Dark Red Text */
             position: relative;
             overflow: hidden;
-            border: 1px solid #dee2e6;
+            border: 1px solid #f5c2c7;
         }
         
         .page-header::after {
             content: ''; position: absolute; top: -50px; right: -50px;
-            width: 150px; height: 150px; background: rgba(0,0,0,0.03);
+            width: 150px; height: 150px; background: rgba(255,255,255,0.4);
             border-radius: 50%; pointer-events: none;
         }
 
         .btn-back {
-            text-decoration: none; color: #343a40; font-weight: 600; 
+            text-decoration: none; color: #842029; font-weight: 600; 
             display: flex; align-items: center; gap: 8px;
             padding: 10px 20px; 
             background: white; 
@@ -161,15 +161,15 @@ function get_pendency_files($p_id) {
             transition: 0.3s;
             font-size: 0.95rem;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            border: 1px solid #dee2e6;
+            border: 1px solid #f5c2c7;
         }
-        .btn-back:hover { background: #f8f9fa; transform: translateX(-3px); }
+        .btn-back:hover { background: #fff5f5; transform: translateX(-3px); }
         
         .header-title-box {
             display: flex; flex-direction: column; align-items: flex-end; text-align: right;
         }
-        .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #212529; }
-        .header-title-sub { font-size: 0.8rem; opacity: 0.7; font-weight: 500; margin-top: 2px; color: #6c757d; }
+        .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #58151c; }
+        .header-title-sub { font-size: 0.8rem; opacity: 0.8; font-weight: 500; margin-top: 2px; color: #842029; }
     </style>
 </head>
 <body>

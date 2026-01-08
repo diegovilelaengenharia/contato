@@ -52,30 +52,30 @@ if($drive_link) {
     <style>
         body { background: #f4f6f8; }
         
-        /* HEADER - GRAY THEME (PREMIUM) */
+        /* HEADER - BLUE THEME (Premium) */
         .page-header {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); /* Light Gray Gradient */
+            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%); /* Light Blue/Cyan Gradient */
             border-bottom: none;
             padding: 30px 25px; 
             border-bottom-left-radius: 30px; 
             border-bottom-right-radius: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
-            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(13, 202, 240, 0.15); 
+            margin-bottom: 30px;
             display: flex; align-items: center; justify-content: space-between;
-            color: #343a40; /* Dark Text */
+            color: #006064; /* Dark Cyan Text */
             position: relative;
             overflow: hidden;
-            border: 1px solid #dee2e6;
+            border: 1px solid #bcecf5;
         }
         
         .page-header::after {
             content: ''; position: absolute; top: -50px; right: -50px;
-            width: 150px; height: 150px; background: rgba(0,0,0,0.03);
+            width: 150px; height: 150px; background: rgba(255,255,255,0.4);
             border-radius: 50%; pointer-events: none;
         }
 
         .btn-back {
-            text-decoration: none; color: #343a40; font-weight: 600; 
+            text-decoration: none; color: #006064; font-weight: 600; 
             display: flex; align-items: center; gap: 8px;
             padding: 10px 20px; 
             background: white; 
@@ -83,16 +83,16 @@ if($drive_link) {
             transition: 0.3s;
             font-size: 0.95rem;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            border: 1px solid #dee2e6;
+            border: 1px solid #bcecf5;
         }
-        .btn-back:hover { background: #f8f9fa; transform: translateX(-3px); }
+        .btn-back:hover { background: #e6fcff; transform: translateX(-3px); }
         .btn-back:active { transform: scale(0.95); }
         
         .header-title-box {
             display: flex; flex-direction: column; align-items: flex-end; text-align: right;
         }
-        .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #212529; }
-        .header-title-sub { font-size: 0.8rem; opacity: 0.7; font-weight: 500; margin-top: 2px; color: #6c757d; }
+        .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #006064; }
+        .header-title-sub { font-size: 0.8rem; opacity: 0.8; font-weight: 500; margin-top: 2px; color: #00838f; }
 
         .drive-card {
             background: white;
