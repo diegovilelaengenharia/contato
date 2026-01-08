@@ -312,66 +312,66 @@ body {
 
 /* Cadastro (Default Blue) */
 .tab-btn[href*="tab=cadastro"]:hover {
-    color: #0d6efd;
-    border-color: #0d6efd;
+    color: var(--color-primary);
+    border-color: var(--color-primary);
     background: #fff;
 }
 
 .tab-btn[href*="tab=cadastro"].active {
-    background: #0d6efd;
-    border-color: #0d6efd;
+    background: var(--color-primary);
+    border-color: var(--color-primary);
     color: white;
 }
 
 /* Linha do Tempo (Teal/Cyan) */
 .tab-btn[href*="tab=andamento"]:hover {
-    color: #0dcaf0;
-    border-color: #0dcaf0;
+    color: var(--color-primary);
+    border-color: var(--color-primary);
     background: #fff;
 }
 
 .tab-btn[href*="tab=andamento"].active {
-    background: #0dcaf0;
-    border-color: #0dcaf0;
+    background: var(--color-primary);
+    border-color: var(--color-primary);
     color: white;
 }
 
 /* Pendências (Orange/Warning) */
 .tab-btn[href*="tab=pendencias"]:hover {
-    color: #fd7e14;
-    border-color: #fd7e14;
+    color: var(--color-primary);
+    border-color: var(--color-primary);
     background: #fff;
 }
 
 .tab-btn[href*="tab=pendencias"].active {
-    background: #fd7e14;
-    border-color: #fd7e14;
+    background: var(--color-primary);
+    border-color: var(--color-primary);
     color: white;
 }
 
 /* Financeiro (Green) */
 .tab-btn[href*="tab=financeiro"]:hover {
-    color: #198754;
-    border-color: #198754;
+    color: var(--color-primary);
+    border-color: var(--color-primary);
     background: #fff;
 }
 
 .tab-btn[href*="tab=financeiro"].active {
-    background: #198754;
-    border-color: #198754;
+    background: var(--color-primary);
+    border-color: var(--color-primary);
     color: white;
 }
 
 /* Arquivos (Indigo/Purple) */
 .tab-btn[href*="tab=arquivos"]:hover {
-    color: #6610f2;
-    border-color: #6610f2;
+    color: var(--color-primary);
+    border-color: var(--color-primary);
     background: #fff;
 }
 
 .tab-btn[href*="tab=arquivos"].active {
-    background: #6610f2;
-    border-color: #6610f2;
+    background: var(--color-primary);
+    border-color: var(--color-primary);
     color: white;
 }
 
@@ -499,17 +499,17 @@ body {
 }
 
 .btn-warning {
-    background: #ffc107;
+    background: var(--color-primary);
     color: #333;
 }
 
 .btn-info {
-    background: #0dcaf0;
+    background: var(--color-primary);
     color: #fff;
 }
 
 .btn-success {
-    background: #198754;
+    background: var(--color-primary);
 }
 
 .btn-secondary {
@@ -812,9 +812,9 @@ body {
 /* Novo Cliente Highlight (Yellow) */
 .btn-menu[href*="?novo=true"] {
     color: #333 !important;
-    background: linear-gradient(135deg, #ffc107, #ffdb72);
+    background: linear-gradient(135deg, var(--color-primary), #ffdb72);
     box-shadow: 0 4px 10px rgba(255, 193, 7, 0.3);
-    border: 1px solid #e0a800;
+    border: 1px solid var(--color-primary);
 }
 
 .btn-menu[href*="?novo=true"] .material-symbols-rounded {
@@ -1196,3 +1196,4 @@ html.sidebar-collapsed .sidebar-toggler {
 /* Adjust Layout specific for admin container if needed, handled inline in PHP usually or here */
 /* Avatar Style Fix */
 .nav-avatar-btn { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, #146c43, #0f5132); color: white; display: flex; align-items: center; justify-content: center; border: 2px solid #e9ecef; overflow: hidden; padding: 0; cursor: pointer; transition: 0.3s; } .nav-avatar-btn:hover { transform: scale(1.05); box-shadow: 0 4px 10px rgba(20, 108, 67, 0.25); }
+

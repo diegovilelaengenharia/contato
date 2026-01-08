@@ -104,7 +104,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
     
     <!-- STYLES -->
-    <link rel="stylesheet" href="css/style.css?v=3.1">
+    <link rel="stylesheet" href="css/style.css?v=3.2">
     <link rel="stylesheet" href="css/header-premium.css?v=<?= time() ?>">
     
     <style>
@@ -158,8 +158,12 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
     <div class="app-container" style="padding: 0;"> <!-- Remove padding here, controlled by inner elements -->
         
         <!-- HEADER STYLE PREMIUM WOW (Glass + Gradient) -->
-        <div style="text-align: center; margin-bottom: 15px; margin-top: 10px; opacity: 0.5; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #333;">
-            Área do Cliente
+        <div style="display: flex; justify-content: center; margin-bottom: 20px; margin-top: 20px;">
+            <div style="background: #fff; padding: 10px 30px; border-radius: 50px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center;">
+                <span style="font-size: 0.9rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: #146c43; background: linear-gradient(90deg, #146c43, #25D366); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    Área do Cliente
+                </span>
+            </div>
         </div>
         <header class="premium-header" style="flex-direction: column; gap: 10px; align-items: stretch;">
             
