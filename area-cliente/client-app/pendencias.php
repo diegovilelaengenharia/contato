@@ -1,18 +1,8 @@
 <?php
-// CRITICAL DEBUGGING - CATCH FATAL ERRORS
-function shutdown_handler() {
-    $error = error_get_last();
-    if ($error !== NULL && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
-        echo '<div style="background:red; color:white; padding:20px; font-weight:bold; position:fixed; top:0; left:0; width:100%; z-index:999999;">';
-        echo 'FATAL ERROR: ' . $error['message'] . ' in ' . $error['file'] . ':' . $error['line'];
-        echo '</div>';
-    }
-}
-register_shutdown_function('shutdown_handler');
-
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// PRODUCTION SETTINGS
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
+error_reporting(0);
 
 session_set_cookie_params(0, '/');
 session_name('CLIENTE_SESSID');
