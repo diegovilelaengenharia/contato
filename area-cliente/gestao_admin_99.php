@@ -437,7 +437,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         
                         <div style="display:flex; gap:10px; align-items:center;">
                              <!-- Botão Novo Andamento (Integrado) -->
-                            <button type="button" onclick="document.getElementById('modalAndamento').showModal()" style="padding:10px 20px; background:linear-gradient(135deg, #6610f2, #8540f5); border:none; border-radius:30px; font-size:0.9rem; font-weight:700; color:white; cursor:pointer; display:flex; align-items:center; gap:8px; transition:all 0.2s; box-shadow:0 3px 6px rgba(102, 16, 242, 0.3);">
+                            <button type="button" onclick="document.getElementById('modalAndamento').showModal()" style="padding:10px 20px; background:linear-gradient(135deg, #198754, #146c43); border:none; border-radius:30px; font-size:0.9rem; font-weight:700; color:white; cursor:pointer; display:flex; align-items:center; gap:8px; transition:all 0.2s; box-shadow:0 3px 6px rgba(25, 135, 84, 0.3);">
                                 <span style="font-size:1.2rem;">✨</span> Novo Andamento
                             </button>
                             
@@ -446,7 +446,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                              <!-- Botão Apagar Histórico (Perigo) -->
                             <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento&del_all_hist=true" 
                                onclick="return confirm('ATENÇÃO EXTREMA: \n\nVocê está prestes a APAGAR TODO O HISTÓRICO deste processo.\n\nIsso limpará todas as movimentações, datas e logs.\n\nTem certeza absoluta que deseja fazer isso?');"
-                               style="background:#fff0f3; color:#dc3545; padding:10px 15px; border:1px solid #ffdee6; border-radius:30px; font-size:0.8rem; text-decoration:none; font-weight:700; display:flex; align-items:center; gap:5px; margin-left:10px;" title="Limpar Tudo">
+                               style="background:#f8f9fa; color:#6c757d; padding:10px 15px; border:1px solid #dee2e6; border-radius:30px; font-size:0.8rem; text-decoration:none; font-weight:700; display:flex; align-items:center; gap:5px; margin-left:10px;" title="Limpar Tudo">
                                ⏱️ Limpar
                             </a>
                         </div>
@@ -552,14 +552,14 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         </div>
                         
                         <div style="text-align:right;">
-                             <button onclick="document.getElementById('modalNovaPendencia').showModal()" style="padding:8px 15px; background:linear-gradient(135deg, #fd7e14, #ff9800); border:none; border-radius:30px; font-size:0.8rem; font-weight:700; color:white; cursor:pointer; display:inline-flex; align-items:center; gap:5px; box-shadow:0 4px 10px rgba(253, 126, 20, 0.3); transition:all 0.2s; margin-left:10px;">
+                             <button onclick="document.getElementById('modalNovaPendencia').showModal()" style="padding:8px 15px; background:linear-gradient(135deg, #198754, #146c43); border:none; border-radius:30px; font-size:0.8rem; font-weight:700; color:white; cursor:pointer; display:inline-flex; align-items:center; gap:5px; box-shadow:0 4px 10px rgba(25, 135, 84, 0.3); transition:all 0.2s; margin-left:10px;">
                                 <span style="font-size:1rem;">➕</span> Nova Pendência
                             </button>
                             
                             <!-- Botão Limpar Pasta -->
                             <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias&clear_all_files=true" 
                                onclick="return confirm('ATENÇÃO: Isso apagará TODOS os arquivos anexados nas pendências deste cliente.\n\nDeseja continuar?')"
-                               style="background:#f8d7da; color:#dc3545; padding:8px 15px; border-radius:30px; font-size:0.8rem; font-weight:700; text-decoration:none; border:1px solid #f5c6cb; display:inline-flex; align-items:center; gap:5px;">
+                               style="background:#f8f9fa; color:#6c757d; padding:8px 15px; border-radius:30px; font-size:0.8rem; font-weight:700; text-decoration:none; border:1px solid #dee2e6; display:inline-flex; align-items:center; gap:5px;">
                                 🗑️ Limpar Pasta de Arquivos
                             </a>
 
@@ -588,7 +588,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             
                             $msg_wpp_pend .= "\nVocê pode anexar os documentos ou ver mais detalhes acessando sua Área do Cliente:\nhttps://vilela.eng.br/area-cliente/\n\nQualquer dúvida, fique à vontade para me chamar!";
                             ?>
-                             <a href="https://wa.me/55<?= preg_replace('/\D/','',$detalhes['contato_tel']??'') ?>?text=<?= urlencode($msg_wpp_pend) ?>" target="_blank" class="btn-save" style="background:#25D366; color:white; border:none; margin-left:10px; padding:8px 15px;">
+                             <a href="https://wa.me/55<?= preg_replace('/\D/','',$detalhes['contato_tel']??'') ?>?text=<?= urlencode($msg_wpp_pend) ?>" target="_blank" class="btn-save" style="background:#198754; color:white; border:none; margin-left:10px; padding:8px 15px;">
                                 📱 Cobrar no WhatsApp
                             </a>
                         </div>
@@ -741,7 +741,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             <input type="text" name="link_drive_pasta" value="<?= $detalhes['link_drive_pasta']??'' ?>" placeholder="https://drive.google.com/...">
                         </div>
 
-                        <button type="submit" name="btn_salvar_arquivos" class="btn-save" style="background:#0d6efd; color:white; border:none; box-shadow:0 4px 10px rgba(13, 110, 253, 0.3);">Salvar Links</button>
+                        <button type="submit" name="btn_salvar_arquivos" class="btn-save" style="background:#198754; color:white; border:none; box-shadow:0 4px 10px rgba(25, 135, 84, 0.3);">Salvar Links</button>
                     </form>
 
                     <?php 
@@ -778,7 +778,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         <h3 style="margin:0; color:#198754;">💰 Fluxo Financeiro</h3>
                         <p style="margin:5px 0 0 0; font-size:0.9rem; color:#666;">Gerencie honorários, taxas e despesas do processo.</p>
                     </div>
-                    <button type="button" onclick="document.getElementById('modalFinanceiro').showModal()" style="background:linear-gradient(135deg, #198754, #20c997); color:white; border:none; padding:12px 25px; border-radius:30px; font-weight:700; font-size:1rem; cursor:pointer; display:flex; align-items:center; gap:8px; box-shadow:0 4px 15px rgba(25, 135, 84, 0.3); transition:all 0.2s;">
+                    <button type="button" onclick="document.getElementById('modalFinanceiro').showModal()" style="background:linear-gradient(135deg, #198754, #146c43); color:white; border:none; padding:12px 25px; border-radius:30px; font-weight:700; font-size:1rem; cursor:pointer; display:flex; align-items:center; gap:8px; box-shadow:0 4px 15px rgba(25, 135, 84, 0.3); transition:all 0.2s;">
                         <span style="font-size:1.2rem;">➕</span> Novo Lançamento
                     </button>
                 </div>
