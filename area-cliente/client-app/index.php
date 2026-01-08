@@ -314,21 +314,24 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
 
         <!-- FOOTER PREMIUM -->
         <footer class="premium-footer" style="padding: 30px 20px; background: #fff; border-top: 1px solid #eee;">
-            <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px;">
-                <!-- Left: Logo -->
+            <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
+                <!-- Logo -->
                 <div style="flex-shrink: 0;">
-                    <img src="../../assets/logo.png" alt="Vilela Engenharia" style="max-height: 55px; opacity: 1;">
+                    <img src="../../assets/logo.png" alt="Vilela Engenharia" style="max-height: 50px; opacity: 1;">
                 </div>
                 
-                <!-- Right: Info -->
-                <div style="text-align: right;">
-                    <span style="display:block; font-size: 0.7rem; color: #999; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Engenheiro Responsável</span>
-                    <span style="display:block; font-size: 1.05rem; font-weight: 700; color: #333; margin: 3px 0;">Diego T. N. Vilela</span>
-                    <span style="display:block; font-size: 0.85rem; color: #666;">Engenheiro Civil · CREA 235.474/D</span>
+                <!-- Vertical Divider (Optional, subtle) -->
+                <div style="width:1px; height:40px; background:#eee;"></div>
+
+                <!-- Info -->
+                <div style="text-align: left;">
+                    <span style="display:block; font-size: 0.65rem; color: #999; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; line-height:1;">Engenheiro Responsável</span>
+                    <span style="display:block; font-size: 0.95rem; font-weight: 700; color: #333; margin: 2px 0; line-height:1.2;">Diego T. N. Vilela</span>
+                    <span style="display:block; font-size: 0.75rem; color: #666; line-height:1;">CREA 235.474/D</span>
                 </div>
             </div>
-            <div style="margin-top: 15px; font-size: 0.7rem; color: #ccc; text-align: center;">
-                &copy; <?= date('Y') ?> Vilela Engenharia. Todos os direitos reservados.
+            <div style="margin-top: 20px; font-size: 0.7rem; color: #ccc; text-align: center;">
+                &copy; <?= date('Y') ?> Vilela Engenharia
             </div>
         </footer>
 
