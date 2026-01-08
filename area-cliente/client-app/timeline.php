@@ -167,16 +167,7 @@ $obs_atual = $stmt_obs->fetchColumn();
                     </div>
                 </div>
                 
-                <!-- Card Footer (Progress Bar Visual) -->
-                <div style="background:#f8f9fa; padding:10px 20px; border-top:1px solid #eee; display:flex; align-items:center; justify-content:space-between;">
-                   <span style="font-size:0.75rem; color:#666; font-weight:600;">Progresso Geral</span>
-                   <div style="display:flex; align-items:center; gap:10px;">
-                        <div style="width:100px; height:6px; background:#e9ecef; border-radius:3px; overflow:hidden;">
-                            <div style="width:<?= $porcentagem ?>%; height:100%; background:#198754;"></div>
-                        </div>
-                        <span style="font-size:0.8rem; font-weight:700; color:#198754;"><?= $porcentagem ?>%</span>
-                   </div>
-                </div>
+
             </div>
             <?php endif; ?>
 
