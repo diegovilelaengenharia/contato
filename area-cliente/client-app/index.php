@@ -167,7 +167,6 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
         .pf-logo { height: 50px; margin-bottom: 10px; filter: grayscale(1); opacity: 0.7; }
         .pf-text { font-size: 0.9rem; color: #999; line-height: 1.6; } /* Font size increased */
         .pf-strong { color: #555; font-weight: 700; display: block; margin-top: 5px; font-size: 1rem;} 
-
     </style>
 </head>
 <body>
@@ -210,18 +209,25 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             
             <div class="app-action-grid">
                 
+                <?php
+                    // --- LOGIC: Fetch Titles Safe ---
+                    // 1. Latest Pendency (Safe Fetch)
+                    $last_pend_name = '';
+                    try {
+                        $stmt_lp = $pdo->prepare("SELECT titulo FROM processo_pendencias WHERE cliente_id = ? AND status != 'resolvido' ORDER BY data_criacao DESC LIMIT 1");
+                        $stmt_lp->execute([$cliente_id]);
+                        $res_lp = $stmt_lp->fetchColumn();
+                        if($res_lp) $last_pend_name = $res_lp;
+                    } catch(Exception $e) { $last_pend_name = ''; }
 
-                <!-- LOGIC: Fetch Latest Pendency and Finance -->
-                 <?php
-                    // Latest Pendency Name
-                    $stmt_last_pend = $pdo->prepare("SELECT titulo FROM processo_pendencias WHERE cliente_id = ? AND status != 'resolvido' ORDER BY data_criacao DESC LIMIT 1");
-                    $stmt_last_pend->execute([$cliente_id]);
-                    $last_pend_name = $stmt_last_pend->fetchColumn(); 
-
-                    // Latest Finance Name
-                     $stmt_last_fin = $pdo->prepare("SELECT titulo FROM processo_financeiro WHERE cliente_id = ? AND (status = 'pendente' OR status = 'atrasado') ORDER BY data_vencimento ASC LIMIT 1");
-                    $stmt_last_fin->execute([$cliente_id]);
-                    $last_fin_name = $stmt_last_fin->fetchColumn();
+                    // 2. Latest Finance (Safe Fetch)
+                    $last_fin_name = '';
+                    try {
+                        $stmt_lf = $pdo->prepare("SELECT titulo FROM processo_financeiro WHERE cliente_id = ? AND (status = 'pendente' OR status = 'atrasado') ORDER BY data_vencimento ASC LIMIT 1");
+                        $stmt_lf->execute([$cliente_id]);
+                        $res_lf = $stmt_lf->fetchColumn();
+                        if($res_lf) $last_fin_name = $res_lf;
+                    } catch(Exception $e) { $last_fin_name = ''; }
                 ?>
 
                 <!-- 1. RESUMO -->
