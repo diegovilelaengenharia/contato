@@ -170,33 +170,7 @@ function get_pendency_files($p_id) {
         }
         .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #58151c; }
         .header-title-sub { font-size: 0.8rem; opacity: 0.8; font-weight: 500; margin-top: 2px; color: #842029; }
-    </style>
-</head>
-<body>
 
-    <div class="app-container">
-        
-        <!-- HEADER -->
-        <div class="page-header">
-            <!-- Left: Back Button -->
-            <a href="index.php" class="btn-back">
-                <span class="material-symbols-rounded">arrow_back</span> Voltar
-            </a>
-
-            <!-- Right: Title & Icon -->
-            <div style="display:flex; align-items:center; gap:15px; z-index:2;">
-                 <div class="header-title-box">
-                    <span class="header-title-main">Pendências</span>
-                    <span class="header-title-sub">Ações Necessárias</span>
-                 </div>
-                 
-                 <!-- Icon -->
-                 <div style="background: white; border:1px solid #dee2e6; color: #e65100; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-                    ⚠️
-                 </div>
-            </div>
-        </div>
-        
         .status-badge {
             padding: 4px 10px; border-radius: 20px;
             font-size: 0.7rem; font-weight: 700;
@@ -233,9 +207,22 @@ function get_pendency_files($p_id) {
         
         <!-- HEADER -->
         <div class="page-header">
-            <div style="display:flex; align-items:center; gap:15px;">
-                <a href="index.php" class="btn-back"><span>←</span> Voltar</a>
-                <h1 style="font-size:1.2rem; margin:0; font-weight: 700;">Pendências</h1>
+            <!-- Left: Back Button -->
+            <a href="index.php" class="btn-back">
+                <span class="material-symbols-rounded">arrow_back</span> Voltar
+            </a>
+
+            <!-- Right: Title & Icon -->
+            <div style="display:flex; align-items:center; gap:15px; z-index:2;">
+                 <div class="header-title-box">
+                    <span class="header-title-main">Pendências</span>
+                    <span class="header-title-sub">Ações Necessárias</span>
+                 </div>
+                 
+                 <!-- Icon -->
+                 <div style="background: white; border:1px solid #f5c2c7; color: #dc3545; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(220, 53, 69, 0.1);">
+                    ⚠️
+                 </div>
             </div>
         </div>
 

@@ -137,9 +137,6 @@ function formatMoney($val) {
                  </div>
             </div>
         </div>
-            </h1>
-        </div>
-
         <div style="padding: 0 20px;">
             <!-- KPI SUMMARY -->
             <div class="fin-summary">
