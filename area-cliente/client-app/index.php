@@ -166,13 +166,21 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
     <div class="app-container" style="padding: 0;"> <!-- Remove padding here, controlled by inner elements -->
         
         <!-- HEADER STYLE PREMIUM WOW (Glass + Gradient) -->
+        <!-- HEADER STYLE PREMIUM WOW (Glass + Gradient) -->
         <div style="display: flex; justify-content: center; margin-bottom: 20px; margin-top: 20px;">
-            <div style="background: #fff; padding: 10px 30px; border-radius: 50px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center;">
-                <span style="font-size: 0.9rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: #146c43; background: linear-gradient(90deg, #146c43, #25D366); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            <div style="background: #fff; padding: 12px 35px; border-radius: 50px; box-shadow: 0 10px 25px rgba(218, 165, 32, 0.15); border: 1px solid rgba(218, 165, 32, 0.1); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+                <!-- Shine Effect Background -->
+                <div style="position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent); animation: shine 3s infinite;"></div>
+                
+                <span style="font-size: 1rem; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; background: linear-gradient(45deg, #B8860B, #FFD700, #F0E68C, #DAA520); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% auto; animation: textShine 4s linear infinite;">
                     Área do Cliente
                 </span>
             </div>
         </div>
+        <style>
+            @keyframes shine { 0% { left: -100%; } 20% { left: 100%; } 100% { left: 100%; } }
+            @keyframes textShine { to { background-position: 200% center; } }
+        </style>
         <header class="premium-header" style="flex-direction: column; gap: 10px; align-items: stretch;">
             
             <div style="display: flex; align-items: center; justify-content: space-between;">
