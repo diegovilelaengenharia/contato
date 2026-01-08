@@ -557,7 +557,11 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         </div>
                         
                         <div style="text-align:right;">
-                             <!-- Botão Limpar Pasta -->
+                             <button onclick="document.getElementById('modalNovaPendencia').showModal()" style="padding:8px 15px; background:linear-gradient(135deg, #fd7e14, #ff9800); border:none; border-radius:30px; font-size:0.8rem; font-weight:700; color:white; cursor:pointer; display:inline-flex; align-items:center; gap:5px; box-shadow:0 4px 10px rgba(253, 126, 20, 0.3); transition:all 0.2s; margin-left:10px;">
+                                <span style="font-size:1rem;">➕</span> Nova Pendência
+                            </button>
+                            
+                            <!-- Botão Limpar Pasta -->
                             <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias&clear_all_files=true" 
                                onclick="return confirm('ATENÇÃO: Isso apagará TODOS os arquivos anexados nas pendências deste cliente.\n\nDeseja continuar?')"
                                style="background:#f8d7da; color:#dc3545; padding:8px 15px; border-radius:30px; font-size:0.8rem; font-weight:700; text-decoration:none; border:1px solid #f5c6cb; display:inline-flex; align-items:center; gap:5px;">
@@ -716,15 +720,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     </div>
 
                     <!-- Novo Form de Inserção Rápida (MOVIDO PARA BAIXO) -->
-                    <!-- Botão Nova Pendência (Modal) -->
-                    <div style="background:#fff3e0; padding:20px; border-radius:12px; border:1px solid #ffe0b2; margin-bottom:25px; display:flex; justify-content:space-between; align-items:center;">
-                        <div style="color:#ef6c00; font-weight:bold; font-size:1.1rem;">
-                            Nova Pendência e/ou Solicitação de Documento
-                        </div>
-                        <button onclick="document.getElementById('modalNovaPendencia').showModal()" style="padding:10px 25px; background:linear-gradient(135deg, #fd7e14, #ff9800); border:none; border-radius:30px; font-size:0.95rem; font-weight:700; color:white; cursor:pointer; display:flex; align-items:center; gap:8px; box-shadow:0 4px 10px rgba(253, 126, 20, 0.3); transition:all 0.2s;">
-                            <span style="font-size:1.2rem;">➕</span> Criar Pendência
-                        </button>
-                    </div>
+
                     
                 </div>
 
