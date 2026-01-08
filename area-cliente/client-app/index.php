@@ -185,12 +185,14 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
         
         <!-- HEADER PREMIUM v4.0 -->
         <header class="premium-header">
-            <!-- Bell Notification -->
-            <div onclick="document.getElementById('modalNotificacoes').classList.add('open')" style="position:absolute; top:25px; right:20px; cursor:pointer; background:rgba(255,255,255,0.2); padding:10px; border-radius:50%; backdrop-filter:blur(5px); z-index:10;" title="Notificações">
+            <!-- Bell Notification (Modern & Animated) -->
+            <div onclick="document.getElementById('modalNotificacoes').classList.add('open')" class="bell-container" title="Notificações">
                 <div style="position:relative;">
-                    <span style="font-size:1.6rem;">🔔</span>
+                    <svg class="bell-icon bell-ringing" viewBox="0 0 24 24">
+                        <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/>
+                    </svg>
                     <?php if($total_notif > 0): ?>
-                        <span style="position:absolute; top:-2px; right:-2px; background:#ffc107; color:#333; font-size:0.7rem; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; border:2px solid rgba(255,255,255,0.5);"><?= $total_notif ?></span>
+                        <span class="notif-badge"><?= $total_notif ?></span>
                     <?php endif; ?>
                 </div>
             </div>
