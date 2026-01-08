@@ -5,24 +5,58 @@
         <button onclick="document.getElementById('modalTimelineFull').close()" style="border:none; background:none; font-size:1.5rem; cursor:pointer;">&times;</button>
     </div>
     <div style="padding:20px; max-height:60vh; overflow-y:auto;">
-        <div style="display:flex; flex-direction:column; gap:4px;">
-            <?php foreach($fases_padrao as $i => $f): 
-                    $found_idx = array_search(($detalhes['etapa_atual']??''), $fases_padrao);
-                    if($found_idx === false) $found_idx = -1;
-                    
-                    $is_past = $i < $found_idx;
-                    $is_active = $i == $found_idx;
-                    $color = $is_active ? 'var(--color-primary)' : ($is_past ? '#198754' : '#ccc');
-                    $icon = $is_past ? '✅' : ($is_active ? '📍' : '▫️');
-                    $weight = $is_active ? '700' : '400';
-                    $bg_item = $is_active ? '#e8f5e9' : 'transparent';
-            ?>
-                <div style="display:flex; align-items:center; gap:10px; padding:8px; border-radius:6px; background:<?= $bg_item ?>">
-                    <span style="font-size:1rem;"><?= $icon ?></span>
-                    <span style="color:<?= $color ?>; font-weight:<?= $weight ?>; font-size:0.9rem;"><?= $f ?></span>
+        <?php 
+            // Define Groups
+            $grupos = [
+                '🚀 Fase Inicial' => array_slice($fases_padrao, 0, 4), // 0-3
+                '🏗️ Análise Técnica' => array_slice($fases_padrao, 4, 2), // 4-5
+                '📄 Emissão de Documentos' => array_slice($fases_padrao, 6, 3) // 6-8
+            ];
+            
+            $global_index = 0;
+            $found_idx = array_search(($detalhes['etapa_atual']??''), $fases_padrao);
+            if($found_idx === false) $found_idx = -1;
+
+            foreach($grupos as $nome_grupo => $fases_grupo):
+        ?>
+            <div style="margin-bottom:20px;">
+                <h4 style="margin:0 0 10px 0; font-size:0.85rem; color:#999; text-transform:uppercase; font-weight:700; letter-spacing:1px; background:#fff; padding:5px 0; border-radius:4px; display:inline-block;">
+                    <?= $nome_grupo ?>
+                </h4>
+                
+                <div style="padding-left:15px; border-left: 2px solid #f0f0f0;">
+                <?php
+                    foreach($fases_grupo as $fase):
+                        $is_past = $global_index < $found_idx;
+                        $is_curr = $global_index === $found_idx;
+                        
+                        // Icons
+                        $icon_display = '▫️'; 
+                        if($is_past) $icon_display = '✅';
+                        if($is_curr) $icon_display = '📍';
+                        
+                        $text_style = $is_curr ? 'font-weight:700; color:#333;' : ($is_past ? 'color:#198754;' : 'color:#aaa;');
+                        $bg_item = $is_curr ? '#fff' : 'transparent';
+                        $border_item = $is_curr ? '1px solid #198754' : '1px solid transparent';
+                ?>
+                    <div style="display:flex; align-items:center; gap:10px; padding:8px; border-radius:6px; background:<?= $bg_item ?>; border:<?= $border_item ?>; margin-bottom:5px;">
+                        <span style="font-size:1.2rem; min-width:25px; text-align:center;"><?= $icon_display ?></span>
+                        <div style="display:flex; flex-direction:column;">
+                            <span style="font-size:0.9rem; <?= $text_style ?>">
+                                <?= $fase ?>
+                            </span>
+                            <?php if($is_curr): ?>
+                                <span style="font-size:0.7rem; color:#198754; font-weight:700; text-transform:uppercase;">Em Andamento</span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                <?php 
+                    $global_index++; 
+                    endforeach; 
+                ?>
                 </div>
-            <?php endforeach; ?>
-        </div>
+            </div>
+        <?php endforeach; ?>
     </div>
 </dialog>
 
