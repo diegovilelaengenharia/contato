@@ -1283,4 +1283,5 @@ a {
 .social-btn:hover .social-tooltip {
     opacity: 1;
     right: 70px;
-}
+}@ m e d i a   ( m i n - w i d t h :   7 6 8 p x )   {   . h i s t o r y - l i s t ,   . p e n d e n c y - g r i d   {   d i s p l a y :   g r i d ;   g r i d - t e m p l a t e - c o l u m n s :   r e p e a t ( a u t o - f i t ,   m i n m a x ( 4 0 0 p x ,   1 f r ) ) ;   g a p :   2 0 p x ;   }   }  
+ 

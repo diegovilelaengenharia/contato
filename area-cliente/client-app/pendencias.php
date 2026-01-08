@@ -229,6 +229,7 @@ function get_pendency_files($p_id) {
                 <!-- ABERTAS -->
                 <?php if(count($abertas) > 0): ?>
                     <h3 class="section-title"><span class="material-symbols-rounded" style="color:#e65100;">warning</span> Pendências em Aberto</h3>
+                    <div class="pendency-grid">
                     <?php foreach($abertas as $p): 
                         $anexos = get_pendency_files($p['id']);
                         $has_attachment = !empty($anexos);
@@ -276,6 +277,7 @@ function get_pendency_files($p_id) {
                         </div>
                     </div>
                     <?php endforeach; ?>
+                    </div>
                 <?php endif; ?>
             </div>
             <div style="text-align: center; margin-top: 20px; padding-bottom: 20px;">
