@@ -43,6 +43,7 @@ function formatMoney($val) {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
     
     <!-- STYLES -->
     <link rel="stylesheet" href="css/style.css?v=2.7.4">
@@ -50,28 +51,48 @@ function formatMoney($val) {
     <style>
         body { background: #f4f6f8; }
         
+        /* HEADER - GRAY THEME (PREMIUM) */
         .page-header {
-            background: #fff3cd; /* Light Yellow */
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); /* Light Gray Gradient */
             border-bottom: none;
-            padding: 25px 20px; 
-            border-bottom-left-radius: 20px; 
-            border-bottom-right-radius: 20px;
-            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.1); 
+            padding: 30px 25px; 
+            border-bottom-left-radius: 30px; 
+            border-bottom-right-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
             margin-bottom: 25px;
-            display: flex; align-items: center; gap: 10px;
-            color: #856404;
+            display: flex; align-items: center; justify-content: space-between;
+            color: #343a40; /* Dark Text */
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #dee2e6;
         }
         
-        .btn-back {
-            text-decoration: none; color: #856404; font-weight: 600; 
-            display: flex; align-items: center; gap: 5px;
-            padding: 8px 16px; background: #fff; border-radius: 20px;
-            transition: 0.2s;
-            font-size: 0.9rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        .page-header::after {
+            content: ''; position: absolute; top: -50px; right: -50px;
+            width: 150px; height: 150px; background: rgba(0,0,0,0.03);
+            border-radius: 50%; pointer-events: none;
         }
+
+        .btn-back {
+            text-decoration: none; color: #343a40; font-weight: 600; 
+            display: flex; align-items: center; gap: 8px;
+            padding: 10px 20px; 
+            background: white; 
+            border-radius: 25px;
+            transition: 0.3s;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid #dee2e6;
+        }
+        .btn-back:hover { background: #f8f9fa; transform: translateX(-3px); }
         .btn-back:active { transform: scale(0.95); }
         
+        .header-title-box {
+            display: flex; flex-direction: column; align-items: flex-end; text-align: right;
+        }
+        .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #212529; }
+        .header-title-sub { font-size: 0.8rem; opacity: 0.7; font-weight: 500; margin-top: 2px; color: #6c757d; }
+
         .fin-summary {
             display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
             margin-bottom: 25px;
@@ -98,11 +119,24 @@ function formatMoney($val) {
         
         <!-- HEADER -->
         <div class="page-header">
+            <!-- Left: Back Button -->
             <a href="index.php" class="btn-back">
-                <span>←</span> Voltar
+                <span class="material-symbols-rounded">arrow_back</span> Voltar
             </a>
-            <h1 style="font-size: 1.3rem; margin: 0; display: flex; align-items: center; gap: 8px;">
-                <span>💰</span> Financeiro
+
+            <!-- Right: Title & Icon -->
+            <div style="display:flex; align-items:center; gap:15px; z-index:2;">
+                 <div class="header-title-box">
+                    <span class="header-title-main">Financeiro</span>
+                    <span class="header-title-sub">Pagamentos e Previsões</span>
+                 </div>
+                 
+                 <!-- Icon -->
+                 <div style="background: white; border:1px solid #dee2e6; color: #ffc107; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                    💰
+                 </div>
+            </div>
+        </div>
             </h1>
         </div>
 
