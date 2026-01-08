@@ -201,47 +201,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
 
         </header>
 
-        <!-- INFO CARD (Secondary) -->
-        <div class="info-card-container">
-            <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--color-primary); font-weight: 700; letter-spacing: 1px; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
-                Informações do Imóvel
-            </div>
-            
-            <div style="display: flex; flex-direction: column; gap: 12px;">
-                <!-- Endereço -->
-                <div style="display: flex; align-items: start; gap: 10px;">
-                    <span class="material-symbols-rounded" style="color: #999; font-size: 1.1rem; margin-top:2px;">location_on</span>
-                    <div>
-                        <span style="font-size: 0.95rem; font-weight: 600; color: #333; line-height: 1.4; display: block;">
-                            <?= htmlspecialchars($detalhes['endereco_imovel'] ?? 'Endereço não cadastrado') ?>
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="grid-area-proc" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 5px;">
-                    <!-- Área -->
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span class="material-symbols-rounded" style="color: #999; font-size: 1.1rem;">square_foot</span>
-                        <div>
-                            <span style="font-size: 0.7rem; color: #999; text-transform: uppercase; font-weight: 700; display: block;">Área Total</span>
-                            <span style="font-size: 0.9rem; font-weight: 600; color: #333;">
-                                <?= htmlspecialchars($detalhes['area_total_final'] ?? $detalhes['area_construida'] ?? '--') ?> m²
-                            </span>
-                        </div>
-                    </div>
-                    <!-- Processo -->
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span class="material-symbols-rounded" style="color: #999; font-size: 1.1rem;">folder_open</span>
-                        <div>
-                            <span style="font-size: 0.7rem; color: #999; text-transform: uppercase; font-weight: 700; display: block;">Processo</span>
-                            <span style="font-size: 0.9rem; font-weight: 600; color: #333;">
-                                <?= htmlspecialchars($detalhes['processo_numero'] ?? '---') ?>/<?= date('Y', strtotime($detalhes['data_inicio'] ?? 'now')) ?>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
 
         <!-- MAIN CONTENT (With Padding) -->
         <div style="padding: 0 20px;">
@@ -250,22 +210,32 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                 
                 <?php
                     // --- LOGIC: Fetch Titles Safe ---
-                    // 1. Latest Pendency (Safe Fetch)
+                    // 1. Latest Pendency (Safe Fetch - Title + Desc)
                     $last_pend_name = '';
                     try {
-                        $stmt_lp = $pdo->prepare("SELECT titulo FROM processo_pendencias WHERE cliente_id = ? AND status != 'resolvido' ORDER BY data_criacao DESC LIMIT 1");
+                        $stmt_lp = $pdo->prepare("SELECT titulo, descricao FROM processo_pendencias WHERE cliente_id = ? AND status != 'resolvido' ORDER BY data_criacao DESC LIMIT 1");
                         $stmt_lp->execute([$cliente_id]);
-                        $res_lp = $stmt_lp->fetchColumn();
-                        if($res_lp) $last_pend_name = $res_lp;
+                        $row_lp = $stmt_lp->fetch(PDO::FETCH_ASSOC);
+                        if($row_lp) {
+                            $last_pend_name = $row_lp['titulo'];
+                            if(!empty($row_lp['descricao'])) {
+                                $last_pend_name .= ' - ' . $row_lp['descricao'];
+                            }
+                        }
                     } catch(Exception $e) { $last_pend_name = ''; }
 
-                    // 2. Latest Finance (Safe Fetch)
+                    // 2. Latest Finance (Safe Fetch - Desc + Val)
                     $last_fin_name = '';
                     try {
-                        $stmt_lf = $pdo->prepare("SELECT descricao FROM processo_financeiro WHERE cliente_id = ? AND (status = 'pendente' OR status = 'atrasado') ORDER BY data_vencimento ASC LIMIT 1");
+                        $stmt_lf = $pdo->prepare("SELECT descricao, valor FROM processo_financeiro WHERE cliente_id = ? AND (status = 'pendente' OR status = 'atrasado') ORDER BY data_vencimento ASC LIMIT 1");
                         $stmt_lf->execute([$cliente_id]);
-                        $res_lf = $stmt_lf->fetchColumn();
-                        if($res_lf) $last_fin_name = $res_lf;
+                        $row_lf = $stmt_lf->fetch(PDO::FETCH_ASSOC);
+                        if($row_lf) {
+                            $last_fin_name = $row_lf['descricao'];
+                            if(!empty($row_lf['valor'])) {
+                                $last_fin_name .= ' (R$ ' . number_format($row_lf['valor'], 2, ',', '.') . ')';
+                            }
+                        }
                     } catch(Exception $e) { $last_fin_name = ''; }
                 ?>
 
@@ -273,7 +243,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                 <a href="../../area-cliente/relatorio_cliente.php?id=<?= $cliente['id'] ?>" target="_blank" class="app-button" style="border-left-color: #0d6efd;">
                     <div class="app-btn-icon" style="background:#e0f8fc; color:#0d6efd;">📋</div>
                     <div class="app-btn-content">
-                        <span class="app-btn-title">Resumo do Processo</span>
+                        <span class="app-btn-title">Resumo em PDF</span>
                         <span class="app-btn-desc">Visualize os dados principais</span>
                     </div>
                     <div class="app-btn-arrow" style="color:#0d6efd;">➔</div>
