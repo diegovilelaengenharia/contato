@@ -104,7 +104,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
     
     <!-- STYLES -->
-    <link rel="stylesheet" href="css/style.css?v=3.0">
+    <link rel="stylesheet" href="css/style.css?v=3.1">
     <link rel="stylesheet" href="css/header-premium.css?v=<?= time() ?>">
     
     <style>
