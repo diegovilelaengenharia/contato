@@ -45,23 +45,24 @@ function getWhatsappLink($pendency_desc) {
         body { background: #f4f6f8; }
         
         .page-header {
-            background: #fff;
-            border-bottom: 3px solid #dc3545; /* Red Border for Alert */
+            background: #f8d7da; /* Light Red */
+            border-bottom: none;
             padding: 25px 20px; 
-            border-bottom-left-radius: 0; 
-            border-bottom-right-radius: 0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+            border-bottom-left-radius: 20px; 
+            border-bottom-right-radius: 20px;
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.1); 
             margin-bottom: 25px;
             display: flex; align-items: center; gap: 10px;
-            color: #333;
+            color: #842029;
         }
         
         .btn-back {
-            text-decoration: none; color: #666; font-weight: 600; 
+            text-decoration: none; color: #842029; font-weight: 600; 
             display: flex; align-items: center; gap: 5px;
-            padding: 6px 12px; background: #f0f0f0; border-radius: 8px;
+            padding: 8px 16px; background: #fff; border-radius: 20px;
             transition: 0.2s;
             font-size: 0.9rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
         
         .btn-back:active { transform: scale(0.95); }
