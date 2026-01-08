@@ -300,7 +300,9 @@ function get_pendency_files($p_id) {
                                                 <?php endforeach; ?>
                                                 </div>
                                             <?php else: ?>
-                                                <span style="color: #ccc; font-size: 0.8rem;">-</span>
+                                                <div style="text-align:center;">
+                                                    <span class="material-symbols-rounded" style="color: #e9ecef; font-size: 1.4rem;" title="Nenhum arquivo anexado">description</span>
+                                                </div>
                                             <?php endif; ?>
                                         </td>
                                     </tr>
