@@ -556,13 +556,6 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                 <span style="font-size:1rem;">➕</span> Nova Pendência
                             </button>
                             
-                            <!-- Botão Limpar Pasta -->
-                            <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias&clear_all_files=true" 
-                               onclick="return confirm('ATENÇÃO: Isso apagará TODOS os arquivos anexados nas pendências deste cliente.\n\nDeseja continuar?')"
-                               style="background:#f8f9fa; color:#6c757d; padding:8px 15px; border-radius:30px; font-size:0.8rem; font-weight:700; text-decoration:none; border:1px solid #dee2e6; display:inline-flex; align-items:center; gap:5px;">
-                                🗑️ Limpar Pasta de Arquivos
-                            </a>
-
                             <?php 
                             // Movido para cá para usar no botão WhatsApp
                             $stmt_pend = $pdo->prepare("SELECT * FROM processo_pendencias WHERE cliente_id=? ORDER BY status ASC, id DESC");
@@ -588,8 +581,15 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             
                             $msg_wpp_pend .= "\nVocê pode anexar os documentos ou ver mais detalhes acessando sua Área do Cliente:\nhttps://vilela.eng.br/area-cliente/\n\nQualquer dúvida, fique à vontade para me chamar!";
                             ?>
-                             <a href="https://wa.me/55<?= preg_replace('/\D/','',$detalhes['contato_tel']??'') ?>?text=<?= urlencode($msg_wpp_pend) ?>" target="_blank" class="btn-save" style="background:#198754; color:white; border:none; margin-left:10px; padding:8px 15px;">
+                             <a href="https://wa.me/55<?= preg_replace('/\D/','',$detalhes['contato_tel']??'') ?>?text=<?= urlencode($msg_wpp_pend) ?>" target="_blank" class="btn-save" style="background:#ffc107; color:black; border:none; margin-left:10px; padding:8px 15px;">
                                 📱 Cobrar no WhatsApp
+                            </a>
+
+                            <!-- Botão Limpar Pasta (MOVIDO PARA FINAL) -->
+                            <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias&clear_all_files=true" 
+                               onclick="return confirm('ATENÇÃO: Isso apagará TODOS os arquivos anexados nas pendências deste cliente.\n\nDeseja continuar?')"
+                               style="background:#f8d7da; color:#dc3545; padding:8px 15px; border-radius:30px; font-size:0.8rem; font-weight:700; text-decoration:none; border:1px solid #f5c6cb; display:inline-flex; align-items:center; gap:5px; margin-left:10px;">
+                                🗑️ Limpar Pasta de Arquivos
                             </a>
                         </div>
                     </div>
