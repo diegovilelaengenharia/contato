@@ -41,10 +41,15 @@ $fases_padrao = [
     'Processo Finalizado (Documentos Prontos)'
 ];
 
-$etapa_atual = $detalhes['etapa_atual'] ?? 'Levantamento de Dados';
-$etapa_atual = trim($etapa_atual);
+$etapa_atual = trim($detalhes['etapa_atual'] ?? 'Abertura de Processo (Guichê)');
 $fase_index = array_search($etapa_atual, $fases_padrao);
 if($fase_index === false) $fase_index = 0; 
+$porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
+
+// BUSCAR OBSERVAÇÃO DA ETAPA ATUAL
+$stmt_obs = $pdo->prepare("SELECT descricao FROM processo_movimentos WHERE cliente_id = ? AND titulo_fase = ? ORDER BY data_movimento DESC LIMIT 1");
+$stmt_obs->execute([$cliente_id, $etapa_atual]);
+$obs_atual = $stmt_obs->fetchColumn();
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -90,12 +95,21 @@ if($fase_index === false) $fase_index = 0;
         
 
 
-        <!-- HEADER COM BOTÃO VOLTAR -->
-        <div class="page-header">
-            <a href="index.php" class="btn-back">
-                <span>←</span> Voltar
-            </a>
-            <h1 style="font-size:1.2rem; margin:0; color:#198754;">Linha do Tempo</h1>
+        <!-- HEADER COM BOTÃO VOLTAR + CHART -->
+        <div class="page-header" style="justify-content:space-between;">
+            <div style="display:flex; align-items:center; gap:15px;">
+                <a href="index.php" class="btn-back">
+                    <span>←</span> Voltar
+                </a>
+                <h1 style="font-size:1.2rem; margin:0; color:#198754;">Linha do Tempo</h1>
+            </div>
+            
+            <!-- Pie Chart (Small) -->
+            <div style="position:relative; width:50px; height:50px; border-radius:50%; background:conic-gradient(#198754 <?= $porcentagem ?>%, #e9ecef <?= $porcentagem ?>% 100%); display:flex; align-items:center; justify-content:center; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
+                <div style="width:38px; height:38px; background:white; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+                    <span style="font-size:0.75rem; font-weight:800; color:#198754;"><?= $porcentagem ?>%</span>
+                </div>
+            </div>
         </div>
 
         <!-- CONTEÚDO DA TIMELINE (Portado do Modal) -->
@@ -107,70 +121,97 @@ if($fase_index === false) $fase_index = 0;
                 <h3 style="margin:0 0 15px 0; font-size:1.1rem; color:#333; border-bottom:1px solid #dee2e6; padding-bottom:8px;">
                     📋 Dados do Processo
                 </h3>
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; font-size:0.9rem;">
-                    <?php if (!empty($detalhes['endereco_imovel'])): ?>
-                        <div style="grid-column: span 2;">
-                            <label style="display:block; font-size:0.75rem; color:#666; text-transform:uppercase; font-weight:700;">Local da Obra</label>
-                            <span style="color:#000; font-weight:500;"><?= htmlspecialchars($detalhes['endereco_imovel']) ?></span>
-                        </div>
-                    <?php endif; ?>
+                <div style="display:grid; grid-template-columns: 1fr; gap:15px; font-size:0.9rem;">
                     
-                    <?php if (!empty($detalhes['tipo_servico'])): ?>
-                        <div>
-                            <label style="display:block; font-size:0.75rem; color:#666; text-transform:uppercase; font-weight:700;">Serviço</label>
-                            <span style="color:#000; font-weight:500;"><?= htmlspecialchars($detalhes['tipo_servico']) ?></span>
+                    <!-- Current Observation -->
+                    <div style="background:#fff3cd; padding:15px; border-radius:8px; border-left:4px solid #ffc107; margin-bottom:5px;">
+                        <label style="display:block; font-size:0.7rem; color:#856404; text-transform:uppercase; font-weight:800; margin-bottom:5px;">
+                            📌 Status Atual: <?= htmlspecialchars($etapa_atual) ?>
+                        </label>
+                        <div style="color:#555; line-height:1.4; font-size:0.95rem;">
+                            <?= !empty($obs_atual) ? strip_tags($obs_atual) : 'Aguardando atualizações detalhadas desta etapa.' ?>
                         </div>
-                    <?php endif; ?>
+                    </div>
 
-                    <?php if (!empty($detalhes['numero_processo'])): ?>
-                        <div>
-                            <label style="display:block; font-size:0.75rem; color:#666; text-transform:uppercase; font-weight:700;">Nº Protocolo</label>
-                            <span style="color:#000; font-weight:500;"><?= htmlspecialchars($detalhes['numero_processo']) ?></span>
-                        </div>
-                    <?php endif; ?>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                        <?php if (!empty($detalhes['endereco_imovel'])): ?>
+                            <div style="grid-column: span 2;">
+                                <label style="display:block; font-size:0.75rem; color:#999; text-transform:uppercase; font-weight:700;">Local da Obra</label>
+                                <span style="color:#333; font-weight:600;"><?= htmlspecialchars($detalhes['endereco_imovel']) ?></span>
+                            </div>
+                        <?php endif; ?>
+                        
+                        <?php if (!empty($detalhes['numero_processo'])): ?>
+                            <div>
+                                <label style="display:block; font-size:0.75rem; color:#999; text-transform:uppercase; font-weight:700;">Nº Protocolo</label>
+                                <span style="color:#333; font-weight:600;"><?= htmlspecialchars($detalhes['numero_processo']) ?></span>
+                            </div>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
             <?php endif; ?>
 
-            <!-- TIMELINE STEPPER -->
-            <h3 style="margin:0 0 20px 0; font-size:1.1rem; color:#333; border-bottom:1px solid #eee; padding-bottom:10px;">Todas as Etapas</h3>
-            <div class="timeline-container-full" style="padding-left:15px; margin-bottom:30px;">
+            <!-- TIMELINE STEPPER (GROUPED) -->
+            <div class="timeline-container-full" style="padding-left:0; margin-bottom:30px;">
                 <?php 
-                    foreach($fases_padrao as $k => $fase): 
-                        $is_past = $k < $fase_index;
-                        $is_curr = $k === $fase_index;
-                        
-                        // Icons based on status
-                        $icon_display = '▫️'; // Default/Future
-                        if($is_past) $icon_display = '✅';
-                        if($is_curr) $icon_display = '📍';
-                        
-                        $text_style = $is_curr ? 'font-weight:700; color:#333;' : ($is_past ? 'color:#198754;' : 'color:#999;');
-                        
-                        // Line Line
-                        $line_color = ($is_past) ? '#198754' : '#e9ecef';
+                    // Define Groups
+                    $grupos = [
+                        '🚀 Fase Inicial' => array_slice($fases_padrao, 0, 4), // 0-3
+                        '🏗️ Análise Técnica' => array_slice($fases_padrao, 4, 2), // 4-5
+                        '📄 Emissão de Documentos' => array_slice($fases_padrao, 6, 3) // 6-8
+                    ];
+                    
+                    $global_index = 0;
+
+                    foreach($grupos as $nome_grupo => $fases_grupo):
                 ?>
-                <div style="display:flex; gap:15px; position:relative; padding-bottom:30px;">
-                    <!-- Line -->
-                    <?php if($k < count($fases_padrao)-1): ?>
-                    <div style="position:absolute; left:11px; top:30px; bottom:0; width:2px; background:<?= $line_color ?>; z-index:0;"></div>
-                    <?php endif; ?>
-                    
-                    <!-- Icon -->
-                    <div style="width:24px; height:24px; display:flex; align-items:center; justify-content:center; z-index:1; flex-shrink:0; font-size:1.2rem; background:#fff;">
-                        <?= $icon_display ?>
+                    <div style="margin-bottom:20px;">
+                        <h4 style="margin:0 0 15px 0; font-size:0.85rem; color:#999; text-transform:uppercase; font-weight:700; letter-spacing:1px; background:#f8f9fa; padding:5px 10px; border-radius:4px; display:inline-block;">
+                            <?= $nome_grupo ?>
+                        </h4>
+                        
+                        <div style="padding-left:15px;">
+                        <?php
+                            foreach($fases_grupo as $fase):
+                                $is_past = $global_index < $fase_index;
+                                $is_curr = $global_index === $fase_index;
+                                
+                                // Icons
+                                $icon_display = '▫️'; 
+                                if($is_past) $icon_display = '✅';
+                                if($is_curr) $icon_display = '📍';
+                                
+                                $text_style = $is_curr ? 'font-weight:700; color:#333;' : ($is_past ? 'color:#198754;' : 'color:#aaa;');
+                                $line_color = ($is_past) ? '#198754' : '#e9ecef';
+                        ?>
+                            <div style="display:flex; gap:15px; position:relative; padding-bottom:25px;">
+                                <!-- Connect Line (Logic: if not last in group) -->
+                                <div style="position:absolute; left:11px; top:25px; bottom:0; width:2px; background:<?= $line_color ?>; z-index:0;"></div>
+                                
+                                <!-- Icon -->
+                                <div style="width:24px; height:24px; display:flex; align-items:center; justify-content:center; z-index:1; flex-shrink:0; font-size:1.2rem; background:#fff;">
+                                    <?= $icon_display ?>
+                                </div>
+                                
+                                <!-- Text -->
+                                <div style="padding-top:4px;">
+                                    <span style="font-size:0.95rem; display:block; <?= $text_style ?>">
+                                        <?= $fase ?>
+                                    </span>
+                                    <?php if($is_curr): ?>
+                                        <div style="margin-top:5px;">
+                                            <span style="font-size:0.65rem; background:#ffc107; color:#333; padding:2px 8px; border-radius:12px; font-weight:700; text-transform:uppercase; display:inline-block;">Em Andamento</span>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        <?php 
+                            $global_index++; 
+                            endforeach; 
+                        ?>
+                        </div>
                     </div>
-                    
-                    <!-- Text -->
-                    <div style="padding-top:4px;">
-                        <span style="font-size:1rem; display:block; <?= $text_style ?>">
-                            <?= $fase ?>
-                        </span>
-                        <?php if($is_curr): ?>
-                            <span style="font-size:0.7rem; background:#ffc107; color:#333; padding:2px 8px; border-radius:12px; font-weight:700; text-transform:uppercase; margin-top:4px; display:inline-block;">Em Andamento</span>
-                        <?php endif; ?>
-                    </div>
-                </div>
                 <?php endforeach; ?>
             </div>
 
