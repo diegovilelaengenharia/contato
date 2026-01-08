@@ -380,11 +380,6 @@ function get_pendency_files($p_id) {
     
                         <!-- Área de Ação Simplificada (Botão Pequeno) -->
                         <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 10px;">
-                            <!-- Botão Whatsapp Link -->
-                            <a href="<?= getWhatsappLink($p['titulo']) ?>" target="_blank" style="font-size: 0.8rem; color: #198754; text-decoration: none; display: flex; align-items: center; gap: 4px; font-weight:600; padding: 5px 10px; border-radius: 6px;">
-                                <span class="material-symbols-rounded" style="font-size: 1.1rem;">chat</span> Fale c/ Eng.
-                            </a>
-
                             <!-- Botão Resolver (Pequeno) -->
                             <button onclick="openResolveModal(<?= $p['id'] ?>, '<?= htmlspecialchars($p['titulo'], ENT_QUOTES) ?>')" style="background: #0d6efd; color: white; border: none; border-radius: 6px; padding: 6px 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 0.8rem; box-shadow: 0 2px 5px rgba(13,110,253,0.2);">
                                 <span class="material-symbols-rounded" style="font-size: 1rem;">cloud_upload</span>
