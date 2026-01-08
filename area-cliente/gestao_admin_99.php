@@ -547,7 +547,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
                     <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 20px;">
                         <div>
-                            <h3 style="color:#fd7e14; margin-bottom:5px;">📋 Checklist de Pendências</h3>
+                            <h3 style="color:#198754; margin-bottom:5px;">📋 Checklist de Pendências</h3>
                             <p style="color:var(--color-text-subtle); margin-bottom:10px;">Gerencie os itens pendentes e verifique os arquivos enviados.</p>
                         </div>
                         
@@ -598,7 +598,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     <div class="table-responsive" style="margin-bottom: 30px;">
                         <table style="width:100%; border-collapse:collapse;">
                             <thead>
-                                <tr style="border-bottom:2px solid #eee; background:#fff8e1; color:#e65100;">
+                                <tr style="border-bottom:2px solid #dee2e6; background:#f8f9fa; color:#198754;">
                                     <th style="padding:15px; text-align:left; width:60%;">Descrição</th>
                                     <th style="padding:15px; text-align:center;">Data</th>
                                     <th style="padding:15px; text-align:center;">Status</th>
@@ -729,7 +729,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 <div>
                     <div style="display:flex; justify-content:space-between; align-items:flex-start;">
                         <div>
-                            <h3 style="color:#0d6efd;">📂 Arquivos do Cliente</h3>
+                            <h3 style="color:#198754;">📂 Arquivos do Cliente</h3>
                             <p style="margin-bottom:20px; color:var(--color-text-subtle);">Central de links e pastas do Google Drive.</p>
                         </div>
                     </div>
