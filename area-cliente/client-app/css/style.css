@@ -15,7 +15,7 @@
     --color-danger: #dc3545;
 
     /* --- UI BASICS --- */
-    --bg-app: #dce1e6;
+    --bg-app: #f4f6f8;
     /* Darker gray for desktop background contrast */
     --bg-card: #ffffff;
     --bg-nav: #ffffff;
@@ -99,8 +99,8 @@ a {
     min-height: calc(100vh - 60px);
     position: relative;
     overflow-x: hidden;
-    background-color: #ebf5ee;
-    /* App background - Darker soft green/gray */
+    background-color: #f4f6f8;
+    /* App background - Light Gray to match other pages */
     box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
     /* Drop shadow to simulate device */
     border-radius: 20px;
