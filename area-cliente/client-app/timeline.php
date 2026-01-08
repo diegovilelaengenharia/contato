@@ -70,44 +70,45 @@ $obs_atual = $stmt_obs->fetchColumn();
         /* Override basic settings for full page view */
         body { background: #f4f6f8; }
         .page-header {
-            background: linear-gradient(135deg, #198754 0%, #0f5132 100%); /* Green Gradient Premium */
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); /* Light Gray Gradient */
             border-bottom: none;
             padding: 30px 25px; 
             border-bottom-left-radius: 30px; 
             border-bottom-right-radius: 30px;
-            box-shadow: 0 10px 30px rgba(25, 135, 84, 0.25); 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
             margin-bottom: 30px;
             display: flex; align-items: center; justify-content: space-between;
-            color: white;
+            color: #343a40; /* Dark Text */
             position: relative;
             overflow: hidden;
+            border: 1px solid #dee2e6;
         }
         
-        /* Decorative Circle */
+        /* Decorative Circle (Subtle) */
         .page-header::after {
             content: ''; position: absolute; top: -50px; right: -50px;
-            width: 150px; height: 150px; background: rgba(255,255,255,0.1);
+            width: 150px; height: 150px; background: rgba(0,0,0,0.03);
             border-radius: 50%; pointer-events: none;
         }
 
         .btn-back {
-            text-decoration: none; color: white; font-weight: 600; 
+            text-decoration: none; color: #343a40; font-weight: 600; 
             display: flex; align-items: center; gap: 8px;
             padding: 10px 20px; 
-            background: rgba(255,255,255,0.2); /* Glassmorphism */
-            backdrop-filter: blur(5px);
+            background: white; /* White for contrast */
             border-radius: 25px;
             transition: 0.3s;
             font-size: 0.95rem;
-            border: 1px solid rgba(255,255,255,0.3);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid #dee2e6;
         }
-        .btn-back:hover { background: rgba(255,255,255,0.3); transform: translateX(-3px); }
+        .btn-back:hover { background: #f8f9fa; transform: translateX(-3px); }
         
         .header-title-box {
             display: flex; flex-direction: column; align-items: flex-end; text-align: right;
         }
-        .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; }
-        .header-title-sub { font-size: 0.8rem; opacity: 0.8; font-weight: 400; margin-top: 2px; }
+        .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #212529; }
+        .header-title-sub { font-size: 0.8rem; opacity: 0.7; font-weight: 500; margin-top: 2px; color: #6c757d; }
     </style>
 </head>
 <body>
@@ -129,7 +130,7 @@ $obs_atual = $stmt_obs->fetchColumn();
                  </div>
                  
                  <!-- Animated Compass Icon -->
-                 <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(5px); border:1px solid rgba(255,255,255,0.3); color: white; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; animation: compassWiggle 4s ease-in-out infinite;">
+                 <div style="background: white; border:1px solid #dee2e6; color: #343a40; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05); animation: compassWiggle 4s ease-in-out infinite;">
                     🧭
                  </div>
             </div>
