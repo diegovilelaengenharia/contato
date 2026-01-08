@@ -497,5 +497,8 @@ function get_pendency_files($p_id) {
 
     </div>
 
-</body>
-</html>
+        <!-- FLOATING ACTION BUTTON -->
+        <a href="https://wa.me/5535984529577?text=Ola%20Engenheiro,%20tenho%20uma%20duvida" class="whatsapp-float" target="_blank" title="Falar com Engenheiro">
+            <span class="material-symbols-rounded">chat</span>
+        </a>
+    </div>

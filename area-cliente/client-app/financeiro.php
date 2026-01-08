@@ -162,11 +162,28 @@ function formatMoney($val) {
                     <?php foreach($lancamentos as $l): 
                         $status_class = '';
                         $status_label = '';
+                        $status_color = '#666'; // Default
                         
-                        if($l['status'] == 'pago'){ $status_class = 'status-pago'; $status_label = 'Pago'; }
-                        elseif($l['status'] == 'atrasado'){ $status_class = 'status-atrasado'; $status_label = 'Atrasado'; }
-                        elseif($l['status'] == 'isento'){ $status_class = ''; $status_label = 'Isento'; } // Default gray
-                        else { $status_class = 'status-pendente'; $status_label = 'Pendente'; }
+                        if($l['status'] == 'pago'){ 
+                            $status_class = 'status-pago'; 
+                            $status_label = 'Pago'; 
+                            $status_color = '#198754';
+                        }
+                        elseif($l['status'] == 'atrasado'){ 
+                            $status_class = 'status-atrasado'; 
+                            $status_label = 'Atrasado'; 
+                            $status_color = '#dc3545';
+                        }
+                        elseif($l['status'] == 'isento'){ 
+                            $status_class = ''; 
+                            $status_label = 'Isento'; 
+                            $status_color = '#999';
+                        }
+                        else { 
+                            $status_class = 'status-pendente'; 
+                            $status_label = 'Pendente'; 
+                            $status_color = '#ffc107';
+                        }
                     ?>
                     
                     <div class="fin-premium-row <?= $status_class ?>">
@@ -176,7 +193,7 @@ function formatMoney($val) {
                         </div>
                         <div class="fp-right">
                             <span class="fp-price"><?= formatMoney($l['valor']) ?></span>
-                            <span class="fp-badge" style="color: inherit;"><?= $status_label ?></span>
+                            <span class="fp-badge" style="color: <?= $status_color ?>; font-weight:800;"><?= $status_label ?></span>
                         </div>
                     </div>
                     
@@ -193,11 +210,10 @@ function formatMoney($val) {
             </div>
         </div>
 
-        <div class="floating-buttons">
-            <a href="https://wa.me/5535984529577" class="floating-btn floating-btn--whatsapp" target="_blank" title="Falar com Engenheiro">
-                <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.66 15.14L2 22l5-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.08-1.13l-.29-.18-3 .79.8-2.91-.19-.3A8 8 0 1 1 12 20zm4.37-5.73-.52-.26a1.32 1.32 0 0 0-1.15.04l-.4.21a.5.5 0 0 1-.49 0 8.14 8.14 0 0 1-2.95-2.58.5.5 0 0 1 0-.49l.21-.4a1.32 1.32 0 0 0 .04-1.15l-.26-.52a1.32 1.32 0 0 0-1.18-.73h-.37a1 1 0 0 0-1 .86 3.47 3.47 0 0 0 .18 1.52A10.2 10.2 0 0 0 13 15.58a3.47 3.47 0 0 0 1.52.18 1 1 0 0 0 .86-1v-.37a1.32 1.32 0 0 0-.73-1.18z"></path></svg>
-            </a>
-        </div>
+        <!-- FLOATING ACTION BUTTON -->
+        <a href="https://wa.me/5535984529577?text=Ola%20Engenheiro,%20tenho%20uma%20duvida" class="whatsapp-float" target="_blank" title="Falar com Engenheiro">
+            <span class="material-symbols-rounded">chat</span>
+        </a>
 
     </div>
 
