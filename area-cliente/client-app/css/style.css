@@ -90,8 +90,8 @@ a {
 /* --- APP LAYOUT --- */
 .app-container {
     width: 100%;
-    max-width: 500px;
-    /* Reduced from 600px for tighter mobile feel */
+    max-width: 1000px;
+    /* Increased for better desktop use */
     margin: 30px auto;
     /* Added top/bottom margin */
     padding: 0;
