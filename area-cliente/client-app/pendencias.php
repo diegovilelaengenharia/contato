@@ -11,7 +11,28 @@ if (!isset($_SESSION['cliente_id'])) {
 }
 $cliente_id = $_SESSION['cliente_id'];
 
-// 2. LOGIC: HANDLE UPLOAD
+// 2. LOGIC: HANDLE UPLOAD & DELETION
+
+// A) EXCLUSÃO DE ARQUIVO (CLIENTE)
+if(isset($_POST['delete_file']) && isset($_POST['file_name']) && isset($_POST['pendencia_id'])) {
+    $f_del = basename($_POST['file_name']); // Security: basename
+    $p_id_del = $_POST['pendencia_id'];
+    
+    // Check if filename starts with ID (Security)
+    if(strpos($f_del, $p_id_del . '_') === 0) {
+        $path_del = __DIR__ . '/uploads/pendencias/' . $f_del;
+        if(file_exists($path_del)) {
+            unlink($path_del);
+            $msg_success = "Arquivo removido com sucesso.";
+        } else {
+             $msg_error = "Arquivo não encontrado.";
+        }
+    } else {
+        $msg_error = "Permissão negada para excluir este arquivo.";
+    }
+}
+
+// B) UPLOAD
 if(isset($_FILES['arquivo_pendencia']) && isset($_POST['pendencia_id'])) {
     $pid = $_POST['pendencia_id'];
     $file = $_FILES['arquivo_pendencia'];
@@ -29,28 +50,15 @@ if(isset($_FILES['arquivo_pendencia']) && isset($_POST['pendencia_id'])) {
              $new_name = $pid . '_' . time() . '.' . $ext;
              
              if(move_uploaded_file($file['tmp_name'], $dir . $new_name)) {
-                 // Tenta atualizar status para 'em_analise' e salvar nome do arquivo se possível
-                 // Vamos tentar atualizar apenas o status primeiro, pois não temos certeza da coluna de arquivo.
-                 // SE a coluna 'status' for ENUM restrito, isso pode falhar.
-                 
+                 // Tenta atualizar status para 'em_analise' apenas visualmente ou DB se possível
                  try {
-                    $sql = "UPDATE processo_pendencias SET status='em_analise' WHERE id=? AND cliente_id=?";
+                    $sql = "UPDATE processo_pendencias SET status='em_analise' WHERE id=? AND cliente_id=? AND status != 'resolvido'";
                     $stmtUpdate = $pdo->prepare($sql);
                     $stmtUpdate->execute([$pid, $cliente_id]);
-                    
-                    if($stmtUpdate->rowCount() > 0) {
-                        $msg_success = "Arquivo enviado! Pendência em análise.";
-                    } else {
-                        // Se não afetou linhas, pode ser que o status já fosse 'em_analise' ou erro de ID
-                        $msg_success = "Arquivo salvo em: uploads/pendencias/" . $new_name;
-                    }
-
+                    $msg_success = "Arquivo enviado! Pendência em análise.";
                  } catch(PDOException $e) {
-                     // Erro detalhado para debug
-                     $msg_error = "Arquivo salvo, mas erro ao atualizar status: " . $e->getMessage();
-                     // Fallback: se o status 'em_analise' não for aceito, o arquivo já está na pasta.
+                     $msg_success = "Arquivo enviado com sucesso!";
                  }
-                 
              } else {
                  $msg_error = "Erro ao mover arquivo para pasta de uploads.";
              }
@@ -61,13 +69,46 @@ if(isset($_FILES['arquivo_pendencia']) && isset($_POST['pendencia_id'])) {
 }
 
 // 3. FETCH PENDENCIES
-$stmt_pend = $pdo->prepare("SELECT * FROM processo_pendencias WHERE cliente_id = ? ORDER BY CASE WHEN status = 'resolvido' THEN 2 WHEN status = 'em_analise' THEN 1 ELSE 0 END, data_criacao DESC");
+$stmt_pend = $pdo->prepare("SELECT * FROM processo_pendencias WHERE cliente_id = ? ORDER BY data_criacao DESC");
 $stmt_pend->execute([$cliente_id]);
-$pendencias = $stmt_pend->fetchAll(PDO::FETCH_ASSOC);
+$all_pendencias = $stmt_pend->fetchAll(PDO::FETCH_ASSOC);
+
+// SEPARATE LISTS
+$resolvidas = [];
+$abertas = [];
+
+foreach($all_pendencias as $p) {
+    if($p['status'] == 'resolvido') {
+        $resolvidas[] = $p;
+    } else {
+        $abertas[] = $p;
+    }
+}
 
 function getWhatsappLink($pendency_title) {
     $text = "Olá, estou entrando em contato sobre a pendência: *" . strip_tags($pendency_title) . "*.";
     return "https://wa.me/5535984529577?text=" . urlencode($text);
+}
+
+// Helper para buscar arquivos
+function get_pendency_files($p_id) {
+    $upload_dir = __DIR__ . '/uploads/pendencias/';
+    $web_path = 'uploads/pendencias/';
+    $anexos = [];
+    if(is_dir($upload_dir)) {
+        $files = glob($upload_dir . $p_id . "_*.*");
+        if($files) {
+            foreach($files as $f) {
+                $filename = basename($f);
+                $anexos[] = [
+                    'name' => $filename,
+                    'path' => $web_path . $filename,
+                    'date' => filemtime($f)
+                ];
+            }
+        }
+    }
+    return $anexos;
 }
 ?>
 <!DOCTYPE html>
@@ -89,20 +130,20 @@ function getWhatsappLink($pendency_title) {
     <style>
         body { background: #f4f6f8; }
         
-        /* HEADER PADRONIZADO (Verde Brand) */
+        /* HEADER - ORANGE THEME (PENDÊNCIAS) */
         .page-header {
-            background: #e8f5e9; /* Light Green Standard */
+            background: #fff3e0; /* Light Orange */
             border-bottom: none;
             padding: 25px 20px; 
             border-bottom-left-radius: 20px; 
             border-bottom-right-radius: 20px;
-            box-shadow: 0 4px 15px rgba(25, 135, 84, 0.1); 
+            box-shadow: 0 4px 15px rgba(253, 126, 20, 0.1); 
             margin-bottom: 25px;
             display: flex; align-items: center; justify-content: space-between;
-            color: #146c43;
+            color: #e65100; /* Dark Orange Text */
         }
         .btn-back {
-            text-decoration: none; color: #146c43; font-weight: 600; 
+            text-decoration: none; color: #e65100; font-weight: 600; 
             display: flex; align-items: center; gap: 5px;
             padding: 8px 16px; background: #fff; border-radius: 20px;
             transition: 0.2s;
@@ -115,9 +156,6 @@ function getWhatsappLink($pendency_title) {
             font-size: 0.7rem; font-weight: 700;
             text-transform: uppercase;
         }
-        .st-pendente { background: #fff3cd; color: #856404; }
-        .st-resolvido { background: #d1e7dd; color: #0f5132; }
-        .st-analise { background: #cff4fc; color: #055160; }
 
         .btn-action-text {
             display: flex; align-items: center; justify-content: center; gap: 8px;
@@ -132,6 +170,14 @@ function getWhatsappLink($pendency_title) {
 
         .empty-state {
             text-align: center; padding: 40px; color: #999;
+        }
+        
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #555;
+            margin: 30px 0 15px 0;
+            display: flex; align-items: center; gap: 8px;
         }
     </style>
 </head>
@@ -160,7 +206,7 @@ function getWhatsappLink($pendency_title) {
         <?php endif; ?>
 
         <!-- CONTENT -->
-        <?php if(empty($pendencias)): ?>
+        <?php if(empty($all_pendencias)): ?>
             <div class="empty-state">
                 <span style="font-size:2rem; display:block; margin-bottom:10px;">🎉</span>
                 <h3 style="color:#333; margin:0;">Tudo Certo!</h3>
@@ -168,151 +214,159 @@ function getWhatsappLink($pendency_title) {
             </div>
         <?php else: ?>
             
-            <div style="display: flex; flex-direction: column; gap: 20px; padding-bottom: 20px;">
-                <?php foreach($pendencias as $p): 
-                    $status = $p['status'];
-                    $is_resolvido = ($status == 'resolvido');
+            <div style="display: flex; flex-direction: column; gap: 10px; padding-bottom: 20px;">
+
+                <!-- 1. HISTÓRICO DE RESOLUÇÕES (TOPO) -->
+                <?php if(count($resolvidas) > 0): ?>
+                    <h3 class="section-title">
+                        <span class="material-symbols-rounded" style="color:#198754;">history</span> Histórico de Resoluções
+                    </h3>
                     
-                    // Detect Files Logic (FileSystem Scan)
-                    // Pattern: ID_TIMESTAMP.ext or just ID.ext (legacy)
-                    $upload_dir = __DIR__ . '/uploads/pendencias/';
-                    $web_path = 'uploads/pendencias/'; // Relative to this file
-                    $anexos = [];
-                    
-                    if(is_dir($upload_dir)) {
-                        // Scan for files starting with ID_
-                        $files = glob($upload_dir . $p['id'] . "_*.*");
-                        if($files) {
-                            foreach($files as $f) {
-                                $filename = basename($f);
-                                $anexos[] = [
-                                    'name' => $filename,
-                                    'path' => $web_path . $filename,
-                                    'date' => filemtime($f)
-                                ];
-                            }
+                    <?php foreach($resolvidas as $p): 
+                         $data_criacao = date('d/m/Y', strtotime($p['data_criacao']));
+                         $anexos = get_pendency_files($p['id']);
+                         // Resolvidos tem estilo mais compacto/suave
+                    ?>
+                    <div style="background: #e8f5e9; border: 1px solid #c3e6cb; border-radius: 12px; padding: 15px; opacity: 0.9;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <span style="font-size: 0.8rem; font-weight: 700; color: #198754;">Concluído em: <?= $data_criacao ?></span>
+                            <span class="material-symbols-rounded" style="color:#198754; font-size:1.2rem;">check_circle</span>
+                        </div>
+                        
+                        <h4 style="margin: 0 0 5px 0; font-size: 1rem; color: #155724; font-weight: 700;">
+                            <?= htmlspecialchars($p['titulo']) ?>
+                        </h4>
+                        
+                        <?php if(!empty($p['descricao'])): ?>
+                            <div style="font-size: 0.9rem; color: #155724; line-height: 1.4; opacity: 0.8;">
+                                <?= nl2br(htmlspecialchars($p['descricao'])) ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <!-- Arquivos do Histórico -->
+                        <?php if(!empty($anexos)): ?>
+                            <div style="margin-top:10px; padding-top:10px; border-top:1px dashed #c3e6cb;">
+                                <strong style="font-size:0.75rem; color:#198754;">Arquivos do Processo:</strong>
+                                <div style="display:flex; flex-wrap:wrap; gap:5px; margin-top:5px;">
+                                <?php foreach($anexos as $arq): ?>
+                                    <a href="<?= $arq['path'] ?>" target="_blank" style="text-decoration:none; background:white; color:#198754; padding:3px 8px; border-radius:10px; font-size:0.75rem; border:1px solid #c3e6cb;">
+                                        📎 Anexo
+                                    </a>
+                                <?php endforeach; ?>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+
+
+                <!-- 2. PENDÊNCIAS EM ABERTO (EMBAIXO) -->
+                <?php if(count($abertas) > 0): ?>
+                    <h3 class="section-title">
+                        <span class="material-symbols-rounded" style="color:#e65100;">warning</span> Pendências em Aberto
+                    </h3>
+
+                    <?php foreach($abertas as $p): 
+                        $anexos = get_pendency_files($p['id']);
+                        $has_attachment = !empty($anexos);
+                        $data_criacao = date('d/m/Y', strtotime($p['data_criacao']));
+                        
+                        // Cores
+                        if($has_attachment) {
+                             $status_label = "Arquivo Enviado / Em Análise";
+                             $bg_badge = "#0d6efd"; $bg_card = "#f0f8ff"; $border_card = "#cce5ff"; $text_title = "#084298";
+                        } else {
+                             $status_label = "Pendente";
+                             $bg_badge = "#ffc107"; $bg_card = "#fff9d6"; $border_card = "#ffeeba"; $text_title = "#856404";
                         }
-                    }
-                    
-                    // Se tiver anexo e status nao for resolvido, considera como "Em Análise/Anexado" visualmente
-                    $has_attachment = !empty($anexos);
-                    if($has_attachment && !$is_resolvido) {
-                         $status_label = "Arquivo Enviado / Em Análise";
-                         $bg_badge = "#0d6efd"; // Blue
-                         $bg_card = "#f0f8ff"; // Light Blue bg
-                         $border_card = "#cce5ff";
-                         $text_title = "#084298";
-                    } elseif($is_resolvido) {
-                         $status_label = "Resolvido";
-                         $bg_badge = "#198754"; // Green
-                         $bg_card = "#d1e7dd"; 
-                         $border_card = "#badbcc";
-                         $text_title = "#0f5132";
-                    } else {
-                         // Default Pendente
-                         $status_label = "Pendente";
-                         $bg_badge = "#ffc107"; // Yellow
-                         $bg_card = "#fff9d6";
-                         $border_card = "#ffeeba";
-                         $text_title = "#856404";
-                    }
-                    
-                    $data_criacao = date('d/m/Y', strtotime($p['data_criacao']));
-                ?>
-                <div style="background: <?= $bg_card ?>; border: 1px solid <?= $border_card ?>; border-radius: 16px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-                    
-                    <!-- Header do Card: Título e Status -->
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
-                        <div>
-                            <!-- DATA EVIDENTE -->
-                            <span style="display: block; font-size: 0.8rem; font-weight: 700; color: #555; margin-bottom: 4px; opacity: 0.7;">
-                                📅 <?= $data_criacao ?>
+                    ?>
+                    <div style="background: <?= $bg_card ?>; border: 1px solid <?= $border_card ?>; border-radius: 16px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                        
+                        <!-- Header do Card -->
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                            <div>
+                                <span style="display: block; font-size: 0.8rem; font-weight: 700; color: #555; margin-bottom: 4px; opacity: 0.7;">
+                                    📅 <?= $data_criacao ?>
+                                </span>
+                                <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800; color: <?= $text_title ?>; line-height: 1.3;">
+                                    <?= htmlspecialchars($p['titulo']) ?>
+                                </h3>
+                            </div>
+                            <span style="background: <?= $bg_badge ?>; color: <?= ($status_label=='Pendente')?'#333':'white' ?>; padding: 4px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">
+                                <?= $status_label ?>
                             </span>
-                            <!-- TÍTULO GRANDE E NEGRITO -->
-                            <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800; color: <?= $text_title ?>; line-height: 1.3;">
-                                <?= htmlspecialchars($p['titulo']) ?>
-                            </h3>
                         </div>
-                        
-                        <span style="background: <?= $bg_badge ?>; color: <?= ($status_label=='Pendente')?'#333':'white' ?>; padding: 4px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">
-                            <?= $status_label ?>
-                        </span>
-                    </div>
-
-                    <!-- Descrição -->
-                    <?php if(!empty($p['descricao'])): ?>
-                        <div style="font-size: 0.95rem; color: #444; margin-bottom: 15px; line-height: 1.5; font-weight: 500;">
-                            <?= nl2br(htmlspecialchars($p['descricao'])) ?>
-                        </div>
-                    <?php endif; ?>
-
-                    <!-- Arquivos Já Enviados (Feedback Visual) -->
-                    <?php if($has_attachment): ?>
-                        <div style="margin-bottom: 15px; background: rgba(255,255,255,0.7); padding: 10px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.05);">
-                            <strong style="display:block; font-size:0.8rem; margin-bottom:5px; color:#555;">Arquivos Enviados:</strong>
-                            <?php foreach($anexos as $arq): ?>
-                                <a href="<?= $arq['path'] ?>" target="_blank" style="display:inline-flex; align-items:center; gap:6px; font-size:0.85rem; color: #0d6efd; text-decoration:none; background:white; padding:5px 10px; border-radius:15px; border:1px solid #ddd; margin-right:5px; margin-bottom:5px;">
-                                    📎 Anexo (<?= date('d/m H:i', $arq['date']) ?>)
-                                </a>
-                            <?php endforeach; ?>
-                            <div style="font-size:0.75rem; color:#888; margin-top:5px;">*O arquivo foi enviado e está sob análise do engenheiro.</div>
-                        </div>
-                    <?php endif; ?>
-
-                    <!-- Ações (Upload/Whatsapp) -->
-                    <?php if(!$is_resolvido): ?>
-                    <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px;">
-                        
-                        <!-- Form Upload -->
-                        <form action="pendencias.php" method="POST" enctype="multipart/form-data" style="background: rgba(255,255,255,0.6); padding: 15px; border-radius: 12px; border: 1px dashed <?= $text_title ?>; margin-bottom:0;">
-                            <input type="hidden" name="pendencia_id" value="<?= $p['id'] ?>">
-                            
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.85rem; color: #333;">
-                                <?= $has_attachment ? 'Enviar novo arquivo (sobrescrever/adicional):' : 'Anexar Comprovante/Arquivo:' ?>
-                            </label>
-                            <div style="display: flex; gap: 10px;">
-                                <input type="file" name="arquivo_pendencia" required style="font-size: 0.85rem; width: 100%; border-radius: 6px; border: 1px solid #ccc; background: #fff; padding:5px;">
+    
+                        <!-- Descrição -->
+                        <?php if(!empty($p['descricao'])): ?>
+                            <div style="font-size: 0.95rem; color: #444; margin-bottom: 15px; line-height: 1.5; font-weight: 500;">
+                                <?= nl2br(htmlspecialchars($p['descricao'])) ?>
                             </div>
-                            <button type="submit" name="upload_arquivo" style="margin-top: 10px; width: 100%; padding: 10px; background: #0d6efd; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                                <span class="material-symbols-rounded">cloud_upload</span> Enviar Arquivo
-                            </button>
-                        </form>
-
-                        <!-- Botão Whatsapp -->
-                        <a href="<?= getWhatsappLink($p['titulo']) ?>" target="_blank" class="btn-action-text" style="background: #25D366; color: white; border: 1px solid #badbcc; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                            <span class="material-symbols-rounded">chat</span>
-                            Fale com o Engenheiro
-                        </a>
-
-                    </div>
-                    <?php else: ?>
-                        <!-- Se resolvido -->
-                            <div style="margin-top: 10px; font-size: 0.85rem; color: #0f5132; background: rgba(255,255,255,0.4); padding: 8px; border-radius: 8px; display: flex; align-items: center; gap: 6px;">
-                            <span class="material-symbols-rounded" style="font-size: 1rem;">check_circle</span>
-                            <span>Pendência regularizada.</span>
+                        <?php endif; ?>
+    
+                        <!-- Arquivos Enviados (Com Botão Delete) -->
+                        <?php if($has_attachment): ?>
+                            <div style="margin-bottom: 15px; background: rgba(255,255,255,0.7); padding: 10px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.05);">
+                                <strong style="display:block; font-size:0.8rem; margin-bottom:5px; color:#555;">Arquivos Enviados:</strong>
+                                <?php foreach($anexos as $arq): ?>
+                                    <div style="display:inline-flex; align-items:center; gap:5px; background:white; padding:5px 10px; border-radius:15px; border:1px solid #ddd; margin-right:5px; margin-bottom:5px;">
+                                        <a href="<?= $arq['path'] ?>" target="_blank" style="display:flex; align-items:center; gap:5px; color:#0d6efd; text-decoration:none; font-size:0.85rem;">
+                                            📎 <?= $arq['name'] ?>
+                                        </a>
+                                        <!-- Delete Button (Form Inline) -->
+                                        <form method="POST" onsubmit="return confirm('Deseja realmente apagar este arquivo?');" style="margin:0; display:flex;">
+                                            <input type="hidden" name="delete_file" value="true">
+                                            <input type="hidden" name="file_name" value="<?= htmlspecialchars($arq['name']) ?>">
+                                            <input type="hidden" name="pendencia_id" value="<?= $p['id'] ?>">
+                                            <button type="submit" style="background:none; border:none; cursor:pointer; padding:0; display:flex; color:#dc3545;" title="Apagar Arquivo">
+                                                <span class="material-symbols-rounded" style="font-size:1rem;">delete</span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                <?php endforeach; ?>
+                                <div style="font-size:0.75rem; color:#888; margin-top:5px;">*Aguardando análise. Você pode excluir se enviou errado.</div>
                             </div>
-                    <?php endif; ?>
+                        <?php endif; ?>
+    
+                        <!-- Ações -->
+                        <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px;">
+                            <!-- Form Upload -->
+                            <form action="pendencias.php" method="POST" enctype="multipart/form-data" style="background: rgba(255,255,255,0.6); padding: 15px; border-radius: 12px; border: 1px dashed <?= $text_title ?>; margin-bottom:0;">
+                                <input type="hidden" name="pendencia_id" value="<?= $p['id'] ?>">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.85rem; color: #333;">
+                                    <?= $has_attachment ? 'Enviar novo arquivo:' : 'Anexar Comprovante/Arquivo:' ?>
+                                </label>
+                                <div style="display: flex; gap: 10px;">
+                                    <input type="file" name="arquivo_pendencia" required style="font-size: 0.85rem; width: 100%; border-radius: 6px; border: 1px solid #ccc; background: #fff; padding:5px;">
+                                </div>
+                                <button type="submit" name="upload_arquivo" style="margin-top: 10px; width: 100%; padding: 10px; background: #0d6efd; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                    <span class="material-symbols-rounded">cloud_upload</span> Enviar Arquivo
+                                </button>
+                            </form>
+    
+                            <!-- Botão Whatsapp -->
+                            <a href="<?= getWhatsappLink($p['titulo']) ?>" target="_blank" class="btn-action-text" style="background: #25D366; color: white; border: 1px solid #badbcc; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <span class="material-symbols-rounded">chat</span>
+                                Fale com o Engenheiro
+                            </a>
+                        </div>
+    
+                    </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
 
-                </div>
-                <?php endforeach; ?>
             </div>
 
+             <!-- WHATSAPP CTA -->
+            <div style="text-align: center; margin-top: 20px; padding-bottom: 20px;">
+                 <a href="https://wa.me/5535984529577?text=Ola,%20tenho%20duvidas%20sobre%20as%20pendencias." style="display:inline-block; font-size: 0.85rem; color: #146c43; text-decoration: none; font-weight: 600; padding: 10px 20px; background: #d1e7dd; border-radius: 20px;">
+                    Dúvidas sobre as pendências? Fale conosco.
+                 </a>
+            </div>
+            
         <?php endif; ?>
 
-        <!-- FLOATING ACTION BUTTONS -->
-        <div class="floating-buttons">
-            <a href="https://wa.me/5535984529577" class="floating-btn floating-btn--whatsapp" target="_blank" title="Falar com Engenheiro">
-                <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.66 15.14L2 22l5-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.08-1.13l-.29-.18-3 .79.8-2.91-.19-.3A8 8 0 1 1 12 20zm4.37-5.73-.52-.26a1.32 1.32 0 0 0-1.15.04l-.4.21a.5.5 0 0 1-.49 0 8.14 8.14 0 0 1-2.95-2.58.5.5 0 0 1 0-.49l.21-.4a1.32 1.32 0 0 0 .04-1.15l-.26-.52a1.32 1.32 0 0 0-1.18-.73h-.37a1 1 0 0 0-1 .86 3.47 3.47 0 0 0 .18 1.52A10.2 10.2 0 0 0 13 15.58a3.47 3.47 0 0 0 1.52.18 1 1 0 0 0 .86-1v-.37a1.32 1.32 0 0 0-.73-1.18z"></path></svg>
-            </a>
-        </div>
-        
-        <!-- WHATSAPP CTA -->
-        <div style="text-align: center; margin-top: 20px; padding-bottom: 20px;">
-             <a href="https://wa.me/5535984529577?text=Ola,%20tenho%20duvidas%20sobre%20as%20pendencias." style="display:inline-block; font-size: 0.85rem; color: #146c43; text-decoration: none; font-weight: 600; padding: 10px 20px; background: #d1e7dd; border-radius: 20px;">
-                Dúvidas sobre as pendências? Fale conosco.
-             </a>
-        </div>
-        
     </div>
 
 </body>

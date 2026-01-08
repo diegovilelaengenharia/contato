@@ -515,12 +515,56 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
                 <!-- PENDÊNCIAS CONTENT (Laranja) -->
                 <div>
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                    <!-- LÓGICA DE EXCLUSÃO (Backend) -->
+                    <?php
+                    // 1. Exclusão Individual
+                    if(isset($_GET['delete_file_pendencia']) && isset($_GET['file_name'])) {
+                         $f_delete = basename($_GET['file_name']);
+                         $p_delete = __DIR__ . '/client-app/uploads/pendencias/' . $f_delete;
+                         if(file_exists($p_delete)) {
+                             unlink($p_delete);
+                             echo "<script>window.location.href='?cliente_id={$cliente_ativo['id']}&tab=pendencias&msg=file_deleted';</script>";
+                         }
+                    }
+                    
+                    // 2. Limpar Pasta Completa (Bulk)
+                    if(isset($_GET['clear_all_files']) && $_GET['clear_all_files'] == 'true') {
+                        $p_dir = __DIR__ . '/client-app/uploads/pendencias/';
+                        $stmtIds = $pdo->prepare("SELECT id FROM processo_pendencias WHERE cliente_id=?");
+                        $stmtIds->execute([$cliente_ativo['id']]);
+                        $ids = $stmtIds->fetchAll(PDO::FETCH_COLUMN);
+                        
+                        $count_del = 0;
+                        if($ids) {
+                            foreach($ids as $pid) {
+                                $files = glob($p_dir . $pid . "_*.*");
+                                if($files) {
+                                    foreach($files as $f) {
+                                        unlink($f);
+                                        $count_del++;
+                                    }
+                                }
+                            }
+                        }
+                        echo "<script>window.location.href='?cliente_id={$cliente_ativo['id']}&tab=pendencias&msg=all_files_cleared&count={$count_del}';</script>";
+                    }
+                    ?>
+
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 20px;">
                         <div>
                             <h3 style="color:#fd7e14; margin-bottom:5px;">📋 Checklist de Pendências</h3>
-                            <p style="color:var(--color-text-subtle); margin-bottom:20px;">Adicione itens que o cliente precisa resolver. O cliente verá esta lista.</p>
+                            <p style="color:var(--color-text-subtle); margin-bottom:10px;">Gerencie os itens pendentes e verifique os arquivos enviados.</p>
                         </div>
-                        <?php 
+                        
+                        <div style="text-align:right;">
+                             <!-- Botão Limpar Pasta -->
+                            <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias&clear_all_files=true" 
+                               onclick="return confirm('ATENÇÃO: Isso apagará TODOS os arquivos anexados nas pendências deste cliente.\n\nDeseja continuar?')"
+                               style="background:#f8d7da; color:#dc3545; padding:8px 15px; border-radius:30px; font-size:0.8rem; font-weight:700; text-decoration:none; border:1px solid #f5c6cb; display:inline-flex; align-items:center; gap:5px;">
+                                🗑️ Limpar Pasta de Arquivos
+                            </a>
+
+                            <?php 
                             // Movido para cá para usar no botão WhatsApp
                             $stmt_pend = $pdo->prepare("SELECT * FROM processo_pendencias WHERE cliente_id=? ORDER BY status ASC, id DESC");
                             $stmt_pend->execute([$cliente_ativo['id']]);
@@ -544,40 +588,15 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             }
                             
                             $msg_wpp_pend .= "\n📂 *Acesse sua Área do Cliente* para anexar documentos ou ver detalhes:\nhttps://vilela.eng.br/area-cliente/\n\nQualquer dúvida, estou à disposição por aqui!";
-                        ?>
-                        
-                    </div>
-
-                    <!-- Novo Form de Inserção Rápida -->
-                    <!-- Novo Form de Inserção Rápida -->
-                    <form method="POST" style="background:#fff3e0; padding:20px; border-radius:12px; border:1px solid #ffe0b2; margin-bottom:25px;">
-                        <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
-                        <h4 style="margin-top:0; color:#ef6c00;">➕ Adicionar Nova Pendência</h4>
-                        <div style="display:flex; flex-direction:column; gap:10px;">
-                            <div style="flex-grow:1;">
-                                <textarea name="descricao_pendencia" id="new_pendencia_editor" placeholder="Digite a descrição..." style="width:100%;"></textarea>
-                            </div>
-                            <div style="text-align:right;">
-                                <button type="submit" name="btn_adicionar_pendencia" class="btn-save" style="width:auto; margin:0; padding:10px 25px; color:white; background: #fd7e14; border:none;">Adicionar Pendência</button>
-                            </div>
+                            ?>
+                             <a href="https://wa.me/55<?= preg_replace('/\D/','',$detalhes['contato_tel']??'') ?>?text=<?= urlencode($msg_wpp_pend) ?>" target="_blank" class="btn-save" style="background:#25D366; color:white; border:none; margin-left:10px; padding:8px 15px;">
+                                📱 Cobrar no WhatsApp
+                            </a>
                         </div>
-                    </form>
-                    <script>
-                        document.addEventListener('DOMContentLoaded', () => {
-                            if(document.querySelector('#new_pendencia_editor')) {
-                                ClassicEditor
-                                .create(document.querySelector('#new_pendencia_editor'), {
-                                    toolbar: [ 'bold', 'italic', 'link', 'bulletedList', '|', 'undo', 'redo' ],
-                                    language: 'pt-br',
-                                    placeholder: 'Digite a descrição da pendência aqui...'
-                                })
-                                .catch( error => { console.error( error ); } );
-                            }
-                        });
-                    </script>
+                    </div>
                     
-                    <!-- Lista de Pendências -->
-                    <div class="table-responsive">
+                    <!-- Lista de Pendências (MOVIDO PARA CIMA) -->
+                    <div class="table-responsive" style="margin-bottom: 30px;">
                         <table style="width:100%; border-collapse:collapse;">
                             <thead>
                                 <tr style="border-bottom:2px solid #eee; background:#fff8e1; color:#e65100;">
@@ -653,11 +672,17 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                                 <?= $p['descricao'] // Já permite HTML do editor ?>
                                             </div>
                                             <?php if(!empty($arquivos)): ?>
-                                                <div style="margin-top:5px; display:flex; flex-wrap:wrap; gap:5px;">
+                                                <div style="margin-top:8px; display:flex; flex-direction:column; gap:5px;">
                                                     <?php foreach($arquivos as $arq): ?>
-                                                    <a href="<?= htmlspecialchars($arq['arquivo_path']) ?>" target="_blank" style="display:inline-flex; align-items:center; gap:5px; font-size:0.85rem; color:#0d6efd; text-decoration:none; background:#e9ecef; padding:2px 8px; border-radius:4px;">
-                                                        📎 <?= (strlen($arq['arquivo_nome']) > 25 ? substr($arq['arquivo_nome'],0,25).'...' : $arq['arquivo_nome']) ?>
-                                                    </a>
+                                                    <div style="display:flex; align-items:center; gap:8px;">
+                                                        <a href="<?= htmlspecialchars($arq['arquivo_path']) ?>" target="_blank" style="display:inline-flex; align-items:center; gap:5px; font-size:0.85rem; color:#0d6efd; text-decoration:none; background:#e9ecef; padding:4px 10px; border-radius:4px; font-weight:600;">
+                                                            📎 <?= (strlen($arq['arquivo_nome']) > 40 ? substr($arq['arquivo_nome'],0,40).'...' : $arq['arquivo_nome']) ?>
+                                                        </a>
+                                                        <!-- Botão Excluir Arquivo -->
+                                                        <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias&delete_file_pendencia=true&file_name=<?= urlencode($arq['arquivo_nome']) ?>" 
+                                                           onclick="return confirm('ATENÇÃO: Deseja apagar este arquivo permanentemente?')"
+                                                           style="text-decoration:none; font-size:1.1rem; padding:2px;" title="Apagar Arquivo">🗑️</a>
+                                                    </div>
                                                     <?php endforeach; ?>
                                                 </div>
                                             <?php endif; ?>
@@ -689,6 +714,34 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             </tbody>
                         </table>
                     </div>
+
+                    <!-- Novo Form de Inserção Rápida (MOVIDO PARA BAIXO) -->
+                    <form method="POST" style="background:#fff3e0; padding:20px; border-radius:12px; border:1px solid #ffe0b2; margin-bottom:25px;">
+                        <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
+                        <h4 style="margin-top:0; color:#ef6c00;">➕ Adicionar Nova Pendência</h4>
+                        <div style="display:flex; flex-direction:column; gap:10px;">
+                            <div style="flex-grow:1;">
+                                <textarea name="descricao_pendencia" id="new_pendencia_editor" placeholder="Digite a descrição..." style="width:100%;"></textarea>
+                            </div>
+                            <div style="text-align:right;">
+                                <button type="submit" name="btn_adicionar_pendencia" class="btn-save" style="width:auto; margin:0; padding:10px 25px; color:white; background: #fd7e14; border:none;">Adicionar Pendência</button>
+                            </div>
+                        </div>
+                    </form>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', () => {
+                            if(document.querySelector('#new_pendencia_editor')) {
+                                ClassicEditor
+                                .create(document.querySelector('#new_pendencia_editor'), {
+                                    toolbar: [ 'bold', 'italic', 'link', 'bulletedList', '|', 'undo', 'redo' ],
+                                    language: 'pt-br',
+                                    placeholder: 'Digite a descrição da pendência aqui...'
+                                })
+                                .catch( error => { console.error( error ); } );
+                            }
+                        });
+                    </script>
+                    
                 </div>
 
                 <!-- Modais Pendências -->

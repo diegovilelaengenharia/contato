@@ -51,20 +51,20 @@ if($drive_link) {
     <style>
         body { background: #f4f6f8; }
         
-        /* HEADER PADRONIZADO (Verde Brand) */
+        /* HEADER PADRONIZADO (Cyan Brand - Documentos) */
         .page-header {
-            background: #e8f5e9; /* Light Green Standard */
+            background: #d1ecf1; /* Light Cyan */
             border-bottom: none;
             padding: 25px 20px; 
             border-bottom-left-radius: 20px; 
             border-bottom-right-radius: 20px;
-            box-shadow: 0 4px 15px rgba(25, 135, 84, 0.1); 
+            box-shadow: 0 4px 15px rgba(13, 202, 240, 0.1); 
             margin-bottom: 25px;
             display: flex; align-items: center; justify-content: space-between;
-            color: #146c43;
+            color: #0c5460;
         }
         .btn-back {
-            text-decoration: none; color: #146c43; font-weight: 600; 
+            text-decoration: none; color: #0c5460; font-weight: 600; 
             display: flex; align-items: center; gap: 5px;
             padding: 8px 16px; background: #fff; border-radius: 20px;
             transition: 0.2s;
