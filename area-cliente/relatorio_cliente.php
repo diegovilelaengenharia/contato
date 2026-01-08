@@ -257,11 +257,12 @@ $text_color = '#333';
     <div class="page">
         <!-- Header -->
         <div class="header">
-            <div class="logo">
-                <!-- Tenta carregar logo se existir, senão texto -->
-                <img src="../logo.png" alt="Vilela Engenharia" style="max-height: 80px; display: block;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                <h1 style="display:none;">Vilela</h1>
-                <span style="display:none;">Engenharia</span>
+            <div class="logo" style="display: flex; align-items: center; gap: 15px;">
+                <img src="../assets/logo.png" alt="Vilela Engenharia" style="max-height: 60px;">
+                <div>
+                    <h1 style="color: var(--primary); font-size: 20pt; margin: 0; line-height: 1;">Relatório Técnico</h1>
+                    <span style="font-size: 9pt; color: #666; letter-spacing: 1px; display: block; margin-top: 3px;">Acompanhamento de Processo</span>
+                </div>
             </div>
             <div class="meta-header" style="text-align:right; font-size:10pt; line-height:1.5;">
                 <strong style="font-size:12pt; color:var(--primary);">VILELA ENGENHARIA</strong><br>
