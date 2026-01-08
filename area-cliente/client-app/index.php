@@ -103,8 +103,8 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- STYLES -->
-    <link rel="stylesheet" href="css/style.css?v=2.7.4">
-    <link rel="stylesheet" href="css/header-premium.css?v=4.0">
+    <link rel="stylesheet" href="css/style.css?v=4.5">
+    <link rel="stylesheet" href="css/header-premium.css?v=4.5">
     
     <style>
         /* MODAL DE NOTIFICAÇÕES */
