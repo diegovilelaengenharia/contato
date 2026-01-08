@@ -188,7 +188,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             <!-- Bell Notification (Modern & Animated) -->
             <div onclick="document.getElementById('modalNotificacoes').classList.add('open')" class="bell-container" title="Notificações">
                 <div style="position:relative;">
-                    <svg class="bell-icon bell-ringing" viewBox="0 0 24 24">
+                    <svg class="bell-icon bell-ringing" width="28" height="28" viewBox="0 0 24 24" style="fill:#198754;">
                         <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/>
                     </svg>
                     <?php if($total_notif > 0): ?>
@@ -276,11 +276,16 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                     $p_style = $has_pendency ? "border-left: 6px solid #dba7a7;" : ""; 
                 ?>
                 <a href="pendencias.php" class="app-button" style="<?= $p_style ?>">
-                    <div class="app-btn-icon" style="background:<?= $has_pendency ? '#fdf2f2' : '#fcf8e8' ?>; color:<?= $has_pendency ? '#c25e5e' : '#9e8538' ?>;">⚠️</div>
+                    <div class="app-btn-icon" style="background:<?= $has_pendency ? '#fdf2f2' : '#fcf8e8' ?>; color:<?= $has_pendency ? '#c25e5e' : '#9e8538' ?>; position:relative;">
+                        ⚠️
+                        <?php if($has_pendency): ?>
+                            <span style="position:absolute; top:-5px; right:-5px; background:#dc3545; color:white; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:700; border:2px solid white; box-shadow:0 2px 5px rgba(0,0,0,0.2);"><?= $pend_qtd ?></span>
+                        <?php endif; ?>
+                    </div>
                     <div class="app-btn-content">
                         <span class="app-btn-title" style="<?= $has_pendency ? 'color:#c25e5e; font-weight:800;' : '' ?>">Pendências</span>
                         <?php if($has_pendency): ?>
-                            <span class="app-btn-desc" style="color:#d97575; font-weight:600;"><?= $pend_qtd ?> Ação(ões) Necessária(s)</span>
+                            <span class="app-btn-desc" style="color:#d97575; font-weight:600;">Você possui pendências!</span>
                         <?php else: ?>
                             <span class="app-btn-desc">Tudo em dia!</span>
                         <?php endif; ?>
@@ -292,10 +297,15 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                     $has_fin = $fin_qtd > 0;
                 ?>
                 <a href="financeiro.php" class="app-button">
-                    <div class="app-btn-icon" style="background:#eaf4ed; color:#4a8b5c;">💰</div>
+                    <div class="app-btn-icon" style="background:#eaf4ed; color:#4a8b5c; position:relative;">
+                        💰
+                        <?php if($has_fin): ?>
+                            <span style="position:absolute; top:-5px; right:-5px; background:#dc3545; color:white; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:700; border:2px solid white; box-shadow:0 2px 5px rgba(0,0,0,0.2);"><?= $fin_qtd ?></span>
+                        <?php endif; ?>
+                    </div>
                     <div class="app-btn-content">
                         <span class="app-btn-title">Financeiro</span>
-                        <span class="app-btn-desc"><?= $has_fin ? "$fin_qtd Pagamento(s) Pendente(s)" : "Faturas e Recibos" ?></span>
+                        <span class="app-btn-desc"><?= $has_fin ? "Pagamento(s) em aberto" : "Faturas e Recibos" ?></span>
                     </div>
                     <div style="color:#4a8b5c; font-size:1.4rem;">➔</div>
                 </a>

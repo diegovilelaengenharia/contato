@@ -137,3 +137,99 @@
     font-size: 1.1rem;
     flex-shrink: 0;
 }
+
+/* NOTIFICATION BELL ANIMATION */
+.bell-container {
+    position: absolute;
+    top: 25px;
+    right: 20px;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.25);
+    padding: 12px;
+    border-radius: 50%;
+    backdrop-filter: blur(5px);
+    z-index: 10;
+    transition: transform 0.2s;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.bell-container:active {
+    transform: scale(0.95);
+}
+
+.bell-icon {
+    width: 28px;
+    height: 28px;
+    fill: #198754;
+    display: block;
+}
+
+.bell-ringing {
+    animation: bellRing 4s ease-in-out infinite;
+    transform-origin: top center;
+}
+
+@keyframes bellRing {
+    0% {
+        transform: rotate(0);
+    }
+
+    5% {
+        transform: rotate(15deg);
+    }
+
+    10% {
+        transform: rotate(-15deg);
+    }
+
+    15% {
+        transform: rotate(10deg);
+    }
+
+    20% {
+        transform: rotate(-10deg);
+    }
+
+    25% {
+        transform: rotate(0);
+    }
+
+    100% {
+        transform: rotate(0);
+    }
+}
+
+.notif-badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background: #dc3545;
+    color: white;
+    font-size: 0.7rem;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    border: 2px solid #eefdf3;
+    animation: pulseBadge 2s infinite;
+}
+
+@keyframes pulseBadge {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+    }
+
+    70% {
+        transform: scale(1.1);
+        box-shadow: 0 0 0 6px rgba(220, 53, 69, 0);
+    }
+
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+    }
+}
