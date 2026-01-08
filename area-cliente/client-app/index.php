@@ -174,35 +174,64 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
     <div class="app-container" style="padding: 0;"> <!-- Remove padding here, controlled by inner elements -->
         
         <!-- HEADER STYLE PREMIUM WOW (Glass + Gradient) -->
-        <header class="premium-header">
+        <header class="premium-header" style="flex-direction: column; gap: 10px; align-items: stretch;">
             
-            <div class="ph-content">
-                <?php 
-                    $avatarPath = $cliente['foto_perfil'] ?? '';
-                    if($avatarPath && !str_starts_with($avatarPath, '../') && !str_starts_with($avatarPath, 'http')) $avatarPath = '../' . $avatarPath;
-                ?>
-                <div class="ph-avatar-box">
-                    <?php if($avatarPath && file_exists($avatarPath) && !is_dir($avatarPath)): ?>
-                        <img src="<?= htmlspecialchars($avatarPath) ?>?v=<?= time() ?>" style="width:100%; height:100%; object-fit:cover;">
-                    <?php else: ?>
-                        <span style="font-size:1.5rem; color:white;">👤</span>
-                    <?php endif; ?>
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div class="ph-content" style="flex: 1;">
+                    <?php 
+                        $avatarPath = $cliente['foto_perfil'] ?? '';
+                        if($avatarPath && !str_starts_with($avatarPath, '../') && !str_starts_with($avatarPath, 'http')) $avatarPath = '../' . $avatarPath;
+                    ?>
+                    <div class="ph-avatar-box" style="width: 60px; height: 60px;">
+                        <?php if($avatarPath && file_exists($avatarPath) && !is_dir($avatarPath)): ?>
+                            <img src="<?= htmlspecialchars($avatarPath) ?>?v=<?= time() ?>" style="width:100%; height:100%; object-fit:cover;">
+                        <?php else: ?>
+                            <span style="font-size:1.5rem; color:white;">👤</span>
+                        <?php endif; ?>
+                    </div>
+
+                    <div class="ph-info" style="margin-left: 15px;">
+                        <div style="font-size:0.85rem; color:rgba(255,255,255,0.9); font-weight:400;">Bem vindo(a),</div>
+                        <h1 style="margin:0; font-size:1.4rem;"><?= htmlspecialchars(explode(' ', $cliente['nome'])[0]) ?></h1>
+                    </div>
                 </div>
 
-                <div class="ph-info">
-                    <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.7); font-weight:700;">Área do Cliente</div>
-                    <h1><?= htmlspecialchars(explode(' ', $cliente['nome'])[0]) ?></h1> <!-- Primeiro Nome only for clean look -->
+                <div class="ph-actions">
+                    <a href="logout.php" class="ph-logout" style="background: rgba(255,255,255,0.2); border:none;">
+                        <span class="material-symbols-rounded" style="font-size:1.1rem;">logout</span>
+                    </a>
                 </div>
-            </div>
-
-            <div class="ph-actions">
-                <a href="logout.php" class="ph-logout">
-                    <span class="material-symbols-rounded" style="font-size:1.1rem;">logout</span>
-                    <span>Sair</span>
-                </a>
             </div>
 
         </header>
+
+        <!-- INFO BAR (New) -->
+        <div class="app-info-bar" style="padding: 0 25px; margin-top: 15px; margin-bottom: 20px; color: #555;">
+            <!-- Endereço -->
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 5px;">
+                <span class="material-symbols-rounded" style="color:var(--color-primary); font-size: 1.1rem;">location_on</span>
+                <span style="font-size: 0.9rem; font-weight: 500;">
+                    <?= htmlspecialchars($detalhes['endereco_imovel'] ?? 'Endereço não cadastrado') ?>
+                </span>
+            </div>
+            
+            <div style="display: flex; gap: 20px;">
+                <!-- Área -->
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <span class="material-symbols-rounded" style="color:var(--color-primary); font-size: 1.1rem;">square_foot</span>
+                    <span style="font-size: 0.85rem;">
+                        <?= htmlspecialchars($detalhes['area_total_final'] ?? $detalhes['area_construida'] ?? '--') ?> m²
+                    </span>
+                </div>
+                <!-- Processo -->
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <span class="material-symbols-rounded" style="color:var(--color-primary); font-size: 1.1rem;">folder_open</span>
+                    <span style="font-size: 0.85rem;">
+                       Proc: <?= htmlspecialchars($detalhes['processo_numero'] ?? '--') ?>/<?= date('Y', strtotime($detalhes['data_inicio'] ?? 'now')) ?>
+                    </span>
+                </div>
+            </div>
+        </div>
 
         <!-- MAIN CONTENT (With Padding) -->
         <div style="padding: 0 20px;">
