@@ -293,7 +293,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
         </div>
 
         <!-- FOOTER PREMIUM -->
-        <footer class="premium-footer" style="padding: 30px 20px; background: #fff; border-top: 1px solid #eee; margin-top: 0; margin-bottom: 90px; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px;">
+        <footer class="premium-footer" style="padding: 30px 20px; background: #fff; border-top: 1px solid #eee; margin-top: 0; margin-bottom: 25px; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px;">
             <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
                 <!-- Logo -->
                 <div style="flex-shrink: 0;">

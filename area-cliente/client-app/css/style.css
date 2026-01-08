@@ -65,7 +65,7 @@ body {
     color: var(--text-main);
     margin: 0;
     padding: 0;
-    padding-bottom: calc(80px + var(--safe-bottom));
+    padding-bottom: 0;
     transition: background-color 0.3s, color 0.3s;
 }
 
