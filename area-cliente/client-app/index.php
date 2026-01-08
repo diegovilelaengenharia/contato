@@ -191,8 +191,8 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                     </div>
 
                     <div class="ph-info" style="margin-left: 15px;">
-                        <div style="font-size:0.85rem; color:rgba(255,255,255,0.9); font-weight:400;">Bem vindo(a),</div>
-                        <h1 style="margin:0; font-size:1.4rem;"><?= htmlspecialchars(explode(' ', $cliente['nome'])[0]) ?></h1>
+                        <div style="font-size:0.85rem; color:rgba(255,255,255,0.9); font-weight:400;">Olá meu querido cliente,</div>
+                        <h1 style="margin:0; font-size:1.4rem;"><?= htmlspecialchars($cliente['nome']) ?></h1>
                     </div>
                 </div>
 
