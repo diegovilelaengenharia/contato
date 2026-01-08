@@ -311,7 +311,8 @@ function get_pendency_files($p_id) {
                     </h3>
 
                     <?php foreach($abertas as $p): 
-                        $anexos = get_pendency_files($p['id']);
+                        // $anexos = get_pendency_files($p['id']);
+                        $anexos = []; // DEBUG: Disabled
                         $has_attachment = !empty($anexos);
                         $data_criacao = date('d/m/Y', strtotime($p['data_criacao']));
                         
