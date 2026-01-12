@@ -2,6 +2,9 @@
 session_set_cookie_params(0, '/');
 session_name('CLIENTE_SESSID');
 session_start();
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 require_once '../db.php';
 
 // VERIFICAR LOGIN
