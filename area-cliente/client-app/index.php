@@ -351,7 +351,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
         <footer class="premium-footer" style="background: #fff; margin-top: 0; margin-bottom: 25px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid #e0e0e0;">
             
             <!-- Top: Info -->
-            <div style="padding: 25px 20px; display: flex; align-items: center; justify-content: center; gap: 15px;">
+            <div style="padding: 15px 20px; display: flex; align-items: center; justify-content: center; gap: 15px;">
                 <!-- Logo -->
                 <div style="flex-shrink: 0;">
                     <img src="../../assets/logo.png" alt="Vilela Engenharia" style="max-height: 50px; opacity: 1;">
