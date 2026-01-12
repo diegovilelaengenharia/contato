@@ -286,6 +286,18 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                 <span style="background:#f8f9fa; padding:1px 6px; border-radius:4px; border:1px solid #e9ecef;">333.333.333-33</span>
                             </div>
 
+                            <!-- NEW: Process Info & Address moved here -->
+                            <div style="margin-bottom:8px; font-size:0.8rem; color:#444; display:flex; flex-direction:column; gap:4px;">
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <span class="material-symbols-rounded" style="font-size:1rem; color:#6f42c1;">folder_open</span>
+                                    <span style="font-weight:600;"><?= !empty($detalhes['tipo_servico']) ? htmlspecialchars($detalhes['tipo_servico']) : 'Tipo de Processo não informado' ?></span>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:6px; color:#666;">
+                                    <span class="material-symbols-rounded" style="font-size:1rem; color:#dc3545;">location_on</span>
+                                    <span style="font-size:0.8rem;"><?= !empty($detalhes['endereco_imovel']) ? htmlspecialchars($detalhes['endereco_imovel']) : 'Endereço da obra não informado' ?></span>
+                                </div>
+                            </div>
+
                             <div style="display:flex; gap:8px;">
                                 <a href="gerenciar_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save" style="background:var(--color-primary-light); color:var(--color-primary); border:none; padding:3px 10px; font-size:0.75rem; box-shadow:none;">✏️ Editar Cadastro</a>
                                 <a href="relatorio_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save" style="background:#fff3cd; color:#856404; border:none; padding:3px 10px; font-size:0.75rem; box-shadow:none;">⚠️ Resumo PDF</a>
@@ -294,42 +306,43 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         </div>
                     </div>
 
-                    <!-- MEIO: Abas de Navegação (Agora NO Header) -->
+                    <!-- MEIO: Abas de Navegação (Agora Grid 3 cols) -->
                     <div style="flex:1; display:flex; justify-content:center; align-items:center; padding:0 10px;">
                         <style>
                             .header-tabs {
-                                display: flex;
-                                gap: 8px;
-                                flex-wrap: wrap;
-                                justify-content: center;
+                                display: grid;
+                                grid-template-columns: repeat(3, 1fr);
+                                gap: 8px; /* Espaço entre botões */
+                                width: 100%;
+                                max-width: 500px; /* Limite largura */
                             }
                             .h-tab-link {
                                 display: flex;
                                 align-items: center;
+                                justify-content: center; /* Centralizar texto/icone */
                                 gap: 6px;
-                                padding: 8px 16px;
-                                border-radius: 20px;
+                                padding: 8px 4px; /* Menos padding lateral */
+                                border-radius: 8px; /* Quadrado arredondado */
                                 text-decoration: none;
-                                color: #666;
+                                color: #555;
                                 font-weight: 600;
-                                font-size: 0.9rem;
+                                font-size: 0.85rem;
                                 transition: all 0.2s;
-                                background: transparent;
-                                border: 1px solid transparent;
+                                background: #f8f9fa;
+                                border: 1px solid #e9ecef;
+                                white-space: nowrap; /* Evitar quebra */
                             }
                             .h-tab-link:hover {
-                                background: #f8f9fa;
-                                color: #333;
+                                background: #e2e6ea;
                             }
                             .h-tab-link.active {
-                                background: #fff;
-                                color: var(--color-primary);
-                                border-color: #e0e0e0;
-                                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-                                color: #146c43;
+                                background: #146c43;
+                                color: white;
+                                border-color: #146c43;
+                                box-shadow: 0 2px 5px rgba(20, 108, 67, 0.3);
                             }
                             /* Icons */
-                            .h-tab-link span { font-size: 1.1rem; }
+                            .h-tab-link span { font-size: 1rem; }
                         </style>
                         <div class="header-tabs">
                              <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=documentos" class="h-tab-link <?= ($active_tab=='documentos')?'active':'' ?>">
@@ -385,18 +398,6 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     
                 </div>
                 
-                <!-- Extra Info Row (Process Type & Addr) -->
-                 <div style="border-top:1px solid #eee; padding:10px 25px; display:flex; gap:30px; background:#fafafa; border-radius: 0 0 12px 12px;">
-                     <div style="display:flex; align-items:center; gap:6px;">
-                        <span class="material-symbols-rounded" style="font-size:1.1rem; color:#6f42c1;">folder_open</span>
-                        <span style="font-size:0.85rem; font-weight:600; color:#555;"><?= !empty($detalhes['tipo_servico']) ? htmlspecialchars($detalhes['tipo_servico']) : 'Tipo de Processo não informado' ?></span>
-                    </div>
-                    <div style="display:flex; align-items:center; gap:6px; color:#666;">
-                        <span class="material-symbols-rounded" style="font-size:1.1rem; color:#dc3545;">location_on</span>
-                        <span style="font-size:0.85rem;"><?= !empty($detalhes['endereco_imovel']) ? htmlspecialchars($detalhes['endereco_imovel']) : 'Endereço da obra não informado' ?></span>
-                    </div>
-                 </div>
-
             </div>
 
     
