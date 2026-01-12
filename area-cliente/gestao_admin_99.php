@@ -254,19 +254,24 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             ?>
 
             <!-- Card Resumo do Cliente (Grid Layout: Info + Timelime) -->
-            <div class="form-card" style="margin-bottom:20px; border-left:5px solid var(--color-primary); background:#fff; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.05); padding:0;">
+            <div id="clientHeaderCard" class="form-card" style="margin-bottom:20px; border-left:5px solid var(--color-primary); background:#fff; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.05); padding:0; transition: all 0.3s ease;">
                 
                 <div style="display:flex; justify-content:space-between; align-items:stretch;">
                     
                     <!-- ESQUERDA: Info do Cliente -->
-                    <div style="padding:20px 25px; display:flex; align-items:center; gap:20px;">
+                    <div id="colLeftInfo" style="padding:20px 25px; display:flex; align-items:center; gap:20px; transition: all 0.3s ease; min-width:350px;">
                         
+                        <!-- Toggle Button -->
+                         <button onclick="toggleClientInfo()" title="Ocultar/Exibir Detalhes" style="position:absolute; top:10px; left:10px; background:white; border:1px solid #eee; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:#999; z-index:10; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
+                            <span id="toggleIcon" class="material-symbols-rounded" style="font-size:16px;">first_page</span>
+                        </button>
+
                         <!-- Avatar / Iniciais (Com Upload) -->
                         <div style="position:relative; width:70px; height:70px; min-width:70px; cursor:pointer;" onclick="document.getElementById('avatar_input').click();" title="Clique para alterar a foto">
                             <?php if($avatar_url): ?>
                                 <img src="<?= $avatar_url ?>" style="width:100%; height:100%; object-fit:cover; border-radius:50%; border:3px solid var(--color-primary-light);">
                             <?php else: ?>
-                                <div style="width:100%; height:100%; background:var(--color-primary-light); color:var(--color-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.8rem; font-weight:800; border:2px solid white; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
+                                <div style="width:100%; height:100%; background:var(--color-primary-light); color:var(--color-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.8rem; font-weight:800; border:2px solid white; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
                                     <?= strtoupper(substr($cliente_ativo['nome'], 0, 1)) ?>
                                 </div>
                             <?php endif; ?>
@@ -277,7 +282,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         <!-- Form invisível para upload -->
                         </form>
 
-                        <div class="client-summary-card">
+                        <div id="clientDetailsBlock" class="client-summary-card" style="transition: opacity 0.2s; white-space:nowrap; overflow:hidden;">
                             <h2 style="margin:0 0 5px 0; font-size:1.4rem; color:var(--color-text); line-height:1.2;"><?= htmlspecialchars($cliente_ativo['nome']) ?></h2>
                             
                             <div style="display:flex; flex-wrap:wrap; gap:10px; font-size:0.8rem; color:#666; margin-bottom:8px;">
@@ -315,6 +320,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                 gap: 8px; /* Espaço entre botões */
                                 width: 100%;
                                 max-width: 500px; /* Limite largura */
+                                transition: all 0.3s;
                             }
                             .h-tab-link {
                                 display: flex;
@@ -343,8 +349,23 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             }
                             /* Icons */
                             .h-tab-link span { font-size: 1rem; }
+                            
+                            /* COLLAPSED STATE STYLES */
+                            .collapsed-mode #colLeftInfo {
+                                min-width: 100px !important;
+                                padding: 20px 10px !important;
+                                justify-content: center;
+                            }
+                            .collapsed-mode #clientDetailsBlock {
+                                display: none;
+                                opacity: 0;
+                            }
+                            .collapsed-mode .header-tabs {
+                                max-width: 700px; /* Expand tabs area */
+                                grid-template-columns: repeat(5, 1fr) !important; /* All in one row if possible */
+                            }
                         </style>
-                        <div class="header-tabs">
+                        <div class="header-tabs" id="tabsGridContainer">
                              <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=documentos" class="h-tab-link <?= ($active_tab=='documentos')?'active':'' ?>">
                                 <span>📁</span> Documentos
                             </a>
@@ -399,6 +420,36 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 </div>
                 
             </div>
+
+            <!-- TOGGLE LOGIC SCRIPT -->
+            <script>
+                function toggleClientInfo() {
+                    const card = document.getElementById('clientHeaderCard');
+                    const icon = document.getElementById('toggleIcon');
+                    const isCollapsed = card.classList.contains('collapsed-mode');
+                    
+                    if(isCollapsed) {
+                        card.classList.remove('collapsed-mode');
+                        icon.innerText = 'first_page'; // Arrow left
+                        localStorage.setItem('client_header_collapsed', 'false');
+                    } else {
+                        card.classList.add('collapsed-mode');
+                        icon.innerText = 'last_page'; // Arrow right
+                        localStorage.setItem('client_header_collapsed', 'true');
+                    }
+                }
+                
+                // Init on Load
+                document.addEventListener('DOMContentLoaded', () => {
+                    const isCollapsed = localStorage.getItem('client_header_collapsed') === 'true';
+                    if(isCollapsed) {
+                        const card = document.getElementById('clientHeaderCard');
+                        const icon = document.getElementById('toggleIcon');
+                        card.classList.add('collapsed-mode'); // No animation for init? element transition handles it
+                         if(icon) icon.innerText = 'last_page';
+                    }
+                });
+            </script>
 
     
             <!-- Modal Timeline e Andamento -->
