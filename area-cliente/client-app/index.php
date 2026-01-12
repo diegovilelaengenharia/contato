@@ -170,13 +170,16 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
         
         <!-- HEADER STYLE PREMIUM WOW (Glass + Gradient) -->
         <!-- HEADER STYLE PREMIUM WOW (Glass + Gradient) -->
-        <div style="display: flex; justify-content: center; margin-bottom: 20px; margin-top: 20px;">
-            <div style="background: #222; padding: 12px 35px; border-radius: 50px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 215, 0, 0.2); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+        <!-- HEADER TITLE - Portal Definition -->
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 25px; margin-top: 25px;">
+            <img src="../../assets/logo.png" alt="Vilela Engenharia" style="height: 55px; margin-bottom: 12px; opacity: 1;">
+            
+            <div style="background: #222; padding: 10px 30px; border-radius: 50px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 215, 0, 0.2); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
                 <!-- Shine Effect Background -->
                 <div style="position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); animation: shine 3s infinite;"></div>
                 
-                <span style="font-size: 1rem; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; background: linear-gradient(45deg, #B8860B, #FFD700, #F0E68C, #DAA520); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% auto; animation: textShine 4s linear infinite;">
-                    Área do Cliente
+                <span style="font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: white;">
+                    Portal de Acompanhamento
                 </span>
             </div>
         </div>
