@@ -176,7 +176,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             <!-- TOP: BRANDING Area -->
             <div style="padding: 25px 20px 20px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #fff;">
                 <img src="../../assets/logo.png" alt="Vilela Engenharia" style="height: 55px; margin-bottom: 8px; opacity: 1;">
-                <span style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #666;">
+                <span style="font-size: 1.1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #666;">
                     Portal de Acompanhamento
                 </span>
             </div>
