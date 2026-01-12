@@ -175,7 +175,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             
             <!-- TOP: BRANDING Area -->
             <div style="padding: 25px 30px; display: flex; flex-direction: row; align-items: center; justify-content: flex-start; background: #fff; gap: 20px;">
-                <img src="../../assets/logo.png" alt="Vilela Engenharia" style="height: 50px; opacity: 1;">
+                <img src="../../assets/logo.png" alt="Vilela Engenharia" style="height: 65px; opacity: 1;">
                 
                 <!-- Vertical Separator -->
                 <div style="width: 1px; height: 35px; background: #e0e0e0;"></div>
@@ -329,28 +329,35 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                     <div class="app-btn-arrow" style="color:#0dcaf0;">➔</div>
                 </a>
 
-                <!-- 6. RESUMO (MOVED & RESTYLED) -->
-                <a href="../../area-cliente/relatorio_cliente.php?id=<?= $cliente['id'] ?>" target="_blank" class="app-button" style="background: #fff3cd; border: 1px solid #ffecb5; padding: 12px 15px; min-height: auto;">
-                    <div class="app-btn-icon" style="background: rgba(255, 193, 7, 0.2); color: #856404; width: 32px; height: 32px; font-size: 1.1rem; flex-shrink: 0;">🖨️</div>
-                    <div class="app-btn-content">
-                        <span class="app-btn-title" style="color: #856404; font-size: 0.95rem; font-weight: 700; display: block; margin-bottom: 2px;">Download: Visão Geral do Processo</span>
-                        <span class="app-btn-desc" style="color: #856404; font-size: 0.75rem; opacity: 0.9;">Baixar Resumo Completo do processo</span>
+                <!-- 6. RESUMO (REDESIGNED) -->
+                <div style="background: #fff3cd; border: 1px solid #ffecb5; border-radius: 20px; padding: 15px 25px; display: flex; align-items: center; justify-content: space-between; gap: 15px; grid-column: 1 / -1; margin-top: 5px;">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div style="font-size: 1.6rem;">🖨️</div>
+                        <div style="display: flex; flex-direction: column;">
+                            <span style="font-size: 0.9rem; font-weight: 700; color: #856404;">Download: Visão Geral do Processo</span>
+                            <span style="font-size: 0.75rem; color: #856404; opacity: 0.8;">Baixar Resumo Completo do processo</span>
+                        </div>
                     </div>
-                </a>
+                    <a href="../../area-cliente/relatorio_cliente.php?id=<?= $cliente['id'] ?>" target="_blank" style="background: #ffc107; color: #4e3e06; font-weight: 700; font-size: 0.8rem; padding: 10px 20px; border-radius: 12px; text-decoration: none; box-shadow: 0 4px 6px rgba(133, 100, 4, 0.1); transition: transform 0.2s; text-align: center; white-space: nowrap;">
+                        Clique aqui para download
+                    </a>
+                </div>
 
             </div>
             
         </div>
 
-        <!-- FOOTER PREMIUM -->
-        <footer class="premium-footer" style="padding: 20px 20px; background: #fff; border-top: 1px solid #eee; margin-top: 0; margin-bottom: 25px; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px;">
-            <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
+        <!-- FOOTER PREMIUM (Harmonized) -->
+        <footer class="premium-footer" style="background: #fff; margin-top: 0; margin-bottom: 25px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid #e0e0e0;">
+            
+            <!-- Top: Info -->
+            <div style="padding: 25px 20px; display: flex; align-items: center; justify-content: center; gap: 15px;">
                 <!-- Logo -->
                 <div style="flex-shrink: 0;">
-                    <img src="../../assets/logo.png" alt="Vilela Engenharia" style="max-height: 45px; opacity: 1;">
+                    <img src="../../assets/logo.png" alt="Vilela Engenharia" style="max-height: 50px; opacity: 1;">
                 </div>
                 
-                <!-- Vertical Divider (Optional, subtle) -->
+                <!-- Vertical Divider -->
                 <div style="width:1px; height:35px; background:#eee;"></div>
 
                 <!-- Info -->
@@ -360,8 +367,10 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                     <span style="display:block; font-size: 0.75rem; color: #666; line-height:1;">CREA 235.474/D</span>
                 </div>
             </div>
-            <div style="margin-top: 15px; font-size: 0.7rem; color: #ccc; text-align: center;">
-                &copy; <?= date('Y') ?> Vilela Engenharia
+
+            <!-- Bottom: Green Harmony Bar -->
+            <div style="background: linear-gradient(135deg, #198754 0%, #146c43 100%); padding: 12px; text-align: center;">
+                <span style="font-size: 0.75rem; color: rgba(255,255,255,0.9); font-weight: 500;">&copy; <?= date('Y') ?> Vilela Engenharia</span>
             </div>
         </footer>
 
