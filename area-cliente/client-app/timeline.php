@@ -121,6 +121,51 @@ $obs_atual = $stmt_obs->fetchColumn();
         }
         .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #0f5132; }
         .header-title-sub { font-size: 0.8rem; opacity: 0.8; font-weight: 500; margin-top: 2px; color: #198754; }
+
+        /* MODAL STYLES */
+        .detail-modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+            z-index: 10000;
+            display: none; align-items: flex-end; justify-content: center;
+            opacity: 0; transition: opacity 0.3s ease;
+        }
+        .detail-modal-overlay.active { display: flex; opacity: 1; }
+
+        .detail-modal {
+            background: white; width: 100%; max-width: 500px;
+            border-top-left-radius: 25px; border-top-right-radius: 25px;
+            padding: 30px 25px;
+            transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+        .detail-modal-overlay.active .detail-modal { transform: translateY(0); }
+        
+        @media(min-width: 768px) {
+            .detail-modal-overlay { align-items: center; }
+            .detail-modal { border-radius: 20px; transform: scale(0.95); opacity: 0; }
+            .detail-modal-overlay.active .detail-modal { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-icon-box {
+            width: 60px; height: 60px; background: #e8f5e9; color: #198754;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; margin-bottom: 20px;
+        }
+        .modal-title { font-size: 1.4rem; font-weight: 700; color: #333; margin-bottom: 10px; line-height: 1.2; }
+        .modal-badge { 
+            display: inline-block; padding: 4px 12px; border-radius: 20px; 
+            font-size: 0.75rem; font-weight: 600; text-transform: uppercase; margin-bottom: 20px;
+        }
+        .modal-desc { font-size: 1rem; color: #555; line-height: 1.6; margin-bottom: 25px; }
+        .modal-meta { 
+            background: #f8f9fa; border-radius: 12px; padding: 15px; display: flex; gap: 15px; border: 1px solid #eee;
+        }
+        .btn-close-modal {
+            background: #198754; color: white; border: none; width: 100%; padding: 16px;
+            border-radius: 16px; font-size: 1rem; font-weight: 600; cursor: pointer;
+            margin-top: 25px; box-shadow: 0 4px 10px rgba(25, 135, 84, 0.2);
+        }
     </style>
 </head>
 <body>
@@ -208,9 +253,58 @@ $obs_atual = $stmt_obs->fetchColumn();
             </div>
             <?php endif; ?>
 
-            <!-- TIMELINE STEPPER (GROUPED) -->
+            <!-- TIMELINE STEPPER (GROUPED - INTERACTIVE) -->
             <div class="timeline-container-full" style="padding-left:0; margin-bottom:30px;">
                 <?php 
+                    // DETALHAMENTO EDUCATIVO DAS FASES
+                    $fases_detalhes = [
+                        'Abertura de Processo (Guichê)' => [
+                            'desc' => 'Iniciamos o protocolo oficial na Prefeitura. Seu processo recebe um número único e entra na fila de distribuição.',
+                            'prazo' => '2 a 5 dias úteis',
+                            'icon' => '📂'
+                        ],
+                        'Fiscalização (Parecer Fiscal)' => [
+                            'desc' => 'Um fiscal da Prefeitura visita o local (ou analisa via satélite) para conferir se a construção existe e bate com as medidas básicas.',
+                            'prazo' => '7 a 15 dias',
+                            'icon' => '🧐'
+                        ],
+                        'Triagem (Documentos Necessários)' => [
+                            'desc' => 'Conferência administrativa para ver se todas as certidões e documentos pessoais estão anexados corretamente.',
+                            'prazo' => '3 a 7 dias',
+                            'icon' => '📑'
+                        ],
+                        'Comunicado de Pendências (Triagem)' => [
+                            'desc' => 'A Prefeitura solicitou algum documento extra ou correção. Nossa equipe já está providenciando para destravar.',
+                            'prazo' => 'Depende da pendência',
+                            'icon' => '⚠️'
+                        ],
+                        'Análise Técnica (Engenharia)' => [
+                            'desc' => 'A fase mais rigorosa. Engenheiros da Prefeitura analisam cada detalhe do projeto arquitetônico (recuos, áreas, iluminação).',
+                            'prazo' => '15 a 45 dias',
+                            'icon' => '📐'
+                        ],
+                        'Comunicado (Pendências e Taxas)' => [
+                            'desc' => 'O projeto precisa de ajustes técnicos solicitados pelo analista ou há taxas de aprovação emitidas para pagamento.',
+                            'prazo' => '5 a 10 dias',
+                            'icon' => '💰'
+                        ],
+                        'Confecção de Documentos' => [
+                            'desc' => 'Projeto aprovado! Agora a Prefeitura está gerando o Alvará, a Certidão de Conclusão ou o Habite-se oficial.',
+                            'prazo' => '5 a 10 dias',
+                            'icon' => '🖨️'
+                        ],
+                        'Avaliação (ITBI/Averbação)' => [
+                            'desc' => 'Fase de regularização fiscal e cartorária. Cálculo de impostos de transmissão e preparação para registro em cartório.',
+                            'prazo' => '15 a 30 dias',
+                            'icon' => '🏦'
+                        ],
+                        'Processo Finalizado (Documentos Prontos)' => [
+                            'desc' => 'Tudo pronto! Seu imóvel está 100% regularizado com documentação em mãos.',
+                            'prazo' => 'Concluído',
+                            'icon' => '🎉'
+                        ]
+                    ];
+
                     // Define Groups
                     $grupos = [
                         '🚀 Fase Inicial' => array_slice($fases_padrao, 0, 4), // 0-3
@@ -233,16 +327,26 @@ $obs_atual = $stmt_obs->fetchColumn();
                                 $is_past = $global_index < $fase_index;
                                 $is_curr = $global_index === $fase_index;
                                 
-                                // Icons
+                                // Dados da Fase
+                                $dados = $fases_detalhes[$fase] ?? ['desc'=>'Sem detalhes.', 'prazo'=>'-', 'icon'=>'▫️'];
+                                
+                                // Icons logic
                                 $icon_display = '▫️'; 
                                 if($is_past) $icon_display = '✅';
-                                if($is_curr) $icon_display = '📍';
-                                
+                                if($is_curr) $icon_display = $dados['icon']; // Use custom icon for current
+                                if(!$is_past && !$is_curr) $icon_display = '🔒'; // Lock for future
+
                                 $text_style = $is_curr ? 'font-weight:700; color:#333;' : ($is_past ? 'color:#198754;' : 'color:#aaa;');
                                 $line_color = ($is_past) ? '#198754' : '#e9ecef';
                         ?>
-                            <div style="display:flex; gap:15px; position:relative; padding-bottom:25px;">
-                                <!-- Connect Line (Logic: if not last in group) -->
+                            <!-- CLICKABLE WRAPPER -->
+                            <div 
+                                onclick="openPhaseModal('<?= htmlspecialchars($fase) ?>', '<?= htmlspecialchars($dados['desc']) ?>', '<?= htmlspecialchars($dados['prazo']) ?>', '<?= $dados['icon'] ?>', '<?= $is_curr ? 'atual' : ($is_past ? 'concluido' : 'futuro') ?>')"
+                                style="display:flex; gap:15px; position:relative; padding-bottom:25px; cursor:pointer; transition: opacity 0.2s;"
+                                onmouseover="this.style.opacity='0.7'"
+                                onmouseout="this.style.opacity='1'"
+                            >
+                                <!-- Connect Line -->
                                 <div style="position:absolute; left:11px; top:25px; bottom:0; width:2px; background:<?= $line_color ?>; z-index:0;"></div>
                                 
                                 <!-- Icon -->
@@ -253,7 +357,7 @@ $obs_atual = $stmt_obs->fetchColumn();
                                 <!-- Text -->
                                 <div style="padding-top:4px;">
                                     <span style="font-size:0.95rem; display:block; <?= $text_style ?>">
-                                        <?= $fase ?>
+                                        <?= $fase ?> <span style="font-size:0.7rem; color:#ccc; margin-left:5px;">(Ver +)</span>
                                     </span>
                                     <?php if($is_curr): ?>
                                         <div style="margin-top:5px;">
@@ -339,6 +443,62 @@ $obs_atual = $stmt_obs->fetchColumn();
         </div>
 
     </div>
+
+    <!-- MODAL DE DETALHES DA FASE -->
+    <div class="detail-modal-overlay" id="detailModalOverlay" onclick="closePhaseModal(event)">
+        <div class="detail-modal" onclick="event.stopPropagation()">
+            <div class="modal-icon-box" id="modalIcon"></div>
+            
+            <span class="modal-badge" id="modalBadge">Status</span>
+            <h3 class="modal-title" id="modalTitle">Título da Fase</h3>
+            <p class="modal-desc" id="modalDesc">Descrição educativa sobre essa fase.</p>
+            
+            <div class="modal-meta">
+                <span style="font-size:1.5rem;">⏳</span>
+                <div>
+                    <strong style="display:block; font-size:0.8rem; color:#999; text-transform:uppercase;">Prazo Médio Estimado</strong>
+                    <span style="font-size:1rem; color:#333; font-weight:600;" id="modalTime">15 dias</span>
+                </div>
+            </div>
+
+            <button class="btn-close-modal" onclick="closePhaseModal()">Entendi</button>
+        </div>
+    </div>
+
+    <script>
+        function openPhaseModal(title, desc, time, icon, status) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalDesc').textContent = desc;
+            document.getElementById('modalTime').textContent = time;
+            document.getElementById('modalIcon').textContent = icon;
+            
+            const badge = document.getElementById('modalBadge');
+            const overlay = document.getElementById('detailModalOverlay');
+            
+            // Status Logic
+            if(status === 'atual') {
+                badge.style.backgroundColor = '#fff3cd'; 
+                badge.style.color = '#856404'; 
+                badge.textContent = 'EM ANDAMENTO';
+            } else if (status === 'concluido') {
+                badge.style.backgroundColor = '#d1e7dd'; 
+                badge.style.color = '#0f5132'; 
+                badge.textContent = 'CONCLUÍDO';
+            } else {
+                badge.style.backgroundColor = '#e2e3e5'; 
+                badge.style.color = '#6c757d'; 
+                badge.textContent = 'AGUARDANDO';
+            }
+
+            // Open Animation
+            overlay.classList.add('active');
+        }
+
+        function closePhaseModal(event) {
+            // If event is passed (click on overlay), verification is already done in onclick html
+            document.getElementById('detailModalOverlay').classList.remove('active');
+        }
+    </script>
 
 </body>
 </html>
