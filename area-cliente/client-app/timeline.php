@@ -179,17 +179,16 @@ $obs_atual = $stmt_obs->fetchColumn();
                 <span class="material-symbols-rounded">arrow_back</span> Voltar
             </a>
 
-            <!-- Center/Right: Logo & Title -->
-            <div style="display:flex; align-items:center; gap:20px;">
-                <!-- LOGO -->
-                <img src="../../assets/logo.png" alt="Vilela Engenharia" style="height:65px; width:auto; opacity:1;">
+            <!-- Right: Title & Icon (Pendências Style) -->
+            <div style="display:flex; align-items:center; gap:15px;">
+                <div style="text-align:right;">
+                    <h1 style="margin:0; font-size:1.4rem; color:#146c43; font-weight:700; letter-spacing:-0.5px;">Acompanhamento</h1>
+                    <span style="display:block; font-size:0.8rem; color:#198754; font-weight:500; margin-top:2px;">Linha do Tempo</span>
+                </div>
                 
-                <!-- Vertical Separator -->
-                <div style="width: 1px; height: 35px; background: #e0e0e0;"></div>
-
-                <div style="text-align:left;">
-                    <h1 style="margin:0; font-size:1.2rem; color:#146c43; font-weight:700;">Acompanhamento</h1>
-                    <span style="display:block; font-size:0.7rem; color:#999; text-transform:uppercase; letter-spacing:1px;">Linha do Tempo</span>
+                <!-- Icon Box -->
+                <div style="background: #fff; width: 50px; height: 50px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #e0e0e0;">
+                    🧭
                 </div>
             </div>
         </div>
