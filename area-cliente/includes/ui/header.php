@@ -44,7 +44,13 @@
         </div>
     </div>
 
-    <!-- 3. Acesso Rápido (Dropdown) -->
+    <!-- 3. Novo Cliente (Direct Button) -->
+    <a href="gerenciar_cliente.php" class="top-nav-btn" style="border-color:#198754; color:#198754;">
+        <span class="material-symbols-rounded">person_add</span>
+        Novo Cliente
+    </a>
+
+    <!-- 4. Acesso Rápido (Dropdown) -->
     <div class="top-nav-dropdown" style="position:relative;">
         <button class="top-nav-btn" onclick="toggleTopNavDropdown(this)" style="cursor:pointer;">
             <span class="material-symbols-rounded" style="color:#6610f2;">link</span>
@@ -52,13 +58,6 @@
             <span class="material-symbols-rounded" style="font-size:1rem; margin-left:5px; color:#aaa;">expand_more</span>
         </button>
         <div class="top-nav-dropdown-menu" style="width:220px;">
-            <!-- New Internal Shortcuts -->
-            <a href="gerenciar_cliente.php" class="dropdown-item">
-                <span class="material-symbols-rounded">person_add</span>
-                Novo Cliente
-            </a>
-            <div style="border-top:1px solid #eee; margin:5px 0;"></div>
-            
             <!-- External Links -->
             <a href="https://oliveira.atende.net/atendenet?source=pwa" target="_blank" class="dropdown-item">
                 <span class="material-symbols-rounded" style="font-size:1.1rem; vertical-align:middle; margin-right:5px; color:#009688;">support_agent</span>
@@ -114,6 +113,19 @@
 
 </div>
 <div style="height:60px;"></div> <!-- Spacer to push content down -->
+
+<!-- FLOATING ACTION BUTTONS (Right Side) -->
+<div class="floating-stack" style="position:fixed; right:20px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:10px; z-index:999;">
+    <!-- Atende Oliveira -->
+    <a href="https://oliveira.atende.net/atendenet?source=pwa" target="_blank" title="Prefeitura (Atende Oliveira)" style="width:50px; height:50px; background:#009688; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; text-decoration:none; box-shadow:0 4px 10px rgba(0,0,0,0.2); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+        <span class="material-symbols-rounded" style="font-size:24px;">support_agent</span>
+    </a>
+    
+    <!-- Matrículas -->
+    <a href="https://ridigital.org.br/VisualizarMatricula/DefaultVM.aspx?from=menu" target="_blank" title="Matrículas Online" style="width:50px; height:50px; background:#6f42c1; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; text-decoration:none; box-shadow:0 4px 10px rgba(0,0,0,0.2); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+        <span class="material-symbols-rounded" style="font-size:24px;">assignment_ind</span>
+    </a>
+</div>
 
 <script>
 function toggleTopNavDropdown(btn) {
