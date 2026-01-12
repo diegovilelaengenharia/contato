@@ -256,58 +256,101 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             <!-- Card Resumo do Cliente (Grid Layout: Info + Timelime) -->
             <div class="form-card" style="margin-bottom:20px; border-left:5px solid var(--color-primary); background:#fff; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.05); padding:0;">
                 
-                <div style="display:grid; grid-template-columns: 1fr 300px; gap:0;">
-                    
                     <!-- ESQUERDA: Info do Cliente -->
-                    <div style="padding:25px; display:flex; align-items:flex-start; gap:20px;">
+                    <div style="padding:20px 25px; display:flex; align-items:center; gap:20px;">
                         
                         <!-- Avatar / Iniciais (Com Upload) -->
-                        <div style="position:relative; width:80px; height:80px; min-width:80px; cursor:pointer;" onclick="document.getElementById('avatar_input').click();" title="Clique para alterar a foto">
+                        <div style="position:relative; width:70px; height:70px; min-width:70px; cursor:pointer;" onclick="document.getElementById('avatar_input').click();" title="Clique para alterar a foto">
                             <?php if($avatar_url): ?>
                                 <img src="<?= $avatar_url ?>" style="width:100%; height:100%; object-fit:cover; border-radius:50%; border:3px solid var(--color-primary-light);">
                             <?php else: ?>
-                                <div style="width:100%; height:100%; background:var(--color-primary-light); color:var(--color-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2rem; font-weight:800; border:2px solid white; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
+                                <div style="width:100%; height:100%; background:var(--color-primary-light); color:var(--color-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.8rem; font-weight:800; border:2px solid white; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
                                     <?= strtoupper(substr($cliente_ativo['nome'], 0, 1)) ?>
                                 </div>
                             <?php endif; ?>
                             
-                            <div style="position:absolute; bottom:0; right:0; background:var(--color-primary); color:white; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; border:2px solid white;">📷</div>
+                            <div style="position:absolute; bottom:0; right:0; background:var(--color-primary); color:white; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; border:2px solid white;">📷</div>
                         </div>
                         
                         <!-- Form invisível para upload -->
-                        </form> <!-- Fechamento do form global (ajuste se necessário, mas mantendo estrutura original) -->
+                        </form>
 
-                        <div class="client-summary-card" style="flex:1;">
-                            <h2 style="margin:0 0 5px 0; font-size:1.6rem; color:var(--color-text);"><?= htmlspecialchars($cliente_ativo['nome']) ?></h2>
+                        <div class="client-summary-card">
+                            <h2 style="margin:0 0 5px 0; font-size:1.4rem; color:var(--color-text); line-height:1.2;"><?= htmlspecialchars($cliente_ativo['nome']) ?></h2>
                             
-                            <div style="display:flex; flex-wrap:wrap; gap:15px; font-size:0.9rem; color:#666; margin-bottom:15px;">
-                                <span style="background:#f8f9fa; padding:2px 8px; border-radius:6px; border:1px solid #e9ecef;">🆔 #<?= str_pad($cliente_ativo['id'], 3, '0', STR_PAD_LEFT) ?></span>
-                                <span style="background:#f8f9fa; padding:2px 8px; border-radius:6px; border:1px solid #e9ecef;">📱 <?= $detalhes['contato_tel'] ?? '--' ?></span>
-                                <span style="background:#f8f9fa; padding:2px 8px; border-radius:6px; border:1px solid #e9ecef;">📄 <?= $detalhes['cpf_cnpj'] ?? '--' ?></span>
+                            <div style="display:flex; flex-wrap:wrap; gap:10px; font-size:0.8rem; color:#666; margin-bottom:8px;">
+                                <span style="background:#f8f9fa; padding:1px 6px; border-radius:4px; border:1px solid #e9ecef;">🆔 #<?= str_pad($cliente_ativo['id'], 3, '0', STR_PAD_LEFT) ?></span>
+                                <span style="background:#f8f9fa; padding:1px 6px; border-radius:4px; border:1px solid #e9ecef;">📱 <?= $detalhes['contato_tel'] ?? '--' ?></span>
+                                <span style="background:#f8f9fa; padding:1px 6px; border-radius:4px; border:1px solid #e9ecef;">333.333.333-33</span>
                             </div>
 
-                            <!-- NEW: Process Info & Address -->
-                            <div style="margin-top:12px; font-size:0.9rem; color:#444; display:flex; flex-direction:column; gap:6px;">
-                                <div style="display:flex; align-items:center; gap:6px;">
-                                    <span class="material-symbols-rounded" style="font-size:1.1rem; color:#6f42c1;">folder_open</span>
-                                    <span style="font-weight:600;"><?= !empty($detalhes['tipo_servico']) ? htmlspecialchars($detalhes['tipo_servico']) : 'Tipo de Processo não informado' ?></span>
-                                </div>
-                                <div style="display:flex; align-items:center; gap:6px; color:#666;">
-                                    <span class="material-symbols-rounded" style="font-size:1.1rem; color:#dc3545;">location_on</span>
-                                    <span><?= !empty($detalhes['endereco_imovel']) ? htmlspecialchars($detalhes['endereco_imovel']) : 'Endereço da obra não informado' ?></span>
-                                </div>
-                            </div>
-                            
-                            <div style="display:flex; gap:10px; font-size:0.9rem; align-items:center; margin-top:10px;">
-                                <a href="gerenciar_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save" style="background:var(--color-primary-light); color:var(--color-primary); border:none; padding:5px 12px; font-size:0.8rem; box-shadow:none;">✏️ Editar Cadastro</a>
-                                <a href="relatorio_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save" style="background:#e2e6ea; color:#444; border:none; padding:5px 12px; font-size:0.8rem; box-shadow:none;">⚠️ Resumo PDF</a>
-                                <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" class="btn-delete-confirm btn-save" data-confirm-text="Excluir cliente?" style="background:#dc3545; color:white; border:none; padding:5px 12px; font-size:0.8rem; box-shadow:none;">🗑️ Excluir</a>
+                            <div style="display:flex; gap:8px;">
+                                <a href="gerenciar_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save" style="background:var(--color-primary-light); color:var(--color-primary); border:none; padding:3px 10px; font-size:0.75rem; box-shadow:none;">✏️ Editar Cadastro</a>
+                                <a href="relatorio_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save" style="background:#fff3cd; color:#856404; border:none; padding:3px 10px; font-size:0.75rem; box-shadow:none;">⚠️ Resumo PDF</a>
+                                <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" class="btn-delete-confirm btn-save" data-confirm-text="Excluir cliente?" style="background:#dc3545; color:white; border:none; padding:3px 10px; font-size:0.75rem; box-shadow:none;">🗑️ Excluir</a>
                             </div>
                         </div>
                     </div>
 
-                    <!-- DIREITA: Timeline Compacta (Gráfico Pizza/Donut) -->
-                    <div style="background:#fff; border-left:1px solid #eee; padding:20px; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; min-width:280px;">
+                    <!-- MEIO: Abas de Navegação (Agora NO Header) -->
+                    <div style="display:flex; justify-content:center; align-items:center; padding:0 10px;">
+                        <style>
+                            .header-tabs {
+                                display: flex;
+                                gap: 8px;
+                                flex-wrap: wrap;
+                                justify-content: center;
+                            }
+                            .h-tab-link {
+                                display: flex;
+                                align-items: center;
+                                gap: 6px;
+                                padding: 8px 16px;
+                                border-radius: 20px;
+                                text-decoration: none;
+                                color: #666;
+                                font-weight: 600;
+                                font-size: 0.9rem;
+                                transition: all 0.2s;
+                                background: transparent;
+                                border: 1px solid transparent;
+                            }
+                            .h-tab-link:hover {
+                                background: #f8f9fa;
+                                color: #333;
+                            }
+                            .h-tab-link.active {
+                                background: #fff;
+                                color: var(--color-primary);
+                                border-color: #e0e0e0;
+                                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+                                color: #146c43;
+                            }
+                            /* Icons */
+                            .h-tab-link span { font-size: 1.1rem; }
+                        </style>
+                        <div class="header-tabs">
+                             <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=documentos" class="h-tab-link <?= ($active_tab=='documentos')?'active':'' ?>">
+                                <span>📁</span> Documentos
+                            </a>
+                            <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="h-tab-link <?= ($active_tab=='andamento'||$active_tab=='cadastro')?'active':'' ?>">
+                                <span>📜</span> Histórico
+                            </a>
+                            <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias" class="h-tab-link <?= ($active_tab=='pendencias')?'active':'' ?>">
+                                <span>⚠️</span> Pendências
+                            </a>
+                            <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=financeiro" class="h-tab-link <?= ($active_tab=='financeiro')?'active':'' ?>">
+                                <span>💰</span> Financeiro
+                            </a>
+                            <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=arquivos" class="h-tab-link <?= ($active_tab=='arquivos')?'active':'' ?>">
+                                <span>📂</span> Arquivos
+                            </a>
+                        </div>
+                    </div>
+
+
+                    <!-- DIREITA: Timeline Compacta -->
+                    <div style="background:#fff; border-left:1px solid #eee; padding:15px; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; min-width:260px;">
                         
                         <?php 
                         $found_idx = array_search(($detalhes['etapa_atual']??''), $fases_padrao);
@@ -319,107 +362,40 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         ?>
 
                         <!-- Donut Chart -->
-                        <div style="position:relative; width:100px; height:100px; border-radius:50%; background:conic-gradient(var(--color-primary) <?= $percent ?>%, #eee <?= $percent ?>% 100%); display:flex; align-items:center; justify-content:center; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
-                            <div style="width:75px; height:75px; background:white; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-direction:column;">
-                                <span style="font-size:1.2rem; font-weight:800; color:var(--color-primary);"><?= $percent ?>%</span>
+                        <div style="position:relative; width:80px; height:80px; border-radius:50%; background:conic-gradient(var(--color-primary) <?= $percent ?>%, #eee <?= $percent ?>% 100%); display:flex; align-items:center; justify-content:center; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+                            <div style="width:60px; height:60px; background:white; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-direction:column;">
+                                <span style="font-size:1rem; font-weight:800; color:var(--color-primary);"><?= $percent ?>%</span>
                             </div>
                         </div>
 
-                        <div style="margin-top:10px; text-align:center;">
-                            <h4 style="margin:0 0 8px 0; font-size:1rem; color:var(--color-primary); font-weight:700; max-width:220px; line-height:1.3;">
+                        <div style="margin-top:8px; text-align:center;">
+                            <h4 style="margin:0 0 5px 0; font-size:0.85rem; color:var(--color-primary); font-weight:700; max-width:200px; line-height:1.2;">
                                 <?= ($found_idx >= 0) ? htmlspecialchars($fases_padrao[$found_idx]) : 'Não iniciado' ?>
                             </h4>
                             
-                            <button onclick="document.getElementById('modalTimelineFull').showModal()" style="margin-top:10px; background:none; border:1px solid #ddd; color:#666; padding:5px 12px; border-radius:20px; font-size:0.75rem; cursor:pointer;">
+                            <button onclick="document.getElementById('modalTimelineFull').showModal()" style="background:none; border:1px solid #ddd; color:#666; padding:3px 10px; border-radius:15px; font-size:0.7rem; cursor:pointer;">
                                 Ver Etapas 📋
                             </button>
                         </div>
                     </div>
 
                 </div>
+                
+                <!-- Extra Info Row (Process Type & Addr) -->
+                 <div style="border-top:1px solid #eee; padding:10px 25px; display:flex; gap:30px; background:#fafafa; border-radius: 0 0 12px 12px;">
+                     <div style="display:flex; align-items:center; gap:6px;">
+                        <span class="material-symbols-rounded" style="font-size:1.1rem; color:#6f42c1;">folder_open</span>
+                        <span style="font-size:0.85rem; font-weight:600; color:#555;"><?= !empty($detalhes['tipo_servico']) ? htmlspecialchars($detalhes['tipo_servico']) : 'Tipo de Processo não informado' ?></span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:6px; color:#666;">
+                        <span class="material-symbols-rounded" style="font-size:1.1rem; color:#dc3545;">location_on</span>
+                        <span style="font-size:0.85rem;"><?= !empty($detalhes['endereco_imovel']) ? htmlspecialchars($detalhes['endereco_imovel']) : 'Endereço da obra não informado' ?></span>
+                    </div>
+                 </div>
+
             </div>
 
-            <!-- TAB NAVIGATION -->
-            <!-- Styles for Tabs (Multi-Color) -->
-            <style>
-                .tabs-container {
-                    margin-bottom: 0; /* Remove margin to connect with window below */
-                    border-bottom: none; 
-                    display: flex;
-                    gap: 10px;
-                    overflow-x: auto;
-                    padding: 10px 5px 0 5px; /* Bottom padding removed to sit on line */
-                    align-items: flex-end; /* Align tabs to bottom */
-                }
-                .tab-link {
-                    padding: 10px 20px;
-                    text-decoration: none;
-                    color: #666;
-                    font-weight: 700;
-                    font-size: 0.95rem;
-                    border-radius: 12px 12px 0 0; /* Top rounded only */
-                    transition: all 0.2s;
-                    white-space: nowrap;
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 8px;
-                    background: #f8f9fa;
-                    border: 1px solid #e0e0e0;
-                    border-bottom: none;
-                    opacity: 0.8;
-                    margin-bottom: -1px; /* Overlap border */
-                    position: relative;
-                    z-index: 1;
-                }
-                .tab-link:hover {
-                    opacity: 1;
-                    transform: translateY(-2px);
-                }
-                .tab-link.active {
-                    opacity: 1;
-                    background: #fff;
-                    color: #fff !important; /* Will be overridden by specific colors if needed, but lets use background */
-                    border: none;
-                    padding-top: 14px; /* Pop up effect */
-                    box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
-                    z-index: 10;
-                }
-                
-                /* UNIFORM COLOR (Vilela Green) for all tabs */
-                .tab-link.active {
-                    background: #146c43 !important; /* Brand Green */
-                    color: white !important;
-                    box-shadow: 0 4px 15px rgba(20, 108, 67, 0.4);
-                }
-                .tab-link.active span { color: white; }
-                
-                /* Remove individual colors but keep classes for targeting if needed later */
-                .tab-link.t-hist.active, 
-                .tab-link.t-pend.active, 
-                .tab-link.t-fin.active, 
-                .tab-link.t-arq.active {
-                    background: #146c43;
-                }
-            </style>
-            
-            <div class="tabs-container">
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=documentos" class="tab-link t-docs <?= ($active_tab=='documentos')?'active':'' ?>">
-                    <span>📁</span> Documentos
-                </a>
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="tab-link t-hist <?= ($active_tab=='andamento'||$active_tab=='cadastro')?'active':'' ?>">
-                    <span>📜</span> Histórico
-                </a>
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias" class="tab-link t-pend <?= ($active_tab=='pendencias')?'active':'' ?>">
-                    <span>⚠️</span> Pendências
-                </a>
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=financeiro" class="tab-link t-fin <?= ($active_tab=='financeiro')?'active':'' ?>">
-                    <span>💰</span> Financeiro
-                </a>
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=arquivos" class="tab-link t-arq <?= ($active_tab=='arquivos')?'active':'' ?>">
-                    <span>📂</span> Arquivos
-                </a>
-            </div>
-
+    
             <!-- Modal Timeline e Andamento -->
             <?php require 'includes/modals/timeline.php'; ?>
             
@@ -429,7 +405,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 $win_border_color = '#146c43';
             ?>
 
-            <div style="background:#fff; border-top: 4px solid <?= $win_border_color ?>; border-radius: 0 0 12px 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); padding: 25px; margin-bottom: 30px;">
+            <div style="background:#fff; border-top: 4px solid <?= $win_border_color ?>; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); padding: 25px; margin-bottom: 30px;">
 
             <!-- Script removed as logic is now backend-driven -->
 
