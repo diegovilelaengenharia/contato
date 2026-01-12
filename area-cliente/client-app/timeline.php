@@ -172,22 +172,22 @@ $obs_atual = $stmt_obs->fetchColumn();
 
     <div class="app-container">
         
-        <!-- SIMPLE HEADER -->
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 30px; padding: 20px 0; border-bottom: 1px solid #e0e0e0;">
+        <!-- SIMPLE HEADER (Pendências Style) -->
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 30px; padding: 25px 30px; border-radius: 30px; background: linear-gradient(135deg, #d1e7dd 0%, #effcf6 100%); box-shadow: 0 10px 30px rgba(25, 135, 84, 0.1); border: 1px solid #c3e6cb;">
             <!-- Left: Back Button -->
-            <a href="index.php" style="text-decoration:none; color:#333; font-weight:600; display:flex; align-items:center; gap:5px; padding:8px 15px; background:white; border-radius:20px; border:1px solid #ddd; box-shadow:0 2px 5px rgba(0,0,0,0.05); font-size: 0.9rem;">
+            <a href="index.php" style="text-decoration:none; color:#146c43; font-weight:600; display:flex; align-items:center; gap:5px; padding:10px 20px; background:white; border-radius:25px; border:1px solid #c3e6cb; box-shadow:0 2px 5px rgba(0,0,0,0.05); font-size: 0.95rem;">
                 <span class="material-symbols-rounded">arrow_back</span> Voltar
             </a>
 
-            <!-- Right: Title & Icon (Pendências Style) -->
+            <!-- Right: Title & Icon -->
             <div style="display:flex; align-items:center; gap:15px;">
-                <div style="text-align:right;">
-                    <h1 style="margin:0; font-size:1.4rem; color:#146c43; font-weight:700; letter-spacing:-0.5px;">Acompanhamento</h1>
-                    <span style="display:block; font-size:0.8rem; color:#198754; font-weight:500; margin-top:2px;">Linha do Tempo</span>
+                <div style="display:flex; flex-direction:column; align-items:flex-end; text-align:right;">
+                    <h1 style="margin:0; font-size:1.4rem; color:#0f5132; font-weight:700; letter-spacing:-0.5px;">Acompanhamento</h1>
+                    <span style="display:block; font-size:0.8rem; color:#146c43; font-weight:500; margin-top:2px; opacity:0.9;">Linha do Tempo</span>
                 </div>
                 
                 <!-- Icon Box -->
-                <div style="background: #fff; width: 50px; height: 50px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #e0e0e0;">
+                <div style="background: white; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(25, 135, 84, 0.15); border: 1px solid #c3e6cb; color: #198754;">
                     🧭
                 </div>
             </div>
