@@ -22,8 +22,60 @@ $stmt_det = $pdo->prepare("SELECT * FROM processo_detalhes WHERE cliente_id = ?"
 $stmt_det->execute([$cliente_id]);
 $detalhes = $stmt_det->fetch(PDO::FETCH_ASSOC);
 
-// FORCE SCHEMA UPDATE (Safe to run multiple times)
-// Ensures 'processo_docs_entregues' has 'arquivo_path' column
+// --- LOGICA DE UPLOAD (Idêntica a pendencias.php) ---
+if(isset($_FILES['arquivo_doc']) && isset($_POST['doc_chave'])) {
+    $doc_chave = $_POST['doc_chave'];
+    $file = $_FILES['arquivo_doc'];
+    
+    if($file['error'] === 0) {
+        $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        // Permitir tudo (exceto executáveis perigosos se quiser filtrar, mas user pediu tudo)
+        // Directory: uploads/cliente_{id}/docs/ 
+        // OBS: Caminho relativo a este arquivo (client-app) é ../uploads...
+        $upload_dir_rel = "../uploads/cliente_{$cliente_id}/docs/";
+        // Mas para DB queremos salvar relativo a root da area-cliente ou absoluto?
+        // O padrão usado no projeto parece ser relativo a area-cliente.
+        // O arquivo pendencias usa __DIR__ . '/uploads'... vamos seguir o padrão local.
+        
+        $upload_dir_abs = __DIR__ . "/../uploads/cliente_{$cliente_id}/docs/";
+        
+        if(!is_dir($upload_dir_abs)) mkdir($upload_dir_abs, 0755, true);
+        
+        // Name: CHAVE_TIMESTAMP.ext
+        $new_name = "{$doc_chave}_" . time() . ".{$ext}";
+        $target_path = $upload_dir_abs . $new_name;
+        
+        // Path para salvar no banco (Relativo a area-cliente)
+        $db_path = "uploads/cliente_{$cliente_id}/docs/" . $new_name;
+
+        if(move_uploaded_file($file['tmp_name'], $target_path)) {
+            // Update DB
+            // Check existing
+            $stmt = $pdo->prepare("SELECT id FROM processo_docs_entregues WHERE cliente_id = ? AND doc_chave = ?");
+            $stmt->execute([$cliente_id, $doc_chave]);
+            $existing = $stmt->fetch();
+
+            if ($existing) {
+                $update = $pdo->prepare("UPDATE processo_docs_entregues SET arquivo_path = ?, nome_original = ?, data_entrega = NOW() WHERE id = ?");
+                $update->execute([$db_path, $file['name'], $existing['id']]);
+            } else {
+                $insert = $pdo->prepare("INSERT INTO processo_docs_entregues (cliente_id, doc_chave, arquivo_path, nome_original, data_entrega) VALUES (?, ?, ?, ?, NOW())");
+                $insert->execute([$cliente_id, $doc_chave, $db_path, $file['name']]);
+            }
+            
+            // Redirect to self to prevent resubmit
+            header("Location: documentos_iniciais.php?msg=success");
+            exit;
+        } else {
+            $error_msg = "Falha ao mover arquivo.";
+        }
+    } else {
+        $error_msg = "Erro no upload: " . $file['error'];
+    }
+}
+// --- FIM LOGICA UPLOAD ---
+
+// FORCE SCHEMA UPDATE
 require_once '../includes/schema.php';
 
 // LOAD CONFIG
@@ -36,19 +88,14 @@ $tipo_chave = ($detalhes && isset($detalhes['tipo_processo_chave'])) ? $detalhes
 $proc_data = $processos[$tipo_chave] ?? null;
 
 // Buscar Status de Entrega (Mapeado por chave)
-try {
-    $stmt_entregues = $pdo->prepare("SELECT doc_chave, arquivo_path, nome_original, data_entrega FROM processo_docs_entregues WHERE cliente_id = ?");
-    $stmt_entregues->execute([$cliente_id]);
-    $entregues_raw = $stmt_entregues->fetchAll(PDO::FETCH_ASSOC);
-} catch (Exception $e) {
-    // Fallback if schema update failed weirdly
-    $entregues_raw = [];
-}
+$stmt_entregues = $pdo->prepare("SELECT doc_chave, arquivo_path, nome_original, data_entrega FROM processo_docs_entregues WHERE cliente_id = ?");
+$stmt_entregues->execute([$cliente_id]);
+$entregues_raw = $stmt_entregues->fetchAll(PDO::FETCH_ASSOC);
 
 // Transform in Associative Array: [ 'chave' => {data} ]
 $entregues = [];
 foreach($entregues_raw as $row) {
-    $entregues[$row['doc_chave']] = $row;
+    if(isset($row['doc_chave'])) $entregues[$row['doc_chave']] = $row;
 }
 ?>
 <!DOCTYPE html>
@@ -271,18 +318,16 @@ foreach($entregues_raw as $row) {
                         
                         <?php if(!$is_ok): ?>
                              <!-- Upload Trigger (PENDING) -->
-                             <label class="btn-anexar" style="cursor:pointer; display:flex; align-items:center; gap:5px; padding:6px 12px; background:#0d6efd; color:white; border-radius:20px; font-size:0.75rem; font-weight:600; text-decoration:none; transition:0.2s; white-space: nowrap; box-shadow: 0 2px 5px rgba(13, 110, 253, 0.2);">
+                             <button type="button" class="btn-anexar" onclick="triggerUpload('<?= $d_key ?>')" style="cursor:pointer; display:flex; align-items:center; gap:5px; padding:6px 12px; background:#0d6efd; color:white; border-radius:20px; font-size:0.75rem; font-weight:600; border:none; transition:0.2s; white-space: nowrap; box-shadow: 0 2px 5px rgba(13, 110, 253, 0.2);">
                                 <span class="material-symbols-rounded" style="font-size:1rem;">attach_file</span> 
                                 <span style="display:none; @media(min-width:400px){display:inline;}">Anexar</span>
-                                <input type="file" style="display:none;" onchange="uploadDoc(this, '<?= $d_key ?>')">
-                            </label>
+                            </button>
                         <?php else: ?>
                              <!-- Re-Upload Trigger (EDIT) -->
-                             <label class="btn-anexar" style="cursor:pointer; display:flex; align-items:center; gap:5px; padding:6px 12px; background:#6c757d; color:white; border-radius:20px; font-size:0.75rem; font-weight:600; text-decoration:none; transition:0.2s; white-space: nowrap; box-shadow: 0 2px 5px rgba(108, 117, 125, 0.2); opacity: 0.8;">
+                             <button type="button" class="btn-anexar" onclick="triggerUpload('<?= $d_key ?>')" style="cursor:pointer; display:flex; align-items:center; gap:5px; padding:6px 12px; background:#6c757d; color:white; border-radius:20px; font-size:0.75rem; font-weight:600; border:none; transition:0.2s; white-space: nowrap; box-shadow: 0 2px 5px rgba(108, 117, 125, 0.2); opacity: 0.8;">
                                 <span class="material-symbols-rounded" style="font-size:1rem;">edit</span> 
                                 <span style="display:none; @media(min-width:400px){display:inline;}">Alterar</span>
-                                <input type="file" style="display:none;" onchange="uploadDoc(this, '<?= $d_key ?>')">
-                            </label>
+                            </button>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -321,74 +366,36 @@ foreach($entregues_raw as $row) {
 
     </div>
 
-<!-- OVERRIDE UPLOAD SCRIPT -->
-    <script>
-    // Force re-declaration of uploadDoc to ensure latest logic is used
-    window.uploadDoc = function(input, docChave) {
-        if (!input.files || !input.files[0]) return;
-        
-        const file = input.files[0];
-        // Validate Size (Max 10MB)
-        if(file.size > 10 * 1024 * 1024) {
-            alert("O arquivo é muito grande (Máx 10MB).");
-            return;
-        }
+    <!-- Hidden Form for Traditional Post Upload -->
+    <form id="uploadForm" method="POST" enctype="multipart/form-data" style="display:none;">
+        <input type="hidden" name="doc_chave" id="hiddenDocChave">
+        <input type="file" name="arquivo_doc" id="hiddenFileInput" onchange="submitUploadForm()">
+    </form>
 
-        const formData = new FormData();
-        formData.append('arquivo', file);
-        formData.append('doc_chave', docChave);
-        
-        const label = input.closest('label');
-        const originalText = label.innerHTML;
-        
-        // UI Feedback
-        label.innerHTML = '<span class="material-symbols-rounded" style="animation:spin 1s linear infinite; font-size:1rem;">refresh</span> Enviando...';
-        label.style.pointerEvents = 'none';
-        label.style.opacity = '0.7';
-        
-        fetch('../upload_doc.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => {
-            return response.text().then(text => {
-                let data;
-                try {
-                    data = JSON.parse(text);
-                } catch (e) {
-                    console.error("Server Raw Response:", text);
-                    throw new Error("Resposta inválida do servidor. Veja o console para detalhes ou contate o suporte.");
-                }
-                return data;
-            });
-        })
-        .then(data => {
-            if (data.success) {
-                // Success
-                Toastify({ 
-                    text: "✅ Enviado com Sucesso!", 
-                    duration: 3000, 
-                    backgroundColor: "#198754",
-                    gravity: "top", 
-                    position: "center"
-                }).showToast();
-                
-                setTimeout(() => location.reload(), 1000); 
-            } else {
-                // Server Logic Error
-                throw new Error(data.error || "Erro desconhecido no servidor.");
-            }
-        })
-        .catch(error => {
-            console.error(error);
-            alert("❌ Falha no Envio:\\n" + error.message);
-            
-            // Reset UI
-            label.innerHTML = originalText;
-            label.style.pointerEvents = 'auto';
-            label.style.opacity = '1';
-        });
-    };
+    <script>
+    // Trigger file selection
+    window.triggerUpload = function(docChave) {
+        document.getElementById('hiddenDocChave').value = docChave;
+        document.getElementById('hiddenFileInput').click();
+    }
+
+    // Submit form immediately after selection
+    window.submitUploadForm = function() {
+        const fileInput = document.getElementById('hiddenFileInput');
+        if(fileInput.files.length > 0) {
+            // Show loading (optional, but nice)
+            // Just submit
+            document.getElementById('uploadForm').submit();
+        }
+    }
+    
+    // Check URL for success message
+    const urlParams = new URLSearchParams(window.location.search);
+    if(urlParams.get('msg') === 'success') {
+        Toastify({ text: "✅ Documento salvo com sucesso!", backgroundColor: "#198754", duration: 3000 }).showToast();
+        // Clean URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
     </script>
 </body>
 </html>
