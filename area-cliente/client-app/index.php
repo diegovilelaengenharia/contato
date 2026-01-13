@@ -202,7 +202,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             .ph-user-bar { padding: 15px 20px; }
             .ph-username { font-size: 1rem; }
         }
-    </style>
+
 
         /* FORCE SOCIAL UPDATE v2 */
         .floating-buttons { position: fixed; bottom: 25px; right: 25px; display: flex; flex-direction: column; gap: 16px; z-index: 99999 !important; }
