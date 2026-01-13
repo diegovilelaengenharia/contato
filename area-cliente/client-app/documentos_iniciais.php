@@ -309,7 +309,7 @@ foreach($entregues_raw as $row) {
             
             <?php foreach($proc_data['docs_obrigatorios'] as $d_key): 
                     $label = $todos_docs[$d_key] ?? $d_key;
-                    $info = $entregues[$d_key] ?? null; // $entregues is now assoc array [key => row]
+                    $info = $entregues[$d_key] ?? null; 
                     
                     // Status Calculation
                     $status = $info['status'] ?? 'pendente'; 
@@ -326,6 +326,9 @@ foreach($entregues_raw as $row) {
                     } elseif($status == 'rejeitado') {
                         $icon = 'error'; $status_text = 'Rejeitado / Corrigir'; $status_color = '#dc3545'; $bg_color = '#fff5f5';
                     }
+                    
+                    // Safe label for JS
+                    $js_label = addslashes($label);
             ?>
                 <div class="doc-card" style="border-left: 5px solid <?= $status_color ?>; background: <?= $bg_color ?>;">
                     <div class="doc-icon" style="background: <?= $status_color ?>; color: <?= ($status=='em_analise') ? '#555' : 'white' ?>;">
@@ -351,13 +354,13 @@ foreach($entregues_raw as $row) {
                     <div>
                     <?php if($status == 'pendente' || $status == 'rejeitado'): ?>
                             <!-- Upload Trigger -->
-                            <button type="button" class="btn-anexar" onclick="triggerUpload('<?= $d_key ?>')" style="cursor:pointer; display:flex; align-items:center; gap:5px; padding:6px 14px; background:#0d6efd; color:white; border-radius:20px; font-size:0.8rem; font-weight:600; border:none; transition:0.2s; white-space: nowrap; box-shadow: 0 2px 5px rgba(13, 110, 253, 0.2);">
+                            <button type="button" class="btn-anexar" onclick="openUploadModal('<?= $d_key ?>', '<?= $js_label ?>')" style="cursor:pointer; display:flex; align-items:center; gap:5px; padding:6px 14px; background:#0d6efd; color:white; border-radius:20px; font-size:0.8rem; font-weight:600; border:none; transition:0.2s; white-space: nowrap; box-shadow: 0 2px 5px rgba(13, 110, 253, 0.2);">
                             <span class="material-symbols-rounded" style="font-size:1.1rem;">cloud_upload</span> 
                             <span style="display:none; @media(min-width:400px){display:inline;}">Anexar</span>
                         </button>
                     <?php elseif($status == 'em_analise'): ?>
                             <!-- Re-Upload Trigger (EDIT) -->
-                            <button type="button" class="btn-anexar" onclick="triggerUpload('<?= $d_key ?>')" style="cursor:pointer; display:flex; align-items:center; gap:5px; padding:6px 12px; background:#ffc107; color:#333; border-radius:20px; font-size:0.75rem; font-weight:600; border:none; transition:0.2s; white-space: nowrap;">
+                            <button type="button" class="btn-anexar" onclick="openUploadModal('<?= $d_key ?>', '<?= $js_label ?>')" style="cursor:pointer; display:flex; align-items:center; gap:5px; padding:6px 12px; background:#ffc107; color:#333; border-radius:20px; font-size:0.75rem; font-weight:600; border:none; transition:0.2s; white-space: nowrap;">
                             <span class="material-symbols-rounded" style="font-size:1rem;">edit</span> 
                             <span style="display:none; @media(min-width:400px){display:inline;}">Alterar</span>
                         </button>
@@ -383,16 +386,19 @@ foreach($entregues_raw as $row) {
                         elseif($status == 'aprovado') { $icon='check_circle'; $status_color='#198754'; $bg_color='#f8fff9'; $status_text='Aprovado'; }
                         elseif($status == 'rejeitado') { $icon='error'; $status_color='#dc3545'; $bg_color='#fff5f5'; $status_text='Rejeitado'; }
                         else { $icon='priority_high'; $status_color='#dc3545'; $bg_color='#fff'; $status_text='Pendente'; } // Excepcionais might differ in default color? Keep consistent.
+                        
+                        $js_label = addslashes($label);
                 ?>
                 <div class="doc-card" style="border-left: 5px solid <?= $status_color ?>; background: <?= $bg_color ?>;">
                      <div class="doc-icon" style="background: <?= $status_color ?>; color: <?= ($status=='em_analise') ? '#555' : 'white' ?>;"><span class="material-symbols-rounded"><?= $icon ?></span></div>
                      <div class="doc-info">
                         <div class="doc-title"><?= htmlspecialchars($label) ?></div>
                         <span class="doc-status" style="background:<?= $status_color ?>20; color:<?= ($status=='em_analise')?'#856404':$status_color ?>;"><?= $status_text ?></span>
+                        <?php if(!empty($info['nome_original'])): ?><div style="font-size:0.75rem; color:#666;">📎 <?= htmlspecialchars($info['nome_original']) ?></div><?php endif; ?>
                      </div>
                      <div>
                         <?php if($status != 'aprovado'): ?>
-                        <button type="button" class="btn-anexar" onclick="triggerUpload('<?= $d_key ?>')" style="cursor:pointer; display:flex; align-items:center; gap:5px; padding:6px 12px; background:#0d6efd; color:white; border-radius:20px; font-size:0.75rem;"><span class="material-symbols-rounded">cloud_upload</span></button>
+                        <button type="button" class="btn-anexar" onclick="openUploadModal('<?= $d_key ?>', '<?= $js_label ?>')" style="cursor:pointer; display:flex; align-items:center; gap:5px; padding:6px 12px; background:#0d6efd; color:white; border-radius:20px; font-size:0.75rem;"><span class="material-symbols-rounded">cloud_upload</span></button>
                         <?php endif; ?>
                      </div>
                 </div>
