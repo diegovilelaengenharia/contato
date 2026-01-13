@@ -2,7 +2,7 @@
 // Footer Padrão da Área do Cliente
 // Deve ser incluído dentro da div .app-container ou logo após o conteúdo principal
 ?>
-<div class="app-footer" style="text-align: center; margin-top: 40px; background: #fff; border-top: 1px solid #e9ecef; border-radius: 0 0 20px 20px; overflow: hidden; padding-top: 30px;">
+<div class="app-footer" style="text-align: center; margin-top: 0; background: #fff; border-top: 1px solid #e9ecef; border-radius: 0 0 20px 20px; overflow: hidden; padding-top: 30px;">
     
     <!-- Logo e Info Block -->
     <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; padding-bottom: 30px;">
