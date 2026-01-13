@@ -79,6 +79,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Verifica a senha (usando hash seguro)
             if ($user && password_verify($senha, $user['senha'])) {
                 session_regenerate_id(true);
+                // CLEAR PREVIOUS SESSION DATA (Prevent Admin/Client Mix)
+                session_unset();
+                
                 $_SESSION['cliente_id'] = $user['id'];
                 $_SESSION['cliente_nome'] = $user['nome'];
                 session_write_close();
