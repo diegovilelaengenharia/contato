@@ -123,6 +123,14 @@ $obs_atual = $stmt_obs->fetchColumn();
         .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #0f5132; }
         .header-title-sub { font-size: 0.8rem; opacity: 0.8; font-weight: 500; margin-top: 2px; color: #198754; }
 
+        @media (max-width: 480px) {
+            .page-header { flex-direction: column-reverse; gap: 20px; text-align: center; padding: 25px; align-items: center; }
+            .header-title-box { text-align: center; align-items: center; } 
+            .btn-back { width: 100%; justify-content: center; }
+            .page-header img { height: 45px !important; margin-bottom: 10px; }
+            .page-header > div:first-child { flex-direction: column-reverse; width: 100%; gap: 15px; }
+        }
+
         @keyframes compassWiggle {
             0% { transform: rotate(0deg); }
             25% { transform: rotate(-15deg); }
@@ -138,10 +146,13 @@ $obs_atual = $stmt_obs->fetchColumn();
         
         <!-- HEADER NOVA IDENTIDADE VISUAL (TIMELINE) -->
         <div class="page-header">
-            <!-- Left: Back Button -->
-            <a href="index.php" class="btn-back">
-                <span class="material-symbols-rounded">arrow_back</span> Voltar
-            </a>
+            <!-- Left: Back Button & Logo -->
+            <div style="display:flex; align-items:center; gap:20px;">
+                <a href="index.php" class="btn-back">
+                    <span class="material-symbols-rounded">arrow_back</span> Voltar
+                </a>
+                <img src="../../assets/logo.png" alt="Vilela Engenharia" style="height: 60px; width: auto; object-fit: contain;">
+            </div>
 
             <!-- Right: Title & Icon -->
             <div style="display:flex; align-items:center; gap:15px; z-index:2;">

@@ -112,6 +112,15 @@ if($drive_link) {
             75% { transform: rotate(-5deg); }
             100% { transform: rotate(0deg); }
         }
+        
+        @media (max-width: 480px) {
+            .page-header { flex-direction: column-reverse; gap: 20px; text-align: center; padding: 25px; align-items: center; }
+            .header-title-box { text-align: center; align-items: center; } 
+            .btn-back { width: 100%; justify-content: center; }
+            .page-header img { height: 45px !important; margin-bottom: 10px; }
+            .page-header > div:first-child { flex-direction: column-reverse; width: 100%; gap: 15px; }
+        }
+
         .drive-card {
             background: white;
             border-radius: 20px;
@@ -161,10 +170,13 @@ if($drive_link) {
         
         <!-- HEADER MODULE (BLUE) -->
         <div class="page-header">
-            <!-- Left: Back Button -->
-            <a href="index.php" class="btn-back">
-                <span class="material-symbols-rounded">arrow_back</span> Voltar
-            </a>
+            <!-- Left: Back Button & Logo -->
+            <div style="display:flex; align-items:center; gap:20px;">
+                <a href="index.php" class="btn-back">
+                    <span class="material-symbols-rounded">arrow_back</span> Voltar
+                </a>
+                <img src="../../assets/logo.png" alt="Vilela Engenharia" style="height: 60px; width: auto; object-fit: contain;">
+            </div>
 
             <!-- Right: Title & Icon -->
             <div style="display:flex; align-items:center; gap:15px; z-index:2;">
