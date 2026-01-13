@@ -38,9 +38,9 @@ if (!in_array($ext, $allowed)) {
     exit;
 }
 
-// Directory: ../uploads/cliente_{id}/docs/
-$upload_dir_rel = "../uploads/cliente_{$cliente_id}/docs/";
-$upload_dir_abs = __DIR__ . "/../" . $upload_dir_rel; // Fix path resolution
+// Directory: uploads/cliente_{id}/docs/ (Inside area-cliente)
+$upload_dir_rel = "uploads/cliente_{$cliente_id}/docs/";
+$upload_dir_abs = __DIR__ . "/" . $upload_dir_rel; // Absolute system path
 
 if (!is_dir($upload_dir_abs)) {
     mkdir($upload_dir_abs, 0755, true);
