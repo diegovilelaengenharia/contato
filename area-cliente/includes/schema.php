@@ -105,4 +105,3 @@ try {
 } catch (Exception $e) {
     $pdo->exec("ALTER TABLE processo_docs_entregues ADD COLUMN status ENUM('pendente', 'em_analise', 'aprovado', 'rejeitado') DEFAULT 'pendente'");
 }
-?>

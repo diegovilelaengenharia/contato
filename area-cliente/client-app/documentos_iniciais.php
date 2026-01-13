@@ -3,6 +3,8 @@ session_set_cookie_params(0, '/');
 session_name('CLIENTE_SESSID');
 session_start();
 require_once '../db.php';
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
 // VERIFICAR LOGIN
 if (!isset($_SESSION['cliente_id'])) {
@@ -418,35 +420,87 @@ foreach($entregues_raw as $row) {
 
     </div>
 
-    <!-- Hidden Form for Traditional Post Upload -->
-    <form id="uploadForm" method="POST" enctype="multipart/form-data" style="display:none;">
-        <input type="hidden" name="doc_chave" id="hiddenDocChave">
-        <input type="file" name="arquivo_doc" id="hiddenFileInput" onchange="submitUploadForm()">
-    </form>
+    <!-- UPLOAD MODAL -->
+    <div id="uploadModal" class="modal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%; overflow:auto; background-color:rgba(0,0,0,0.5); backdrop-filter:blur(5px);">
+        <div class="modal-content" style="background-color:#fff; margin:10% auto; padding:0; border:none; width:90%; max-width:500px; border-radius:15px; box-shadow:0 10px 25px rgba(0,0,0,0.2); animation:slideDown 0.3s ease-out;">
+            
+            <div class="modal-header" style="background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%); padding:20px; border-radius:15px 15px 0 0; display:flex; justify-content:space-between; align-items:center;">
+                <h5 style="margin:0; color:white; font-size:1.2rem; display:flex; align-items:center; gap:10px;">
+                    <span class="material-symbols-rounded">cloud_upload</span> Anexar Documento
+                </h5>
+                <span onclick="closeUploadModal()" style="color:white; font-size:28px; font-weight:bold; cursor:pointer; line-height:1;">&times;</span>
+            </div>
+
+            <div class="modal-body" style="padding:25px;">
+                <p id="modalDocTitle" style="margin-top:0; color:#555; font-weight:600; font-size:1.1rem; border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:20px;"></p>
+                
+                <form id="uploadModalForm" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="doc_chave" id="modalDocChave">
+                    
+                    <div class="upload-area" style="border:2px dashed #ccc; border-radius:10px; padding:30px; text-align:center; cursor:pointer; transition:all 0.3s;" onclick="document.getElementById('modalFileInput').click()">
+                        <span class="material-symbols-rounded" style="font-size:48px; color:#aaa; margin-bottom:10px; display:block;">folder_open</span>
+                        <p style="margin:0; color:#666;">Clique para selecionar um arquivo ou arraste aqui</p>
+                        <p style="font-size:0.8rem; color:#999; margin-top:5px;">(PDF, JPG, PNG)</p>
+                    </div>
+                    <input type="file" name="arquivo_doc" id="modalFileInput" style="display:none;" onchange="updateFileName(this)">
+                    <p id="selectedFileName" style="text-align:center; margin-top:15px; font-weight:600; color:#0d6efd; display:none;"></p>
+
+                    <div style="margin-top:25px; display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                        <button type="button" onclick="closeUploadModal()" style="padding:12px; border:1px solid #ddd; background:white; color:#555; border-radius:8px; font-weight:600; cursor:pointer;">Cancelar</button>
+                        <button type="submit" style="padding:12px; border:none; background:#0d6efd; color:white; border-radius:8px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+                            <span class="material-symbols-rounded" style="font-size:20px;">send</span> Enviar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes slideDown {
+            from {transform: translateY(-50px); opacity: 0;}
+            to {transform: translateY(0); opacity: 1;}
+        }
+    </style>
 
     <script>
-    // Trigger file selection
-    window.triggerUpload = function(docChave) {
-        document.getElementById('hiddenDocChave').value = docChave;
-        document.getElementById('hiddenFileInput').click();
+    // Modal Logic
+    function openUploadModal(docChave, docTitle) {
+        document.getElementById('modalDocChave').value = docChave;
+        document.getElementById('modalDocTitle').innerText = docTitle;
+        document.getElementById('selectedFileName').style.display = 'none';
+        document.getElementById('selectedFileName').innerText = '';
+        document.getElementById('modalFileInput').value = '';
+        document.getElementById('uploadModal').style.display = 'block';
     }
 
-    // Submit form immediately after selection
-    window.submitUploadForm = function() {
-        const fileInput = document.getElementById('hiddenFileInput');
-        if(fileInput.files.length > 0) {
-            // Show loading (optional, but nice)
-            // Just submit
-            document.getElementById('uploadForm').submit();
+    function closeUploadModal() {
+        document.getElementById('uploadModal').style.display = 'none';
+    }
+
+    function updateFileName(input) {
+        if(input.files && input.files[0]) {
+            const nameEl = document.getElementById('selectedFileName');
+            nameEl.innerText = input.files[0].name;
+            nameEl.style.display = 'block';
+        }
+    }
+
+    // Close on click outside
+    window.onclick = function(event) {
+        const modal = document.getElementById('uploadModal');
+        if (event.target == modal) {
+            closeUploadModal();
         }
     }
     
-    // Check URL for success message
+    // Check URL for success/error
     const urlParams = new URLSearchParams(window.location.search);
     if(urlParams.get('msg') === 'success') {
-        Toastify({ text: "✅ Documento salvo com sucesso!", backgroundColor: "#198754", duration: 3000 }).showToast();
+        Toastify({ text: "✅ Documento enviado com sucesso!", backgroundColor: "#198754", duration: 3000 }).showToast();
         // Clean URL
-        window.history.replaceState({}, document.title, window.location.pathname);
+        const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+        window.history.replaceState({path:newUrl},'',newUrl);
     }
     </script>
 </body>
