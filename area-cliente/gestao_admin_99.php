@@ -754,13 +754,17 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         // 1. Save Transaction Type
                         $new_proc = $_POST['tipo_processo_chave'];
                         
+                        // Busca o título legível para atualizar o cabeçalho (tipo_servico)
+                        $titulo_servico = isset($processos[$new_proc]) ? $processos[$new_proc]['titulo'] : null;
+
                         // Check if record exists
                         $check = $pdo->prepare("SELECT id FROM processo_detalhes WHERE cliente_id = ?");
                         $check->execute([$cliente_ativo['id']]);
+                        
                         if($check->rowCount() > 0) {
-                            $pdo->prepare("UPDATE processo_detalhes SET tipo_processo_chave = ?, observacoes_gerais = ? WHERE cliente_id = ?")->execute([$new_proc, $_POST['observacoes_gerais']??'', $cliente_ativo['id']]);
+                            $pdo->prepare("UPDATE processo_detalhes SET tipo_processo_chave = ?, tipo_servico = ?, observacoes_gerais = ? WHERE cliente_id = ?")->execute([$new_proc, $titulo_servico, $_POST['observacoes_gerais']??'', $cliente_ativo['id']]);
                         } else {
-                            $pdo->prepare("INSERT INTO processo_detalhes (cliente_id, tipo_processo_chave, observacoes_gerais) VALUES (?, ?, ?)")->execute([$cliente_ativo['id'], $new_proc, $_POST['observacoes_gerais']??'']);
+                            $pdo->prepare("INSERT INTO processo_detalhes (cliente_id, tipo_processo_chave, tipo_servico, observacoes_gerais) VALUES (?, ?, ?, ?)")->execute([$cliente_ativo['id'], $new_proc, $titulo_servico, $_POST['observacoes_gerais']??'']);
                         }
                         
                         // 2. Save Checks (Delete all and re-insert checked)

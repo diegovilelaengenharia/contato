@@ -9,7 +9,7 @@
         <div style="display: flex; align-items: center; gap: 20px; text-align: left;">
             <!-- Logo (Simbolico) -->
             <div style="border-right: 1px solid #ddd; padding-right: 20px;">
-                 <img src="../assets/logo_vilela.png" alt="Vilela Engenharia" style="height: 40px; width: auto; object-fit: contain;">
+                 <img src="../../assets/logo.png" alt="Vilela Engenharia" style="height: 50px; width: auto; object-fit: contain;">
             </div>
             
             <!-- Info Engineer -->
