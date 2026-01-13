@@ -25,7 +25,7 @@ $cols_needed = [
     'tipo_responsavel', 'resp_tecnico', 'registro_prof', 'num_art_rrt',
     'tipo_pessoa', 'cpf_cnpj', 'rg_ie', 'estado_civil', 'profissao', 'endereco_residencial', 'contato_email', 'contato_tel',
     // New Columns for Process Tracking
-    'processo_numero', 'processo_objeto', 'processo_link_mapa', 'link_drive_pasta',
+    'processo_numero', 'processo_objeto', 'processo_link_mapa', 'link_drive_pasta', 'tipo_processo_chave',
     // New Columns for "Maria" Spec (Resumo do Patrimônio)
     'valor_venal', 'area_total_final', 'foto_capa_obra',
     // New Technical Columns (Oliveira/MG Spec)
@@ -80,5 +80,14 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS admin_settings (
     id INT AUTO_INCREMENT PRIMARY KEY,
     setting_key VARCHAR(50) NOT NULL UNIQUE,
     setting_value TEXT
+)");
+
+// Create Documents Delivered Table
+$pdo->exec("CREATE TABLE IF NOT EXISTS processo_docs_entregues (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cliente_id INT NOT NULL,
+    doc_chave VARCHAR(50) NOT NULL,
+    data_entrega DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
 )");
 ?>
