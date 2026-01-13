@@ -195,10 +195,19 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
 
         /* MOBILE ADAPT */
         @media(max-width: 600px) {
-            .ph-top { padding: 15px 20px; flex-direction: column; align-items: flex-start; gap: 10px; }
-            .ph-divider { display: none; }
-            .ph-logo img { height: 46px; }
-            .ph-title { font-size: 0.95rem; }
+            .ph-top { 
+                padding: 15px 20px; 
+                flex-direction: row; /* Side by side */
+                align-items: center; 
+                justify-content: flex-start;
+                gap: 15px; 
+            }
+            .ph-divider { 
+                display: block; /* Show divider or just use gap */
+                height: 30px; margin: 0; border-left: 1px solid rgba(255,255,255,0.3);
+            }
+            .ph-logo img { height: 40px; } /* Slightly smaller to fit */
+            .ph-title { font-size: 0.9rem; line-height: 1.2; text-align: left; }
             .ph-user-bar { padding: 15px 20px; }
             .ph-username { font-size: 1rem; }
         }

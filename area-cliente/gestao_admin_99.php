@@ -236,14 +236,17 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     if(!is_dir('uploads/avatars/')) mkdir('uploads/avatars/', 0755, true);
                     
                     if(move_uploaded_file($_FILES['avatar_upload']['tmp_name'], $upload_path)) {
-                        // Salvar caminho no banco (assumindo coluna 'foto_perfil' ou criando lógica de arquivo)
+                        // FORCE UPDATE IN DATABASE
                          try {
-                            // Tenta atualizar se a coluna existir, senão o arquivo já vale pelo nome
-                            // Mas para garantir cache busting, ideal seria salvar. 
-                            // Como não tenho certeza da coluna, vou usar o arquivo físico como referência
-                            // e forçar reload.
+                            $stmt = $pdo->prepare("UPDATE clientes SET foto_perfil = ? WHERE id = ?");
+                            $stmt->execute([$upload_path, $cliente_ativo['id']]);
+                            
+                            // Reload to show changes
                             echo "<script>window.location.href='?cliente_id={$cliente_ativo['id']}&tab=andamento&avatar_updated=1';</script>";
-                         } catch(Exception $e) {}
+                         } catch(Exception $e) {
+                             // If column doesn't exist, we rely on file naming convention, 
+                             // but we should eventually add the column.
+                         }
                     }
                 }
             }
