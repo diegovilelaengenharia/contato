@@ -496,6 +496,9 @@ if (ob_get_length()) ob_clean();
             </div>
             
 
+
+            <?php endif; ?>
+
             <!-- FOOTER -->
             <?php include 'includes/footer.php'; ?>
 

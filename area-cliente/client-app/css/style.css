@@ -92,8 +92,8 @@ a {
     width: 100%;
     max-width: 500px;
     /* Reduced from 600px for tighter mobile feel */
-    margin: 30px auto;
-    /* Added top/bottom margin */
+    margin: 30px auto 10px auto;
+    /* Adjusted bottom margin */
     padding: 0;
     /* Padding handled by children */
     min-height: calc(100vh - 60px);
