@@ -178,22 +178,63 @@ $entregues = $stmt_entregues->fetchAll(PDO::FETCH_COLUMN);
 
         <?php if($proc_data): ?>
             
-            <div style="background: #e7f1ff; border: 1px solid #b6d4fe; color: #084298; padding: 15px; border-radius: 12px; margin-bottom: 25px;">
-                <strong style="display:block; margin-bottom:5px;">Processo Identificado:</strong>
-                <span style="font-size: 1.1rem; font-weight: 700;"><?= htmlspecialchars($proc_data['titulo']) ?></span>
-            </div>
+            <!-- INFO CARDS (PREMIUM) -->
+            <style>
+                .info-card-container {
+                    display: grid; gap: 20px; margin-bottom: 30px;
+                }
+                .ic-processo {
+                    background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
+                    border: 1px solid #bbdefb;
+                    border-left: 5px solid #0d6efd;
+                    padding: 20px; border-radius: 12px;
+                    display: flex; align-items: center; gap: 15px;
+                    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.05);
+                }
+                .ic-icon {
+                    width: 45px; height: 45px;
+                    background: #fff; border-radius: 50%;
+                    display: flex; align-items: center; justify-content: center;
+                    font-size: 1.5rem; color: #0d6efd;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+                }
+                .ic-content h4 { font-size: 0.8rem; text-transform: uppercase; color: #555; letter-spacing: 0.5px; margin: 0; font-weight: 600; }
+                .ic-content p { font-size: 1.2rem; font-weight: 700; color: #084298; margin: 3px 0 0 0; }
+                
+                .ic-obs {
+                    background: linear-gradient(135deg, #fff9e6 0%, #ffffff 100%);
+                    border: 1px solid #ffecb5;
+                    border-left: 5px solid #ffc107;
+                    padding: 20px; border-radius: 12px;
+                    display: flex; gap: 15px;
+                    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.05);
+                }
+                .ic-obs .ic-icon { color: #856404; }
+                .ic-obs h4 { color: #856404; }
+                .ic-obs p { font-size: 0.95rem; font-weight: 400; color: #555; line-height: 1.6; font-style: italic; }
+            </style>
 
-            <?php if(!empty($detalhes['observacoes_gerais'])): ?>
-                <div style="background: #fff3cd; border: 1px solid #ffeeba; border-left: 5px solid #ffc107; padding: 15px; border-radius: 8px; margin-bottom: 25px; display: flex; gap: 15px; align-items: flex-start;">
-                    <span style="font-size: 1.5rem;">👷‍♂️</span>
-                    <div>
-                        <strong style="display:block; color: #856404; margin-bottom: 5px; font-size: 0.95rem;">Observação do Engenheiro:</strong>
-                        <div style="color: #666; font-size: 0.95rem; line-height: 1.5;">
-                            <?= nl2br(htmlspecialchars($detalhes['observacoes_gerais'])) ?>
-                        </div>
+            <div class="info-card-container">
+                <!-- Processo Card -->
+                <div class="ic-processo">
+                    <div class="ic-icon">🏗️</div>
+                    <div class="ic-content">
+                        <h4>Processo Identificado</h4>
+                        <p><?= htmlspecialchars($proc_data['titulo']) ?></p>
                     </div>
                 </div>
-            <?php endif; ?>
+
+                <!-- Obs Card -->
+                <?php if(!empty($detalhes['observacoes_gerais'])): ?>
+                    <div class="ic-obs">
+                        <div class="ic-icon" style="align-self: flex-start;">👷‍♂️</div>
+                        <div class="ic-content">
+                            <h4>Observação do Engenheiro</h4>
+                            <p>“<?= nl2br(htmlspecialchars($detalhes['observacoes_gerais'])) ?>”</p>
+                        </div>
+                    </div>
+                <?php endif; ?>
+            </div>
 
             <h3 style="font-size: 1rem; color: #555; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 5px;">Documentos Obrigatórios</h3>
             

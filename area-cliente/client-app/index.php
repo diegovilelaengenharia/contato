@@ -347,37 +347,37 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                 ?>
 
                 <!-- 1. DOCS INICIAIS (CHECKLIST) -->
-                <a href="documentos_iniciais.php" class="app-button" style="border-left-color: #20c997;">
-                    <div class="app-btn-icon" style="background:#e6fffa; color:#20c997;">📋</div>
+                <a href="documentos_iniciais.php" class="app-button" style="border-left-color: #083b30;">
+                    <div class="app-btn-icon" style="background:#e6fffa; color:#083b30;">📋</div>
                     <div class="app-btn-content">
                         <span class="app-btn-title">Checklist Inicial</span>
                         <span class="app-btn-desc">Lista de documentos necessários</span>
                     </div>
-                    <div class="app-btn-arrow" style="color:#20c997;">➔</div>
+                    <div class="app-btn-arrow" style="color:#083b30;">➔</div>
                 </a>
 
                 <!-- 2. TIMELINE -->
-                <a href="timeline.php" class="app-button" style="border-left-color: #198754;">
-                    <div class="app-btn-icon" style="background:#e8f5e9; color:#198754;">🧭</div>
+                <a href="timeline.php" class="app-button" style="border-left-color: #0f5132;">
+                    <div class="app-btn-icon" style="background:#e8f5e9; color:#0f5132;">🧭</div>
                     <div class="app-btn-content">
                         <span class="app-btn-title">Linha do Tempo</span>
                         <div class="progress-mini" style="margin-top:5px; height:6px; background:#e9ecef; border-radius:3px; overflow:hidden; width:100px;">
-                            <div class="bar" style="width: <?= $porcentagem ?>%; height:100%; background:#198754;"></div>
+                            <div class="bar" style="width: <?= $porcentagem ?>%; height:100%; background:#0f5132;"></div>
                         </div>
                         <span class="app-btn-desc" style="margin-top:5px;">
                             <?= htmlspecialchars($etapa_atual) ?> - <?= $porcentagem ?>%
                         </span>
                     </div>
-                    <div class="app-btn-arrow" style="color:#198754;">➔</div>
+                    <div class="app-btn-arrow" style="color:#0f5132;">➔</div>
                 </a>
 
                 <!-- 3. PENDÊNCIAS -->
                 <?php 
-                    // Se houver pendências: Vermelho (#dc3545)
-                    // Se NÃO houver: Cinza Bacana (#6c757d)
-                    $p_color = ($pend_qtd > 0) ? '#dc3545' : '#6c757d';
+                    // Se houver pendências: Vermelho (#58151c - from header title)
+                    // Se NÃO houver: Cinza (#6c757d)
+                    $p_color = ($pend_qtd > 0) ? '#58151c' : '#6c757d';
                     $p_bg    = ($pend_qtd > 0) ? '#fce8e6' : '#e9ecef';
-                    $p_icon  = ($pend_qtd > 0) ? '⚠️' : '✅'; // Warning se tiver, Check se não
+                    $p_icon  = ($pend_qtd > 0) ? '⚠️' : '✅'; 
                 ?>
                 <a href="pendencias.php" class="app-button" style="border-left-color: <?= $p_color ?>;">
                     <div class="app-btn-icon" style="background:<?= $p_bg ?>; color:<?= $p_color ?>;"><?= $p_icon ?></div>
@@ -399,8 +399,8 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                 </a>
 
                 <!-- 4. FINANCEIRO -->
-                <a href="financeiro.php" class="app-button" style="border-left-color: #ffc107;">
-                    <div class="app-btn-icon" style="background:#fff3cd; color:#ffc107;">💰</div>
+                <a href="financeiro.php" class="app-button" style="border-left-color: #533f03;">
+                    <div class="app-btn-icon" style="background:#fff3cd; color:#533f03;">💰</div>
                     <div class="app-btn-content">
                         <span class="app-btn-title">Financeiro</span>
                          <?php if($fin_qtd > 0): ?>
@@ -414,18 +414,18 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                     <?php if($fin_qtd > 0): ?>
                         <span class="badge-count" style="background:#ffc107; color:#856404;"><?= $fin_qtd ?></span>
                     <?php else: ?>
-                        <div class="app-btn-arrow" style="color:#ffc107;">➔</div>
+                        <div class="app-btn-arrow" style="color:#533f03;">➔</div>
                     <?php endif; ?>
                 </a>
                 
                 <!-- 5. DOCUMENTOS -->
-                <a href="documentos.php" class="app-button" style="border-left-color: #0d6efd;">
-                    <div class="app-btn-icon" style="background:#cfe2ff; color:#0d6efd;">📂</div>
+                <a href="documentos.php" class="app-button" style="border-left-color: #052c65;">
+                    <div class="app-btn-icon" style="background:#cfe2ff; color:#052c65;">📂</div>
                     <div class="app-btn-content">
                         <span class="app-btn-title">Documentos Finais</span>
                         <span class="app-btn-desc">Acesso aos documentos digitais</span>
                     </div>
-                    <div class="app-btn-arrow" style="color:#0d6efd;">➔</div>
+                    <div class="app-btn-arrow" style="color:#052c65;">➔</div>
                 </a>
 
                 <!-- 6. RESUMO (MOVED & RESTYLED) -->
