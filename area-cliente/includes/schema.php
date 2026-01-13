@@ -14,7 +14,7 @@ try {
     $pdo->query("SELECT arquivo_path FROM processo_pendencias LIMIT 1");
 } catch (Exception $e) {
     $pdo->exec("ALTER TABLE processo_pendencias ADD COLUMN arquivo_path VARCHAR(255) DEFAULT NULL");
-}");
+}
 
 // Update Schema: Add ALL Missing Columns for processo_detalhes
 $cols_needed = [
