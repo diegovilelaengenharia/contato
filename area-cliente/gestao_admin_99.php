@@ -752,7 +752,15 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     if(isset($_POST['update_docs_settings'])) {
                         // 1. Save Transaction Type
                         $new_proc = $_POST['tipo_processo_chave'];
-                        $pdo->prepare("UPDATE processo_detalhes SET tipo_processo_chave = ? WHERE cliente_id = ?")->execute([$new_proc, $cliente_ativo['id']]);
+                        
+                        // Check if record exists
+                        $check = $pdo->prepare("SELECT id FROM processo_detalhes WHERE cliente_id = ?");
+                        $check->execute([$cliente_ativo['id']]);
+                        if($check->rowCount() > 0) {
+                            $pdo->prepare("UPDATE processo_detalhes SET tipo_processo_chave = ? WHERE cliente_id = ?")->execute([$new_proc, $cliente_ativo['id']]);
+                        } else {
+                            $pdo->prepare("INSERT INTO processo_detalhes (cliente_id, tipo_processo_chave) VALUES (?, ?)")->execute([$cliente_ativo['id'], $new_proc]);
+                        }
                         
                         // 2. Save Checks (Delete all and re-insert checked)
                         $pdo->prepare("DELETE FROM processo_docs_entregues WHERE cliente_id = ?")->execute([$cliente_ativo['id']]);
