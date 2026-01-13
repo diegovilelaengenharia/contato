@@ -321,5 +321,74 @@ foreach($entregues_raw as $row) {
 
     </div>
 
+<!-- OVERRIDE UPLOAD SCRIPT -->
+    <script>
+    // Force re-declaration of uploadDoc to ensure latest logic is used
+    window.uploadDoc = function(input, docChave) {
+        if (!input.files || !input.files[0]) return;
+        
+        const file = input.files[0];
+        // Validate Size (Max 10MB)
+        if(file.size > 10 * 1024 * 1024) {
+            alert("O arquivo é muito grande (Máx 10MB).");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('arquivo', file);
+        formData.append('doc_chave', docChave);
+        
+        const label = input.closest('label');
+        const originalText = label.innerHTML;
+        
+        // UI Feedback
+        label.innerHTML = '<span class="material-symbols-rounded" style="animation:spin 1s linear infinite; font-size:1rem;">refresh</span> Enviando...';
+        label.style.pointerEvents = 'none';
+        label.style.opacity = '0.7';
+        
+        fetch('../upload_doc.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            return response.text().then(text => {
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch (e) {
+                    console.error("Server Raw Response:", text);
+                    throw new Error("Resposta inválida do servidor. Veja o console para detalhes ou contate o suporte.");
+                }
+                return data;
+            });
+        })
+        .then(data => {
+            if (data.success) {
+                // Success
+                Toastify({ 
+                    text: "✅ Enviado com Sucesso!", 
+                    duration: 3000, 
+                    backgroundColor: "#198754",
+                    gravity: "top", 
+                    position: "center"
+                }).showToast();
+                
+                setTimeout(() => location.reload(), 1000); 
+            } else {
+                // Server Logic Error
+                throw new Error(data.error || "Erro desconhecido no servidor.");
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            alert("❌ Falha no Envio:\\n" + error.message);
+            
+            // Reset UI
+            label.innerHTML = originalText;
+            label.style.pointerEvents = 'auto';
+            label.style.opacity = '1';
+        });
+    };
+    </script>
 </body>
 </html>
