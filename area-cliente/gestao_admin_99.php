@@ -92,7 +92,10 @@ function renderFinTable($stmt, $title, $color, $cid) {
 // require 'includes/processamento.php'; // DEBUG: COMMENTED TO TEST 500 ERROR CAUSE
 
 // Exportar Relatório (Exaustivo e Profissional)
-require 'includes/exportacao.php';
+// require 'includes/exportacao.php'; // DEBUG: COMMENTED TO TEST CAUSE
+echo "<h1>ALIVE - CONFIGS LOADED</h1>"; 
+// die(); // Let it continue to see if it crashes later
+
 
 // --- Consultas Iniciais e Dashboard Data ---
 $clientes = $pdo->query("SELECT * FROM clientes ORDER BY nome ASC")->fetchAll();
