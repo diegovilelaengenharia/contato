@@ -7,7 +7,7 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS processo_pendencias (
     status ENUM('pendente', 'resolvido') DEFAULT 'pendente',
     data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
-);
+);");
 
 // Ensure legacy column exists for pendencias
 try {
