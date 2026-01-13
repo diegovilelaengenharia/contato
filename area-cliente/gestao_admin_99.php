@@ -89,7 +89,7 @@ function renderFinTable($stmt, $title, $color, $cid) {
 }
 
 // --- Processamento (POST/GET) ---
-require 'includes/processamento.php';
+// require 'includes/processamento.php'; // DEBUG: COMMENTED TO TEST 500 ERROR CAUSE
 
 // Exportar Relatório (Exaustivo e Profissional)
 require 'includes/exportacao.php';
