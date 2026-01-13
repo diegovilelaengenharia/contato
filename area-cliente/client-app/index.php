@@ -123,7 +123,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             gap: 20px;
         }
         .ph-logo img {
-            height: 45px;
+            height: 60px;
         }
         .ph-divider {
             width: 2px;
@@ -197,7 +197,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
         @media(max-width: 600px) {
             .ph-top { padding: 15px 20px; flex-direction: column; align-items: flex-start; gap: 10px; }
             .ph-divider { display: none; }
-            .ph-logo img { height: 35px; }
+            .ph-logo img { height: 46px; }
             .ph-title { font-size: 0.95rem; }
             .ph-user-bar { padding: 15px 20px; }
             .ph-username { font-size: 1rem; }
@@ -347,13 +347,13 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                 ?>
 
                 <!-- 1. DOCS INICIAIS (CHECKLIST) -->
-                <a href="documentos_iniciais.php" class="app-button" style="border-left-color: #0d6efd;">
-                    <div class="app-btn-icon" style="background:#cfe2ff; color:#0d6efd;">📋</div>
+                <a href="documentos_iniciais.php" class="app-button" style="border-left-color: #20c997;">
+                    <div class="app-btn-icon" style="background:#e6fffa; color:#20c997;">📋</div>
                     <div class="app-btn-content">
                         <span class="app-btn-title">Checklist Inicial</span>
                         <span class="app-btn-desc">Lista de documentos necessários</span>
                     </div>
-                    <div class="app-btn-arrow" style="color:#0d6efd;">➔</div>
+                    <div class="app-btn-arrow" style="color:#20c997;">➔</div>
                 </a>
 
                 <!-- 2. TIMELINE -->
@@ -419,13 +419,13 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                 </a>
                 
                 <!-- 5. DOCUMENTOS -->
-                <a href="documentos.php" class="app-button" style="border-left-color: #0dcaf0;">
-                    <div class="app-btn-icon" style="background:#d1ecf1; color:#0dcaf0;">📂</div>
+                <a href="documentos.php" class="app-button" style="border-left-color: #0d6efd;">
+                    <div class="app-btn-icon" style="background:#cfe2ff; color:#0d6efd;">📂</div>
                     <div class="app-btn-content">
                         <span class="app-btn-title">Documentos Finais</span>
                         <span class="app-btn-desc">Acesso aos documentos digitais</span>
                     </div>
-                    <div class="app-btn-arrow" style="color:#0dcaf0;">➔</div>
+                    <div class="app-btn-arrow" style="color:#0d6efd;">➔</div>
                 </a>
 
                 <!-- 6. RESUMO (MOVED & RESTYLED) -->

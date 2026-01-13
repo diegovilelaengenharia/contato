@@ -68,19 +68,20 @@ $entregues = $stmt_entregues->fetchAll(PDO::FETCH_COLUMN);
 
         /* Override basic settings for full page view */
         body { background: #f4f6f8; }
+        /* HEADER MODULE STYLE (TEAL - DOCS INICIAIS) */
         .page-header {
-            background: linear-gradient(135deg, #e8f5e9 0%, #c3e6cb 100%); /* Light Green Gradient */
+            background: linear-gradient(135deg, #e6fffa 0%, #b2f5ea 100%); /* Light Teal Gradient */
             border-bottom: none;
             padding: 30px 25px; 
             border-bottom-left-radius: 30px; 
             border-bottom-right-radius: 30px;
-            box-shadow: 0 10px 30px rgba(25, 135, 84, 0.15); 
+            box-shadow: 0 10px 30px rgba(32, 201, 151, 0.15); 
             margin-bottom: 30px;
             display: flex; align-items: center; justify-content: space-between;
-            color: #146c43; /* Dark Green Text */
+            color: #0d5f4c; /* Dark Teal Text */
             position: relative;
             overflow: hidden;
-            border: 1px solid #badbcc;
+            border: 1px solid #b2f5ea;
         }
         
         /* Decorative Circle (Subtle) */
@@ -91,7 +92,7 @@ $entregues = $stmt_entregues->fetchAll(PDO::FETCH_COLUMN);
         }
 
         .btn-back {
-            text-decoration: none; color: #146c43; font-weight: 600; 
+            text-decoration: none; color: #0d5f4c; font-weight: 600; 
             display: flex; align-items: center; gap: 8px;
             padding: 10px 20px; 
             background: white; 
@@ -99,15 +100,15 @@ $entregues = $stmt_entregues->fetchAll(PDO::FETCH_COLUMN);
             transition: 0.3s;
             font-size: 0.95rem;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            border: 1px solid #badbcc;
+            border: 1px solid #b2f5ea;
         }
-        .btn-back:hover { background: #f0fff4; transform: translateX(-3px); }
+        .btn-back:hover { background: #e6fffa; transform: translateX(-3px); }
         
         .header-title-box {
             display: flex; flex-direction: column; align-items: flex-end; text-align: right;
         }
-        .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #0f5132; }
-        .header-title-sub { font-size: 0.8rem; opacity: 0.8; font-weight: 500; margin-top: 2px; color: #198754; }
+        .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #083b30; }
+        .header-title-sub { font-size: 0.8rem; opacity: 0.8; font-weight: 500; margin-top: 2px; color: #0d5f4c; }
 
         .doc-card {
             background: #fff;
@@ -169,7 +170,7 @@ $entregues = $stmt_entregues->fetchAll(PDO::FETCH_COLUMN);
                  </div>
                  
                  <!-- Animated Icon -->
-                 <div style="background: white; border:1px solid #dee2e6; color: #343a40; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05); animation: docWiggle 4s ease-in-out infinite;">
+                 <div style="background: white; border:1px solid #b2f5ea; color: #20c997; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05); animation: docWiggle 4s ease-in-out infinite;">
                     📋
                  </div>
             </div>
