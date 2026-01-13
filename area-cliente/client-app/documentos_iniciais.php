@@ -300,57 +300,102 @@ foreach($entregues_raw as $row) {
                 <?php endif; ?>
             </div>
 
+            <?php if($proc_data): 
+                // Merge obligatory and exceptional for display or keep separate? 
+                // Previous design kept them separate. Let's keep separate loops but use same internal logic.
+            ?>
+
             <h3 style="font-size: 1rem; color: #555; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 5px;">Documentos Obrigatórios</h3>
             
             <?php foreach($proc_data['docs_obrigatorios'] as $d_key): 
-                $is_ok = in_array($d_key, $entregues);
+                    $label = $todos_docs[$d_key] ?? $d_key;
+                    $info = $entregues[$d_key] ?? null; // $entregues is now assoc array [key => row]
+                    
+                    // Status Calculation
+                    $status = $info['status'] ?? 'pendente'; 
+                    // Fallback logic
+                    if($status == 'pendente' && !empty($info['arquivo_path'])) $status = 'em_analise';
+                    
+                    // Visual Props
+                    $icon = 'priority_high'; $status_text = 'Pendente'; $status_color = '#dc3545'; $bg_color = '#fff';
+                    
+                    if($status == 'em_analise') {
+                        $icon = 'hourglass_top'; $status_text = 'Em Análise'; $status_color = '#ffc107'; $bg_color = '#fffbf0';
+                    } elseif($status == 'aprovado') {
+                        $icon = 'check_circle'; $status_text = 'Aprovado'; $status_color = '#198754'; $bg_color = '#f8fff9';
+                    } elseif($status == 'rejeitado') {
+                        $icon = 'error'; $status_text = 'Rejeitado / Corrigir'; $status_color = '#dc3545'; $bg_color = '#fff5f5';
+                    }
             ?>
-                <div class="doc-card <?= $is_ok ? 'entregue' : 'pendente' ?>">
-                    <div class="doc-icon" style="background: <?= $is_ok ? '#d1e7dd' : '#f8d7da' ?>; color: <?= $is_ok ? '#198754' : '#dc3545' ?>;">
-                        <?= $is_ok ? '✓' : '!' ?>
+                <div class="doc-card" style="border-left: 5px solid <?= $status_color ?>; background: <?= $bg_color ?>;">
+                    <div class="doc-icon" style="background: <?= $status_color ?>; color: <?= ($status=='em_analise') ? '#555' : 'white' ?>;">
+                        <span class="material-symbols-rounded"><?= $icon ?></span>
                     </div>
-                    <div class="doc-info" style="display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%;">
-                        <div>
-                            <div class="doc-title"><?= htmlspecialchars($todos_docs[$d_key] ?? $d_key) ?></div>
-                            <span class="doc-status <?= $is_ok ? 'status-ok' : 'status-pend' ?>">
-                                <?= $is_ok ? 'Recebido' : 'Pendente' ?>
-                            </span>
-                        </div>
+                    <div class="doc-info">
+                        <div class="doc-title" style="margin-bottom: 4px;"><?= htmlspecialchars($label) ?></div>
                         
-                        <?php if(!$is_ok): ?>
-                             <!-- Upload Trigger (PENDING) -->
-                             <button type="button" class="btn-anexar" onclick="triggerUpload('<?= $d_key ?>')" style="cursor:pointer; display:flex; align-items:center; gap:5px; padding:6px 12px; background:#0d6efd; color:white; border-radius:20px; font-size:0.75rem; font-weight:600; border:none; transition:0.2s; white-space: nowrap; box-shadow: 0 2px 5px rgba(13, 110, 253, 0.2);">
-                                <span class="material-symbols-rounded" style="font-size:1rem;">attach_file</span> 
-                                <span style="display:none; @media(min-width:400px){display:inline;}">Anexar</span>
-                            </button>
-                        <?php else: ?>
-                             <!-- Re-Upload Trigger (EDIT) -->
-                             <button type="button" class="btn-anexar" onclick="triggerUpload('<?= $d_key ?>')" style="cursor:pointer; display:flex; align-items:center; gap:5px; padding:6px 12px; background:#6c757d; color:white; border-radius:20px; font-size:0.75rem; font-weight:600; border:none; transition:0.2s; white-space: nowrap; box-shadow: 0 2px 5px rgba(108, 117, 125, 0.2); opacity: 0.8;">
-                                <span class="material-symbols-rounded" style="font-size:1rem;">edit</span> 
-                                <span style="display:none; @media(min-width:400px){display:inline;}">Alterar</span>
-                            </button>
-                        <?php endif; ?>
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+                            <span class="doc-status" style="background: <?= $status_color ?>20; color: <?= ($status=='em_analise') ? '#856404' : $status_color ?>;">
+                                <?= $status_text ?>
+                            </span>
+
+                            <?php if(!empty($info['nome_original'])): ?>
+                                <span style="font-size: 0.75rem; color: #666; display: flex; align-items: center; gap: 3px;">
+                                    <span class="material-symbols-rounded" style="font-size: 0.9rem;">description</span>
+                                    <?= htmlspecialchars($info['nome_original']) ?>
+                                </span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <div>
+                    <?php if($status == 'pendente' || $status == 'rejeitado'): ?>
+                            <!-- Upload Trigger -->
+                            <button type="button" class="btn-anexar" onclick="triggerUpload('<?= $d_key ?>')" style="cursor:pointer; display:flex; align-items:center; gap:5px; padding:6px 14px; background:#0d6efd; color:white; border-radius:20px; font-size:0.8rem; font-weight:600; border:none; transition:0.2s; white-space: nowrap; box-shadow: 0 2px 5px rgba(13, 110, 253, 0.2);">
+                            <span class="material-symbols-rounded" style="font-size:1.1rem;">cloud_upload</span> 
+                            <span style="display:none; @media(min-width:400px){display:inline;}">Anexar</span>
+                        </button>
+                    <?php elseif($status == 'em_analise'): ?>
+                            <!-- Re-Upload Trigger (EDIT) -->
+                            <button type="button" class="btn-anexar" onclick="triggerUpload('<?= $d_key ?>')" style="cursor:pointer; display:flex; align-items:center; gap:5px; padding:6px 12px; background:#ffc107; color:#333; border-radius:20px; font-size:0.75rem; font-weight:600; border:none; transition:0.2s; white-space: nowrap;">
+                            <span class="material-symbols-rounded" style="font-size:1rem;">edit</span> 
+                            <span style="display:none; @media(min-width:400px){display:inline;}">Alterar</span>
+                        </button>
+                    <?php elseif($status == 'aprovado'): ?>
+                        <div style="color: #198754; font-weight: bold; font-size: 1.2rem;">OK</div>
+                    <?php endif; ?>
                     </div>
                 </div>
             <?php endforeach; ?>
 
-            <?php if(!empty($proc_data['docs_excepcionais'])): ?>
-                <h3 style="font-size: 1rem; color: #555; margin-top: 30px; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 5px;">Documentos Excepcionais (Se aplicável)</h3>
-                
+            <?php // Handle docs_excepcionais (Optional loop handling or remove if empty check needed inside)
+            if(!empty($proc_data['docs_excepcionais'])): ?>
+                <h3 style="font-size: 1rem; color: #555; margin-top: 30px; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 5px;">Documentos Excepcionais</h3>
                 <?php foreach($proc_data['docs_excepcionais'] as $d_key): 
-                    $is_ok = in_array($d_key, $entregues);
+                        // Reuse same logic (simplified copy-paste for safety)
+                        $label = $todos_docs[$d_key] ?? $d_key;
+                        $info = $entregues[$d_key] ?? null;
+                        $status = $info['status'] ?? 'pendente';
+                        if($status == 'pendente' && !empty($info['arquivo_path'])) $status = 'em_analise';
+                        
+                        // Visuals
+                        if($status == 'em_analise') { $icon='hourglass_top'; $status_color='#ffc107'; $bg_color='#fffbf0'; $status_text='Em Análise'; }
+                        elseif($status == 'aprovado') { $icon='check_circle'; $status_color='#198754'; $bg_color='#f8fff9'; $status_text='Aprovado'; }
+                        elseif($status == 'rejeitado') { $icon='error'; $status_color='#dc3545'; $bg_color='#fff5f5'; $status_text='Rejeitado'; }
+                        else { $icon='priority_high'; $status_color='#dc3545'; $bg_color='#fff'; $status_text='Pendente'; } // Excepcionais might differ in default color? Keep consistent.
                 ?>
-                    <div class="doc-card <?= $is_ok ? 'entregue' : 'pendente' ?>">
-                        <div class="doc-icon" style="background: <?= $is_ok ? '#d1e7dd' : '#fff3cd' ?>; color: <?= $is_ok ? '#198754' : '#856404' ?>;">
-                            <?= $is_ok ? '✓' : '?' ?>
-                        </div>
-                        <div class="doc-info">
-                            <div class="doc-title"><?= htmlspecialchars($todos_docs[$d_key] ?? $d_key) ?></div>
-                            <span class="doc-status <?= $is_ok ? 'status-ok' : '' ?>" style="<?= !$is_ok ? 'background:#fff3cd; color:#856404;' : '' ?>">
-                                <?= $is_ok ? 'Recebido' : 'Aguardando Avaliação' ?>
-                            </span>
-                        </div>
-                    </div>
+                <div class="doc-card" style="border-left: 5px solid <?= $status_color ?>; background: <?= $bg_color ?>;">
+                     <div class="doc-icon" style="background: <?= $status_color ?>; color: <?= ($status=='em_analise') ? '#555' : 'white' ?>;"><span class="material-symbols-rounded"><?= $icon ?></span></div>
+                     <div class="doc-info">
+                        <div class="doc-title"><?= htmlspecialchars($label) ?></div>
+                        <span class="doc-status" style="background:<?= $status_color ?>20; color:<?= ($status=='em_analise')?'#856404':$status_color ?>;"><?= $status_text ?></span>
+                     </div>
+                     <div>
+                        <?php if($status != 'aprovado'): ?>
+                        <button type="button" class="btn-anexar" onclick="triggerUpload('<?= $d_key ?>')" style="cursor:pointer; display:flex; align-items:center; gap:5px; padding:6px 12px; background:#0d6efd; color:white; border-radius:20px; font-size:0.75rem;"><span class="material-symbols-rounded">cloud_upload</span></button>
+                        <?php endif; ?>
+                     </div>
+                </div>
                 <?php endforeach; ?>
             <?php endif; ?>
 

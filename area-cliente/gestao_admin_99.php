@@ -738,9 +738,6 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             <?php elseif($active_tab == 'docs_iniciais'): ?>
                 <!-- DOCUMENTOS INICIAIS CONTENT (Azul) -->
                  <?php 
-                    // ENSURE SCHEMA IS UPDATED (Fix 500 Error if column missing)
-                    require_once 'includes/schema.php';
-
                     $docs_config = require 'config/docs_config.php';
                     $processos = $docs_config['processes'];
                     $todos_docs = $docs_config['document_registry'];
