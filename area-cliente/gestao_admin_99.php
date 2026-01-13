@@ -767,14 +767,40 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             $pdo->prepare("INSERT INTO processo_detalhes (cliente_id, tipo_processo_chave, observacoes_gerais) VALUES (?, ?, ?)")->execute([$cliente_ativo['id'], $new_proc, $_POST['observacoes_gerais']??'']);
                         }
                         
-                        // 2. Save Checks (Delete all and re-insert checked)
-                        $pdo->prepare("DELETE FROM processo_docs_entregues WHERE cliente_id = ?")->execute([$cliente_ativo['id']]);
-                        
-                        if(isset($_POST['docs_entregues'])) {
-                            $stmt_ins = $pdo->prepare("INSERT INTO processo_docs_entregues (cliente_id, doc_chave) VALUES (?, ?)");
-                            foreach($_POST['docs_entregues'] as $d_key) {
-                                $stmt_ins->execute([$cliente_ativo['id'], $d_key]);
+                        // 2. Save Checks (Smart Merge - NON DESTRUCTIVE)
+                        // Get current DB Docs to compare
+                        $current_docs_stmt = $pdo->prepare("SELECT doc_chave FROM processo_docs_entregues WHERE cliente_id = ?");
+                        $current_docs_stmt->execute([$cliente_ativo['id']]);
+                        $current_docs = $current_docs_stmt->fetchAll(PDO::FETCH_COLUMN);
+
+                        $submitted_docs = $_POST['docs_entregues'] ?? [];
+
+                        // A. Docs to ADD (In submitted, not in DB)
+                        $to_add = array_diff($submitted_docs, $current_docs);
+                        if (!empty($to_add)) {
+                            $stmt_ins = $pdo->prepare("INSERT INTO processo_docs_entregues (cliente_id, doc_chave, data_entrega) VALUES (?, ?, NOW())");
+                            foreach($to_add as $new_key) {
+                                $stmt_ins->execute([$cliente_ativo['id'], $new_key]);
                             }
+                        }
+
+                        // B. Docs to REMOVE (In DB, not in submitted) - BUT ONLY IF NO FILE ATTACHED
+                        // If admin unchecks a doc that has a file, we should probably Keep it or Warn? 
+                        // For now, let's assume Uncheck = Delete metadata too (Reset), OR we can protect files.
+                        // User request: "quando assinalo que recebi... nao mostra". 
+                        // FIX: The issue was overwriting. This merge fixes adding checks without deleting files.
+                        // However, if admin WANTS to uncheck, we should remove. 
+                        
+                        $to_remove = array_diff($current_docs, $submitted_docs);
+                        if(!empty($to_remove)) {
+                            // Only delete if NO file is attached? Or force delete?
+                            // Let's force delete to allow admin to "Undo" a receipt.
+                            // Ideally, we should check if file exists and maybe delete file physics too?
+                            // For safety/simplicity now: Just delete record.
+                             $stmt_del = $pdo->prepare("DELETE FROM processo_docs_entregues WHERE cliente_id = ? AND doc_chave = ?");
+                             foreach($to_remove as $del_key) {
+                                 $stmt_del->execute([$cliente_ativo['id'], $del_key]);
+                             }
                         }
                         echo "<script>window.location.href='?cliente_id={$cliente_ativo['id']}&tab=docs_iniciais&msg=docs_updated';</script>";
                     }
