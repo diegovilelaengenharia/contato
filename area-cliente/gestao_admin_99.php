@@ -1018,7 +1018,6 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                 <span style="font-size:3rem; display:block; margin-bottom:10px;">👆</span>
                                 Selecione um tipo de processo acima para ver a lista de documentos.
                             </div>
-                        <?php endif; ?>
                     </form>
                 </div>
 
