@@ -126,13 +126,10 @@ function formatMoney($val) {
 
         <!-- HEADER MODULE (GOLD) -->
         <div class="page-header">
-            <!-- Left: Back Button & Logo -->
-            <div style="display:flex; align-items:center; gap:20px;">
-                <a href="index.php" class="btn-back">
-                    <span class="material-symbols-rounded">arrow_back</span> Voltar
-                </a>
-                 <img src="../../assets/logo.png" alt="Vilela Engenharia" style="height: 60px; width: auto; object-fit: contain;">
-            </div>
+            <!-- Left: Back Button -->
+            <a href="index.php" class="btn-back">
+                <span class="material-symbols-rounded">arrow_back</span> Voltar
+            </a>
 
             <!-- Right: Title & Icon -->
             <div style="display:flex; align-items:center; gap:15px; z-index:2;">
@@ -150,14 +147,45 @@ function formatMoney($val) {
 
         <div style="padding: 0 20px">
             <!-- KPI SUMMARY -->
-            <div class="fin-summary">
-                <div class="fin-card-kpi">
-                    <small>Total Pago</small>
-                    <strong style="color: #198754;"><?= formatMoney($total_pago) ?></strong>
+            <!-- KPI SUMMARY (ENHANCED) -->
+             <style>
+                .fin-summary-highlight {
+                    display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+                    margin-bottom: 35px;
+                }
+                .fsh-card {
+                    background: white; border-radius: 20px; padding: 25px;
+                    border: 1px solid #eee; position: relative; overflow: hidden;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+                    display: flex; flex-direction: column; justify-content: center;
+                }
+                .fsh-card.paid { background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 80%); border-color: #c3e6cb; }
+                .fsh-card.pending { background: linear-gradient(135deg, #fff9e6 0%, #ffffff 80%); border-color: #ffecb5; }
+                
+                .fsh-label { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #666; margin-bottom: 5px; z-index: 2; }
+                .fsh-value { font-size: 1.8rem; font-weight: 800; z-index: 2; line-height: 1.2; }
+                
+                .fsh-icon-bg {
+                    position: absolute; right: -10px; bottom: -10px; font-size: 4rem; opacity: 0.15; z-index: 1; transform: rotate(-10deg);
+                }
+                
+                @media (max-width: 480px) {
+                    .fin-summary-highlight { grid-template-columns: 1fr; gap: 15px; }
+                    .fsh-card { padding: 20px; }
+                    .fsh-value { font-size: 1.6rem; }
+                }
+            </style>
+            
+            <div class="fin-summary-highlight">
+                <div class="fsh-card paid">
+                    <span class="fsh-label" style="color: #146c43;">Total Pago</span>
+                    <span class="fsh-value" style="color: #198754;"><?= formatMoney($total_pago) ?></span>
+                    <div class="fsh-icon-bg">✅</div>
                 </div>
-                <div class="fin-card-kpi">
-                    <small>A Pagar</small>
-                    <strong style="color: #ffc107;"><?= formatMoney($total_pendente + $total_atrasado) ?></strong>
+                <div class="fsh-card pending">
+                    <span class="fsh-label" style="color: #856404;">A Pagar</span>
+                    <span class="fsh-value" style="color: #ffc107;"><?= formatMoney($total_pendente + $total_atrasado) ?></span>
+                    <div class="fsh-icon-bg">⏳</div>
                 </div>
             </div>
 

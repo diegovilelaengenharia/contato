@@ -210,13 +210,10 @@ if (ob_get_length()) ob_clean();
         
         <!-- HEADER MODULE (RED) -->
         <div class="page-header">
-            <!-- Left: Back Button & Logo -->
-            <div style="display:flex; align-items:center; gap:20px;">
-                <a href="index.php" class="btn-back">
-                    <span class="material-symbols-rounded">arrow_back</span> Voltar
-                </a>
-                <img src="../../assets/logo.png" alt="Vilela Engenharia" style="height: 60px; width: auto; object-fit: contain;">
-            </div>
+            <!-- Left: Back Button -->
+            <a href="index.php" class="btn-back">
+                <span class="material-symbols-rounded">arrow_back</span> Voltar
+            </a>
 
             <!-- Right: Title & Icon -->
             <div style="display:flex; align-items:center; gap:15px; z-index:2;">
