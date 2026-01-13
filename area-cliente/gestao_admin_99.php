@@ -89,10 +89,10 @@ function renderFinTable($stmt, $title, $color, $cid) {
 }
 
 // --- Processamento (POST/GET) ---
-require 'includes/processamento.php';
+// require 'includes/processamento.php';
 
 // Exportar Relatório (Exaustivo e Profissional)
-require 'includes/exportacao.php';
+// require 'includes/exportacao.php';
 
 
 // --- Consultas Iniciais e Dashboard Data ---
