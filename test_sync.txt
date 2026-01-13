@@ -1,1 +1,0 @@
-Sync verification file. Created at 2026-01-13. If you see this, deployment is working.

@@ -9,16 +9,6 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS processo_pendencias (
     FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
 )");
 
-// Create Table for Initial Documents Checklist
-$pdo->exec("CREATE TABLE IF NOT EXISTS processo_documentos_iniciais (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    cliente_id INT NOT NULL,
-    tipo_processo VARCHAR(100),
-    docs_entregues JSON,
-    observacoes TEXT,
-    FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
-)");
-
 // Update Schema: Add ALL Missing Columns for processo_detalhes
 $cols_needed = [
     'res_rua', 'res_numero', 'res_bairro', 'res_complemento', 'res_cidade', 'res_uf',
