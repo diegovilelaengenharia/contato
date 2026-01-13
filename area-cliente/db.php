@@ -22,4 +22,3 @@ try {
     // Em produção, a mensagem será capturada pelo index.php
     throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }
-?>

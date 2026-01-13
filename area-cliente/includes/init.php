@@ -52,4 +52,3 @@ if (isset($_GET['sair'])) {
     header("Location: index.php");
     exit;
 }
-?>
