@@ -1284,3 +1284,62 @@ a {
     opacity: 1;
     right: 70px;
 }
+
+/* --- DOWNLOAD CARD SIMPLE (New Request) --- */
+.download-card {
+    background: #fff9db;
+    /* Light Yellow */
+    border: 1px solid #ffe8cc;
+    border-radius: 20px;
+    /* Fully rounded/pill shape */
+    padding: 15px 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 10px rgba(255, 193, 7, 0.15);
+}
+
+.download-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(255, 193, 7, 0.25);
+}
+
+.dc-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.dc-icon {
+    font-size: 1.8rem;
+}
+
+.dc-text h4 {
+    margin: 0 0 2px 0;
+    color: #856404;
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.dc-text p {
+    margin: 0;
+    color: #856404;
+    font-size: 0.75rem;
+    opacity: 0.8;
+}
+
+.dc-action {
+    background: #ffc107;
+    color: #333;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(133, 100, 4, 0.2);
+}

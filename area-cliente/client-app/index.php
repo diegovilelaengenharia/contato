@@ -429,11 +429,17 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                 </a>
 
                 <!-- 6. RESUMO (MOVED & RESTYLED) -->
-                <a href="../../area-cliente/relatorio_cliente.php?id=<?= $cliente['id'] ?>" target="_blank" class="app-button" style="background: #fff3cd; border: 1px solid #ffecb5; padding: 12px 15px; min-height: auto;">
-                    <div class="app-btn-icon" style="background: rgba(255, 193, 7, 0.2); color: #856404; width: 32px; height: 32px; font-size: 1.1rem; flex-shrink: 0;">🖨️</div>
-                    <div class="app-btn-content">
-                        <span class="app-btn-title" style="color: #856404; font-size: 0.95rem; font-weight: 700; display: block; margin-bottom: 2px;">Download: Visão Geral do Processo</span>
-                        <span class="app-btn-desc" style="color: #856404; font-size: 0.75rem; opacity: 0.9;">Baixar Resumo Completo do processo</span>
+                <!-- 6. RESUMO (SIMPLIFIED) -->
+                <a href="../../area-cliente/relatorio_cliente.php?id=<?= $cliente['id'] ?>" target="_blank" class="download-card">
+                    <div class="dc-info">
+                        <div class="dc-icon">🖨️</div>
+                        <div class="dc-text">
+                            <h4>Visão Geral do Processo</h4>
+                            <p>Clique para baixar o PDF</p>
+                        </div>
+                    </div>
+                    <div class="dc-action">
+                        <span class="material-symbols-rounded">download</span>
                     </div>
                 </a>
 
