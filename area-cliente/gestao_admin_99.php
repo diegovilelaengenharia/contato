@@ -88,11 +88,11 @@ function renderFinTable($stmt, $title, $color, $cid) {
     echo "</div>";
 }
 
-// --- Processamento (POST-GET) ---
-// require 'includes/processamento.php';
+// --- Processamento (POST/GET) ---
+require 'includes/processamento.php';
 
-// Exportar Relatório
-// require 'includes/exportacao.php';
+// Exportar Relatório (Exaustivo e Profissional)
+require 'includes/exportacao.php';
 
 
 // --- Consultas Iniciais e Dashboard Data ---
@@ -945,7 +945,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                     </tbody>
                                 </table>
                             </div>
-                        <?php endif; ?>
+
 
                              <!-- CSS para Tabela (Novo) -->
                              <style>
