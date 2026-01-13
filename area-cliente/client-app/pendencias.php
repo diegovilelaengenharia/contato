@@ -495,6 +495,10 @@ if (ob_get_length()) ob_clean();
                 </a>
             </div>
             
+
+            <!-- FOOTER -->
+            <?php include 'includes/footer.php'; ?>
+
     </div>
 
     <!-- MODAL DE RESOLUÇÃO -->

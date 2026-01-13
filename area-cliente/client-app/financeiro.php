@@ -231,6 +231,9 @@ function formatMoney($val) {
             </a>
         </div>
 
+        <!-- FOOTER -->
+        <?php include 'includes/footer.php'; ?>
+
     </div>
 
 </body>

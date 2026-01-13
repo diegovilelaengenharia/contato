@@ -338,6 +338,9 @@ $obs_atual = $stmt_obs->fetchColumn();
             </a>
         </div>
 
+        <!-- FOOTER -->
+        <?php include 'includes/footer.php'; ?>
+
     </div>
 
 </body>

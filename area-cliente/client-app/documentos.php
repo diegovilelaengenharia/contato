@@ -232,6 +232,9 @@ if($drive_link) {
             </a>
         </div>
 
+        <!-- FOOTER -->
+        <?php include 'includes/footer.php'; ?>
+
     </div>
 
 </body>
