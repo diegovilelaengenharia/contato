@@ -1111,7 +1111,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             
             </div> <!-- End of Colored Window Wrapper -->
         
-        <?php } else { ?>
+        <?php else: ?>
             
             <!-- DASHBOARD GERAL (Visão do Gestor) -->
             <div style="margin-bottom:30px; display:flex; justify-content:space-between; align-items:flex-end;">
