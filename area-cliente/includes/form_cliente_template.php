@@ -97,7 +97,7 @@ $p_obj = $detalhes['objeto_processo'] ?? '';
             </select>
             <small style="color:#666; font-size:0.8rem;">Selecionar o tipo correto ativa a lista de documentos personalizada.</small>
         </div>
-        <div class="form-group" style="grid-column: span 2;"><label>Objeto do Processo</label><input type="text" name="processo_objeto" value="<?= htmlspecialchars($p_obj) ?>" placeholder="Ex: Regularização Residencial Unifamiliar"></div>
+
     </div>
     <h3 style="margin:0 0 15px 0; color:var(--color-primary); border-bottom:1px solid #eee; padding-bottom:5px;">1. Acesso & Fotos</h3>
     <div style="display:flex; gap:20px; margin-bottom:20px;">
