@@ -7,7 +7,14 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS processo_pendencias (
     status ENUM('pendente', 'resolvido') DEFAULT 'pendente',
     data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
-)");
+);
+
+// Ensure legacy column exists for pendencias
+try {
+    $pdo->query("SELECT arquivo_path FROM processo_pendencias LIMIT 1");
+} catch (Exception $e) {
+    $pdo->exec("ALTER TABLE processo_pendencias ADD COLUMN arquivo_path VARCHAR(255) DEFAULT NULL");
+}");
 
 // Update Schema: Add ALL Missing Columns for processo_detalhes
 $cols_needed = [
@@ -18,7 +25,7 @@ $cols_needed = [
     'tipo_responsavel', 'resp_tecnico', 'registro_prof', 'num_art_rrt',
     'tipo_pessoa', 'cpf_cnpj', 'rg_ie', 'estado_civil', 'profissao', 'endereco_residencial', 'contato_email', 'contato_tel',
     // New Columns for Process Tracking
-    'processo_numero', 'processo_objeto', 'processo_link_mapa',
+    'processo_numero', 'processo_objeto', 'processo_link_mapa', 'link_drive_pasta',
     // New Columns for "Maria" Spec (Resumo do Patrimônio)
     'valor_venal', 'area_total_final', 'foto_capa_obra',
     // New Technical Columns (Oliveira/MG Spec)
