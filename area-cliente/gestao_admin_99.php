@@ -521,32 +521,32 @@ if($cliente_ativo) {
                 $win_border_color = '#146c43';
             ?>
 
-            <div style="background:#fff; border-top: 4px solid <?= $win_border_color ?>; border-radius: 0 0 12px 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); padding: 25px; margin-bottom: 30px;">
+            <div style="background:#fff; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.03); padding: 35px; margin-bottom: 30px; border: 1px solid #f0f0f0;">
 
             <!-- Script removed as logic is now backend-driven -->
 
             <?php if($active_tab == 'cadastro' || $active_tab == 'andamento'): ?>
                 <div class="admin-tab-content">
-                    <!-- Unified Header with Actions -->
-                    <div class="admin-header-row">
+                    <!-- Modern Header -->
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:30px; gap:20px;">
                         <div>
-                            <h3 class="admin-title">📜 Histórico Completo do Processo</h3>
-                            <p class="admin-subtitle">Registre aqui todos os passos e comunicações.</p>
+                            <h3 style="margin:0 0 6px 0; font-size:1.6rem; font-weight:800; color:#2c3e50; letter-spacing:-0.5px; display:flex; align-items:center; gap:10px;">
+                                Histórico do Processo
+                            </h3>
+                            <p style="margin:0; font-size:0.95rem; color:#6c757d; font-weight:400;">Linha do tempo completa e registros do cliente.</p>
                         </div>
                         
-                        <div style="display:flex; gap:10px; align-items:center;">
+                        <div style="display:flex; gap:12px; align-items:center;">
                              <!-- Botão Novo Andamento (Integrado) -->
-                            <button type="button" onclick="document.getElementById('modalAndamento').showModal()" style="padding:10px 20px; background:linear-gradient(135deg, #198754, #146c43); border:none; border-radius:30px; font-size:0.9rem; font-weight:700; color:white; cursor:pointer; display:flex; align-items:center; gap:8px; transition:all 0.2s; box-shadow:0 3px 6px rgba(25, 135, 84, 0.3);">
-                                <span style="font-size:1.2rem;">✨</span> Novo Andamento
+                            <button type="button" onclick="document.getElementById('modalAndamento').showModal()" style="padding:12px 24px; background:#198754; border:none; border-radius:12px; font-size:0.95rem; font-weight:600; color:white; cursor:pointer; display:flex; align-items:center; gap:8px; transition:all 0.2s; box-shadow:0 4px 12px rgba(25, 135, 84, 0.25);">
+                                <span class="material-symbols-rounded">add_circle</span> Novo Andamento
                             </button>
                             
- 
- 
                              <!-- Botão Apagar Histórico (Perigo) -->
                             <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento&del_all_hist=true" 
                                onclick="return confirm('ATENÇÃO EXTREMA: \n\nVocê está prestes a APAGAR TODO O HISTÓRICO deste processo.\n\nIsso limpará todas as movimentações, datas e logs.\n\nTem certeza absoluta que deseja fazer isso?');"
-                               style="background:#f8f9fa; color:#6c757d; padding:10px 15px; border:1px solid #dee2e6; border-radius:30px; font-size:0.8rem; text-decoration:none; font-weight:700; display:flex; align-items:center; gap:5px; margin-left:10px;" title="Limpar Tudo">
-                               ⏱️ Limpar
+                               style="background:#fff; color:#dc3545; padding:11px 16px; border:1px solid #f5c2c7; border-radius:12px; font-size:0.9rem; text-decoration:none; font-weight:600; display:flex; align-items:center; gap:6px; transition:all 0.2s;" title="Limpar Tudo">
+                                <span class="material-symbols-rounded">delete_sweep</span> Limpar
                             </a>
                         </div>
                     </div>
