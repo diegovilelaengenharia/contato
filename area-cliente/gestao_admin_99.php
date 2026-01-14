@@ -603,9 +603,7 @@ if ($cliente_ativo) {
                                         <a href="relatorio_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="profile-action-btn" title="Resumo PDF">
                                             <span class="material-symbols-rounded">picture_as_pdf</span> Resumo PDF
                                         </a>
-                                        <a href="area_cliente.php" target="_blank" class="profile-action-btn" title="Ver como Cliente">
-                                            <span class="material-symbols-rounded">visibility</span> Ver como Cliente
-                                        </a>
+
                                         <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" class="profile-action-btn btn-danger-hover" onclick="return confirm('Deseja excluir este cliente?')" style="color:#dc3545;" title="Excluir Cliente">
                                             <span class="material-symbols-rounded">delete</span> Excluir Cliente
                                         </a>
