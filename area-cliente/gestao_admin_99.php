@@ -274,93 +274,74 @@ if($cliente_ativo) {
 
             <!-- Old Client Summary Card Removed (Moved to Profile Tab) -->
             
-            <!-- MODERN TIMELINE HEADER (Substitui cabeçalho antigo) -->
+            <!-- MODERN TIMELINE HEADER (Somente Stepper) -->
             <style>
                 .timeline-header {
                     background: #fff;
                     border-radius: 20px;
-                    padding: 20px 30px;
-                    box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+                    padding: 30px 40px; /* Increased padding for standalone look */
+                    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
                     margin-bottom: 30px;
-                    border: 1px solid rgba(0,0,0,0.02);
+                    border: 1px solid #f0f0f0;
                     position: relative;
-                    overflow: hidden;
+                    overflow: visible; /* Prevent cutting off tooltips/shadows */
                 }
-                .timeline-header::before {
-                    content: '';
-                    position: absolute;
-                    top: 0; left: 0; right: 0; height: 4px;
-                    background: linear-gradient(90deg, #198754, #20c997, #198754);
-                    background-size: 200% 100%;
-                    animation: gradientMove 3s linear infinite;
-                }
-                @keyframes gradientMove { 0% {background-position: 100% 0;} 100% {background-position: -100% 0;} }
 
-                .th-container { display: flex; align-items: center; justify-content: space-between; gap: 40px; }
-                
-                /* Identity Section */
-                .th-identity { display: flex; align-items: center; gap: 15px; min-width: 250px; }
-                .th-avatar {
-                    width: 55px; height: 55px; border-radius: 50%;
-                    background: #f0f2f5; display: flex; align-items: center; justify-content: center;
-                    font-weight: 800; color: #198754; font-size: 1.4rem;
-                    border: 3px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-                    position: relative; z-index: 1;
-                }
-                .th-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-                .th-info h2 { margin: 0; font-size: 1.1rem; font-weight: 700; color: #333; }
-                .th-info span { font-size: 0.8rem; color: #888; display: block; margin-top: 2px; }
+                .th-container { display: flex; align-items: center; justify-content: center; width: 100%; }
 
                 /* Timeline Stepper */
-                .th-stepper { flex: 1; display: flex; align-items: center; justify-content: space-between; position: relative; }
+                .th-stepper { flex: 1; display: flex; align-items: center; justify-content: space-between; position: relative; max-width: 900px; margin: 0 auto; }
+                
                 .th-line-bg {
-                    position: absolute; left: 0; right: 0; top: 14px; height: 3px; background: #e9ecef; z-index: 0; border-radius: 3px;
+                    position: absolute; left: 0; right: 0; top: 15px; height: 4px; background: #e9ecef; z-index: 0; border-radius: 3px;
                 }
                 .th-line-fill {
-                    position: absolute; left: 0; top: 14px; height: 3px; background: #198754; z-index: 0; border-radius: 3px;
+                    position: absolute; left: 0; top: 15px; height: 4px; background: #198754; z-index: 0; border-radius: 3px;
                     transition: width 1s ease;
                 }
+                
                 .th-step {
                     position: relative; z-index: 1; text-align: center; cursor: default;
-                    flex: 1; /* Distribute evenly */
+                    flex: 1; 
                     display: flex; flex-direction: column; align-items: center;
                 }
+                
                 .th-step-circle {
-                    width: 30px; height: 30px; border-radius: 50%; background: #fff; border: 2px solid #e9ecef;
+                    width: 34px; height: 34px; border-radius: 50%; background: #fff; border: 3px solid #e9ecef;
                     display: flex; align-items: center; justify-content: center;
-                    font-size: 0.75rem; color: #999; font-weight: 600;
-                    margin-bottom: 8px; transition: all 0.3s;
+                    font-size: 0.85rem; color: #adb5bd; font-weight: 700;
+                    margin-bottom: 10px; transition: all 0.3s;
                 }
-                .th-step.active .th-step-circle {
-                    border-color: #198754; background: #198754; color: #fff;
-                    box-shadow: 0 0 0 4px rgba(25, 135, 84, 0.2);
-                    animation: pulseRing 2s infinite;
-                }
+
+                /* COLORS */
+                /* Completed */
                 .th-step.completed .th-step-circle {
                     border-color: #198754; background: #198754; color: #fff;
                 }
-                .th-step-label { font-size: 0.75rem; color: #999; font-weight: 500; transition: color 0.3s; white-space: nowrap; }
-                .th-step.active .th-step-label { color: #198754; font-weight: 700; }
-                .th-step.completed .th-step-label { color: #198754; }
+                .th-step.completed .th-step-label { color: #198754; font-weight: 600; }
 
-                @keyframes pulseRing {
-                    0% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.4); }
-                    70% { box-shadow: 0 0 0 8px rgba(25, 135, 84, 0); }
-                    100% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0); }
+                /* Active (Distinct - Blue) */
+                .th-step.active .th-step-circle {
+                    border-color: #0d6efd; background: #0d6efd; color: #fff;
+                    box-shadow: 0 0 0 5px rgba(13, 110, 253, 0.2);
+                    transform: scale(1.15);
+                    animation: pulseBlue 2s infinite;
                 }
+                .th-step.active .th-step-label { color: #0d6efd; font-weight: 800; transform: scale(1.05); }
 
-                /* Actions */
-                .th-actions { display: flex; gap: 8px; margin-left: 20px; }
-                .th-btn {
-                    width: 36px; height: 36px; border-radius: 10px; border: none;
-                    display: flex; align-items: center; justify-content: center;
-                    cursor: pointer; transition: all 0.2s; background: #f8f9fa; color: #555;
+                /* Future (Dimmed/Darker Gray) */
+                .th-step.future .th-step-circle {
+                    border-color: #dee2e6; background: #f8f9fa; color: #ccc;
                 }
-                .th-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.08); }
-                .th-btn.edit:hover { background: #e7f1ff; color: #0d6efd; }
-                .th-btn.pdf:hover { background: #f3e8ff; color: #6f42c1; }
-                .th-btn.del:hover { background: #fff5f5; color: #dc3545; }
+                .th-step.future .th-step-label { color: #999; font-weight: 500; }
 
+                .th-step-label { font-size: 0.8rem; transition: all 0.3s; white-space: nowrap; }
+
+                @keyframes pulseBlue {
+                    0% { box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.5); }
+                    70% { box-shadow: 0 0 0 10px rgba(13, 110, 253, 0); }
+                    100% { box-shadow: 0 0 0 0 rgba(13, 110, 253, 0); }
+                }
             </style>
 
             <?php
@@ -368,7 +349,7 @@ if($cliente_ativo) {
             $steps = [
                 'cadastro' => 'Novo Cliente',
                 'docs_iniciais' => 'Documentação', 
-                'analise' => 'Análise', // Matches "Análise Técnica"
+                'analise' => 'Análise', 
                 'pendencias' => 'Pendências',
                 'financeiro' => 'Financeiro',
                 'aprovado' => 'Concluído'
@@ -387,50 +368,30 @@ if($cliente_ativo) {
             elseif(strpos($current_etapa_db, 'concl')!==false || strpos($current_etapa_db, 'aprov')!==false) $active_index = 5;
             
             // Calculate progress percentage for width of line
+            // If active is 2 (3rd step), fill should reach 2.
             $progress_pct = ($active_index / (count($steps)-1)) * 100;
             ?>
 
             <div class="timeline-header">
                 <div class="th-container">
                     
-                    <!-- Identity -->
-                    <div class="th-identity">
-                        <!-- Avatar / Upload -->
-                        <div style="position:relative;">
-                                <form id="form_avatar_upload_page_th" method="POST" enctype="multipart/form-data" style="display:none;">
-                                <input type="file" name="avatar_upload" id="avatar_input_page_th" accept="image/*" onchange="document.getElementById('form_avatar_upload_page_th').submit();">
-                            </form>
-                            <div class="th-avatar" onclick="document.getElementById('avatar_input_page_th').click();" title="Alterar Foto" style="cursor:pointer;">
-                                <?php if($avatar_url): ?>
-                                    <img src="<?= $avatar_url ?>">
-                                <?php else: ?>
-                                    <?= strtoupper(substr($cliente_ativo['nome'], 0, 1)) ?>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-
-                        <div class="th-info">
-                            <h2><?= htmlspecialchars($cliente_ativo['nome']) ?></h2>
-                            <span>ID: #<?= str_pad($cliente_ativo['id'], 3, '0', STR_PAD_LEFT) ?></span>
-                        </div>
-                    </div>
-
-                    <!-- Visual Timeline -->
+                    <!-- Visual Timeline (Full Width) -->
                     <div class="th-stepper">
                         <div class="th-line-bg"></div>
+                        <!-- Provide a gradient fill to bridge Green (Past) to Blue (Active) if desired, or just Green -->
                         <div class="th-line-fill" style="width: <?= $progress_pct ?>%;"></div>
                         
                         <?php 
                         $i = 0; 
                         foreach($steps as $key => $label): 
-                            $status_class = '';
+                            $status_class = 'future';
                             if($i < $active_index) $status_class = 'completed';
                             elseif($i == $active_index) $status_class = 'active';
                         ?>
                             <div class="th-step <?= $status_class ?>">
                                 <div class="th-step-circle">
                                     <?php if($status_class == 'completed'): ?>
-                                        <span class="material-symbols-rounded" style="font-size:1.2rem;">check</span>
+                                        <span class="material-symbols-rounded" style="font-size:1.1rem;">check</span>
                                     <?php else: ?>
                                         <?= $i+1 ?>
                                     <?php endif; ?>
@@ -438,23 +399,6 @@ if($cliente_ativo) {
                                 <div class="th-step-label"><?= $label ?></div>
                             </div>
                         <?php $i++; endforeach; ?>
-                    </div>
-
-                    <!-- Actions -->
-                    <div class="th-actions">
-                        <a href="gerenciar_cliente.php?id=<?= $cliente_ativo['id'] ?>" class="th-btn edit" title="Editar">
-                            <span class="material-symbols-rounded">edit</span>
-                        </a>
-                        <a href="relatorio_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="th-btn pdf" title="Resumo PDF">
-                            <span class="material-symbols-rounded">picture_as_pdf</span>
-                        </a>
-                        <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" class="th-btn del" onclick="return confirmAction(event, 'Excluir?')" title="Excluir">
-                            <span class="material-symbols-rounded">delete</span>
-                        </a>
-                        <!-- Current Status Text Indicator (Optional) -->
-                        <!-- <div style="background:#e8f5e9; color:#198754; padding:5px 12px; border-radius:15px; font-size:0.75rem; font-weight:700;">
-                            <?= strtoupper($steps_flow[$active_index] ?? 'NOVO') ?>
-                        </div> -->
                     </div>
 
                 </div>
