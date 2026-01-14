@@ -305,19 +305,32 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                         // Tenta achar avatar físico se não tiver no banco ou como fallback
                         $avatarPath = $cliente['foto_perfil'] ?? '';
                         
-                        // Lógica de fallback físico
-                        $files = glob("../uploads/avatars/avatar_{$cliente_id}.*");
-                        if (!empty($files)) {
-                            $avatarPath = $files[0];
+                        // Lógica de fallback físico (procura extensions comuns)
+                        $possiveis_extensoes = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+                        $avatarFisico = '';
+                        
+                        foreach ($possiveis_extensoes as $ext) {
+                            $caminhoTeste = "../uploads/avatars/avatar_{$cliente_id}.{$ext}";
+                            if (file_exists($caminhoTeste)) {
+                                $avatarFisico = $caminhoTeste;
+                                break;
+                            }
+                        }
+
+                        // Se achou arquivo físico, ele tem prioridade sobre o banco (se o banco for antigo ou nulo)
+                        if ($avatarFisico) {
+                            $avatarPath = $avatarFisico;
                         } elseif ($avatarPath && !str_starts_with($avatarPath, '../') && !str_starts_with($avatarPath, 'http')) {
+                            // Se veio do banco sem caminho relativo, adiciona
                             $avatarPath = '../' . $avatarPath;
                         }
                     ?>
                     <?php if($avatarPath && file_exists($avatarPath) && !is_dir($avatarPath)): ?>
                         <img src="<?= htmlspecialchars($avatarPath) ?>?v=<?= time() ?>" class="ph-avatar">
                     <?php else: ?>
+                        <!-- Fallback visual (Iniciais) -->
                         <div class="ph-avatar">
-                            <span class="material-symbols-rounded">person</span>
+                            <?= strtoupper(substr($cliente['nome'] ?? 'C', 0, 1)) ?>
                         </div>
                     <?php endif; ?>
                     
