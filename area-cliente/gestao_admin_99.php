@@ -385,7 +385,7 @@ if ($cliente_ativo) {
                         transition: width 1s ease;
                     }
 
-                    < !-- TAB NAVIGATION PILLS --><div class="nav-pills">< !-- 1. Perfil --><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=perfil" class="nav-pill <?= ($active_tab == 'perfil' || $active_tab == 'cadastro') ? 'active' : '' ?>"><span class="material-symbols-rounded">person</span>Perfil </a>< !-- 2. Documentos --><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=docs_iniciais" class="nav-pill <?= ($active_tab == 'docs_iniciais') ? 'active' : '' ?>"><span class="material-symbols-rounded">folder_open</span>Documentos </a>< !-- 3. Timeline --><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="nav-pill <?= ($active_tab == 'andamento') ? 'active' : '' ?>"><span class="material-symbols-rounded">history</span>Timeline </a>< !-- 4. Pendências --><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias" class="nav-pill <?= ($active_tab == 'pendencias') ? 'active' : '' ?>"><span class="material-symbols-rounded">warning</span>Pendências </a>< !-- 5. Financeiro --><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=financeiro" class="nav-pill <?= ($active_tab == 'financeiro') ? 'active' : '' ?>"><span class="material-symbols-rounded">paid</span>Financeiro </a>< !-- 6. Arquivos --><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=arquivos" class="nav-pill <?= ($active_tab == 'arquivos') ? 'active' : '' ?>"><span class="material-symbols-rounded">inventory_2</span>Arquivos </a></div>< !-- Modal Timeline e Andamento --><?php require 'includes/modals/timeline.php'; ?>< !-- CONTEÚDO DA ABA PERFIL (Removido, agora é Fixo acima) -->< !-- TAB NAVIGATION -->< !-- Styles for Tabs (Multi-Color) -->< !-- STYLE FOR FLEX LAYOUT & HIDDEN TABS --><style>.admin-container {
+                    < !-- TAB NAVIGATION PILLS --><div class="nav-pills">< !-- 1. Perfil --><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=perfil" class="nav-pill <?= ($active_tab == 'perfil' || $active_tab == 'cadastro') ? 'active' : '' ?>"><span class="material-symbols-rounded">person</span>Perfil </a>< !-- 2. Documentos --><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=docs_iniciais" class="nav-pill <?= ($active_tab == 'docs_iniciais') ? 'active' : '' ?>"><span class="material-symbols-rounded">folder_open</span>Documentos </a>< !-- 3. Timeline --><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="nav-pill <?= ($active_tab == 'andamento') ? 'active' : '' ?>"><span class="material-symbols-rounded">history</span>Timeline </a>< !-- 4. Pendências --><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias" class="nav-pill <?= ($active_tab == 'pendencias') ? 'active' : '' ?>"><span class="material-symbols-rounded">warning</span>Pendências </a>< !-- 5. Financeiro --><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=financeiro" class="nav-pill <?= ($active_tab == 'financeiro') ? 'active' : '' ?>"><span class="material-symbols-rounded">paid</span>Financeiro </a>< !-- 6. Arquivos --><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=arquivos" class="nav-pill <?= ($active_tab == 'arquivos') ? 'active' : '' ?>"><span class="material-symbols-rounded">inventory_2</span>Arquivos </a></div>< !-- Modal Timeline e Andamento --><?php require 'includes/modals/timeline.php'; ?>< !-- STYLE FOR FLEX LAYOUT & HIDDEN TABS --><style>.admin-container {
                         display: block !important;
                         /* Sidebar is fixed, so block is safer */
                         max-width: 100% !important;
@@ -505,36 +505,95 @@ if ($cliente_ativo) {
 
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                                 <h3 class="admin-title" style="margin:0;">👤 Perfil do Cliente</h3>
-                                <div style="display:flex; gap:10px;">
-                                    <a href="gerenciar_cliente.php?id=<?= $cliente_ativo['id'] ?>" class="btn-save btn-info" style="text-decoration:none; padding:8px 15px; font-size:0.9rem;">✏️ Editar Cadastro</a>
-                                    <a href="area_cliente.php" target="_blank" class="btn-save btn-success" style="text-decoration:none; padding:8px 15px; font-size:0.9rem;">👁️ Ver como Cliente</a>
-                                </div>
                             </div>
 
-                            <div style="display:grid; grid-template-columns: 250px 1fr; gap:30px; align-items:start;">
+                            <div style="display:grid; grid-template-columns: 280px 1fr; gap:30px; align-items:start;">
 
-                                <!-- Avatar Column -->
-                                <div class="card" style="padding:20px; text-align:center; border-top: 4px solid var(--color-primary);">
-                                    <div style="width:120px; height:120px; margin:0 auto 15px auto; position:relative;">
-                                        <?php if ($avatar_url): ?>
-                                            <img src="<?= $avatar_url ?>" style="width:100%; height:100%; object-fit:cover; border-radius:50%; border:4px solid #f8f9fa; box-shadow:0 5px 15px rgba(0,0,0,0.1);">
-                                        <?php else: ?>
-                                            <div style="width:100%; height:100%; background:linear-gradient(135deg, #e0f2f1, #b2dfdb); color:#00695c; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:3rem; font-weight:700; border:4px solid #fff; box-shadow:0 5px 15px rgba(0,0,0,0.1);">
-                                                <?= strtoupper(substr($cliente_ativo['nome'], 0, 1)) ?>
-                                            </div>
-                                        <?php endif; ?>
+                                <!-- Avatar & Main Actions Column -->
+                                <div class="card" style="padding:0; text-align:center; border-top: 4px solid var(--color-primary); overflow:hidden;">
+                                    <div style="padding:25px;">
+                                        <div style="width:120px; height:120px; margin:0 auto 15px auto; position:relative;">
+                                            <?php if ($avatar_url): ?>
+                                                <img src="<?= $avatar_url ?>" style="width:100%; height:100%; object-fit:cover; border-radius:50%; border:4px solid #f8f9fa; box-shadow:0 5px 15px rgba(0,0,0,0.1);">
+                                            <?php else: ?>
+                                                <div style="width:100%; height:100%; background:linear-gradient(135deg, #e0f2f1, #b2dfdb); color:#00695c; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:3rem; font-weight:700; border:4px solid #fff; box-shadow:0 5px 15px rgba(0,0,0,0.1);">
+                                                    <?= strtoupper(substr($cliente_ativo['nome'], 0, 1)) ?>
+                                                </div>
+                                            <?php endif; ?>
 
-                                        <!-- Edit Avatar Button -->
-                                        <button onclick="document.getElementById('avatarInput').click()" style="position:absolute; bottom:5px; right:5px; width:32px; height:32px; border-radius:50%; border:none; background:var(--color-primary); color:white; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.2); display:flex; align-items:center; justify-content:center;" title="Alterar Foto">
-                                            <span class="material-symbols-rounded" style="font-size:1.1rem;">photo_camera</span>
-                                        </button>
-                                        <form method="POST" enctype="multipart/form-data" id="avatarForm" style="display:none;">
-                                            <input type="file" name="avatar_upload" id="avatarInput" accept="image/*" onchange="document.getElementById('avatarForm').submit()">
-                                        </form>
+                                            <!-- Edit Avatar Button -->
+                                            <button onclick="document.getElementById('avatarInput').click()" style="position:absolute; bottom:5px; right:5px; width:32px; height:32px; border-radius:50%; border:none; background:var(--color-primary); color:white; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.2); display:flex; align-items:center; justify-content:center;" title="Alterar Foto">
+                                                <span class="material-symbols-rounded" style="font-size:1.1rem;">photo_camera</span>
+                                            </button>
+                                            <form method="POST" enctype="multipart/form-data" id="avatarForm" style="display:none;">
+                                                <input type="file" name="avatar_upload" id="avatarInput" accept="image/*" onchange="document.getElementById('avatarForm').submit()">
+                                            </form>
+                                        </div>
+
+                                        <h4 style="margin:0; font-size:1.2rem; color:#333; font-weight:700;"><?= htmlspecialchars($cliente_ativo['nome']) ?></h4>
+                                        <div style="color:#777; font-size:0.9rem; margin-top:5px; font-weight:500;">
+                                            📱 <?= $detalhes['contato_tel'] ?? '--' ?>
+                                        </div>
                                     </div>
 
-                                    <h4 style="margin:0; font-size:1.1rem; color:#333;"><?= htmlspecialchars($cliente_ativo['nome']) ?></h4>
-                                    <div style="color:#777; font-size:0.85rem; margin-top:5px;"><?= $cliente_ativo['usuario'] ?></div>
+                                    <!-- Action Buttons List -->
+                                    <div style="background:#f8f9fa; border-top:1px solid #eee;">
+                                        <a href="gerenciar_cliente.php?id=<?= $cliente_ativo['id'] ?>" class="profile-action-btn" title="Editar Cadastro">
+                                            <span class="material-symbols-rounded">edit</span> Editar Cadastro
+                                        </a>
+                                        <a href="relatorio_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="profile-action-btn" title="Resumo PDF">
+                                            <span class="material-symbols-rounded">picture_as_pdf</span> Resumo PDF
+                                        </a>
+                                        <a href="area_cliente.php" target="_blank" class="profile-action-btn" title="Ver como Cliente">
+                                            <span class="material-symbols-rounded">visibility</span> Ver como Cliente
+                                        </a>
+                                        <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" class="profile-action-btn btn-danger-hover" onclick="return confirm('Deseja excluir este cliente?')" style="color:#dc3545;" title="Excluir Cliente">
+                                            <span class="material-symbols-rounded">delete</span> Excluir Cliente
+                                        </a>
+                                    </div>
+
+                                    <style>
+                                        .profile-action-btn {
+                                            display: flex;
+                                            align-items: center;
+                                            gap: 12px;
+                                            padding: 12px 25px;
+                                            color: #555;
+                                            text-decoration: none;
+                                            font-weight: 500;
+                                            font-size: 0.95rem;
+                                            border-bottom: 1px solid #eee;
+                                            transition: background 0.2s;
+                                        }
+
+                                        .profile-action-btn:last-child {
+                                            border-bottom: none;
+                                        }
+
+                                        .profile-action-btn:hover {
+                                            background: #fff;
+                                            color: var(--color-primary);
+                                        }
+
+                                        .profile-action-btn .material-symbols-rounded {
+                                            font-size: 1.25rem;
+                                            color: #888;
+                                        }
+
+                                        .profile-action-btn:hover .material-symbols-rounded {
+                                            color: var(--color-primary);
+                                        }
+
+                                        .profile-action-btn.btn-danger-hover:hover {
+                                            background: #fee2e2 !important;
+                                            color: #dc3545 !important;
+                                        }
+
+                                        .profile-action-btn.btn-danger-hover:hover .material-symbols-rounded {
+                                            color: #dc3545 !important;
+                                        }
+                                    </style>
+
                                 </div>
 
                                 <!-- Details Column -->
@@ -545,15 +604,6 @@ if ($cliente_ativo) {
                                         <div>
                                             <label style="display:block; font-size:0.75rem; color:#888; text-transform:uppercase; font-weight:700; margin-bottom:5px;">CPF / CNPJ</label>
                                             <div style="font-size:1rem; color:#333; font-weight:500;"><?= $cliente_ativo['cpf_cnpj'] ?: '<span style="color:#ccc;">--</span>' ?></div>
-                                        </div>
-                                        <div>
-                                            <label style="display:block; font-size:0.75rem; color:#888; text-transform:uppercase; font-weight:700; margin-bottom:5px;">Telefone / WhatsApp</label>
-                                            <div style="font-size:1rem; color:#333; font-weight:500;">
-                                                <?= $detalhes['contato_tel'] ?: '<span style="color:#ccc;">--</span>' ?>
-                                                <?php if ($detalhes['contato_tel']): ?>
-                                                    <a href="https://wa.me/55<?= preg_replace('/\D/', '', $detalhes['contato_tel']) ?>" target="_blank" style="text-decoration:none; margin-left:5px;">📱</a>
-                                                <?php endif; ?>
-                                            </div>
                                         </div>
                                         <div>
                                             <label style="display:block; font-size:0.75rem; color:#888; text-transform:uppercase; font-weight:700; margin-bottom:5px;">E-mail</label>

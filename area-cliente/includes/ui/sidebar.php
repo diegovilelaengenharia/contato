@@ -6,88 +6,9 @@
     <!-- BRANDING HEADER (REMOVED) -->
 
     <!-- SEÇÃO CLIENTE SELECIONADO (Topo) -->
+    <!-- SEÇÃO CLIENTE SELECIONADO (Removido daqui e movido para a aba Perfil) -->
     <?php if ($cliente_ativo): ?>
-        <div class="nav-section">
-            <h6 class="nav-header" style="color:#198754; font-size:0.75rem; letter-spacing:1px; margin-bottom:12px;">CLIENTE ATUAL</h6>
-
-            <!-- CLIENTE HEADER & AÇÕES -->
-            <div class="nav-client-card" style="background: white; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); border:1px solid #eee; overflow:hidden;">
-
-                <!-- Info Principal -->
-                <div style="padding: 15px; display:flex; align-items:center; gap:12px; border-bottom:1px solid #f8f9fa;">
-                    <!-- Avatar -->
-                    <div style="width:42px; height:42px; min-width:42px; position:relative;">
-                        <?php if ($avatar_url): ?>
-                            <img src="<?= $avatar_url ?>" style="width:100%; height:100%; object-fit:cover; border-radius:50%; border:2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                        <?php else: ?>
-                            <div style="width:100%; height:100%; background:#198754; color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.1rem; font-weight:700; border:2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                                <?= strtoupper(substr($cliente_ativo['nome'], 0, 1)) ?>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-
-                    <!-- Texto -->
-                    <div style="flex:1; overflow:hidden;">
-                        <h3 style="font-size:0.9rem; margin:0 0 2px 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#333; font-weight:700;" title="<?= htmlspecialchars($cliente_ativo['nome']) ?>">
-                            <?= htmlspecialchars($cliente_ativo['nome']) ?>
-                        </h3>
-                        <div style="font-size:0.75rem; color:#777;">
-                            📱 <?= $detalhes['contato_tel'] ?? '--' ?>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Barra de Ações -->
-                <div style="display:flex; background:#fff;">
-                    <a href="gerenciar_cliente.php?id=<?= $cliente_ativo['id'] ?>" class="client-action-btn" style="color:#0d6efd;" title="Editar Cadastro">
-                        <span class="material-symbols-rounded">edit</span>
-                    </a>
-                    <a href="relatorio_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="client-action-btn" style="color:#6f42c1;" title="Resumo PDF">
-                        <span class="material-symbols-rounded">picture_as_pdf</span>
-                    </a>
-                    <a href="area_cliente.php" target="_blank" class="client-action-btn" style="color:#198754;" title="Ver como Cliente">
-                        <span class="material-symbols-rounded">visibility</span>
-                    </a>
-                    <!-- BOTAO EXCLUIR VERMELHO -->
-                    <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" class="client-action-btn btn-danger-hover" onclick="return confirm('Deseja excluir este cliente?')" style="color:#dc3545;" title="Excluir Cliente">
-                        <span class="material-symbols-rounded">delete</span>
-                    </a>
-                </div>
-            </div>
-
-            <style>
-                .client-action-btn {
-                    flex: 1;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    padding: 10px 0;
-                    color: #6c757d;
-                    text-decoration: none;
-                    transition: all 0.2s;
-                    border-right: 1px solid #f9f9f9;
-                }
-
-                .client-action-btn:last-child {
-                    border-right: none;
-                }
-
-                .client-action-btn:hover {
-                    background: #f8f9fa;
-                    transform: translateY(-1px);
-                }
-
-                .client-action-btn .material-symbols-rounded {
-                    font-size: 1.1rem;
-                }
-
-                .btn-danger-hover:hover {
-                    background: #fee2e2 !important;
-                    color: #dc3545 !important;
-                }
-            </style>
-        </div>
-
+        <!-- Conteúdo movido para a aba Perfil -->
     <?php endif; ?>
 
     <!-- SEÇÃO GERAL -->
