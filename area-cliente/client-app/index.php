@@ -120,34 +120,37 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
         }
         .ph-top {
             background: #f2f7f5; /* Light Green/Grey for contrast */
-            padding: 24px 24px;
+            padding: 24px 32px; /* Increased side padding */
             display: flex;
-            align-items: center;
-            justify-content: flex-start; /* Aligned to start */
-            gap: 20px; /* Space between logo and text */
+            align-items: center; /* Center vertically */
+            justify-content: flex-start; /* Logo left, Text right */
+            gap: 24px; /* Space between logo and text */
             border-bottom: 1px solid #e0e0e0;
         }
         .ph-logo img {
-            height: 80px; /* Increased size (30% boost) */
+            height: 90px; /* Even bigger logo */
+            display: block; /* Remove inline gap */
         }
         .ph-title {
-            font-size: 1.4rem; /* Increased size */
-            font-weight: 800; /* BOLD */
+            font-size: 1.8rem; /* Much Larger */
+            font-weight: 800; /* Extra Bold */
             color: var(--color-primary); /* Vilela Green */
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            line-height: 1;
-            margin-bottom: 2px;
+            line-height: 1.1;
+            margin-bottom: 4px;
         }
         .ph-subtitle {
-            font-size: 0.85rem;
-            color: #666;
-            font-weight: 400;
+            font-size: 0.9rem; /* Smaller contrast */
+            color: #6c757d; /* Muted grey */
+            font-weight: 500;
+            letter-spacing: 0.2px;
         }
         .ph-header-text {
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: flex-start; /* Ensure left align */
         }
         .ph-user-bar {
             background: #fff; /* White background */
