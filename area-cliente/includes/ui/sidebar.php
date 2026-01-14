@@ -1,8 +1,11 @@
 <aside class="sidebar admin-nav-sidebar">
     
     <!-- ADMIN PROFILE (Sidebar Header - Clean & Simple) -->
-    <div style="padding: 20px 20px; margin-bottom: 10px;">
-        <div style="display:flex; align-items:center; gap:12px;">
+    <div style="padding: 20px 20px; margin-bottom: 10px; position:relative; overflow:hidden; border-radius: 16px 16px 0 0;">
+         <!-- Green Accent Line Top -->
+        <div style="position:absolute; top:0; left:0; width:100%; height:4px; background:#198754;"></div>
+
+        <div style="display:flex; align-items:center; gap:12px; margin-top:5px;">
             <!-- Avatar -->
             <div style="width:48px; height:48px; border-radius:50%; background:#f0f2f5; overflow:hidden; border:2px solid #fff; box-shadow:0 2px 8px rgba(0,0,0,0.1); flex-shrink:0;">
                 <img src="../assets/foto-diego-new.jpg" onerror="this.src='https://ui-avatars.com/api/?name=Diego+Vilela&background=0D8ABC&color=fff'" style="width:100%; height:100%; object-fit:cover;">
@@ -105,7 +108,10 @@
     </div>
 
     <!-- TECHNICAL RESPONSIBLE FOOTER (Pinned to Bottom) -->
-    <div style="margin-top:auto; padding:20px; border-top:1px solid #f0f0f0; background:#fff; border-radius: 0 0 16px 16px; text-align:center;">
+    <div style="margin-top:auto; padding:20px; border-top:1px solid #f0f0f0; background: linear-gradient(to bottom, #fff 0%, #f1f8f5 100%); border-radius: 0 0 16px 16px; text-align:center; position:relative; overflow:hidden;">
+        <!-- Green Accent Line Bottom -->
+        <div style="position:absolute; bottom:0; left:0; width:100%; height:4px; background:#198754;"></div>
+        
         <span style="display: block; font-size: 0.65rem; color: #adb5bd; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; margin-bottom:2px;">Engenheiro Responsável</span>
         <strong style="display: block; font-size: 0.85rem; color: #495057; line-height: 1.2;">Diego T. N. Vilela</strong>
         <span style="display: block; font-size: 0.75rem; color: #888;">CREA 235.474/D</span>
