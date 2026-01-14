@@ -120,34 +120,37 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
         }
         .ph-top {
             background: #f2f7f5; /* Light Green/Grey for contrast */
-            padding: 24px 24px;
+            padding: 24px 32px; /* Increased side padding */
             display: flex;
-            align-items: center;
-            justify-content: flex-start; /* Aligned to start */
-            gap: 20px; /* Space between logo and text */
+            align-items: center; /* Center vertically */
+            justify-content: flex-start; /* Logo left, Text right */
+            gap: 24px; /* Space between logo and text */
             border-bottom: 1px solid #e0e0e0;
         }
         .ph-logo img {
-            height: 80px; /* Increased size (30% boost) */
+            height: 90px; /* Even bigger logo */
+            display: block; /* Remove inline gap */
         }
         .ph-title {
-            font-size: 1.4rem; /* Increased size */
-            font-weight: 800; /* BOLD */
+            font-size: 1.8rem; /* Much Larger */
+            font-weight: 800; /* Extra Bold */
             color: var(--color-primary); /* Vilela Green */
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            line-height: 1;
-            margin-bottom: 2px;
+            line-height: 1.1;
+            margin-bottom: 4px;
         }
         .ph-subtitle {
-            font-size: 0.85rem;
-            color: #666;
-            font-weight: 400;
+            font-size: 0.9rem; /* Smaller contrast */
+            color: #6c757d; /* Muted grey */
+            font-weight: 500;
+            letter-spacing: 0.2px;
         }
         .ph-header-text {
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: flex-start; /* Ensure left align */
         }
         .ph-user-bar {
             background: #fff; /* White background */
@@ -245,10 +248,9 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             }
             .ph-top {
                 padding: 16px;
-                flex-direction: row; /* FORCE ROW even on mobile */
-                align-items: center;
-                gap: 16px;
-                justify-content: flex-start;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
             }
             .ph-logo img { height: 40px; }
             .ph-title { font-size: 0.8rem; }
@@ -430,8 +432,8 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                 <a href="documentos_iniciais.php" class="app-button" style="border-left-color: #083b30;">
                     <div class="app-btn-icon" style="background:#e6fffa; color:#083b30;">📋</div>
                     <div class="app-btn-content">
-                        <span class="app-btn-title">Abertura de Processo</span>
-                        <span class="app-btn-desc">Documentos para Abertura do Processo</span>
+                        <span class="app-btn-title">Checklist Inicial</span>
+                        <span class="app-btn-desc">Lista de documentos necessários</span>
                     </div>
                     <div class="app-btn-arrow" style="color:#083b30;">➔</div>
                 </a>
@@ -453,81 +455,48 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
 
                 <!-- 3. PENDÊNCIAS -->
                 <?php 
-                    // Lógica de Cores Solicitada:
-                    // Se pendências > 0: Fundo Vermelho Claro
-                    // Se pendências = 0: Fundo Verde
-                    
-                    if ($pend_qtd > 0) {
-                        $p_border = '#dc3545'; // Vermelho
-                        $p_bg_btn = '#ffebe9'; // Vermelho Claro (Fundo do Card Inteiro?) - User pediu "botao com cor de fundo", assumindo card
-                        $p_icon_bg = '#f8d7da';
-                        $p_icon_color = '#721c24';
-                        $p_icon = '⚠️';
-                        $p_arrow = '#dc3545';
-                    } else {
-                        $p_border = '#198754'; // Verde
-                        $p_bg_btn = '#d1e7dd'; // Verde Claro / Sucesso
-                        $p_icon_bg = '#a3cfbb';
-                        $p_icon_color = '#0f5132';
-                        $p_icon = '✅';
-                        $p_arrow = '#198754';
-                    }
+                    // Se houver pendências: Vermelho (#58151c - from header title)
+                    // Se NÃO houver: Cinza (#6c757d)
+                    $p_color = ($pend_qtd > 0) ? '#58151c' : '#6c757d';
+                    $p_bg    = ($pend_qtd > 0) ? '#fce8e6' : '#e9ecef';
+                    $p_icon  = ($pend_qtd > 0) ? '⚠️' : '✅'; 
                 ?>
-                <a href="pendencias.php" class="app-button" style="border-left-color: <?= $p_border ?>; background-color: <?= $p_bg_btn ?>;">
-                    <div class="app-btn-icon" style="background:<?= $p_icon_bg ?>; color:<?= $p_icon_color ?>;"><?= $p_icon ?></div>
+                <a href="pendencias.php" class="app-button" style="border-left-color: <?= $p_color ?>;">
+                    <div class="app-btn-icon" style="background:<?= $p_bg ?>; color:<?= $p_color ?>;"><?= $p_icon ?></div>
                     <div class="app-btn-content">
                         <span class="app-btn-title" style="color: #333;">Pendências</span>
-                        <span class="app-btn-desc" style="color:#444;">Pendência da Triagem ou dos Analistas</span>
                         <?php if($pend_qtd > 0): ?>
-                             <div style="font-size: 0.75rem; color: #dc3545; font-weight: 600; margin-top: 4px;">
-                                Atenção: <?= $pend_qtd ?> pendência(s)
-                             </div>
+                            <span class="app-btn-desc" style="color:#dc3545; font-weight:600;">
+                                <?= htmlspecialchars(mb_strimwidth($last_pend_name, 0, 35, "...")) ?>
+                            </span>
+                        <?php else: ?>
+                            <span class="app-btn-desc" style="color:#888;">Nenhuma pendência recente</span>
                         <?php endif; ?>
                     </div>
                     <?php if($pend_qtd > 0): ?>
                         <span class="badge-count" style="background:#dc3545;"><?= $pend_qtd ?></span>
                     <?php else: ?>
-                         <div class="app-btn-arrow" style="color:<?= $p_arrow ?>;">➔</div>
+                         <div class="app-btn-arrow" style="color:<?= $p_color ?>;">➔</div>
                     <?php endif; ?>
                 </a>
 
                 <!-- 4. FINANCEIRO -->
-                <?php 
-                    // Lógica de Cores Solicitada:
-                    // Se pendências > 0: Fundo Amarelo Claro
-                    // Se pendências = 0: Fundo Verde
-                    
-                    if ($fin_qtd > 0) {
-                        $f_border = '#ffc107'; // Amarelo
-                        $f_bg_btn = '#fff3cd'; // Amarelo Claro
-                        $f_icon_bg = '#ffe69c';
-                        $f_icon_color = '#856404';
-                        $f_icon = '💰';
-                        $f_arrow = '#856404';
-                    } else {
-                        $f_border = '#198754'; // Verde
-                        $f_bg_btn = '#d1e7dd'; // Verde Claro
-                        $f_icon_bg = '#a3cfbb';
-                        $f_icon_color = '#0f5132';
-                        $f_icon = '✅';
-                        $f_arrow = '#198754';
-                    }
-                ?>
-                <a href="financeiro.php" class="app-button" style="border-left-color: <?= $f_border ?>; background-color: <?= $f_bg_btn ?>;">
-                    <div class="app-btn-icon" style="background:<?= $f_icon_bg ?>; color:<?= $f_icon_color ?>;"><?= $f_icon ?></div>
+                <a href="financeiro.php" class="app-button" style="border-left-color: #533f03;">
+                    <div class="app-btn-icon" style="background:#fff3cd; color:#533f03;">💰</div>
                     <div class="app-btn-content">
-                        <span class="app-btn-title" style="color: #333;">Financeiro</span>
-                        <span class="app-btn-desc" style="color:#444;">Honorarios, Taxas, Multas, etc</span>
-                        <?php if($fin_qtd > 0): ?>
-                             <div style="font-size: 0.75rem; color: #856404; font-weight: 600; margin-top: 4px;">
-                                <?= $fin_qtd ?> item(ns) pendente(s)
-                             </div>
+                        <span class="app-btn-title">Financeiro</span>
+                         <?php if($fin_qtd > 0): ?>
+                            <span class="app-btn-desc" style="color:#d9a406; font-weight:600;">
+                                <?= htmlspecialchars(mb_strimwidth($last_fin_name, 0, 40, "...")) ?>
+                            </span>
+                        <?php else: ?>
+                            <span class="app-btn-desc">Nenhum pagamento pendente</span>
                         <?php endif; ?>
                     </div>
                     <?php if($fin_qtd > 0): ?>
                         <span class="badge-count" style="background:#ffc107; color:#856404;"><?= $fin_qtd ?></span>
                     <?php else: ?>
-                        <div class="app-btn-arrow" style="color:<?= $f_arrow ?>;">➔</div>
+                        <div class="app-btn-arrow" style="color:#533f03;">➔</div>
                     <?php endif; ?>
                 </a>
                 
