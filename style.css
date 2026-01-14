@@ -305,10 +305,10 @@ body {
 }
 
 .hero-client-btn {
-    background-color: var(--color-accent);
-    /* Gold */
-    color: var(--color-text);
-    /* Dark text for contrast */
+    background: linear-gradient(135deg, #d4af37 0%, #aa8623 100%);
+    /* Metallic Gold */
+    color: #ffffff;
+    /* White text looks better on dark gold */
     border: none;
     border-radius: 50px;
     padding: 12px 24px;
@@ -322,14 +322,14 @@ body {
     transition: all 0.2s ease;
     flex: 1;
     max-width: 220px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(172, 137, 35, 0.3);
 }
 
 .hero-client-btn:hover {
-    background-color: #e6a72e;
-    /* Slightly darker gold */
+    background: linear-gradient(135deg, #e6c55e 0%, #c19b33 100%);
+    /* Lighter Gold on Hover */
     transform: translateY(-2px);
-    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 14px rgba(172, 137, 35, 0.4);
 }
 
 .hero-vcard:focus-visible,
@@ -668,8 +668,11 @@ body {
     box-shadow: 0 6px 16px rgba(220, 39, 67, 0.4);
 }
 
-color: var(--color-text);
-/* Dark icon for contrast */
+.floating-btn--vcard {
+    --btn-bg: var(--color-accent);
+    /* Gold */
+    color: var(--color-text);
+    /* Dark icon for contrast */
 }
 
 .floating-btn--vcard:hover {
