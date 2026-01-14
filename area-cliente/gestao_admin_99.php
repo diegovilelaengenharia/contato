@@ -273,6 +273,128 @@ if($cliente_ativo) {
             <?php /* Avatar Logic Moved Up */ ?>
 
             <!-- Old Client Summary Card Removed (Moved to Profile Tab) -->
+            
+            <!-- TAB NAVIGATION PILLS -->
+            <style>
+                .nav-pills {
+                    display: flex;
+                    gap: 12px;
+                    margin-bottom: 25px;
+                    flex-wrap: wrap;
+                }
+                .nav-pill {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
+                    padding: 10px 20px;
+                    background: #fff;
+                    border: 1px solid #e0e0e0;
+                    border-radius: 50px; /* Pill shape */
+                    text-decoration: none;
+                    color: #555;
+                    font-weight: 600;
+                    font-size: 0.95rem;
+                    transition: all 0.2s;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+                }
+                .nav-pill:hover {
+                    background: #f8f9fa;
+                    transform: translateY(-1px);
+                    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+                }
+                .nav-pill.active {
+                    background: #2f3e36; /* Dark Vilela Green/Gray */
+                    color: white;
+                    border-color: transparent;
+                    box-shadow: 0 4px 12px rgba(47, 62, 54, 0.2);
+                }
+                .nav-pill .material-symbols-rounded {
+                    font-size: 1.2rem;
+                }
+            </style>
+            
+            <!-- ABAS DE NAVEGAÇÃO (Pills) -->
+            <div class="nav-pills">
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=perfil" class="nav-pill <?= ($active_tab=='perfil')?'active':'' ?>">
+                    <span class="material-symbols-rounded">person</span>
+                    Perfil
+                </a>
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=docs_iniciais" class="nav-pill <?= ($active_tab=='docs_iniciais')?'active':'' ?>">
+                    <span class="material-symbols-rounded">folder_open</span>
+                    Documentos
+                </a>
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="nav-pill <?= ($active_tab=='andamento'||$active_tab=='cadastro')?'active':'' ?>">
+                    <span class="material-symbols-rounded">history</span>
+                    Timeline
+                </a>
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias" class="nav-pill <?= ($active_tab=='pendencias')?'active':'' ?>">
+                    <span class="material-symbols-rounded">warning</span>
+                    Pendências
+                </a>
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=financeiro" class="nav-pill <?= ($active_tab=='financeiro')?'active':'' ?>">
+                    <span class="material-symbols-rounded">paid</span>
+                    Financeiro
+                </a>
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=arquivos" class="nav-pill <?= ($active_tab=='arquivos')?'active':'' ?>">
+                    <span class="material-symbols-rounded">inventory_2</span>
+                    Arquivos
+                </a>
+            </div>
+
+            <!-- Modal Timeline e Andamento -->
+            <?php require 'includes/modals/timeline.php'; ?>
+            
+            <!-- CONTEÚDO DA ABA PERFIL (Antigo Header fixo movido pra cá) -->
+            <?php if($active_tab == 'perfil'): ?>
+                 <div class="form-card" style="border-left:5px solid var(--color-primary); background:#fff; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.05); padding:30px;">
+                    <div style="display:flex; align-items:center; gap:30px; flex-wrap:wrap;">
+                        
+                        <!-- Avatar / Upload -->
+                        <div style="text-align:center;">
+                             <form id="form_avatar_upload_page" method="POST" enctype="multipart/form-data" style="display:none;">
+                                <input type="file" name="avatar_upload" id="avatar_input_page" accept="image/*" onchange="document.getElementById('form_avatar_upload_page').submit();">
+                            </form>
+                            <div style="width:120px; height:120px; position:relative; margin:0 auto; cursor:pointer;" onclick="document.getElementById('avatar_input_page').click();" title="Alterar Foto">
+                                <?php if($avatar_url): ?>
+                                    <img src="<?= $avatar_url ?>" style="width:100%; height:100%; object-fit:cover; border-radius:50%; border:4px solid #f0f0f0;">
+                                <?php else: ?>
+                                    <div style="width:100%; height:100%; background:var(--color-primary-light); color:var(--color-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:3rem; font-weight:800; border:4px solid #f0f0f0;">
+                                        <?= strtoupper(substr($cliente_ativo['nome'], 0, 1)) ?>
+                                    </div>
+                                <?php endif; ?>
+                                <div style="position:absolute; bottom:5px; right:5px; background:var(--color-primary); color:white; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:2px solid white;">📷</div>
+                            </div>
+                        </div>
+
+                        <!-- Detalhes Texto -->
+                        <div style="flex:1;">
+                            <h2 style="margin:0 0 10px 0; font-size:2rem; color:var(--color-text);"><?= htmlspecialchars($cliente_ativo['nome']) ?></h2>
+                            
+                            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px; margin-bottom:20px;">
+                                <div class="info-item">
+                                    <small style="color:#999; font-weight:600; text-transform:uppercase;">CPF/CNPJ</small>
+                                    <div style="font-weight:500; font-size:1.1rem;"><?= $detalhes['cpf_cnpj'] ?? '--' ?></div>
+                                </div>
+                                <div class="info-item">
+                                    <small style="color:#999; font-weight:600; text-transform:uppercase;">Telefone</small>
+                                    <div style="font-weight:500; font-size:1.1rem;"><?= $detalhes['contato_tel'] ?? '--' ?></div>
+                                </div>
+                                <div class="info-item">
+                                    <small style="color:#999; font-weight:600; text-transform:uppercase;">Email</small>
+                                    <div style="font-weight:500; font-size:1.1rem;"><?= $detalhes['email_contato'] ?? '--' ?></div>
+                                </div>
+                            </div>
+
+                            <div style="display:flex; gap:10px;">
+                                <a href="gerenciar_cliente.php?id=<?= $cliente_ativo['id'] ?>" class="btn-std btn-primary">✏️ Editar Dados Completos</a>
+                                <a href="relatorio_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-std" style="background:#eee; color:#555;">📄 Resumo PDF</a>
+                                <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" class="btn-delete-confirm btn-std" data-confirm-text="Excluir cliente?" style="background:#f8d7da; color:#dc3545;">🗑️ Excluir Cliente</a>
+                            </div>
+                        </div>
+
+                    </div>
+                 </div>
+            <?php endif; ?>
 
             <!-- TAB NAVIGATION -->
             <!-- Styles for Tabs (Multi-Color) -->
