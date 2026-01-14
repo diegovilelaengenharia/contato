@@ -345,7 +345,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             <div class="ph-top">
                 <div class="ph-logo">
                     <!-- Ajustar caminho do logo se necessário -->
-                    <img src="../../assets/logo.png?v=<?= time() ?>" alt="Vilela Engenharia" style="height: 115px !important; width: auto !important; max-width: none !important;">
+                    <img src="../../assets/logo.png?v=<?= time() ?>" alt="Vilela Engenharia" style="height: 40px !important; width: auto !important; max-width: none !important;">
                 </div>
                 <div class="ph-header-text">
                     <div class="ph-title">Portal Cliente</div>
