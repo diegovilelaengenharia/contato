@@ -275,25 +275,26 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                 border-radius: 16px;
             }
             .ph-top {
-                padding: 20px; /* More padding */
-                flex-direction: row; /* FORCE ROW */
+                padding: 20px; 
+                flex-direction: row; 
                 align-items: center;
-                justify-content: space-between; /* Logo Left, Title Right */
-                gap: 10px;
+                justify-content: flex-start; /* Logo and Title together on Left */
+                gap: 15px; /* Space between Logo and Title */
             }
             .ph-logo {
-                padding: 6px 10px; /* Compact logo badge */
+                padding: 6px 10px; 
             }
-            .ph-logo img { height: 38px !important; } /* Balanced Logo */
+            .ph-logo img { height: 38px !important; } 
             .ph-header-text {
-                text-align: right; /* Align text to right */
-                align-items: flex-end;
+                text-align: left; /* Align text to Left */
+                align-items: flex-start;
             }
             .ph-title { 
-                font-size: 1.4rem; /* MUCH BIGGER (was 0.8rem) */
-                white-space: nowrap; /* Prevent breaking if possible */
+                font-size: 1.8rem; /* INCREASED 30% (was 1.4rem) */
+                line-height: 1;
+                white-space: nowrap; 
             }
-            .ph-subtitle { display: none; } /* Hide quote on mobile to save space */
+            .ph-subtitle { display: none; } 
             
             .ph-user-bar { padding: 16px; flex-direction: row; }
             .ph-username { font-size: 1rem; }
