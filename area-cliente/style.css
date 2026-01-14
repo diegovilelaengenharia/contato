@@ -1,45 +1,71 @@
 :root {
-    /* --- NEW CORPORATE DARK PALETTE --- */
-    --color-bg: #121212;
-    --color-surface: #1e2321;
-    --color-surface-hover: #2a302e;
+    /* --- BRAND STRATEGY: PROFESSIONAL LIGHT (DEFAULT) --- */
+    /* Based on Vilela Logo: Dark Charcoal, Green, Yellow */
 
+    /* Backgrounds */
+    --color-bg: #f8f9fa;
+    /* Clean Light Grey */
+    --color-surface: #ffffff;
+    /* Pure White */
+    --color-surface-hover: #f1f3f5;
+
+    /* Primary Colors */
     --color-primary: #197e63;
-    --color-primary-light: #25a884;
+    /* VILELA GREEN (Logo Checkmark) */
+    --color-primary-light: #209978;
     --color-accent: #ffba35;
+    /* WINDOW YELLOW (Logo Windows) */
 
-    --color-text: #e1e3e1;
-    --color-text-subtle: #a0a5a3;
-    --color-danger: #e04f5f;
+    /* Typography */
+    --color-text: #343a40;
+    /* CHARCOAL (Logo Text) - High Contrast */
+    --color-text-subtle: #6c757d;
+
+    /* Status */
+    --color-danger: #dc3545;
     --color-success: #197e63;
-    /* Defined for status usage */
     --color-warning: #ffba35;
-    /* Defined for status usage */
 
-    /* WhatsApp - Keep it unchanged or fit palette? Keeping standard */
+    /* WhatsApp */
     --color-accent-secondary: #25d366;
 
-    /* --- MAPPING LEGACY VARIABLES (LOGIC SAFETY) --- */
+    /* Mapping */
     --bg-app: var(--color-bg);
     --bg-card: var(--color-surface);
     --bg-nav: var(--color-surface);
-
     --text-main: var(--color-text);
     --text-muted: var(--color-text-subtle);
-    --border-color: #333333;
-    /* Subtle dark border */
+    --border-color: #dee2e6;
+    /* Light subtle border */
 
-    /* --- SHAPES & SHADOWS --- */
+    /* Shapes */
     --radius-sm: 12px;
     --radius-md: 20px;
     --radius-lg: 32px;
 
-    /* Dark mode optimized shadows */
+    /* Light Mode Shadows (Soft & Elegant) */
+    --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.05);
+    --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-nav: 0 -4px 20px rgba(0, 0, 0, 0.05);
+
+    --safe-bottom: env(safe-area-inset-bottom, 20px);
+}
+
+/* --- DARK MODE OVERRIDES (The "Corporate Dark" Theme) --- */
+body.dark-mode {
+    --color-bg: #121212;
+    --color-surface: #1e2321;
+    --color-surface-hover: #2a302e;
+
+    --color-text: #e1e3e1;
+    --color-text-subtle: #a0a5a3;
+
+    --border-color: #333333;
+
+    /* In dark mode, shadows are less visible, rely on borders/surface contrast */
     --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.5);
     --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.4);
     --shadow-nav: 0 -4px 20px rgba(0, 0, 0, 0.5);
-
-    --safe-bottom: env(safe-area-inset-bottom, 20px);
 }
 
 /* Dark Mode is now default. Old overrides removed. */

@@ -79,6 +79,11 @@
     <!-- 5. Perfil (Avatar) -->
     <div style="display:flex; align-items:center; gap:10px;">
         
+        <!-- NEW: Theme Toggle (Sun/Moon) -->
+        <button id="themeToggleBtn" onclick="toggleTheme()" style="width:40px; height:40px; border-radius:50%; border:1px solid #ddd; background:white; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.05); transition:all 0.2s;" title="Alternar Tema">
+            <span class="material-symbols-rounded" style="color:#666; font-size:1.4rem;">contrast</span>
+        </button>
+        
         <!-- NEW: Avisos (Circular) -->
         <button onclick="document.getElementById('modalNotificacoes').showModal()" style="position:relative; width:40px; height:40px; border-radius:50%; border:1px solid #ddd; background:white; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.05); transition:all 0.2s;" title="Avisos">
             <span class="material-symbols-rounded" style="color:#fd7e14; font-size:1.4rem;">notifications</span>
@@ -133,4 +138,26 @@ window.addEventListener('click', function(e) {
         });
     }
 });
+
+// --- THEME TOGGLE LOGIC ---
+function toggleTheme() {
+    const body = document.body;
+    body.classList.toggle('dark-mode');
+    
+    // Save preference
+    if (body.classList.contains('dark-mode')) {
+        localStorage.setItem('theme', 'dark');
+    } else {
+        localStorage.setItem('theme', 'light');
+    }
+}
+
+// Apply saved theme on load
+(function() {
+    const savedTheme = localStorage.getItem('theme');
+    // Default is light, so only add class if 'dark' is saved
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
+})();
 </script>
