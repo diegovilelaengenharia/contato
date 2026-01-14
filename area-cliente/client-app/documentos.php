@@ -16,18 +16,13 @@ $stmt = $pdo->prepare("SELECT link_drive_pasta FROM processo_detalhes WHERE clie
 $stmt->execute([$cliente_id]);
 $drive_link = $stmt->fetchColumn();
 
-// 3. FETCH RECENT DOCUMENTS (FROM MOVEMENTS)
-$stmt_docs = $pdo->prepare("SELECT * FROM processo_movimentos WHERE cliente_id = ? AND tipo_movimento = 'documento' ORDER BY data_movimento DESC");
-$stmt_docs->execute([$cliente_id]);
-$docs_recents = $stmt_docs->fetchAll(PDO::FETCH_ASSOC);
-
 // Helper for Embed URL
 $embed_url = "";
 if($drive_link) {
     if (preg_match('/folders\/([a-zA-Z0-9_-]+)/', $drive_link, $matches)) {
-        $embed_url = "https://drive.google.com/embeddedfolderview?id=" . $matches[1] . "#grid";
+        $embed_url = "https://drive.google.com/embeddedfolderview?id=" . $matches[1] . "#list";
     } elseif (preg_match('/id=([a-zA-Z0-9_-]+)/', $drive_link, $matches)) {
-         $embed_url = "https://drive.google.com/embeddedfolderview?id=" . $matches[1] . "#grid";
+         $embed_url = "https://drive.google.com/embeddedfolderview?id=" . $matches[1] . "#list";
     } else {
         $embed_url = $drive_link; // Fallback
     }
@@ -153,7 +148,7 @@ if($drive_link) {
             border: 1px solid #eee;
             border-radius: 12px;
             overflow: hidden;
-            height: 400px;
+            height: 500px;
             background: #fafafa;
         }
         
@@ -190,103 +185,28 @@ if($drive_link) {
         </div>
         
         <div style="padding: 0 20px;">
-            <!-- MAIN ACTIONS GRID -->
-            <div style="display: grid; grid-template-columns: 1fr; gap: 20px; margin-bottom: 30px;">
+            <!-- MAIN DRIVE CARD -->
+            <div class="drive-card">
+                <span class="drive-icon">📁</span>
+                <h2 style="font-size: 1.3rem; margin: 0 0 10px 0; color: #333;">Pasta do Projeto</h2>
+                <p style="color: #666; font-size: 0.9rem; margin-bottom: 20px;">
+                    Acesse todos os seus projetos, plantas e contratos diretamente no Google Drive.
+                </p>
                 
-                <!-- 1. SYSTEM DOCUMENTS (Highlighted) -->
-                <?php if (!empty($docs_recents)): ?>
-                    <div>
-                        <h3 style="font-size: 1.1rem; color: #146c43; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
-                            <span class="material-symbols-rounded">history</span> Documentos Registrados
-                        </h3>
-                        <div style="display: flex; flex-direction: column; gap: 10px;">
-                            <?php foreach($docs_recents as $doc): ?>
-                                <div class="doc-list-item" style="transition: transform 0.2s; cursor: pointer;">
-                                    <div style="width: 45px; height: 45px; background: #e8f5e9; color: #146c43; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">
-                                        📄
-                                    </div>
-                                    <div style="flex: 1;">
-                                        <div style="font-weight: 700; color: #333; font-size: 0.95rem;"><?= htmlspecialchars($doc['titulo_fase']) ?></div>
-                                        <div style="font-size: 0.8rem; color: #888; display: flex; gap: 10px;">
-                                            <span>📅 <?= date('d/m/Y', strtotime($doc['data_movimento'])) ?></span>
-                                            <span style="color: #ccc;">|</span>
-                                            <span style="color: #146c43; font-weight: 600;">Disponível</span>
-                                        </div>
-                                    </div>
-                                    <!-- Fake Download Action -->
-                                    <div style="color: #ccc;">
-                                        <span class="material-symbols-rounded">download</span>
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
+                <?php if ($drive_link): ?>
+                    <a href="<?= htmlspecialchars($drive_link) ?>" target="_blank" class="btn-drive-primary">
+                        Abrir no Google Drive ↗
+                    </a>
+                    
+                    <div class="iframe-wrapper">
+                        <iframe src="<?= htmlspecialchars($embed_url) ?>" width="100%" height="100%" frameborder="0" style="border:0;"></iframe>
+                    </div>
+                <?php else: ?>
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; color: #666; font-style: italic;">
+                        O link da pasta ainda não foi vinculado ao seu processo.
                     </div>
                 <?php endif; ?>
-
-                <!-- 2. DRIVE CARD (Now an Action Card) -->
-                <div class="drive-card" style="padding: 30px; border-left: 5px solid #146c43; text-align: left; display: flex; align-items: center; justify-content: space-between; gap: 20px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;" onclick="openDriveModal()">
-                    <div>
-                        <span class="drive-icon" style="font-size: 2.5rem; margin-bottom: 5px; text-align: left;">📂</span>
-                        <h2 style="font-size: 1.2rem; margin: 0 0 5px 0; color: #333;">Pasta Completa do Drive</h2>
-                        <p style="color: #666; font-size: 0.9rem; margin: 0; line-height: 1.4;">
-                            Acesse todos os arquivos do projeto (Plantas, Contratos, Imagens) atualizados em tempo real.
-                        </p>
-                    </div>
-                    <div style="background: #146c43; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(20, 108, 67, 0.3);">
-                        <span class="material-symbols-rounded" style="font-size: 1.5rem;">arrow_forward</span>
-                    </div>
-                </div>
-
             </div>
-
-    
-            <!-- DRIVE MODAL (Hidden by default) -->
-            <div id="driveModal" class="modal-overlay" style="display: none;">
-                <div class="modal-content" style="max-width: 900px; height: 80vh; display: flex; flex-direction: column; padding: 0;">
-                    
-                    <!-- Modal Header -->
-                    <div style="padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; border-radius: 20px 20px 0 0;">
-                        <h3 style="margin: 0; color: #146c43; display: flex; align-items: center; gap: 10px;">
-                            <span class="material-symbols-rounded">folder_shared</span> Pasta do Google Drive
-                        </h3>
-                        <span class="close-modal" onclick="closeDriveModal()" style="position: static; font-size: 1.8rem; color: #666;">&times;</span>
-                    </div>
-
-                    <!-- Iframe Container -->
-                     <div style="flex: 1; background: #fff; position: relative;">
-                        <?php if ($drive_link): ?>
-                            <iframe src="<?= htmlspecialchars($embed_url) ?>" width="100%" height="100%" frameborder="0" style="border:0; position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe>
-                        <?php else: ?>
-                            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: #999;">
-                                <span style="font-size: 3rem;">🚫</span>
-                                <p>Pasta não vinculada.</p>
-                            </div>
-                        <?php endif; ?>
-                     </div>
-
-                     <!-- Modal Footer -->
-                     <div style="padding: 15px; border-top: 1px solid #eee; text-align: right; background: #fff; border-radius: 0 0 20px 20px;">
-                        <a href="<?= htmlspecialchars($drive_link) ?>" target="_blank" class="btn-drive-primary" style="font-size: 0.9rem; padding: 10px 20px;">
-                            Abrir no App do Google Drive ↗
-                        </a>
-                     </div>
-
-                </div>
-            </div>
-
-            <script>
-                function openDriveModal() {
-                    document.getElementById('driveModal').style.display = 'flex';
-                }
-                function closeDriveModal() {
-                    document.getElementById('driveModal').style.display = 'none';
-                }
-                // Close on outside click
-                document.getElementById('driveModal').addEventListener('click', function(e) {
-                    if (e.target === this) closeDriveModal();
-                });
-            </script>
-
 
             <!-- WHATSAPP CTA -->
             <div style="text-align: center; margin-top: 30px; padding-bottom: 20px;">
