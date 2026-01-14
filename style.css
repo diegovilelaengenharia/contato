@@ -1780,29 +1780,16 @@ input[type="checkbox"] {
     content: '-';
 }
 
-.footer-premium__bottom a {
+.footer-premium__bottom {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     padding-top: 24px;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
+    justify-content: center;
     font-size: 0.9rem;
     color: var(--color-text-subtle);
 }
 
-.footer-privacy-link {
-    color: var(--color-text-subtle);
-    text-decoration: none;
-    font-size: 0.85rem;
-    transition: color 0.2s ease;
-    border-bottom: 1px dotted transparent;
-}
 
-.footer-privacy-link:hover {
-    color: var(--color-primary);
-    border-color: var(--color-primary);
-}
 
 .about-more__text {
     margin-top: 16px;
