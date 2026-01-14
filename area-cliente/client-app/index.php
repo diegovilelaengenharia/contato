@@ -134,13 +134,17 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             border-right: none;
             display: flex;
             align-items: center;
+            background: #ffffff; /* White badge for logo */
+            padding: 8px 12px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         .ph-logo img {
-            height: 60px !important;
+            height: 50px !important; /* Slightly smaller to fit badge */
             display: block;
             width: auto;
             object-fit: contain;
-            filter: brightness(0) invert(1); /* Make logo white */
+            /* Filter removed to show original logo colors */
         }
         .ph-title {
             font-size: 2.2rem;
