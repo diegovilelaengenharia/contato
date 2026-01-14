@@ -46,7 +46,7 @@ function formatMoney($val) {
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
     
     <!-- STYLES -->
-    <link rel="stylesheet" href="css/style.css?v=4.0">
+    <link rel="stylesheet" href="css/style.css?v=4.1">
     
     <style>
         /* FORCE SOCIAL UPDATE v2 */
@@ -107,11 +107,12 @@ function formatMoney($val) {
         
         /* Mobile overrides */
         @media (max-width: 480px) {
-            .page-header { flex-direction: column-reverse; gap: 20px; text-align: center; padding: 25px; align-items: center; }
+            .page-header { flex-direction: column-reverse; gap: 15px; text-align: center; padding: 20px; align-items: center; }
             .header-title-box { text-align: center; align-items: center; } 
-            .btn-back { width: 100%; justify-content: center; }
+            .header-title-main { font-size: 1.5rem; }
+            .btn-back { width: auto; padding: 8px 25px; justify-content: center; font-size: 0.9rem; }
             .page-header img { height: 45px !important; margin-bottom: 10px; }
-            .page-header > div:first-child { flex-direction: column-reverse; width: 100%; gap: 15px; }
+            .page-header > div:first-child { flex-direction: column-reverse; width: 100%; gap: 15px; align-items: center; }
         }
 
         .fin-card {
