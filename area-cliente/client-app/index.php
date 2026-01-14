@@ -119,18 +119,19 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             border: 1px solid rgba(0,0,0,0.05);
         }
         .ph-top {
-            padding: 20px 24px;
+            background: #f2f7f5; /* Light Green/Grey for contrast */
+            padding: 24px 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid #e0e0e0;
         }
         .ph-logo img {
-            height: 48px; /* Clean standard size */
+            height: 60px; /* Increased size (was 48px) */
         }
         .ph-title {
-            font-size: 0.9rem;
-            font-weight: 600;
+            font-size: 0.95rem;
+            font-weight: 800; /* BOLD */
             color: var(--color-primary); /* Vilela Green */
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -456,27 +457,8 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             
         </div>
 
-        <!-- FOOTER PREMIUM (MATCHING LANDING PAGE) -->
-        <footer class="footer-premium" style="margin-top: 40px; text-align: center; color: #6c757d; font-size: 0.86rem;">
-            <!-- Content Row -->
-            <div class="footer-premium__content" style="display: flex; flex-direction: column; align-items: center; gap: 16px; margin-bottom: 24px;">
-                <!-- Avatar -->
-                <img src="../../assets/foto-diego-new.jpg" alt="Diego Vilela" class="footer-avatar" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 3px solid #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-                
-                <div class="footer-divider" style="width: 40px; height: 1px; background: rgba(0,0,0,0.1);"></div>
-                
-                <div class="footer-info">
-                    <h3 style="margin: 0; font-size: 1.1rem; color: #1a1a1a; font-weight: 700;">Diego T. N. Vilela</h3>
-                    <p style="margin: 4px 0 0; font-size: 0.9rem; opacity: 0.8;">Engenheiro Civil • CREA 235.474/D</p>
-                    <a href="https://vilela.eng.br/#sobre" target="_blank" class="footer-bio-link" style="display: inline-block; margin-top: 8px; font-size: 0.85rem; color: #197e63; font-weight: 600; text-decoration: none;">Sobre Mim</a>
-                </div>
-            </div>
-
-            <!-- Bottom Bar -->
-            <div class="footer-premium__bottom" style="border-top: 1px solid rgba(0,0,0,0.05); padding-top: 24px; font-size: 0.8rem;">
-                <p>&copy; <span id="year">2026</span> Vilela Engenharia. Todos os direitos reservados.</p>
-            </div>
-        </footer>
+        <!-- FOOTER PREMIUM -->
+        <?php include 'includes/footer.php'; ?>
 
         <!-- FLOATING SOCIAL BUTTONS (OFFICIAL LANDING PAGE STYLE) -->
         <div class="floating-buttons" style="z-index: 99999;">
