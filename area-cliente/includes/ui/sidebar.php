@@ -32,18 +32,18 @@
                     </div>
                 </div>
 
-                <!-- Barra de Ações (Icones) -->
-                <div style="display:flex; background:#f8f9fa;">
-                    <a href="gerenciar_cliente.php?id=<?= $cliente_ativo['id'] ?>" class="client-action-btn" title="Editar Cadastro">
+                <!-- Barra de Ações (Icones Coloridos) -->
+                <div style="display:flex; background:#fff;">
+                    <a href="gerenciar_cliente.php?id=<?= $cliente_ativo['id'] ?>" class="client-action-btn" style="color:#0d6efd;" title="Editar Cadastro">
                         <span class="material-symbols-rounded">edit</span>
                     </a>
-                    <a href="relatorio_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="client-action-btn" title="Resumo PDF">
-                        <span class="material-symbols-rounded">description</span>
+                    <a href="relatorio_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="client-action-btn" style="color:#6f42c1;" title="Resumo PDF">
+                        <span class="material-symbols-rounded">picture_as_pdf</span>
                     </a>
-                    <a href="area_cliente.php" target="_blank" class="client-action-btn" title="Ver como Cliente">
+                    <a href="area_cliente.php" target="_blank" class="client-action-btn" style="color:#198754;" title="Ver como Cliente">
                         <span class="material-symbols-rounded">visibility</span>
                     </a>
-                    <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" class="client-action-btn btn-danger-hover" onclick="return confirm('Deseja excluir este cliente?')" title="Excluir Cliente">
+                    <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" class="client-action-btn btn-danger-hover" onclick="return confirm('Deseja excluir este cliente?')" style="color:#dc3545;" title="Excluir Cliente">
                         <span class="material-symbols-rounded">delete</span>
                     </a>
                 </div>
