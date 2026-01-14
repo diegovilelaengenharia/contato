@@ -458,7 +458,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
 
                 <!-- 1. DOCS INICIAIS (CHECKLIST) -->
                 <a href="documentos_iniciais.php" class="app-button" style="border: 1px solid #083b30;">
-                    <div class="app-btn-icon" style="background:#083b30; color:#ffffff;">📋</div>
+                    <div class="app-btn-icon" style="background:#e6fffa; color:#083b30;">📋</div>
                     <div class="app-btn-content">
                         <span class="app-btn-title">Abertura de Processo</span>
                         <span class="app-btn-desc">Documentos para Abertura do Processo</span>
@@ -468,7 +468,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
 
                 <!-- 2. TIMELINE -->
                 <a href="timeline.php" class="app-button" style="border: 1px solid #0f5132;">
-                    <div class="app-btn-icon" style="background:#0f5132; color:#ffffff;">🧭</div>
+                    <div class="app-btn-icon" style="background:#e8f5e9; color:#0f5132;">🧭</div>
                     <div class="app-btn-content">
                         <span class="app-btn-title">Linha do Tempo</span>
                         <div class="progress-mini" style="margin-top:5px; height:6px; background:#e9ecef; border-radius:3px; overflow:hidden; width:100px;">
@@ -484,21 +484,21 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                 <!-- 3. PENDÊNCIAS -->
                 <?php 
                     // Lógica de Cores Solicitada:
-                    // Se pendências > 0: Fundo Vermelho Sólido no ícone
-                    // Se pendências = 0: Fundo Verde Sólido no ícone
+                    // Se pendências > 0: Fundo Vermelho Claro
+                    // Se pendências = 0: Fundo Verde
                     
                     if ($pend_qtd > 0) {
                         $p_border = '#dc3545'; // Vermelho
-                        $p_bg_btn = '#ffebe9'; 
-                        $p_icon_bg = '#dc3545'; // Solid Red
-                        $p_icon_color = '#ffffff'; // White Icon
+                        $p_bg_btn = '#ffebe9'; // Vermelho Claro (Fundo do Card Inteiro?) - User pediu "botao com cor de fundo", assumindo card
+                        $p_icon_bg = '#f8d7da';
+                        $p_icon_color = '#721c24';
                         $p_icon = '⚠️';
                         $p_arrow = '#dc3545';
                     } else {
                         $p_border = '#198754'; // Verde
-                        $p_bg_btn = '#d1e7dd'; 
-                        $p_icon_bg = '#198754'; // Solid Green
-                        $p_icon_color = '#ffffff'; // White Icon
+                        $p_bg_btn = '#d1e7dd'; // Verde Claro / Sucesso
+                        $p_icon_bg = '#a3cfbb';
+                        $p_icon_color = '#0f5132';
                         $p_icon = '✅';
                         $p_arrow = '#198754';
                     }
@@ -524,21 +524,21 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                 <!-- 4. FINANCEIRO -->
                 <?php 
                     // Lógica de Cores Solicitada:
-                    // Se pendências > 0: Fundo Amarelo Sólido
-                    // Se pendências = 0: Fundo Verde Sólido
+                    // Se pendências > 0: Fundo Amarelo Claro
+                    // Se pendências = 0: Fundo Verde
                     
                     if ($fin_qtd > 0) {
                         $f_border = '#ffc107'; // Amarelo
-                        $f_bg_btn = '#fff3cd'; 
-                        $f_icon_bg = '#ffc107'; // Solid Yellow
-                        $f_icon_color = '#333333'; // Dark Text (Contrast)
+                        $f_bg_btn = '#fff3cd'; // Amarelo Claro
+                        $f_icon_bg = '#ffe69c';
+                        $f_icon_color = '#856404';
                         $f_icon = '💰';
                         $f_arrow = '#856404';
                     } else {
                         $f_border = '#198754'; // Verde
-                        $f_bg_btn = '#d1e7dd'; 
-                        $f_icon_bg = '#198754'; // Solid Green
-                        $f_icon_color = '#ffffff'; // White Icon
+                        $f_bg_btn = '#d1e7dd'; // Verde Claro
+                        $f_icon_bg = '#a3cfbb';
+                        $f_icon_color = '#0f5132';
                         $f_icon = '✅';
                         $f_arrow = '#198754';
                     }
@@ -563,7 +563,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                 
                 <!-- 5. DOCUMENTOS -->
                 <a href="documentos.php" class="app-button" style="border: 1px solid #052c65;">
-                    <div class="app-btn-icon" style="background:#052c65; color:#ffffff;">📂</div>
+                    <div class="app-btn-icon" style="background:#cfe2ff; color:#052c65;">📂</div>
                     <div class="app-btn-content">
                         <span class="app-btn-title">Documentos Finais</span>
                         <span class="app-btn-desc">Acesso aos documentos digitais</span>
