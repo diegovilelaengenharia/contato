@@ -96,8 +96,8 @@ body {
 }
 
 .logo-area img {
-    height: 68px;
-    /* Increased 20% (56px -> 68px) */
+    height: 80px;
+    /* Increased to 80px for obvious visibility */
     margin-bottom: 12px;
     /* Ensure logo is crisp */
     image-rendering: -webkit-optimize-contrast;
