@@ -478,33 +478,32 @@ if($cliente_ativo) {
             <!-- STYLE FOR FLEX LAYOUT & HIDDEN TABS -->
             <style>
                 .admin-container {
-                    display: flex !important; /* Force Flex */
-                    gap: 30px;
-                    max-width: 100% !important; /* Full width minus sidebar */
-                    align-items: flex-start;
+                    display: block !important; /* Sidebar is fixed, so block is safer */
+                    max-width: 100% !important;
                     margin: 0; padding: 0;
                 }
                 
                 aside.sidebar {
                     display: block !important;
                     flex-shrink: 0; 
-                    position: fixed; /* FIXED POSITION */
+                    position: fixed;
                     top: 0; left: 0;
-                    width: 280px; /* Fixed width */
-                    height: 100vh; /* Full viewport height */
-                    overflow-y: auto; /* Scrollable if needed */
-                    z-index: 1000;
+                    width: 280px;
+                    height: 100vh;
+                    overflow-y: auto;
+                    z-index: 2000; /* Higher than header/fab */
                     margin: 0 !important;
-                    border-radius: 0 !important; /* Remove curvature if glued */
-                    box-shadow: 2px 0 10px rgba(0,0,0,0.05); /* Shadow to right */
+                    border-radius: 0 !important;
+                    box-shadow: 2px 0 15px rgba(0,0,0,0.06);
+                    background: #fff; /* Ensure solid background */
+                    padding-bottom: 50px; /* Prevent bottom cut-off */
                 }
                 
                 main {
-                    flex: 1;
-                    width: calc(100% - 280px); /* Subtract sidebar width */
+                    display: block;
+                    width: auto;
                     margin-left: 280px; /* Offset content */
-                    max-width: calc(100% - 280px);
-                    padding: 30px; /* Content padding */
+                    padding: 30px;
                 }
 
                 /* Ocultar navegação antiga */
