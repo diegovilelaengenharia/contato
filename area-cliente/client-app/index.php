@@ -120,7 +120,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
         }
         .ph-top {
             background: #f2f7f5; /* Light Green/Grey for contrast */
-            padding: 24px 32px; /* Increased side padding */
+            padding: 40px 32px; /* Increased height (padding top/bottom) */
             display: flex;
             align-items: center; /* Center vertically */
             justify-content: flex-start; /* Logo left, Text right */
