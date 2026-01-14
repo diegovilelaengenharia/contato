@@ -406,6 +406,7 @@ if($cliente_ativo) {
                     width: auto;
                     margin-left: 280px; /* Offset content */
                     padding: 30px;
+                    position: relative; /* Context for absolute positioning */
                 }
 
                 /* Ocultar navegação antiga */
@@ -424,7 +425,18 @@ if($cliente_ativo) {
                         height: auto;
                         position: relative;
                     }
-                    main { margin-left: 0; width: 100%; max-width: 100%; }
+                    main { margin-left: 0; width: 100%; max-width: 100%; padding-top: 80px; /* Space for Profile */ }
+                }
+
+                /* Button styling for delete actions */
+                .btn-danger-hover { /* Applied to delete buttons */
+                    color: #dc3545 !important; /* Red text */
+                    background: #fff5f5 !important; /* Light red background */
+                    border: 1px solid #f5c2c7 !important;
+                    font-weight: 700 !important;
+                }
+                .btn-danger-hover:hover {
+                    background: #f8d7da !important; /* Darker red on hover */
                 }
             </style>
 

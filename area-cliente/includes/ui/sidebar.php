@@ -96,36 +96,6 @@
             <span class="material-symbols-rounded">person_add</span>
             Novo Cliente
         </a>
-        
-        <!-- HR Separator -->
-        <hr class="nav-divider" style="margin: 15px 0;">
-
-        <!-- ADMIN PROFILE (Moved Here) -->
-        <div style="background: #f8f9fa; border-radius: 12px; padding: 15px; border: 1px solid #eee;">
-            <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
-                <!-- Admin Avatar -->
-                <div style="width:38px; height:38px; border-radius:50%; background:#fff; display:flex; align-items:center; justify-content:center; overflow:hidden; border:1px solid #ddd;">
-                   <img src="../assets/avatar_admin.png" onerror="this.src='https://ui-avatars.com/api/?name=Diego+Vilela&background=0D8ABC&color=fff'" style="width:100%; height:100%; object-fit:cover;">
-                </div>
-                
-                <!-- Admin Info -->
-                <div style="flex:1; overflow:hidden;">
-                    <h4 style="margin:0; font-size:0.85rem; font-weight:700; color:#333; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Diego Vilela</h4>
-                    <p style="margin:0; font-size:0.75rem; color:#777;">Administrador</p>
-                </div>
-            </div>
-            
-            <!-- Actions Row -->
-            <div style="display:flex; gap:8px;">
-                <a href="#" style="flex:1; text-align:center; font-size:0.75rem; font-weight:600; color:#555; padding:6px; border-radius:6px; background:#fff; border:1px solid #eee; text-decoration:none; transition:0.2s;" onmouseover="this.style.background='#e9ecef'" onmouseout="this.style.background='#fff'">
-                    Config.
-                </a>
-                <a href="logout.php" style="flex:1; text-align:center; font-size:0.75rem; font-weight:600; color:#dc3545; padding:6px; border-radius:6px; background:#fff; border:1px solid #f5c2c7; text-decoration:none; transition:0.2s;" onmouseover="this.style.background='#ffe0e3'" onmouseout="this.style.background='#fff'">
-                    Sair
-                </a>
-            </div>
-        </div>
-
     </div>
 
 </aside>
