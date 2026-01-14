@@ -814,37 +814,39 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     }
                 ?>
 
-                <!-- ESTILOS ESPECÍFICOS DA ABA -->
+                <!-- ESTILOS ESPECÍFICOS DA ABA (VERDE HARMONIZADO) -->
                 <style>
-                    .docs-header { background: #f0f7ff; padding: 20px; border-radius: 8px; border: 1px solid #cce5ff; margin-bottom: 25px; }
-                    .proc-select { padding: 10px; font-size: 1rem; border: 2px solid #0d6efd; border-radius: 6px; color: #0d6efd; font-weight: 600; width: 100%; max-width: 400px; outline: none; background: white; cursor: pointer; }
-                    .proc-select:focus { box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25); }
+                    /* Ajuste para Verde Vilela (#198754 / #1e5d42) */
+                    .docs-header { background: #f8fffb; padding: 25px; border-radius: 12px; border: 1px solid #d1e7dd; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(25, 135, 84, 0.05); }
                     
-                    .section-title { font-size: 1.1rem; font-weight: 700; color: #444; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #eee; display: flex; align-items: center; gap: 8px; }
+                    .proc-select { padding: 12px; font-size: 1rem; border: 2px solid #198754; border-radius: 8px; color: #0f5132; font-weight: 600; width: 100%; max-width: 500px; outline: none; background: white; cursor: pointer; transition: 0.2s; }
+                    .proc-select:focus { box-shadow: 0 0 0 4px rgba(25, 135, 84, 0.2); border-color: #146c43; }
                     
-                    .doc-card-admin { display: flex; align-items: center; justify-content: space-between; background: white; border: 1px solid #e0e0e0; padding: 15px; border-radius: 8px; margin-bottom: 10px; transition: all 0.2s; gap: 15px; }
-                    .doc-card-admin:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.05); transform: translateY(-2px); border-color: #becfda; }
+                    .section-title { font-size: 1.15rem; font-weight: 700; color: #1e5d42; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #e9f5ef; display: flex; align-items: center; gap: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
                     
-                    .dca-info { display: flex; align-items: center; gap: 15px; flex: 1; }
-                    .dca-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
-                    .dca-text h4 { margin: 0 0 4px 0; font-size: 0.95rem; color: #333; font-weight: 600; }
-                    .dca-text span { font-size: 0.8rem; color: #666; }
+                    .doc-card-admin { display: flex; align-items: center; justify-content: space-between; background: white; border: 1px solid #eaeaea; padding: 18px; border-radius: 12px; margin-bottom: 12px; transition: all 0.2s; gap: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+                    .doc-card-admin:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.08); transform: translateY(-2px); border-color: #c3e6cb; }
                     
-                    .dca-file { display: inline-flex; align-items: center; gap: 5px; background: #e9ecef; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; color: #495057; text-decoration: none; font-weight: 500; transition: 0.2s; white-space: nowrap; max-width: 200px; overflow: hidden; text-overflow: ellipsis; }
-                    .dca-file:hover { background: #dde2e6; color: #000; }
+                    .dca-info { display: flex; align-items: center; gap: 18px; flex: 1; }
+                    .dca-icon { width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+                    .dca-text h4 { margin: 0 0 5px 0; font-size: 1rem; color: #2c3e50; font-weight: 600; }
+                    .dca-text span { font-size: 0.8rem; color: #7f8c8d; }
                     
-                    .dca-actions { display: flex; gap: 8px; }
-                    .btn-act { border: none; width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; font-size: 1rem; }
-                    .btn-act:hover { transform: scale(1.1); filter: brightness(0.95); }
+                    .dca-file { display: inline-flex; align-items: center; gap: 6px; background: #e8f5e9; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; color: #1e5d42; text-decoration: none; font-weight: 600; transition: 0.2s; white-space: nowrap; max-width: 250px; overflow: hidden; text-overflow: ellipsis; border: 1px solid #c3e6cb; }
+                    .dca-file:hover { background: #d1e7dd; color: #0f5132; transform: translateY(-1px); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
                     
-                    /* Status Colors */
-                    .st-pendente { background: #f8f9fa; color: #adb5bd; border: 1px solid #dee2e6; }
-                    .st-analise  { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+                    .dca-actions { display: flex; gap: 10px; }
+                    .btn-act { border: none; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; font-size: 1.1rem; }
+                    .btn-act:hover { transform: scale(1.1); filter: brightness(0.95); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+                    
+                    /* Status Colors - Refined */
+                    .st-pendente { background: #f8f9fa; color: #aaa; border: 1px solid #eee; }
+                    .st-analise  { background: #fff8e1; color: #b7791f; border: 1px solid #ffeeba; }
                     .st-aprovado { background: #d1e7dd; color: #0f5132; border: 1px solid #badbcc; }
                     .st-rejeitado{ background: #f8d7da; color: #842029; border: 1px solid #f5c2c7; }
                 </style>
 
-                <div class="admin-tab-content" style="border-top: 4px solid #0d6efd;">
+                <div class="admin-tab-content" style="border-top: 4px solid #198754;">
                     
                     <form id="formDocsGlobal" method="POST">
                         <input type="hidden" name="update_docs_settings" value="1">
@@ -852,17 +854,17 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         <!-- HEADER CONFIG DO PROCESSO -->
                         <div class="admin-header-row">
                             <div>
-                                <h3 class="admin-title" style="color:#0d6efd;">📑 Checklist de Documentos</h3>
+                                <h3 class="admin-title" style="color:#198754;">📑 Checklist de Documentos</h3>
                                 <p class="admin-subtitle">Gerencie o recebimento e aprovação de documentos do cliente.</p>
                             </div>
-                            <button type="submit" class="btn-save" style="background:#0d6efd; color:white; border:none; padding:10px 25px;">
+                            <button type="submit" class="btn-save" style="background:#198754; color:white; border:none; padding:10px 25px; box-shadow: 0 4px 12px rgba(25, 135, 84, 0.3);">
                                 💾 Salvar Alterações
                             </button>
                         </div>
 
                         <div class="docs-header">
                             <div style="margin-bottom: 20px;">
-                                <label style="display:block; margin-bottom:8px; font-weight:600; color:#444;">Selecione o Tipo de Processo:</label>
+                                <label style="display:block; margin-bottom:8px; font-weight:700; color:#1e5d42;">SELECIONE O TIPO DE PROCESSO:</label>
                                 <select name="tipo_processo_chave" class="proc-select" onchange="this.form.submit()">
                                     <option value="">-- Selecione para carregar checklist --</option>
                                     <?php foreach($processos as $key => $proc): ?>
@@ -874,8 +876,8 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             </div>
                             
                             <div>
-                                <label style="display:block; margin-bottom:8px; font-weight:600; color:#444;">📝 Observações (Visível para o Cliente):</label>
-                                <textarea name="observacoes_gerais" class="admin-form-input" rows="2" placeholder="Ex: Documentos recebidos, iniciando análise..."><?= htmlspecialchars($detalhes['observacoes_gerais'] ?? '') ?></textarea>
+                                <label style="display:block; margin-bottom:8px; font-weight:700; color:#1e5d42;">📝 OBSERVAÇÕES (VISÍVEL PARA O CLIENTE):</label>
+                                <textarea name="observacoes_gerais" class="admin-form-input" rows="2" placeholder="Ex: Documentos recebidos, iniciando análise..." style="border: 1px solid #ced4da; border-radius: 8px; padding: 12px;"><?= htmlspecialchars($detalhes['observacoes_gerais'] ?? '') ?></textarea>
                             </div>
                         </div>
                     </form>
