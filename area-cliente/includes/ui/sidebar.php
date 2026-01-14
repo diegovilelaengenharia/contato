@@ -1,5 +1,11 @@
 <aside class="sidebar admin-nav-sidebar">
     
+    <!-- BRANDING HEADER -->
+    <div style="text-align:center; padding: 25px 15px 10px 15px; margin-bottom: 10px;">
+        <img src="../assets/logo.png" style="max-width: 130px; height: auto; margin-bottom: 12px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));">
+        <h5 style="color: #adb5bd; font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; margin:0; text-transform: uppercase;">Painel Administrativo</h5>
+    </div>
+
     <!-- SEÇÃO CLIENTE SELECIONADO (Topo) -->
     <?php if($cliente_ativo): ?>
         <div class="nav-section">
