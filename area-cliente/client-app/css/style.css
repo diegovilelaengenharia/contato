@@ -1,11 +1,11 @@
 :root {
     /* --- BRAND PALETTE (Premium) --- */
-    --color-primary: #146c43;
-    /* Vilela Green */
-    --color-primary-dark: #0f5132;
+    --color-primary: #197e63;
+    /* Vilela Green (Consistent with Landing Page) */
+    --color-primary-dark: #146c43;
     --color-primary-light: #d1e7dd;
-    --color-accent: #ffd700;
-    /* Gold Accent for Premium feel */
+    --color-accent: #ffba35;
+    /* Window Yellow (Consistent with Landing Page) */
     --color-accent-secondary: #25d366;
     /* WhatsApp Green */
 

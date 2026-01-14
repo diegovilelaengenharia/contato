@@ -107,108 +107,108 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
     <link rel="stylesheet" href="css/style.css?v=<?= time() ?>">
     
     <style>
-        /* HEADER PORTAL STYLE */
+        /* HEADER PORTAL STYLE (PREMIUM WHITE) */
         .portal-header {
             background: #fff;
-            border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             margin-bottom: 25px;
             overflow: hidden;
-            border: 1px solid #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(0,0,0,0.05);
         }
         .ph-top {
-            padding: 20px 30px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        .ph-logo img {
-            height: 60px;
-        }
-        .ph-divider {
-            width: 2px;
-            height: 35px;
-            background: #eee;
-        }
-        .ph-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #444;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .ph-user-bar {
-            background: #146c43; /* Vilela Green */
-            padding: 15px 30px;
+            padding: 20px 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            color: white;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .ph-logo img {
+            height: 48px; /* Clean standard size */
+        }
+        .ph-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--color-primary); /* Vilela Green */
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .ph-user-bar {
+            background: #fff; /* White background */
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #333;
         }
         .ph-user-info {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 16px;
         }
         .ph-avatar {
-            width: 48px;
-            height: 48px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.2);
-            border: 2px solid rgba(255,255,255,0.3);
+            background: #f8f9fa;
+            border: 2px solid var(--color-primary);
             object-fit: cover;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
-            color: white;
+            color: var(--color-primary);
         }
         .ph-text-group {
-            line-height: 1.2;
+            line-height: 1.3;
         }
         .ph-welcome {
-            font-size: 0.8rem;
-            opacity: 0.9;
-            font-weight: 400;
+            font-size: 0.85rem;
+            color: #6c757d;
+            font-weight: 500;
             display: block;
         }
         .ph-username {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 700;
+            color: #1a1a1a;
             display: block;
         }
         .ph-logout-btn {
-            width: 38px;
-            height: 38px;
-            background: rgba(255,255,255,0.15);
-            border-radius: 10px;
+            width: 40px;
+            height: 40px;
+            background: #f8f9fa;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: #dc3545; /* Red for logout */
             text-decoration: none;
-            transition: background 0.2s;
+            transition: all 0.2s;
+            border: 1px solid #eee;
         }
         .ph-logout-btn:hover {
-            background: rgba(255,255,255,0.25);
+            background: #ffebe9;
+            border-color: #ffcdd2;
+            transform: translateY(-2px);
         }
 
         /* MOBILE ADAPT */
         @media(max-width: 600px) {
-            .ph-top { 
-                padding: 15px 20px; 
-                flex-direction: row; /* Side by side */
-                align-items: center; 
-                justify-content: flex-start;
-                gap: 15px; 
+            .portal-header {
+                border-radius: 16px;
             }
-            .ph-divider { 
-                display: block; /* Show divider or just use gap */
-                height: 30px; margin: 0; border-left: 1px solid rgba(255,255,255,0.3);
+            .ph-top {
+                padding: 16px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
             }
-            .ph-logo img { height: 40px; } /* Slightly smaller to fit */
-            .ph-title { font-size: 0.9rem; line-height: 1.2; text-align: left; }
-            .ph-user-bar { padding: 15px 20px; }
+            .ph-logo img { height: 40px; }
+            .ph-title { font-size: 0.8rem; }
+            .ph-user-bar { padding: 16px; flex-direction: row; }
             .ph-username { font-size: 1rem; }
         }
 
@@ -456,8 +456,27 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             
         </div>
 
-        <!-- FOOTER PREMIUM -->
-        <?php include 'includes/footer.php'; ?>
+        <!-- FOOTER PREMIUM (MATCHING LANDING PAGE) -->
+        <footer class="footer-premium" style="margin-top: 40px; text-align: center; color: #6c757d; font-size: 0.86rem;">
+            <!-- Content Row -->
+            <div class="footer-premium__content" style="display: flex; flex-direction: column; align-items: center; gap: 16px; margin-bottom: 24px;">
+                <!-- Avatar -->
+                <img src="../../assets/foto-diego-new.jpg" alt="Diego Vilela" class="footer-avatar" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 3px solid #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                
+                <div class="footer-divider" style="width: 40px; height: 1px; background: rgba(0,0,0,0.1);"></div>
+                
+                <div class="footer-info">
+                    <h3 style="margin: 0; font-size: 1.1rem; color: #1a1a1a; font-weight: 700;">Diego T. N. Vilela</h3>
+                    <p style="margin: 4px 0 0; font-size: 0.9rem; opacity: 0.8;">Engenheiro Civil • CREA 235.474/D</p>
+                    <a href="https://vilela.eng.br/#sobre" target="_blank" class="footer-bio-link" style="display: inline-block; margin-top: 8px; font-size: 0.85rem; color: #197e63; font-weight: 600; text-decoration: none;">Sobre Mim</a>
+                </div>
+            </div>
+
+            <!-- Bottom Bar -->
+            <div class="footer-premium__bottom" style="border-top: 1px solid rgba(0,0,0,0.05); padding-top: 24px; font-size: 0.8rem;">
+                <p>&copy; <span id="year">2026</span> Vilela Engenharia. Todos os direitos reservados.</p>
+            </div>
+        </footer>
 
         <!-- FLOATING SOCIAL BUTTONS (OFFICIAL LANDING PAGE STYLE) -->
         <div class="floating-buttons" style="z-index: 99999;">
