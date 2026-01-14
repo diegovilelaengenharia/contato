@@ -253,6 +253,10 @@ if ($cliente_ativo) {
             <a href="gestao_admin_99.php" title="Visão Geral" style="width:50px; height:50px; background:white; border-radius:50%; box-shadow:0 8px 20px rgba(0,0,0,0.08); display:flex; align-items:center; justify-content:center; color:#555; text-decoration:none; transition:all 0.3s; border:1px solid #f0f0f0;" onmouseover="this.style.transform='scale(1.1)'; this.style.color='#198754'" onmouseout="this.style.transform='scale(1)'; this.style.color='#555'">
                 <span class="material-symbols-rounded" style="font-size:26px;">grid_view</span>
             </a>
+            <!-- Clientes (List) -->
+            <a href="gestao_admin_99.php#lista_clientes" title="Clientes" style="width:50px; height:50px; background:white; border-radius:50%; box-shadow:0 8px 20px rgba(0,0,0,0.08); display:flex; align-items:center; justify-content:center; color:#555; text-decoration:none; transition:all 0.3s; border:1px solid #f0f0f0;" onmouseover="this.style.transform='scale(1.1)'; this.style.color='#198754'" onmouseout="this.style.transform='scale(1)'; this.style.color='#555'">
+                <span class="material-symbols-rounded" style="font-size:26px;">groups</span>
+            </a>
             <!-- Novo Cliente -->
             <a href="gerenciar_cliente.php" title="Novo Cliente" style="width:50px; height:50px; background:#198754; border-radius:50%; box-shadow:0 8px 20px rgba(25,135,84,0.25); display:flex; align-items:center; justify-content:center; color:white; text-decoration:none; transition:all 0.3s;" onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 12px 25px rgba(25,135,84,0.35)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 20px rgba(25,135,84,0.25)'">
                 <span class="material-symbols-rounded" style="font-size:26px;">person_add</span>
@@ -569,8 +573,7 @@ if ($cliente_ativo) {
 
                     <?php if ($active_tab == 'perfil'): ?>
                         <div class="admin-tab-content">
-                            <?php require 'includes/helpers.php'; // Ensure helper functions are available 
-                            ?>
+                            <!-- Helper include removed -->
 
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                                 <h3 class="admin-title" style="margin:0;">👤 Perfil do Cliente</h3>
@@ -1656,7 +1659,7 @@ if ($cliente_ativo) {
                 </div>
 
                 <!-- Tabela Geral de Clientes -->
-                <div class="form-card">
+                <div class="form-card" id="lista_clientes">
                     <h3>📋 Situação da Carteira de Clientes</h3>
                     <div class="table-responsive">
                         <table style="width:100%; border-collapse:collapse; margin-top:15px;">
