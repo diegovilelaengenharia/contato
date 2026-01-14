@@ -300,6 +300,36 @@ body {
     box-shadow: 0 12px 32px -10px rgba(0, 0, 0, 0.1);
     background: #fafafa;
     border-color: var(--color-primary);
+    background: #fafafa;
+    border-color: var(--color-primary);
+}
+
+.hero-client-btn {
+    background-color: var(--color-accent);
+    /* Gold */
+    color: var(--color-text);
+    /* Dark text for contrast */
+    border: none;
+    border-radius: 50px;
+    padding: 12px 24px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    flex: 1;
+    max-width: 220px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.hero-client-btn:hover {
+    background-color: #e6a72e;
+    /* Slightly darker gold */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
 }
 
 .hero-vcard:focus-visible,
@@ -636,6 +666,17 @@ body {
 
 .floating-btn--instagram:hover {
     box-shadow: 0 6px 16px rgba(220, 39, 67, 0.4);
+}
+
+color: var(--color-text);
+/* Dark icon for contrast */
+}
+
+.floating-btn--vcard:hover {
+    background: #e6a72e;
+    /* Slightly darker gold */
+    box-shadow: 0 6px 16px rgba(255, 186, 53, 0.4);
+    transform: scale(1.05) translateY(-2px);
 }
 
 .floating-btn--email {
@@ -1795,6 +1836,25 @@ input[type="checkbox"] {
     text-align: center;
     background: #fff;
     margin-top: 32px;
+}
+
+.hero {
+    background: #ffffff;
+    max-width: 480px;
+    margin: 24px auto 0;
+    padding: 40px 24px 32px;
+    border-radius: 20px;
+    /* Force 20px for card look or var(--radius-large) */
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-soft);
+    position: relative;
+    overflow: hidden;
+    /* Ensures content stays inside rounded corners */
+}
+
+/* Remove gradient border if present */
+.hero::before {
+    display: none !important;
 }
 
 .footer::before {
