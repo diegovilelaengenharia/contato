@@ -104,17 +104,13 @@
     </div>
 
     <!-- TECHNICAL RESPONSIBLE FOOTER (Pinned to Bottom) -->
-    <div style="margin-top:auto; padding:20px; border-top:1px solid #f0f0f0; background:#fff; border-radius: 0 0 16px 16px;">
-        <div style="display: flex; align-items: center; gap: 15px;">
-            <div style="border-right: 1px solid #eee; padding-right: 15px;">
-                 <img src="../assets/logo.png" alt="Vilela" style="height: 48px; width: auto; object-fit: contain;">
-            </div>
-            <div>
-                <span style="display: block; font-size: 0.65rem; color: #adb5bd; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700;">Engenheiro Responsável</span>
-                <strong style="display: block; font-size: 0.85rem; color: #495057; line-height: 1.2;">Diego T. N. Vilela</strong>
-                <span style="display: block; font-size: 0.75rem; color: #888;">CREA 235.474/D</span>
-            </div>
+    <div style="margin-top:auto; padding:20px; border-top:1px solid #f0f0f0; background:#fff; border-radius: 0 0 16px 16px; text-align:center;">
+        <div style="margin-bottom:8px; font-weight:800; color:#198754; text-transform:uppercase; letter-spacing:1px; font-size:0.9rem;">
+            VILELA
         </div>
+        <span style="display: block; font-size: 0.65rem; color: #adb5bd; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; margin-bottom:2px;">Engenheiro Responsável</span>
+        <strong style="display: block; font-size: 0.85rem; color: #495057; line-height: 1.2;">Diego T. N. Vilela</strong>
+        <span style="display: block; font-size: 0.75rem; color: #888;">CREA 235.474/D</span>
     </div>
 
 </aside>
