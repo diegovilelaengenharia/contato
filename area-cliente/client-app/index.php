@@ -174,7 +174,36 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             justify-content: center;
             font-size: 1.5rem;
             color: var(--color-primary);
+            position: relative; /* Para o overlay */
+            cursor: pointer; /* Indicar clicável */
+            overflow: hidden;
         }
+        .ph-avatar:hover .ph-avatar-overlay {
+            opacity: 1;
+        }
+        .ph-avatar-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s;
+            color: #fff;
+            font-size: 1.2rem;
+            border-radius: 50%;
+        }
+        .ph-avatar.loading::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: var(--color-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { from {transform: rotate(0deg);} to {transform: rotate(360deg);} }
         .ph-text-group {
             line-height: 1.3;
         }
@@ -326,13 +355,25 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                         }
                     ?>
                     <?php if($avatarPath && file_exists($avatarPath) && !is_dir($avatarPath)): ?>
-                        <img src="<?= htmlspecialchars($avatarPath) ?>?v=<?= time() ?>" class="ph-avatar">
+                        <div class="ph-avatar" onclick="document.getElementById('avatarUpload').click()" id="avatarContainer">
+                            <img src="<?= htmlspecialchars($avatarPath) ?>?v=<?= time() ?>" id="currentAvatarImg" style="width:100%; height:100%; object-fit:cover;">
+                            <div class="ph-avatar-overlay">
+                                <span class="material-symbols-rounded">edit</span>
+                            </div>
+                        </div>
                     <?php else: ?>
                         <!-- Fallback visual (Ícone Genérico) -->
-                        <div class="ph-avatar">
+                        <!-- Fallback visual (Ícone Genérico) -->
+                        <div class="ph-avatar" onclick="document.getElementById('avatarUpload').click()" id="avatarContainer">
                             <span class="material-symbols-rounded">person</span>
+                            <div class="ph-avatar-overlay">
+                                <span class="material-symbols-rounded">edit</span>
+                            </div>
                         </div>
                     <?php endif; ?>
+                    
+                    <!-- Hidden Input for Upload -->
+                    <input type="file" id="avatarUpload" accept="image/*" style="display: none;" onchange="uploadAvatar(this)">
                     
                     <div class="ph-text-group">
                         <span class="ph-welcome">Bem-vindo(a),</span>
@@ -500,5 +541,63 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
         
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Reveal effect
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.app-button, .portal-header').forEach(el => {
+                el.classList.add('reveal');
+                observer.observe(el);
+            });
+            
+            // Auto Update Year
+            document.getElementById('year').textContent = new Date().getFullYear();
+        });
+
+        // AVATAR UPLOAD LOGIC
+        function uploadAvatar(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const formData = new FormData();
+                formData.append('avatar', file);
+
+                const container = document.getElementById('avatarContainer');
+                container.classList.add('loading'); // Show Spinner
+
+                fetch('actions/upload_avatar.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    container.classList.remove('loading');
+                    if (data.success) {
+                        // Update Image
+                        const timestamp = new Date().getTime();
+                        let imgHtml = `<img src="${data.newPath}?v=${timestamp}" id="currentAvatarImg" style="width:100%; height:100%; object-fit:cover;">
+                                       <div class="ph-avatar-overlay"><span class="material-symbols-rounded">edit</span></div>`;
+                        container.innerHTML = imgHtml;
+                        
+                        // Optional: Show toast success
+                        // alert('Avatar atualizado!'); 
+                    } else {
+                        alert('Erro: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    container.classList.remove('loading');
+                    console.error('Error:', error);
+                    alert('Erro ao enviar a imagem.');
+                });
+            }
+        }
+    </script>
 </body>
 </html>
