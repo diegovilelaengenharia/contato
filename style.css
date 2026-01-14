@@ -305,10 +305,9 @@ body {
 }
 
 .hero-client-btn {
-    background: linear-gradient(135deg, #d4af37 0%, #aa8623 100%);
-    /* Metallic Gold */
+    background: linear-gradient(135deg, #ecd279 0%, #d4ac36 100%);
+    /* Softer, Champagne Gold */
     color: #ffffff;
-    /* White text looks better on dark gold */
     border: none;
     border-radius: 50px;
     padding: 12px 24px;
@@ -322,14 +321,14 @@ body {
     transition: all 0.2s ease;
     flex: 1;
     max-width: 220px;
-    box-shadow: 0 4px 10px rgba(172, 137, 35, 0.3);
+    box-shadow: 0 4px 10px rgba(212, 172, 55, 0.25);
 }
 
 .hero-client-btn:hover {
-    background: linear-gradient(135deg, #e6c55e 0%, #c19b33 100%);
-    /* Lighter Gold on Hover */
+    background: linear-gradient(135deg, #f5db89 0%, #e0bc4e 100%);
+    /* Lighter on Hover */
     transform: translateY(-2px);
-    box-shadow: 0 6px 14px rgba(172, 137, 35, 0.4);
+    box-shadow: 0 6px 14px rgba(212, 172, 55, 0.35);
 }
 
 .hero-vcard:focus-visible,
