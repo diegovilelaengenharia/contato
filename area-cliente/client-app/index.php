@@ -128,12 +128,12 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             border-bottom: 1px solid #e0e0e0;
         }
         .ph-logo img {
-            height: 160px !important; /* FORCE GIANT LOGO */
+            height: 115px !important; /* Reduced 30% (160 -> 115) */
             display: block;
             width: auto;
         }
         .ph-title {
-            font-size: 1.8rem; /* Much Larger */
+            font-size: 2.4rem; /* Increased 30% (1.8 -> 2.4) */
             font-weight: 800; /* Extra Bold */
             color: var(--color-primary); /* Vilela Green */
             text-transform: uppercase;
@@ -325,7 +325,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             <div class="ph-top">
                 <div class="ph-logo">
                     <!-- Ajustar caminho do logo se necessário -->
-                    <img src="../../assets/logo.png?v=<?= time() ?>" alt="Vilela Engenharia" style="height: 160px !important; width: auto !important; max-width: none !important;">
+                    <img src="../../assets/logo.png?v=<?= time() ?>" alt="Vilela Engenharia" style="height: 115px !important; width: auto !important; max-width: none !important;">
                 </div>
                 <div class="ph-header-text">
                     <div class="ph-title">Portal Cliente</div>
