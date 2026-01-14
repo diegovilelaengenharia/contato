@@ -247,21 +247,8 @@ if ($cliente_ativo) {
     ?>
 
     <div class="admin-container">
-        <!-- FLOATING NAVIGATION BUTTONS (Fixed Top Left) -->
-        <div style="position:fixed; top:30px; left:30px; display:flex; flex-direction:column; gap:15px; z-index:9999;">
-            <!-- Visão Geral -->
-            <a href="gestao_admin_99.php" title="Visão Geral" style="width:50px; height:50px; background:white; border-radius:50%; box-shadow:0 8px 20px rgba(0,0,0,0.08); display:flex; align-items:center; justify-content:center; color:#555; text-decoration:none; transition:all 0.3s; border:1px solid #f0f0f0;" onmouseover="this.style.transform='scale(1.1)'; this.style.color='#198754'" onmouseout="this.style.transform='scale(1)'; this.style.color='#555'">
-                <span class="material-symbols-rounded" style="font-size:26px;">grid_view</span>
-            </a>
-            <!-- Clientes (List) -->
-            <a href="gestao_admin_99.php#lista_clientes" title="Clientes" style="width:50px; height:50px; background:white; border-radius:50%; box-shadow:0 8px 20px rgba(0,0,0,0.08); display:flex; align-items:center; justify-content:center; color:#555; text-decoration:none; transition:all 0.3s; border:1px solid #f0f0f0;" onmouseover="this.style.transform='scale(1.1)'; this.style.color='#198754'" onmouseout="this.style.transform='scale(1)'; this.style.color='#555'">
-                <span class="material-symbols-rounded" style="font-size:26px;">groups</span>
-            </a>
-            <!-- Novo Cliente -->
-            <a href="gerenciar_cliente.php" title="Novo Cliente" style="width:50px; height:50px; background:#198754; border-radius:50%; box-shadow:0 8px 20px rgba(25,135,84,0.25); display:flex; align-items:center; justify-content:center; color:white; text-decoration:none; transition:all 0.3s;" onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 12px 25px rgba(25,135,84,0.35)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 20px rgba(25,135,84,0.25)'">
-                <span class="material-symbols-rounded" style="font-size:26px;">person_add</span>
-            </a>
-        </div>
+        <!-- FLOATING NAVIGATION & CLIENT TREE -->
+        <?php require 'includes/ui/floating_menu.php'; ?>
 
         <main style="padding-bottom: 80px;"> <!-- Padding for fixed footer area -->
 
