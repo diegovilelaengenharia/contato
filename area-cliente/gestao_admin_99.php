@@ -745,6 +745,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
 
 
+            <?php elseif($active_tab == 'docs_iniciais'): ?>
                 <!-- DOCUMENTOS INICIAIS CONTENT (Azul Moderno) -->
                 <?php 
                     $docs_config = require 'config/docs_config.php';
