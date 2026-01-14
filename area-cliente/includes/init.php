@@ -12,6 +12,7 @@ session_start();
 // Database Connection
 try {
     require __DIR__ . '/../db.php';
+    require __DIR__ . '/helpers.php'; // Helper Functions (Security)
 } catch (Throwable $e) {
     die("<h1>Erro Crítico (Sintaxe ou Banco)</h1><p><strong>Arquivo:</strong> " . $e->getFile() . " <br><strong>Linha:</strong> " . $e->getLine() . "<br><strong>Erro:</strong> " . $e->getMessage() . "</p>");
 }
