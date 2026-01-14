@@ -165,7 +165,7 @@ if (isset($_GET['cliente_id'])) {
     $finSnapshot = $stmtFin->fetch(PDO::FETCH_ASSOC);
 
     // 2. Pendências
-    $stmtPen = $pdo->prepare("SELECT COUNT(*) as qtd FROM pendencias WHERE cliente_id = ? AND status != 'concluido'");
+    $stmtPen = $pdo->prepare("SELECT COUNT(*) as qtd FROM processo_pendencias WHERE cliente_id = ? AND status != 'concluido'");
     $stmtPen->execute([$id]);
     $penSnapshot = $stmtPen->fetch(PDO::FETCH_ASSOC);
 
@@ -578,7 +578,7 @@ if ($cliente_ativo) {
 
                     <!-- Script removed as logic is now backend-driven -->
 
-                                        <?php if ($active_tab == 'perfil'): ?>
+                    <?php if ($active_tab == 'perfil'): ?>
                         <div class="admin-tab-content" style="background:transparent; padding:0; box-shadow:none; border:none;">
 
                             <div style="display:grid; grid-template-columns: 350px 1fr; gap:30px; align-items:start;">
