@@ -816,30 +816,35 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
                 <!-- ESTILOS ESPECÍFICOS DA ABA (VERDE HARMONIZADO) -->
                 <style>
-                    /* Ajuste para Verde Vilela (#198754 / #1e5d42) */
-                    .docs-header { background: #f8fffb; padding: 25px; border-radius: 12px; border: 1px solid #d1e7dd; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(25, 135, 84, 0.05); }
+                    /* Ajuste para Verde Vilela (#198754 / #1e5d42) - COMPACTO */
+                    .docs-header { background: #f8fffb; padding: 20px; border-radius: 10px; border: 1px solid #d1e7dd; margin-bottom: 25px; box-shadow: 0 4px 10px rgba(25, 135, 84, 0.05); }
                     
-                    .proc-select { padding: 12px; font-size: 1rem; border: 2px solid #198754; border-radius: 8px; color: #0f5132; font-weight: 600; width: 100%; max-width: 500px; outline: none; background: white; cursor: pointer; transition: 0.2s; }
+                    .proc-select { padding: 10px; font-size: 0.95rem; border: 2px solid #198754; border-radius: 6px; color: #0f5132; font-weight: 600; width: 100%; max-width: 500px; outline: none; background: white; cursor: pointer; transition: 0.2s; }
                     .proc-select:focus { box-shadow: 0 0 0 4px rgba(25, 135, 84, 0.2); border-color: #146c43; }
                     
-                    .section-title { font-size: 1.15rem; font-weight: 700; color: #1e5d42; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #e9f5ef; display: flex; align-items: center; gap: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+                    .section-title { font-size: 1rem; font-weight: 700; color: #1e5d42; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #e9f5ef; display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.5px; grid-column: 1 / -1; margin-top: 10px; }
                     
-                    .doc-card-admin { display: flex; align-items: center; justify-content: space-between; background: white; border: 1px solid #eaeaea; padding: 18px; border-radius: 12px; margin-bottom: 12px; transition: all 0.2s; gap: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-                    .doc-card-admin:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.08); transform: translateY(-2px); border-color: #c3e6cb; }
+                    .docs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+                    @media(max-width: 900px) { .docs-grid { grid-template-columns: 1fr; gap: 10px; } }
+
+                    .doc-card-admin { display: flex; align-items: center; justify-content: space-between; background: white; border: 1px solid #eaeaea; padding: 12px 15px; border-radius: 10px; transition: all 0.2s; gap: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+                    .doc-card-admin:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); transform: translateY(-1px); border-color: #c3e6cb; }
                     
-                    .dca-info { display: flex; align-items: center; gap: 18px; flex: 1; }
-                    .dca-icon { width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
-                    .dca-text h4 { margin: 0 0 5px 0; font-size: 1rem; color: #2c3e50; font-weight: 600; }
-                    .dca-text span { font-size: 0.8rem; color: #7f8c8d; }
+                    .dca-info { display: flex; align-items: center; gap: 12px; flex: 1; overflow: hidden; }
+                    .dca-icon { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+                    .dca-text { overflow: hidden; }
+                    .dca-text h4 { margin: 0 0 3px 0; font-size: 0.9rem; color: #2c3e50; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+                    .dca-text span { font-size: 0.75rem; color: #7f8c8d; }
                     
-                    .dca-file { display: inline-flex; align-items: center; gap: 6px; background: #e8f5e9; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; color: #1e5d42; text-decoration: none; font-weight: 600; transition: 0.2s; white-space: nowrap; max-width: 250px; overflow: hidden; text-overflow: ellipsis; border: 1px solid #c3e6cb; }
-                    .dca-file:hover { background: #d1e7dd; color: #0f5132; transform: translateY(-1px); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+                    /* Compact File Link */
+                    .dca-file { display: inline-flex; align-items: center; gap: 4px; background: #e8f5e9; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; color: #1e5d42; text-decoration: none; font-weight: 600; transition: 0.2s; white-space: nowrap; max-width: 140px; overflow: hidden; text-overflow: ellipsis; border: 1px solid #c3e6cb; }
+                    .dca-file:hover { background: #d1e7dd; color: #0f5132; }
                     
-                    .dca-actions { display: flex; gap: 10px; }
-                    .btn-act { border: none; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; font-size: 1.1rem; }
+                    .dca-actions { display: flex; gap: 6px; }
+                    .btn-act { border: none; width: 30px; height: 30px; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; font-size: 0.9rem; }
                     .btn-act:hover { transform: scale(1.1); filter: brightness(0.95); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
                     
-                    /* Status Colors - Refined */
+                    /* Status Colors */
                     .st-pendente { background: #f8f9fa; color: #aaa; border: 1px solid #eee; }
                     .st-analise  { background: #fff8e1; color: #b7791f; border: 1px solid #ffeeba; }
                     .st-aprovado { background: #d1e7dd; color: #0f5132; border: 1px solid #badbcc; }
@@ -857,16 +862,16 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                 <h3 class="admin-title" style="color:#198754;">📑 Checklist de Documentos</h3>
                                 <p class="admin-subtitle">Gerencie o recebimento e aprovação de documentos do cliente.</p>
                             </div>
-                            <button type="submit" class="btn-save" style="background:#198754; color:white; border:none; padding:10px 25px; box-shadow: 0 4px 12px rgba(25, 135, 84, 0.3);">
-                                💾 Salvar Alterações
+                            <button type="submit" class="btn-save" style="background:#198754; color:white; border:none; padding:8px 20px; font-size: 0.9rem; box-shadow: 0 4px 10px rgba(25, 135, 84, 0.2);">
+                                💾 Salvar
                             </button>
                         </div>
 
                         <div class="docs-header">
-                            <div style="margin-bottom: 20px;">
-                                <label style="display:block; margin-bottom:8px; font-weight:700; color:#1e5d42;">SELECIONE O TIPO DE PROCESSO:</label>
+                            <div style="margin-bottom: 15px;">
+                                <label style="display:block; margin-bottom:5px; font-weight:700; color:#1e5d42; font-size:0.85rem;">TIPO DE PROCESSO:</label>
                                 <select name="tipo_processo_chave" class="proc-select" onchange="this.form.submit()">
-                                    <option value="">-- Selecione para carregar checklist --</option>
+                                    <option value="">-- Selecione --</option>
                                     <?php foreach($processos as $key => $proc): ?>
                                         <option value="<?= $key ?>" <?= $active_proc_key == $key ? 'selected' : '' ?>>
                                             <?= htmlspecialchars($proc['titulo']) ?>
@@ -876,8 +881,8 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             </div>
                             
                             <div>
-                                <label style="display:block; margin-bottom:8px; font-weight:700; color:#1e5d42;">📝 OBSERVAÇÕES (VISÍVEL PARA O CLIENTE):</label>
-                                <textarea name="observacoes_gerais" class="admin-form-input" rows="2" placeholder="Ex: Documentos recebidos, iniciando análise..." style="border: 1px solid #ced4da; border-radius: 8px; padding: 12px;"><?= htmlspecialchars($detalhes['observacoes_gerais'] ?? '') ?></textarea>
+                                <label style="display:block; margin-bottom:5px; font-weight:700; color:#1e5d42; font-size:0.85rem;">OBSERVAÇÕES (CLIENTE):</label>
+                                <textarea name="observacoes_gerais" class="admin-form-input" rows="1" placeholder="Ex: Documentos recebidos..." style="border: 1px solid #ced4da; border-radius: 6px; padding: 10px; font-size:0.9rem;"><?= htmlspecialchars($detalhes['observacoes_gerais'] ?? '') ?></textarea>
                             </div>
                         </div>
                     </form>
@@ -886,7 +891,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     <?php if($active_proc_key && isset($processos[$active_proc_key])): 
                         $proc_data = $processos[$active_proc_key];
                         
-                        // Busca dados entregues mapeados
+                        // Busca dados mapeados
                         $stmt_map = $pdo->prepare("SELECT doc_chave, arquivo_path, nome_original, data_entrega, status FROM processo_docs_entregues WHERE cliente_id = ?");
                         $stmt_map->execute([$cliente_ativo['id']]);
                         $entregues_map = [];
@@ -894,105 +899,74 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             $entregues_map[$row['doc_chave']] = $row;
                         }
 
-                        // Função Helper para Renderizar Card
+                        // Função Helper Render Doc Card Compacto
                         function renderDocCard($label, $key, $entregues_map, $active_proc_key) {
-                            global $pdo; // Access PDO inside function
+                            global $pdo; 
                             $doc_data = $entregues_map[$key] ?? null;
                             $status = $doc_data['status'] ?? 'pendente';
                             $has_file = !empty($doc_data['arquivo_path']);
                             
-                            // Visual Props
                             $color = '#adb5bd'; $icon = 'check_box_outline_blank'; $status_bg = '#f8f9fa'; $status_txt = 'Pendente';
-                            if($status == 'em_analise') { $color = '#ffc107'; $icon = 'hourglass_top'; $status_bg = '#fff3cd'; $status_txt = 'Em Análise'; }
+                            if($status == 'em_analise') { $color = '#ffc107'; $icon = 'hourglass_top'; $status_bg = '#fff8e1'; $status_txt = 'Em Análise'; }
                             if($status == 'aprovado')   { $color = '#198754'; $icon = 'check_circle'; $status_bg = '#d1e7dd'; $status_txt = 'Aprovado'; }
                             if($status == 'rejeitado')  { $color = '#dc3545'; $icon = 'error'; $status_bg = '#f8d7da'; $status_txt = 'Rejeitado'; }
                             
-                            echo '<div class="doc-card-admin" style="border-left: 5px solid '.$color.';">';
+                            echo '<div class="doc-card-admin" style="border-left: 4px solid '.$color.';">';
                                 
-                                // Left: Info
+                                // Info
                                 echo '<div class="dca-info">';
                                     echo '<div class="dca-icon" style="background:'.$status_bg.'; color:'.$color.';"><span class="material-symbols-rounded">'.$icon.'</span></div>';
                                     echo '<div class="dca-text">';
-                                        echo '<h4>'.htmlspecialchars($label).'</h4>';
-                                        
-                                        // Status Chip
-                                        echo '<span style="background:'.$status_bg.'; color:'.$color.'; padding:2px 8px; border-radius:10px; font-weight:700; font-size:0.7rem; text-transform:uppercase;">'.$status_txt.'</span>';
-                                        
-                                        // Metadata (Date)
-                                        if($has_file) {
-                                            echo ' <span style="margin-left:8px; font-size:0.75rem;">Entregue: '.date('d/m/y H:i', strtotime($doc_data['data_entrega'])).'</span>';
-                                        }
+                                        echo '<h4 title="'.htmlspecialchars($label).'">'.htmlspecialchars($label).'</h4>';
+                                        echo '<span style="background:'.$status_bg.'; color:'.$color.'; padding:1px 6px; border-radius:4px; font-weight:700; font-size:0.65rem; text-transform:uppercase;">'.$status_txt.'</span>';
                                     echo '</div>';
                                 echo '</div>';
 
-                                // Center: File Link
-                                echo '<div>';
-                                    if($has_file) {
-                                        echo '<a href="'.htmlspecialchars($doc_data['arquivo_path']).'" target="_blank" class="dca-file" title="'.$doc_data['nome_original'].'">
-                                                <span class="material-symbols-rounded" style="font-size:1rem;">description</span> 
-                                                '.htmlspecialchars($doc_data['nome_original']).'
-                                              </a>';
-                                    } else {
-                                        echo '<span style="font-size:0.8rem; color:#ccc; font-style:italic;">-- Sem arquivo --</span>';
-                                    }
-                                echo '</div>';
+                                // Center: File Link (Compacto)
+                                if($has_file) {
+                                    echo '<a href="'.htmlspecialchars($doc_data['arquivo_path']).'" target="_blank" class="dca-file" title="'.$doc_data['nome_original'].'">
+                                            <span class="material-symbols-rounded" style="font-size:0.9rem;">description</span> 
+                                            Arquivo
+                                          </a>';
+                                }
 
-                                // Right: Actions
+                                // Actions
                                 echo '<div class="dca-actions">';
-                                    // Form Wrappers for Actions
-                                    $common_hidden = '<input type="hidden" name="update_docs_settings" value="1">
-                                                      <input type="hidden" name="doc_chave" value="'.$key.'">
-                                                      <input type="hidden" name="tipo_processo_chave" value="'.$active_proc_key.'">';
+                                    $common_hidden = '<input type="hidden" name="update_docs_settings" value="1"><input type="hidden" name="doc_chave" value="'.$key.'"><input type="hidden" name="tipo_processo_chave" value="'.$active_proc_key.'">';
                                     
                                     if($status == 'aprovado') {
-                                        // Reopen
-                                        echo '<form method="POST">'.$common_hidden.'
-                                                <input type="hidden" name="action_doc" value="reopen">
-                                                <button type="submit" class="btn-act" style="background:#fff3cd; color:#856404;" title="Reabrir / Desaprovar">↩️</button>
-                                              </form>';
+                                        echo '<form method="POST">'.$common_hidden.'<input type="hidden" name="action_doc" value="reopen"><button type="submit" class="btn-act" style="background:#fff3cd; color:#856404;" title="Reabrir">↩️</button></form>';
                                     } else {
-                                        // Approve
-                                        echo '<form method="POST">'.$common_hidden.'
-                                                <input type="hidden" name="action_doc" value="approve">
-                                                <button type="submit" class="btn-act" style="background:#d1e7dd; color:#198754;" title="Aprovar">✅</button>
-                                              </form>';
-                                        
-                                        // Reject (Only if not pending clean)
+                                        echo '<form method="POST">'.$common_hidden.'<input type="hidden" name="action_doc" value="approve"><button type="submit" class="btn-act" style="background:#d1e7dd; color:#198754;" title="Aprovar">✅</button></form>';
                                         if($status != 'pendente' || $has_file) {
-                                            echo '<form method="POST" onsubmit="return confirm(\'Rejeitar e limpar este item?\')">'.$common_hidden.'
-                                                    <input type="hidden" name="action_doc" value="reject">
-                                                    <button type="submit" class="btn-act" style="background:#f8d7da; color:#dc3545;" title="Rejeitar / Limpar">🗑️</button>
-                                                  </form>';
+                                            echo '<form method="POST" onsubmit="return confirm(\'Limpar?\')">'.$common_hidden.'<input type="hidden" name="action_doc" value="reject"><button type="submit" class="btn-act" style="background:#f8d7da; color:#dc3545;" title="Rejeitar">🗑️</button></form>';
                                         }
                                     }
-
                                 echo '</div>';
-
                             echo '</div>';
                         }
                     ?>
 
-                    <div style="display: grid; grid-template-columns: 1fr; gap: 40px; margin-top: 20px;">
+                    <div class="docs-grid"> <!-- GRID CONTAINER -->
                         
-                        <!-- COLUMN 1: OBRIGATÓRIOS -->
-                        <div>
-                            <div class="section-title">
-                                <span style="background:#e8f5e9; color:#198754; padding:5px; border-radius:6px; font-size:1.1rem;">📋</span> 
-                                Documentos Obrigatórios
-                            </div>
-                            <?php foreach($proc_data['docs_obrigatorios'] as $doc_key): 
-                                $doc_label = $todos_docs[$doc_key] ?? $doc_key;
-                                renderDocCard($doc_label, $doc_key, $entregues_map, $active_proc_key);
-                            endforeach; ?>
+                        <!-- OBRIGATÓRIOS (Full Width section title) -->
+                        <div class="section-title">
+                            <span style="background:#e8f5e9; color:#198754; padding:3px 6px; border-radius:4px; font-size:0.9rem;">📋</span> 
+                            OBRIGATÓRIOS
                         </div>
-
-                        <!-- COLUMN 2: EXCEPCIONAIS (Se houver) -->
+                        <?php foreach($proc_data['docs_obrigatorios'] as $doc_key): 
+                            $doc_label = $todos_docs[$doc_key] ?? $doc_key;
+                            renderDocCard($doc_label, $doc_key, $entregues_map, $active_proc_key);
+                        endforeach; ?>
+                        
+                        <!-- EXCEPCIONAIS (Se houver) -->
                         <?php if(!empty($proc_data['docs_excepcionais'])): ?>
-                            <div>
-                                <div class="section-title">
-                                    <span style="background:#fff3cd; color:#856404; padding:5px; border-radius:6px; font-size:1.1rem;">⚠️</span> 
-                                    Documentos Excepcionais (Opcionais)
-                                </div>
+                            <div class="section-title" style="margin-top:15px; border-bottom-color:#fff3cd;">
+                                <span style="background:#fff3cd; color:#856404; padding:3px 6px; border-radius:4px; font-size:0.9rem;">⚠️</span> 
+                                EXCEPCIONAIS
+                            </div>
+                            <!-- Spacer para grid alignment se precisar, ou apenas renderizar direto -->
+                            <div style="grid-column: 1 / -1; display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
                                 <?php foreach($proc_data['docs_excepcionais'] as $doc_key): 
                                     $doc_label = $todos_docs[$doc_key] ?? $doc_key;
                                     renderDocCard($doc_label, $doc_key, $entregues_map, $active_proc_key);
@@ -1003,11 +977,9 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     </div>
 
                     <?php else: ?>
-                        <!-- Empty State -->
-                        <div style="text-align:center; padding: 60px 20px; color:#999;">
-                            <span style="font-size:4rem; display:block; margin-bottom:15px; opacity:0.5;">👆</span>
-                            <h3 style="color:#666;">Nenhum checklist carregado</h3>
-                            <p>Selecione o <b>Tipo de Processo</b> acima para visualizar a lista de documentos.</p>
+                        <div style="text-align:center; padding: 40px 20px; color:#999;">
+                            <span style="font-size:3rem; display:block; margin-bottom:10px; opacity:0.5;">👆</span>
+                            <h3 style="color:#666; font-size:1.1rem;">Selecione o Tipo de Processo</h3>
                         </div>
                     <?php endif; ?>
 
