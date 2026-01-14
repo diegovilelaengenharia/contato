@@ -457,7 +457,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                 ?>
 
                 <!-- 1. DOCS INICIAIS (CHECKLIST) -->
-                <a href="documentos_iniciais.php" class="app-button" style="border-left-color: #083b30;">
+                <a href="documentos_iniciais.php" class="app-button" style="border: 1px solid #083b30;">
                     <div class="app-btn-icon" style="background:#e6fffa; color:#083b30;">📋</div>
                     <div class="app-btn-content">
                         <span class="app-btn-title">Abertura de Processo</span>
@@ -467,7 +467,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                 </a>
 
                 <!-- 2. TIMELINE -->
-                <a href="timeline.php" class="app-button" style="border-left-color: #0f5132;">
+                <a href="timeline.php" class="app-button" style="border: 1px solid #0f5132;">
                     <div class="app-btn-icon" style="background:#e8f5e9; color:#0f5132;">🧭</div>
                     <div class="app-btn-content">
                         <span class="app-btn-title">Linha do Tempo</span>
@@ -503,7 +503,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                         $p_arrow = '#198754';
                     }
                 ?>
-                <a href="pendencias.php" class="app-button" style="border-left-color: <?= $p_border ?>; background-color: <?= $p_bg_btn ?>;">
+                <a href="pendencias.php" class="app-button" style="border: 1px solid <?= $p_border ?>; background-color: <?= $p_bg_btn ?>;">
                     <div class="app-btn-icon" style="background:<?= $p_icon_bg ?>; color:<?= $p_icon_color ?>;"><?= $p_icon ?></div>
                     <div class="app-btn-content">
                         <span class="app-btn-title" style="color: #333;">Pendências</span>
@@ -543,7 +543,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                         $f_arrow = '#198754';
                     }
                 ?>
-                <a href="financeiro.php" class="app-button" style="border-left-color: <?= $f_border ?>; background-color: <?= $f_bg_btn ?>;">
+                <a href="financeiro.php" class="app-button" style="border: 1px solid <?= $f_border ?>; background-color: <?= $f_bg_btn ?>;">
                     <div class="app-btn-icon" style="background:<?= $f_icon_bg ?>; color:<?= $f_icon_color ?>;"><?= $f_icon ?></div>
                     <div class="app-btn-content">
                         <span class="app-btn-title" style="color: #333;">Financeiro</span>
@@ -562,7 +562,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                 </a>
                 
                 <!-- 5. DOCUMENTOS -->
-                <a href="documentos.php" class="app-button" style="border-left-color: #052c65;">
+                <a href="documentos.php" class="app-button" style="border: 1px solid #052c65;">
                     <div class="app-btn-icon" style="background:#cfe2ff; color:#052c65;">📂</div>
                     <div class="app-btn-content">
                         <span class="app-btn-title">Documentos Finais</span>
