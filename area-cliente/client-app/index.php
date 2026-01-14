@@ -245,9 +245,10 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             }
             .ph-top {
                 padding: 16px;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
+                flex-direction: row; /* FORCE ROW even on mobile */
+                align-items: center;
+                gap: 16px;
+                justify-content: flex-start;
             }
             .ph-logo img { height: 40px; }
             .ph-title { font-size: 0.8rem; }
