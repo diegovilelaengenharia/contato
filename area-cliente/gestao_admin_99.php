@@ -380,34 +380,26 @@ if($cliente_ativo) {
                 }
                 
                 aside.sidebar {
-                    display: flex !important;
-                    flex-direction: column;
+                    display: block !important;
                     flex-shrink: 0; 
                     position: fixed;
                     top: 0; left: 0;
                     width: 280px;
                     height: 100vh;
+                    overflow-y: auto;
                     z-index: 2000;
                     margin: 0 !important;
                     border-radius: 0 !important;
                     box-shadow: 2px 0 15px rgba(0,0,0,0.06);
                     background: #fff;
-                    padding-bottom: 0; /* Removing padding as bottom section will handle spacing */
-                    overflow: hidden; /* Main sidebar hidden, inner content scrolls */
+                    padding-bottom: 120px; /* Keep bottom buffer */
                 }
                 
-                /* Scrollable Navigation Area */
-                .sidebar-scroll-area {
-                    flex: 1;
-                    overflow-y: auto;
-                    padding-bottom: 20px;
-                }
-                
-                /* Custom Scrollbar for Sidebar Inner */
-                .sidebar-scroll-area::-webkit-scrollbar { width: 4px; }
-                .sidebar-scroll-area::-webkit-scrollbar-track { background: transparent; }
-                .sidebar-scroll-area::-webkit-scrollbar-thumb { background: #dfe6e9; border-radius: 3px; }
-                .sidebar-scroll-area::-webkit-scrollbar-thumb:hover { background: #b2bec3; }
+                /* Custom Scrollbar for Sidebar */
+                aside.sidebar::-webkit-scrollbar { width: 6px; }
+                aside.sidebar::-webkit-scrollbar-track { background: transparent; }
+                aside.sidebar::-webkit-scrollbar-thumb { background: #dfe6e9; border-radius: 3px; }
+                aside.sidebar::-webkit-scrollbar-thumb:hover { background: #b2bec3; }
 
                 main {
                     display: block;

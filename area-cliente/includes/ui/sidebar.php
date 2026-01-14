@@ -6,9 +6,6 @@
         <h5 style="color: #6c757d; font-size: 0.85rem; font-weight: 800; letter-spacing: 1px; margin:0; text-transform: uppercase;">Painel Administrativo</h5>
     </div>
 
-    <!-- START SCROLL AREA -->
-    <div class="sidebar-scroll-area">
-
     <!-- SEÇÃO CLIENTE SELECIONADO (Topo) -->
     <?php if($cliente_ativo): ?>
         <div class="nav-section">
@@ -99,44 +96,36 @@
             <span class="material-symbols-rounded">person_add</span>
             Novo Cliente
         </a>
-
-        <!-- Acesso Rápido Removed -->
-    </div>
-
-    </div>
-    </div> <!-- Close sidebar-scroll-area -->
-
-    <!-- ADMIN PROFILE FOOTER (Pinned to bottom) -->
-    <div style="padding: 15px 20px; border-top: 1px solid #eee; background: #fff;">
-        <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
-            <!-- Admin Avatar -->
-            <div style="width:40px; height:40px; border-radius:50%; background:#f0f2f5; display:flex; align-items:center; justify-content:center; overflow:hidden;">
-                <!-- Placeholder Avatar or Image -->
-               <img src="../assets/avatar_admin.png" onerror="this.src='https://ui-avatars.com/api/?name=Diego+Vilela&background=0D8ABC&color=fff'" style="width:100%; height:100%; object-fit:cover;">
-            </div>
-            
-            <!-- Admin Info -->
-            <div style="flex:1; overflow:hidden;">
-                <h4 style="margin:0; font-size:0.9rem; font-weight:700; color:#333; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Diego Vilela</h4>
-                <p style="margin:0; font-size:0.75rem; color:#777;">Administrador</p>
-            </div>
-            
-            <!-- Notificação (Exemplo) -->
-            <div style="position:relative;">
-                <span class="material-symbols-rounded" style="font-size:1.2rem; color:#95a5a6;">notifications</span>
-                <span style="position:absolute; top:-2px; right:-2px; width:8px; height:8px; background:#dc3545; border-radius:50%; border:2px solid #fff;"></span>
-            </div>
-        </div>
         
-        <!-- Actions Row -->
-        <div style="display:flex; gap:10px;">
-            <a href="#" style="flex:1; text-align:center; font-size:0.8rem; font-weight:600; color:#555; padding:8px; border-radius:8px; background:#f8f9fa; text-decoration:none; transition:0.2s;" onmouseover="this.style.background='#e9ecef'" onmouseout="this.style.background='#f8f9fa'">
-                Configurações
-            </a>
-            <a href="logout.php" style="flex:1; text-align:center; font-size:0.8rem; font-weight:600; color:#dc3545; padding:8px; border-radius:8px; background:#fff5f5; text-decoration:none; transition:0.2s;" onmouseover="this.style.background='#ffe0e3'" onmouseout="this.style.background='#fff5f5'">
-                Sair
-            </a>
+        <!-- HR Separator -->
+        <hr class="nav-divider" style="margin: 15px 0;">
+
+        <!-- ADMIN PROFILE (Moved Here) -->
+        <div style="background: #f8f9fa; border-radius: 12px; padding: 15px; border: 1px solid #eee;">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+                <!-- Admin Avatar -->
+                <div style="width:38px; height:38px; border-radius:50%; background:#fff; display:flex; align-items:center; justify-content:center; overflow:hidden; border:1px solid #ddd;">
+                   <img src="../assets/avatar_admin.png" onerror="this.src='https://ui-avatars.com/api/?name=Diego+Vilela&background=0D8ABC&color=fff'" style="width:100%; height:100%; object-fit:cover;">
+                </div>
+                
+                <!-- Admin Info -->
+                <div style="flex:1; overflow:hidden;">
+                    <h4 style="margin:0; font-size:0.85rem; font-weight:700; color:#333; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Diego Vilela</h4>
+                    <p style="margin:0; font-size:0.75rem; color:#777;">Administrador</p>
+                </div>
+            </div>
+            
+            <!-- Actions Row -->
+            <div style="display:flex; gap:8px;">
+                <a href="#" style="flex:1; text-align:center; font-size:0.75rem; font-weight:600; color:#555; padding:6px; border-radius:6px; background:#fff; border:1px solid #eee; text-decoration:none; transition:0.2s;" onmouseover="this.style.background='#e9ecef'" onmouseout="this.style.background='#fff'">
+                    Config.
+                </a>
+                <a href="logout.php" style="flex:1; text-align:center; font-size:0.75rem; font-weight:600; color:#dc3545; padding:6px; border-radius:6px; background:#fff; border:1px solid #f5c2c7; text-decoration:none; transition:0.2s;" onmouseover="this.style.background='#ffe0e3'" onmouseout="this.style.background='#fff'">
+                    Sair
+                </a>
+            </div>
         </div>
+
     </div>
 
 </aside>
