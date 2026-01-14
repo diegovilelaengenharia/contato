@@ -277,22 +277,25 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             .ph-top {
                 padding: 20px; 
                 flex-direction: row; 
-                align-items: center;
-                justify-content: flex-start; /* Logo and Title together on Left */
-                gap: 15px; /* Space between Logo and Title */
+                align-items: flex-end; /* Align Bottom/Baseline */
+                justify-content: flex-start; 
+                gap: 12px; 
             }
             .ph-logo {
                 padding: 6px 10px; 
+                margin-bottom: 2px; /* Slight adjustment */
             }
-            .ph-logo img { height: 38px !important; } 
+            .ph-logo img { height: 42px !important; } /* Sligthly larger logo */
             .ph-header-text {
-                text-align: left; /* Align text to Left */
+                text-align: left; 
                 align-items: flex-start;
+                padding-bottom: 5px; /* Fine tune text baseline */
             }
             .ph-title { 
-                font-size: 1.8rem; /* INCREASED 30% (was 1.4rem) */
-                line-height: 1;
+                font-size: 1.8rem; 
+                line-height: 0.9;
                 white-space: nowrap; 
+                margin-bottom: 0;
             }
             .ph-subtitle { display: none; } 
             
