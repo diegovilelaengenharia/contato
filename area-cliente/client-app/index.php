@@ -147,25 +147,32 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             /* Filter removed to show original logo colors */
         }
         .ph-title {
-            font-size: 2.8rem; /* Increased to 2.8rem */
+            font-size: 3.6rem; /* Increased 30% (2.8 -> ~3.6) */
             font-weight: 800;
             color: #ffffff !important; /* White Text */
             text-transform: uppercase;
-            letter-spacing: -0.5px;
-            line-height: 1;
-            margin-bottom: 4px;
+            letter-spacing: -1px;
+            line-height: 0.9;
+            margin-bottom: 8px;
             text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .ph-subtitle {
-            font-size: 0.85rem;
-            color: rgba(255,255,255,0.9) !important; /* Light White Text */
+            font-size: 0.7rem; /* Reduced size */
+            color: rgba(255,255,255,0.85) !important;
             font-weight: 400;
             letter-spacing: 0.5px;
-            font-style: normal;
+            font-style: italic; /* Italic */
             display: block;
+            align-self: flex-end; /* Align to bottom right of container */
+            margin-top: -5px; /* Pull closer to title if needed */
         }
         .ph-subtitle::before {
-            content: none; /* Remove golden dash */
+            content: "“";
+            margin-right: 2px;
+        }
+        .ph-subtitle::after {
+            content: "”";
+            margin-left: 2px;
         }
         .ph-header-text {
             display: flex;
