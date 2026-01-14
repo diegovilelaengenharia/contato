@@ -144,20 +144,20 @@ if (ob_get_length()) ob_clean();
     <link rel="stylesheet" href="css/style.css?v=3.0">
     
     <style>
-        /* HEADER MODULE STYLE (RED - PENDÊNCIAS) - MATCHING DOCS INICIAIS */
+        /* HEADER MODULE STYLE (VILELA PREMIUM) - PENDÊNCIAS */
         .page-header {
-            background: linear-gradient(135deg, #fcebec 0%, #f5c6cb 100%); /* Light Red Gradient */
+            background: linear-gradient(135deg, #146C43 0%, #0d462b 100%); /* Vilela Dark Green Gradient */
             border-bottom: none;
             padding: 30px 25px; 
             border-bottom-left-radius: 30px; 
             border-bottom-right-radius: 30px;
-            box-shadow: 0 10px 30px rgba(220, 53, 69, 0.15); 
+            box-shadow: 0 10px 30px rgba(20, 108, 67, 0.25); 
             margin-bottom: 30px;
             display: flex; align-items: center; justify-content: space-between;
-            color: #842029; /* Dark Red Text */
+            color: #ffffff; /* White Text */
             position: relative;
             overflow: hidden;
-            border: 1px solid #f5c2c7;
+            border: none;
         }
         
         /* Decorative Circle (Subtle) */
@@ -168,23 +168,23 @@ if (ob_get_length()) ob_clean();
         }
 
         .btn-back {
-            text-decoration: none; color: #842029; font-weight: 600; 
+            text-decoration: none; color: #146C43; font-weight: 600; 
             display: flex; align-items: center; gap: 8px;
             padding: 10px 20px; 
             background: white; 
             border-radius: 25px;
             transition: 0.3s;
             font-size: 0.95rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            border: 1px solid #f5c2c7;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border: none;
         }
-        .btn-back:hover { background: #fff5f5; transform: translateX(-3px); }
+        .btn-back:hover { background: #f0fff4; transform: translateX(-3px); }
         
         .header-title-box {
             display: flex; flex-direction: column; align-items: flex-end; text-align: right;
         }
-        .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #58151c; }
-        .header-title-sub { font-size: 0.8rem; opacity: 0.8; font-weight: 500; margin-top: 2px; color: #842029; }
+        .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #ffffff; }
+        .header-title-sub { font-size: 0.8rem; opacity: 0.9; font-weight: 400; margin-top: 2px; color: #e9ecef; }
         
         /* Mobile overrides */
         @media (max-width: 480px) {
@@ -223,8 +223,8 @@ if (ob_get_length()) ob_clean();
                  </div>
                  
                  <!-- Icon -->
-                 <div style="background: white; border:1px solid #f5c2c7; color: #dc3545; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-                    ⚠️
+                 <div style="background: rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.3); color: #ffffff; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; backdrop-filter: blur(5px);">
+                    <span class="material-symbols-rounded" style="font-size: 2rem;">warning</span>
                  </div>
             </div>
         </div>
@@ -333,7 +333,7 @@ if (ob_get_length()) ob_clean();
                              $bg_badge = "#ffc107"; $bg_card = "#fff9d6"; $border_card = "#ffeeba"; $text_title = "#856404";
                         }
                     ?>
-                    <div style="background: <?= $bg_card ?>; border: 1px solid <?= $border_card ?>; border-radius: 12px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                    <div style="background: #ffffff; border: 1px solid #e0e0e0; border-radius: 16px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border-left: 5px solid <?= ($status_label=='Pendente')?'#ffc107':'#0d6efd' ?>;">
                         
                         <!-- Header Compacto -->
                         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">

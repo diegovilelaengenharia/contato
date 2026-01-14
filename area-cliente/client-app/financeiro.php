@@ -63,19 +63,20 @@ function formatMoney($val) {
         body { background: #f4f6f8; }
         
         /* HEADER - YELLOW THEME (Premium) */
+        /* HEADER - VILELA PREMIUM (GREEN) */
         .page-header {
-            background: linear-gradient(135deg, #fff3cd 0%, #ffecb5 100%); /* Light Yellow Gradient */
+            background: linear-gradient(135deg, #146C43 0%, #0d462b 100%); /* Vilela Green Gradient */
             border-bottom: none;
             padding: 30px 25px; 
             border-bottom-left-radius: 30px; 
             border-bottom-right-radius: 30px;
-            box-shadow: 0 10px 30px rgba(255, 193, 7, 0.15); 
+            box-shadow: 0 10px 30px rgba(20, 108, 67, 0.25); 
             margin-bottom: 25px;
             display: flex; align-items: center; justify-content: space-between;
-            color: #664d03; /* Dark Yellow/Brown Text */
+            color: #ffffff; /* White Text */
             position: relative;
             overflow: hidden;
-            border: 1px solid #ffecb5;
+            border: none;
         }
         
         /* Decorative Circle (Subtle) */
@@ -86,23 +87,23 @@ function formatMoney($val) {
         }
 
         .btn-back {
-            text-decoration: none; color: #856404; font-weight: 600; 
+            text-decoration: none; color: #146C43; font-weight: 600; 
             display: flex; align-items: center; gap: 8px;
             padding: 10px 20px; 
             background: white; 
             border-radius: 25px;
             transition: 0.3s;
             font-size: 0.95rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            border: 1px solid #ffecb5;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border: none;
         }
-        .btn-back:hover { background: #fffdf5; transform: translateX(-3px); }
+        .btn-back:hover { background: #f0fff4; transform: translateX(-3px); }
         
         .header-title-box {
             display: flex; flex-direction: column; align-items: flex-end; text-align: right;
         }
-        .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #533f03; }
-        .header-title-sub { font-size: 0.8rem; opacity: 0.8; font-weight: 500; margin-top: 2px; color: #856404; }
+        .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #ffffff; }
+        .header-title-sub { font-size: 0.8rem; opacity: 0.9; font-weight: 400; margin-top: 2px; color: #e9ecef; }
         
         /* Mobile overrides */
         @media (max-width: 480px) {
@@ -139,8 +140,8 @@ function formatMoney($val) {
                  </div>
                  
                  <!-- Icon -->
-                 <div style="background: white; border:1px solid #dee2e6; color: #ffc107; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-                    💰
+                 <div style="background: rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.3); color: #ffffff; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; backdrop-filter: blur(5px);">
+                    <span class="material-symbols-rounded" style="font-size: 2rem;">payments</span>
                  </div>
             </div>
         </div>
@@ -225,14 +226,14 @@ function formatMoney($val) {
                         }
                     ?>
                     
-                    <div class="fin-premium-row <?= $status_class ?>">
+                    <div style="background: white; border-radius: 16px; padding: 20px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid <?= $status_color ?>;">
                         <div class="fp-left">
-                            <h4><?= htmlspecialchars($l['descricao']) ?></h4>
-                            <span>Vencimento: <?= date('d/m/Y', strtotime($l['data_vencimento'])) ?></span>
+                            <h4 style="margin: 0 0 5px 0; color: #333; font-size: 0.95rem; font-weight: 700;"><?= htmlspecialchars($l['descricao']) ?></h4>
+                            <span style="font-size: 0.8rem; color: #666; display: block;">Vencimento: <?= date('d/m/Y', strtotime($l['data_vencimento'])) ?></span>
                         </div>
-                        <div class="fp-right">
-                            <span class="fp-price"><?= formatMoney($l['valor']) ?></span>
-                            <span class="fp-badge" style="color: <?= $status_color ?>; font-weight:800;"><?= $status_label ?></span>
+                        <div class="fp-right" style="text-align: right;">
+                            <span style="display: block; font-size: 1.1rem; font-weight: 700; color: #333;"><?= formatMoney($l['valor']) ?></span>
+                            <span style="font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: <?= $status_color ?>; background: <?= $status_color ?>15; padding: 3px 8px; border-radius: 6px; display: inline-block; margin-top: 4px;"><?= $status_label ?></span>
                         </div>
                     </div>
                     
