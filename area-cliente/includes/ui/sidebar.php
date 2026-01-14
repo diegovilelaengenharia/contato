@@ -50,23 +50,25 @@
         <div class="nav-section">
             <h6 class="nav-header" style="color:#198754;">CLIENTE SELECIONADO</h6>
             
-            <div class="nav-client-info" style="text-align:center; padding: 15px 10px; background: #f8f9fa; border-radius: 12px; margin-bottom: 20px;">
-                <!-- AVATAR -->
-                <div style="width:80px; height:80px; margin:0 auto 10px auto; position:relative;">
+            <div class="nav-client-info" style="display:flex; align-items:center; gap:12px; padding: 12px; background: #f8f9fa; border-radius: 12px; margin-bottom: 20px;">
+                <!-- AVATAR (Compact) -->
+                <div style="width:45px; height:45px; min-width:45px; position:relative;">
                     <?php if($avatar_url): ?>
-                        <img src="<?= $avatar_url ?>" style="width:100%; height:100%; object-fit:cover; border-radius:50%; border:3px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                        <img src="<?= $avatar_url ?>" style="width:100%; height:100%; object-fit:cover; border-radius:50%; border:2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
                     <?php else: ?>
-                        <div style="width:100%; height:100%; background:#d1e7dd; color:#146c43; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2rem; font-weight:800; border:3px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                        <div style="width:100%; height:100%; background:#d1e7dd; color:#146c43; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem; font-weight:800; border:2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
                             <?= strtoupper(substr($cliente_ativo['nome'], 0, 1)) ?>
                         </div>
                     <?php endif; ?>
                 </div>
 
-                <h3 class="nav-client-name" style="font-size:1rem; margin-bottom:5px;"><?= htmlspecialchars($cliente_ativo['nome']) ?></h3>
-                
-                <div style="font-size:0.8rem; color:#666; display:flex; flex-direction:column; gap:2px;">
-                    <span>📱 <?= $detalhes['contato_tel'] ?? '--' ?></span>
-                    <span style="font-size:0.75rem; color:#999;">ID: #<?= str_pad($cliente_ativo['id'], 3, '0', STR_PAD_LEFT) ?></span>
+                <div style="flex:1; overflow:hidden;">
+                    <h3 class="nav-client-name" style="font-size:0.9rem; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="<?= htmlspecialchars($cliente_ativo['nome']) ?>"><?= htmlspecialchars($cliente_ativo['nome']) ?></h3>
+                    
+                    <div style="font-size:0.75rem; color:#666; display:flex; flex-direction:column; gap:0;">
+                        <span>📱 <?= $detalhes['contato_tel'] ?? '--' ?></span>
+                        <span style="font-size:0.7rem; color:#999;">ID: #<?= str_pad($cliente_ativo['id'], 3, '0', STR_PAD_LEFT) ?></span>
+                    </div>
                 </div>
             </div>
 
