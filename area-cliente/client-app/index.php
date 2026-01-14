@@ -119,43 +119,45 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             border: 1px solid rgba(0,0,0,0.05);
         }
         .ph-top {
-            background: #ffffff; /* Pure white for clean integration */
-            padding: 30px 32px !important; /* Balanced padding */
+            background: var(--color-primary) !important; /* Green Background */
+            padding: 30px 32px !important;
             display: flex;
             align-items: center;
             justify-content: flex-start;
-            gap: 25px; /* Clean gap, no divider */
-            border-bottom: 1px solid #f0f0f0;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03); /* Very subtle depth */
+            gap: 25px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
         .ph-logo {
             padding-right: 0;
             margin-right: 0;
-            border-right: none; /* REMOVED DIVIDER */
+            border-right: none;
             display: flex;
             align-items: center;
         }
         .ph-logo img {
-            height: 60px !important; /* Reduced to ~60px per request */
+            height: 60px !important;
             display: block;
             width: auto;
             object-fit: contain;
+            filter: brightness(0) invert(1); /* Make logo white */
         }
         .ph-title {
-            font-size: 2.2rem; /* Clean large size */
+            font-size: 2.2rem;
             font-weight: 800;
-            color: var(--color-primary);
+            color: #ffffff !important; /* White Text */
             text-transform: uppercase;
-            letter-spacing: -0.5px; /* Modern tight tracking */
+            letter-spacing: -0.5px;
             line-height: 1;
             margin-bottom: 4px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .ph-subtitle {
             font-size: 0.85rem;
-            color: #888;
+            color: rgba(255,255,255,0.9) !important; /* Light White Text */
             font-weight: 400;
             letter-spacing: 0.5px;
-            font-style: normal; /* Back to normal */
+            font-style: normal;
             display: block;
         }
         .ph-subtitle::before {
