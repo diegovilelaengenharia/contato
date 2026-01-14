@@ -31,16 +31,7 @@
         </div>
     </div>
 
-    <!-- ADMIN PROFILE FOOTER (Since header is gone) -->
-    <div style="margin: 0 20px 15px 20px; padding-top:15px; border-top:1px solid #eee; display:flex; align-items:center; gap:10px;">
-        <div style="width:36px; height:36px; border-radius:50%; background:#e9ecef; overflow:hidden;">
-            <img src="assets/avatar_admin.jpg" alt="DV" style="width:100%; height:100%; object-fit:cover;">
-        </div>
-        <div style="flex:1; overflow:hidden;">
-            <div style="font-size:0.85rem; font-weight:700; color:#333; white-space:nowrap;">Diego Vilela</div>
-            <a href="logout.php" style="font-size:0.75rem; color:#dc3545; text-decoration:none;">Sair</a>
-        </div>
-    </div>
+    <!-- ADMIN PROFILE FOOTER REMOVED (Moved to Top Right) -->
 
     <!-- SEPARADOR -->
     <?php if($cliente_ativo): ?>
