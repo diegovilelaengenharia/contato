@@ -153,6 +153,26 @@ if (isset($_GET['cliente_id'])) {
     $stmt->execute([$id]);
     $detalhes = $stmt->fetch();
     if (!$detalhes) $detalhes = [];
+
+    // --- SNAPSHOT DATA FETCHING (For Profile Summary) ---
+    // 1. Financeiro
+    $stmtFin = $pdo->prepare("SELECT 
+        SUM(CASE WHEN status = 'pago' THEN valor ELSE 0 END) as total_pago,
+        SUM(CASE WHEN status = 'pendente' AND data_vencimento >= CURRENT_DATE THEN valor ELSE 0 END) as total_aberto,
+        SUM(CASE WHEN status = 'pendente' AND data_vencimento < CURRENT_DATE THEN valor ELSE 0 END) as total_atrasado
+        FROM processo_financeiro WHERE cliente_id = ?");
+    $stmtFin->execute([$id]);
+    $finSnapshot = $stmtFin->fetch(PDO::FETCH_ASSOC);
+
+    // 2. Pendências
+    $stmtPen = $pdo->prepare("SELECT COUNT(*) as qtd FROM pendencias WHERE cliente_id = ? AND status != 'concluido'");
+    $stmtPen->execute([$id]);
+    $penSnapshot = $stmtPen->fetch(PDO::FETCH_ASSOC);
+
+    // 3. Última Movimentação (Timeline)
+    $stmtMov = $pdo->prepare("SELECT titulo, data_movimento FROM processo_movimentos WHERE cliente_id = ? ORDER BY data_movimento DESC, id DESC LIMIT 1");
+    $stmtMov->execute([$id]);
+    $lastMov = $stmtMov->fetch(PDO::FETCH_ASSOC);
 }
 $active_tab = $_GET['tab'] ?? 'cadastro';
 
@@ -558,131 +578,158 @@ if ($cliente_ativo) {
 
                     <!-- Script removed as logic is now backend-driven -->
 
-                    <?php if ($active_tab == 'perfil'): ?>
-                        <div class="admin-tab-content">
-                            <!-- Helper include removed -->
+                                        <?php if ($active_tab == 'perfil'): ?>
+                        <div class="admin-tab-content" style="background:transparent; padding:0; box-shadow:none; border:none;">
 
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                                <h3 class="admin-title" style="margin:0;">👤 Perfil do Cliente</h3>
-                            </div>
+                            <div style="display:grid; grid-template-columns: 350px 1fr; gap:30px; align-items:start;">
 
-                            <div style="display:grid; grid-template-columns: 280px 1fr; gap:30px; align-items:start;">
+                                <!-- COLUNA 1: CARD DO CLIENTE (Sticky) -->
+                                <div style="background:#fff; border-radius:20px; padding:30px; box-shadow:0 10px 30px rgba(0,0,0,0.05); text-align:center; position:sticky; top:20px;">
 
-                                <!-- Avatar & Main Actions Column -->
-                                <div class="card" style="padding:0; text-align:center; border-top: 4px solid var(--color-primary); overflow:hidden;">
-                                    <div style="padding:25px;">
-                                        <div style="width:120px; height:120px; margin:0 auto 15px auto; position:relative;">
-                                            <?php if ($avatar_url): ?>
-                                                <img src="<?= $avatar_url ?>" style="width:100%; height:100%; object-fit:cover; border-radius:50%; border:4px solid #f8f9fa; box-shadow:0 5px 15px rgba(0,0,0,0.1);">
-                                            <?php else: ?>
-                                                <div style="width:100%; height:100%; background:linear-gradient(135deg, #e0f2f1, #b2dfdb); color:#00695c; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:3rem; font-weight:700; border:4px solid #fff; box-shadow:0 5px 15px rgba(0,0,0,0.1);">
-                                                    <?= strtoupper(substr($cliente_ativo['nome'], 0, 1)) ?>
-                                                </div>
-                                            <?php endif; ?>
-
-                                            <!-- Edit Avatar Button -->
-                                            <button onclick="document.getElementById('avatarInput').click()" style="position:absolute; bottom:5px; right:5px; width:32px; height:32px; border-radius:50%; border:none; background:var(--color-primary); color:white; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.2); display:flex; align-items:center; justify-content:center;" title="Alterar Foto">
-                                                <span class="material-symbols-rounded" style="font-size:1.1rem;">photo_camera</span>
-                                            </button>
-                                            <form method="POST" enctype="multipart/form-data" id="avatarForm" style="display:none;">
-                                                <input type="file" name="avatar_upload" id="avatarInput" accept="image/*" onchange="document.getElementById('avatarForm').submit()">
-                                            </form>
-                                        </div>
-
-                                        <h4 style="margin:0; font-size:1.2rem; color:#333; font-weight:700;"><?= htmlspecialchars($cliente_ativo['nome']) ?></h4>
-                                        <div style="color:#777; font-size:0.9rem; margin-top:5px; font-weight:500;">
-                                            📱 <?= $detalhes['contato_tel'] ?? '--' ?>
-                                        </div>
+                                    <!-- Avatar Large -->
+                                    <div style="position:relative; width:120px; height:120px; margin:0 auto 20px auto;">
+                                        <img src="<?= $avatar_url ?? 'https://ui-avatars.com/api/?name=' . urlencode($cliente_ativo['nome']) . '&background=random&size=128' ?>"
+                                            style="width:100%; height:100%; border-radius:50%; object-fit:cover; border:4px solid #f8f9fa; box-shadow:0 5px 15px rgba(0,0,0,0.1);">
+                                        <button onclick="document.getElementById('avatar_input').click()" style="position:absolute; bottom:0; right:0; background:#198754; color:white; border:none; width:36px; height:36px; border-radius:50%; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.2); display:flex; align-items:center; justify-content:center;" title="Alterar Foto">
+                                            <span class="material-symbols-rounded" style="font-size:1.2rem;">photo_camera</span>
+                                        </button>
+                                        <form method="POST" enctype="multipart/form-data" id="form_avatar">
+                                            <input type="file" name="avatar_upload" id="avatar_input" style="display:none;" onchange="document.getElementById('form_avatar').submit()">
+                                        </form>
                                     </div>
 
-                                    <!-- Action Buttons List -->
-                                    <div style="background:#f8f9fa; border-top:1px solid #eee;">
-                                        <a href="gerenciar_cliente.php?id=<?= $cliente_ativo['id'] ?>" class="profile-action-btn" title="Editar Cadastro">
-                                            <span class="material-symbols-rounded">edit</span> Editar Cadastro
-                                        </a>
-                                        <a href="relatorio_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="profile-action-btn" title="Resumo PDF">
-                                            <span class="material-symbols-rounded">picture_as_pdf</span> Resumo PDF
-                                        </a>
+                                    <h2 style="margin:0 0 5px 0; color:#2c3e50; font-size:1.4rem; font-weight:700;"><?= htmlspecialchars($cliente_ativo['nome']) ?></h2>
+                                    <p style="margin:0 0 15px 0; color:#6c757d; font-size:0.9rem; font-weight:500;">Cliente desde <?= date('Y', strtotime($cliente_ativo['created_at'])) ?></p>
 
-                                        <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" class="profile-action-btn btn-danger-hover" onclick="return confirm('Deseja excluir este cliente?')" style="color:#dc3545;" title="Excluir Cliente">
+                                    <!-- Status Badge -->
+                                    <div style="display:inline-block; padding:6px 15px; background:#e8f5e9; color:#198754; border-radius:20px; font-size:0.85rem; font-weight:600; margin-bottom:25px;">
+                                        <?= strtoupper($detalhes['etapa_atual'] ?? 'CADASTRO') ?>
+                                    </div>
+
+                                    <!-- Actions List -->
+                                    <div style="text-align:left; display:flex; flex-direction:column; gap:10px;">
+                                        <a href="gerenciar_cliente.php?id=<?= $cliente_ativo['id'] ?>" class="btn-action-profile" style="background:#f8f9fa; color:#333;">
+                                            <span class="material-symbols-rounded">edit_square</span> Editar Dados Completos
+                                        </a>
+                                        <a href="relatorio_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-action-profile" style="background:#e3f2fd; color:#0d6efd;">
+                                            <span class="material-symbols-rounded">picture_as_pdf</span> Gerar Relatório PDF
+                                        </a>
+                                        <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" onclick="return confirm('Tem certeza? Isso apagará tudo!')" class="btn-action-profile" style="background:#fff5f5; color:#dc3545; border:1px solid #f5c2c7;">
                                             <span class="material-symbols-rounded">delete</span> Excluir Cliente
                                         </a>
                                     </div>
-
-                                    <style>
-                                        .profile-action-btn {
-                                            display: flex;
-                                            align-items: center;
-                                            gap: 12px;
-                                            padding: 12px 25px;
-                                            color: #555;
-                                            text-decoration: none;
-                                            font-weight: 500;
-                                            font-size: 0.95rem;
-                                            border-bottom: 1px solid #eee;
-                                            transition: background 0.2s;
-                                        }
-
-                                        .profile-action-btn:last-child {
-                                            border-bottom: none;
-                                        }
-
-                                        .profile-action-btn:hover {
-                                            background: #fff;
-                                            color: var(--color-primary);
-                                        }
-
-                                        .profile-action-btn .material-symbols-rounded {
-                                            font-size: 1.25rem;
-                                            color: #888;
-                                        }
-
-                                        .profile-action-btn:hover .material-symbols-rounded {
-                                            color: var(--color-primary);
-                                        }
-
-                                        .profile-action-btn.btn-danger-hover:hover {
-                                            background: #fee2e2 !important;
-                                            color: #dc3545 !important;
-                                        }
-
-                                        .profile-action-btn.btn-danger-hover:hover .material-symbols-rounded {
-                                            color: #dc3545 !important;
-                                        }
-                                    </style>
-
                                 </div>
 
-                                <!-- Details Column -->
-                                <div class="card" style="padding:25px;">
-                                    <h4 style="color:var(--color-primary); border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:20px;">Informações Pessoais</h4>
+                                <!-- COLUNA 2: RESUMO E DASHBOARD -->
+                                <div style="display:flex; flex-direction:column; gap:25px;">
 
-                                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:20px;">
-                                        <div>
-                                            <label style="display:block; font-size:0.75rem; color:#888; text-transform:uppercase; font-weight:700; margin-bottom:5px;">CPF / CNPJ</label>
-                                            <div style="font-size:1rem; color:#333; font-weight:500;"><?= $cliente_ativo['cpf_cnpj'] ?: '<span style="color:#ccc;">--</span>' ?></div>
-                                        </div>
-                                        <div>
-                                            <label style="display:block; font-size:0.75rem; color:#888; text-transform:uppercase; font-weight:700; margin-bottom:5px;">E-mail</label>
-                                            <div style="font-size:1rem; color:#333; font-weight:500;"><?= $cliente_ativo['email'] ?: '<span style="color:#ccc;">--</span>' ?></div>
+                                    <!-- Bloco 1: Informações Pessoais e Contato -->
+                                    <div style="background:#fff; border-radius:15px; padding:25px; box-shadow:0 5px 20px rgba(0,0,0,0.03);">
+                                        <h3 style="margin:0 0 20px 0; font-size:1.1rem; color:#2c3e50; border-bottom:1px solid #eee; padding-bottom:10px;">📋 Dados Cadastrais</h3>
+
+                                        <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:20px;">
+                                            <div>
+                                                <label style="font-size:0.75rem; color:#999; text-transform:uppercase; font-weight:700;">CPF / CNPJ</label>
+                                                <div style="font-size:1rem; color:#333; font-weight:600;"><?= $detalhes['cpf_cnpj'] ?? '--' ?></div>
+                                            </div>
+                                            <div>
+                                                <label style="font-size:0.75rem; color:#999; text-transform:uppercase; font-weight:700;">E-mail</label>
+                                                <div style="font-size:1rem; color:#333; font-weight:600;"><?= $detalhes['email'] ?? '--' ?></div>
+                                            </div>
+                                            <div>
+                                                <label style="font-size:0.75rem; color:#999; text-transform:uppercase; font-weight:700;">Telefone</label>
+                                                <div style="font-size:1rem; color:#333; font-weight:600;"><?= $detalhes['contato_tel'] ?? '--' ?></div>
+                                            </div>
+                                            <div>
+                                                <label style="font-size:0.75rem; color:#999; text-transform:uppercase; font-weight:700;">Local da Obra</label>
+                                                <div style="font-size:1rem; color:#333; font-weight:600;"><?= $detalhes['endereco_obra'] ?? '--' ?></div>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <h4 style="color:var(--color-primary); border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:20px; margin-top:30px;">Processo & Engenharia</h4>
-                                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:20px;">
-                                        <div>
-                                            <label style="display:block; font-size:0.75rem; color:#888; text-transform:uppercase; font-weight:700; margin-bottom:5px;">Etapa Atual</label>
-                                            <span class="status-badge info" style="font-size:0.9rem;"><?= $detalhes['etapa_atual'] ?: 'Não iniciado' ?></span>
+                                    <!-- Bloco 2: Métricas (Financeiro, Pendencias, Timeline) -->
+                                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+
+                                        <!-- Financeiro -->
+                                        <div style="background:#fff; border-radius:15px; padding:20px; box-shadow:0 5px 20px rgba(0,0,0,0.03); border-left:5px solid #198754;">
+                                            <h4 style="margin:0 0 15px 0; font-size:0.9rem; color:#555;">💰 Resumo Financeiro</h4>
+                                            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                                                <span style="color:#777; font-size:0.9rem;">Pago:</span>
+                                                <span style="font-weight:700; color:#198754;">R$ <?= number_format($finSnapshot['total_pago'] ?? 0, 2, ',', '.') ?></span>
+                                            </div>
+                                            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                                                <span style="color:#777; font-size:0.9rem;">Em Aberto:</span>
+                                                <span style="font-weight:700; color:#ffc107;">R$ <?= number_format($finSnapshot['total_aberto'] ?? 0, 2, ',', '.') ?></span>
+                                            </div>
+                                            <?php if (($finSnapshot['total_atrasado'] ?? 0) > 0): ?>
+                                                <div style="display:flex; justify-content:space-between; margin-top:5px; padding-top:5px; border-top:1px dashed #ddd;">
+                                                    <span style="color:#dc3545; font-size:0.9rem; font-weight:700;">Em Atraso:</span>
+                                                    <span style="font-weight:700; color:#dc3545;">R$ <?= number_format($finSnapshot['total_atrasado'] ?? 0, 2, ',', '.') ?></span>
+                                                </div>
+                                            <?php endif; ?>
                                         </div>
-                                        <div>
-                                            <label style="display:block; font-size:0.75rem; color:#888; text-transform:uppercase; font-weight:700; margin-bottom:5px;">Endereço da Obra</label>
-                                            <div style="font-size:1rem; color:#333; font-weight:500;"><?= $detalhes['endereco_obra'] ?: '<span style="color:#ccc; font-style:italic;">Não informado</span>' ?></div>
+
+                                        <!-- Pendências e Timeline -->
+                                        <div style="display:flex; flex-direction:column; gap:20px;">
+
+                                            <!-- Pendências -->
+                                            <div style="background:#fff; border-radius:15px; padding:15px; box-shadow:0 5px 20px rgba(0,0,0,0.03); display:flex; align-items:center; gap:15px;">
+                                                <div style="background:<?= (($penSnapshot['qtd'] ?? 0) > 0) ? '#ffebee' : '#e8f5e9' ?>; color:<?= (($penSnapshot['qtd'] ?? 0) > 0) ? '#c62828' : '#1b5e20' ?>; width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1.2rem;">
+                                                    <?= $penSnapshot['qtd'] ?? 0 ?>
+                                                </div>
+                                                <div>
+                                                    <div style="font-size:0.9rem; font-weight:700; color:#333;">Pendências Ativas</div>
+                                                    <div style="font-size:0.8rem; color:#777;"><?= (($penSnapshot['qtd'] ?? 0) > 0) ? 'O cliente precisa resolver' : 'Tudo em dia!' ?></div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Última Movimentação -->
+                                            <div style="background:#fff; border-radius:15px; padding:15px; box-shadow:0 5px 20px rgba(0,0,0,0.03);">
+                                                <label style="font-size:0.75rem; color:#999; text-transform:uppercase; font-weight:700; display:block; margin-bottom:5px;">🚀 Última Atualização</label>
+                                                <?php if ($lastMov): ?>
+                                                    <div style="font-weight:600; color:#333; line-height:1.2;"><?= htmlspecialchars($lastMov['titulo']) ?></div>
+                                                    <div style="font-size:0.8rem; color:#198754; margin-top:3px;"><?= date('d/m/Y', strtotime($lastMov['data_movimento'])) ?></div>
+                                                <?php else: ?>
+                                                    <div style="color:#aaa; font-style:italic; font-size:0.9rem;">Nenhum registro recente.</div>
+                                                <?php endif; ?>
+                                            </div>
+
                                         </div>
                                     </div>
 
                                 </div>
-
                             </div>
+
+                            <!-- CSS for Profile Layout -->
+                            <style>
+                                .btn-action-profile {
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 10px;
+                                    padding: 12px 15px;
+                                    border-radius: 10px;
+                                    text-decoration: none;
+                                    font-weight: 600;
+                                    font-size: 0.9rem;
+                                    transition: all 0.2s;
+                                }
+
+                                .btn-action-profile:hover {
+                                    transform: translateX(5px);
+                                    filter: brightness(0.95);
+                                }
+
+                                @media (max-width: 900px) {
+                                    div[style*="grid-template-columns: 350px 1fr"] {
+                                        grid-template-columns: 1fr !important;
+                                    }
+
+                                    div[style*="top:20px"] {
+                                        position: static !important;
+                                    }
+                                }
+                            </style>
+
                         </div>
                     <?php endif; ?>
 

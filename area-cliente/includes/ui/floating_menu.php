@@ -15,12 +15,7 @@ if (!isset($clientes)) {
 <!-- FLOATING NAVIGATION CONTAINER -->
 <div style="position:fixed; top:30px; left:30px; display:flex; flex-direction:column; gap:15px; z-index:9999;">
 
-    <!-- Visão Geral -->
-    <a href="gestao_admin_99.php" title="Visão Geral"
-        class="float-btn"
-        style="width:50px; height:50px; background:white; border-radius:50%; box-shadow:0 8px 20px rgba(0,0,0,0.08); display:flex; align-items:center; justify-content:center; color:#555; text-decoration:none; transition:all 0.3s; border:1px solid #f0f0f0;">
-        <span class="material-symbols-rounded" style="font-size:26px;">grid_view</span>
-    </a>
+
 
     <!-- Clientes (Tree Toggle) -->
     <div style="position:relative;">
