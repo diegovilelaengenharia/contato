@@ -614,6 +614,14 @@ if ($cliente_ativo) {
                                         <a href="relatorio_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-action-profile" style="background:#e3f2fd; color:#0d6efd;">
                                             <span class="material-symbols-rounded">picture_as_pdf</span> Gerar Relatório PDF
                                         </a>
+                                        <div style="background:#f0fff4; border:1px solid #c3e6cb; border-radius:10px; padding:15px; margin-top:5px;">
+                                            <label style="display:block; font-size:0.75rem; color:#155724; font-weight:700; text-transform:uppercase; margin-bottom:5px;">🔗 Link de Acesso do Cliente</label>
+                                            <input type="text" value="https://vilela.eng.br/area-cliente/" readonly onclick="this.select()" style="width:100%; padding:8px; border:1px solid #ced4da; border-radius:5px; font-size:0.85rem; color:#495057; background:white; margin-bottom:8px;">
+
+                                            <label style="display:block; font-size:0.75rem; color:#155724; font-weight:700; text-transform:uppercase; margin-bottom:5px;">👤 Usuário (CPF)</label>
+                                            <input type="text" value="<?= $detalhes['cpf_cnpj'] ?? $cliente_ativo['usuario'] ?>" readonly onclick="this.select()" style="width:100%; padding:8px; border:1px solid #ced4da; border-radius:5px; font-size:0.85rem; color:#495057; background:white;">
+                                            <div style="font-size:0.75rem; color:#155724; margin-top:5px;">*A senha padrão é definida no cadastro.</div>
+                                        </div>
                                         <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" onclick="return confirm('Tem certeza? Isso apagará tudo!')" class="btn-action-profile" style="background:#fff5f5; color:#dc3545; border:1px solid #f5c2c7;">
                                             <span class="material-symbols-rounded">delete</span> Excluir Cliente
                                         </a>
