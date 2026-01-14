@@ -143,19 +143,20 @@ foreach($entregues_raw as $row) {
         /* Override basic settings for full page view */
         body { background: #f4f6f8; }
         /* HEADER MODULE STYLE (TEAL - DOCS INICIAIS) */
+        /* HEADER MODULE STYLE (VILELA PREMIUM) */
         .page-header {
-            background: linear-gradient(135deg, #e6fffa 0%, #b2f5ea 100%); /* Light Teal Gradient */
+            background: linear-gradient(135deg, #146C43 0%, #0d462b 100%); /* Vilela Dark Green Gradient */
             border-bottom: none;
             padding: 30px 25px; 
             border-bottom-left-radius: 30px; 
             border-bottom-right-radius: 30px;
-            box-shadow: 0 10px 30px rgba(32, 201, 151, 0.15); 
+            box-shadow: 0 10px 30px rgba(20, 108, 67, 0.25); 
             margin-bottom: 30px;
             display: flex; align-items: center; justify-content: space-between;
-            color: #0d5f4c; /* Dark Teal Text */
+            color: #ffffff; /* White Text */
             position: relative;
             overflow: hidden;
-            border: 1px solid #b2f5ea;
+            border: none;
         }
         
         /* Decorative Circle (Subtle) */
@@ -166,23 +167,23 @@ foreach($entregues_raw as $row) {
         }
 
         .btn-back {
-            text-decoration: none; color: #0d5f4c; font-weight: 600; 
+            text-decoration: none; color: #146C43; font-weight: 600; 
             display: flex; align-items: center; gap: 8px;
             padding: 10px 20px; 
             background: white; 
             border-radius: 25px;
             transition: 0.3s;
             font-size: 0.95rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            border: 1px solid #b2f5ea;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border: none;
         }
         .btn-back:hover { background: #e6fffa; transform: translateX(-3px); }
         
         .header-title-box {
             display: flex; flex-direction: column; align-items: flex-end; text-align: right;
         }
-        .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #083b30; }
-        .header-title-sub { font-size: 0.8rem; opacity: 0.8; font-weight: 500; margin-top: 2px; color: #0d5f4c; }
+        .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #ffffff; }
+        .header-title-sub { font-size: 0.8rem; opacity: 0.9; font-weight: 400; margin-top: 2px; color: #e9ecef; }
 
         .doc-card {
             background: #fff;
@@ -244,7 +245,7 @@ foreach($entregues_raw as $row) {
                  </div>
                  
                  <!-- Animated Icon -->
-                 <div style="background: white; border:1px solid #b2f5ea; color: #20c997; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05); animation: docWiggle 4s ease-in-out infinite;">
+                 <div style="background: rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.3); color: #ffffff; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; backdrop-filter: blur(5px); animation: docWiggle 4s ease-in-out infinite;">
                     📋
                  </div>
             </div>
@@ -257,7 +258,7 @@ foreach($entregues_raw as $row) {
                 .unified-info-box {
                     background: linear-gradient(135deg, #fffcf5 0%, #ffffff 100%);
                     border: 1px solid #ffeeba;
-                    border-left: 5px solid #0d6efd; /* Blue accent for main process */
+                    border-left: 5px solid #146C43; /* Green accent */
                     border-radius: 16px;
                     padding: 0;
                     margin-bottom: 30px;
@@ -276,13 +277,13 @@ foreach($entregues_raw as $row) {
                 }
                 /* Typography */
                 .uib-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #888; font-weight: 600; margin-bottom: 2px; }
-                .uib-title { font-size: 1.3rem; font-weight: 700; color: #084298; margin: 0; }
+                .uib-title { font-size: 1.3rem; font-weight: 700; color: #146C43; margin: 0; }
                 .uib-text  { font-size: 0.95rem; color: #555; font-style: italic; line-height: 1.5; }
                 
                 .uib-icon { 
                     width: 45px; height: 45px; background: white; border-radius: 50%; 
                     display: flex; align-items: center; justify-content: center; 
-                    font-size: 1.4rem; color: #0d6efd; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+                    font-size: 1.4rem; color: #146C43; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
                     border: 1px solid #e7f1ff;
                 }
             </style>
