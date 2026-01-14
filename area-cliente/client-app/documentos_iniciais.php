@@ -257,28 +257,20 @@ foreach($entregues_raw as $row) {
             <style>
                 .unified-info-box {
                     background: linear-gradient(135deg, #fffcf5 0%, #ffffff 100%);
-                    border: 1px solid #ffeeba;
-                    border-left: 5px solid #146C43; /* Green accent */
+                    border: 1px solid #146C43; /* Full Green Border */
                     border-radius: 16px;
                     padding: 0;
                     margin-bottom: 30px;
-                    box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+                    box-shadow: 0 4px 12px rgba(20, 108, 67, 0.1);
                     overflow: hidden;
                 }
                 .uib-main {
                     padding: 20px;
                     display: flex; align-items: center; gap: 15px;
-                    border-bottom: 1px dashed #e0e0e0;
-                }
-                .uib-obs {
-                    padding: 15px 20px;
-                    background: rgba(255, 193, 7, 0.05); /* Slight yellow tint */
-                    display: flex; gap: 12px; align-items: flex-start;
                 }
                 /* Typography */
                 .uib-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #888; font-weight: 600; margin-bottom: 2px; }
                 .uib-title { font-size: 1.3rem; font-weight: 700; color: #146C43; margin: 0; }
-                .uib-text  { font-size: 0.95rem; color: #555; font-style: italic; line-height: 1.5; }
                 
                 .uib-icon { 
                     width: 45px; height: 45px; background: white; border-radius: 50%; 
@@ -297,17 +289,6 @@ foreach($entregues_raw as $row) {
                         <h2 class="uib-title"><?= htmlspecialchars($proc_data['titulo']) ?></h2>
                     </div>
                 </div>
-
-                <!-- Bottom Section: Observação (Connected) -->
-                <?php if(!empty($detalhes['observacoes_gerais'])): ?>
-                    <div class="uib-obs">
-                        <span style="font-size:1.2rem; margin-top: -2px;">👷‍♂️</span>
-                        <div>
-                            <div class="uib-label" style="color:#d39e00;">OBSERVAÇÃO DO ENGENHEIRO</div>
-                            <div class="uib-text">“<?= nl2br(htmlspecialchars($detalhes['observacoes_gerais'])) ?>”</div>
-                        </div>
-                    </div>
-                <?php endif; ?>
             </div>
 
             <?php if($proc_data): 
