@@ -14,7 +14,7 @@
             Novo Cliente
         </a>
 
-        <!-- Acesso Rápido (Dropdown placeholder or specific links) -->
+        <!-- Acesso Rápido -->
          <div class="nav-item-group">
             <div class="nav-item" onclick="this.parentElement.classList.toggle('open')" style="cursor:pointer; justify-content:space-between;">
                 <div style="display:flex; align-items:center; gap:10px;">
@@ -25,8 +25,20 @@
             </div>
             <div class="nav-subitems">
                  <a href="?importar=1" class="nav-subitem">Solicitações Web</a>
-                 <a href="#" class="nav-subitem">Relatórios</a>
+                 <a href="https://oliveira.atende.net/atendenet?source=pwa" target="_blank" class="nav-subitem">Atende Oliveira</a>
+                 <a href="https://ridigital.org.br/VisualizarMatricula/DefaultVM.aspx?from=menu" target="_blank" class="nav-subitem">Matrículas</a>
             </div>
+        </div>
+    </div>
+
+    <!-- ADMIN PROFILE FOOTER (Since header is gone) -->
+    <div style="margin: 0 20px 15px 20px; padding-top:15px; border-top:1px solid #eee; display:flex; align-items:center; gap:10px;">
+        <div style="width:36px; height:36px; border-radius:50%; background:#e9ecef; overflow:hidden;">
+            <img src="assets/avatar_admin.jpg" alt="DV" style="width:100%; height:100%; object-fit:cover;">
+        </div>
+        <div style="flex:1; overflow:hidden;">
+            <div style="font-size:0.85rem; font-weight:700; color:#333; white-space:nowrap;">Diego Vilela</div>
+            <a href="logout.php" style="font-size:0.75rem; color:#dc3545; text-decoration:none;">Sair</a>
         </div>
     </div>
 

@@ -166,7 +166,9 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
     <!-- UI Components -->
     <!-- UI Components -->
-    <?php require 'includes/ui/header.php'; ?>
+    <!-- UI Components -->
+    <!-- DEPRECATED: Header removed by request on 2026-01-13 -->
+    <?php /* require 'includes/ui/header.php'; */ ?>
 
     <!-- DATA FETCHING FOR SIDEBAR WIDGETS -->
     <?php
