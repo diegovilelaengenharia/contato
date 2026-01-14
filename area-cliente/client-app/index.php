@@ -304,6 +304,19 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                 padding: 15px !important;
             }
         }
+        
+        /* DASHBOARD GRID LAYOUT */
+        .app-action-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-top: 10px;
+        }
+        @media (min-width: 768px) {
+            .app-action-grid {
+                grid-template-columns: 1fr 1fr; /* 2 Columns on Tablet/Desktop */
+            }
+        }
     </style>
     <style>
         /* MODAL DE NOTIFICAÇÕES */
@@ -457,28 +470,28 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                 ?>
 
                 <!-- 1. DOCS INICIAIS (CHECKLIST) -->
-                <a href="documentos_iniciais.php" class="app-button" style="border: 1px solid #083b30;">
-                    <div class="app-btn-icon" style="background:#e6fffa; color:#083b30;">📋</div>
+                <a href="documentos_iniciais.php" class="app-button" style="border: 1px solid #146C43;">
+                    <div class="app-btn-icon" style="background:#e6f4ea; color:#146C43;">📋</div>
                     <div class="app-btn-content">
                         <span class="app-btn-title">Abertura de Processo</span>
                         <span class="app-btn-desc">Documentos para Abertura do Processo</span>
                     </div>
-                    <div class="app-btn-arrow" style="color:#083b30;">➔</div>
+                    <div class="app-btn-arrow" style="color:#146C43;">➔</div>
                 </a>
 
                 <!-- 2. TIMELINE -->
-                <a href="timeline.php" class="app-button" style="border: 1px solid #0f5132;">
-                    <div class="app-btn-icon" style="background:#e8f5e9; color:#0f5132;">🧭</div>
+                <a href="timeline.php" class="app-button" style="border: 1px solid #146C43;">
+                    <div class="app-btn-icon" style="background:#e6f4ea; color:#146C43;">🧭</div>
                     <div class="app-btn-content">
                         <span class="app-btn-title">Linha do Tempo</span>
                         <div class="progress-mini" style="margin-top:5px; height:6px; background:#e9ecef; border-radius:3px; overflow:hidden; width:100px;">
-                            <div class="bar" style="width: <?= $porcentagem ?>%; height:100%; background:#0f5132;"></div>
+                            <div class="bar" style="width: <?= $porcentagem ?>%; height:100%; background:#146C43;"></div>
                         </div>
                         <span class="app-btn-desc" style="margin-top:5px;">
                             <?= htmlspecialchars($etapa_atual) ?> - <?= $porcentagem ?>%
                         </span>
                     </div>
-                    <div class="app-btn-arrow" style="color:#0f5132;">➔</div>
+                    <div class="app-btn-arrow" style="color:#146C43;">➔</div>
                 </a>
 
                 <!-- 3. PENDÊNCIAS -->
@@ -495,12 +508,12 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                         $p_icon = '⚠️';
                         $p_arrow = '#dc3545';
                     } else {
-                        $p_border = '#198754'; // Verde
-                        $p_bg_btn = '#d1e7dd'; // Verde Claro / Sucesso
-                        $p_icon_bg = '#a3cfbb';
-                        $p_icon_color = '#0f5132';
+                        $p_border = '#146C43'; // Verde Premium
+                        $p_bg_btn = '#e6f4ea'; // Verde Claro Premium
+                        $p_icon_bg = '#c8e6c9';
+                        $p_icon_color = '#146C43';
                         $p_icon = '✅';
-                        $p_arrow = '#198754';
+                        $p_arrow = '#146C43';
                     }
                 ?>
                 <a href="pendencias.php" class="app-button" style="border: 1px solid <?= $p_border ?>; background-color: <?= $p_bg_btn ?>;">
@@ -535,12 +548,12 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                         $f_icon = '💰';
                         $f_arrow = '#856404';
                     } else {
-                        $f_border = '#198754'; // Verde
-                        $f_bg_btn = '#d1e7dd'; // Verde Claro
-                        $f_icon_bg = '#a3cfbb';
-                        $f_icon_color = '#0f5132';
+                        $f_border = '#146C43'; // Verde Premium
+                        $f_bg_btn = '#e6f4ea'; // Verde Claro Premium
+                        $f_icon_bg = '#c8e6c9';
+                        $f_icon_color = '#146C43';
                         $f_icon = '✅';
-                        $f_arrow = '#198754';
+                        $f_arrow = '#146C43';
                     }
                 ?>
                 <a href="financeiro.php" class="app-button" style="border: 1px solid <?= $f_border ?>; background-color: <?= $f_bg_btn ?>;">
