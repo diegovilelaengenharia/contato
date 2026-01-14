@@ -140,14 +140,14 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         .ph-logo img {
-            height: 50px !important; /* Slightly smaller to fit badge */
+            height: 40px !important; /* Reduced to 40px */
             display: block;
             width: auto;
             object-fit: contain;
             /* Filter removed to show original logo colors */
         }
         .ph-title {
-            font-size: 2.2rem;
+            font-size: 2.8rem; /* Increased to 2.8rem */
             font-weight: 800;
             color: #ffffff !important; /* White Text */
             text-transform: uppercase;
