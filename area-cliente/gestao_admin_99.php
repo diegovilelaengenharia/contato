@@ -385,7 +385,7 @@ if ($cliente_ativo) {
                         transition: width 1s ease;
                     }
 
-                    < !-- TAB NAVIGATION PILLS --><div class="nav-pills">< !-- 1. Perfil --><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=perfil" class="nav-pill <?= ($active_tab == 'perfil' || $active_tab == 'cadastro') ? 'active' : '' ?>"><span class="material-symbols-rounded">person</span>Perfil </a>< !-- 2. Documentos --><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=docs_iniciais" class="nav-pill <?= ($active_tab == 'docs_iniciais') ? 'active' : '' ?>"><span class="material-symbols-rounded">folder_open</span>Documentos </a>< !-- 3. Timeline --><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="nav-pill <?= ($active_tab == 'andamento') ? 'active' : '' ?>"><span class="material-symbols-rounded">history</span>Timeline </a>< !-- 4. Pendências --><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias" class="nav-pill <?= ($active_tab == 'pendencias') ? 'active' : '' ?>"><span class="material-symbols-rounded">warning</span>Pendências </a>< !-- 5. Financeiro --><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=financeiro" class="nav-pill <?= ($active_tab == 'financeiro') ? 'active' : '' ?>"><span class="material-symbols-rounded">paid</span>Financeiro </a>< !-- 6. Arquivos --><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=arquivos" class="nav-pill <?= ($active_tab == 'arquivos') ? 'active' : '' ?>"><span class="material-symbols-rounded">inventory_2</span>Arquivos </a></div>< !-- Modal Timeline e Andamento --><?php require 'includes/modals/timeline.php'; ?>< !-- STYLE FOR FLEX LAYOUT & HIDDEN TABS --><style>.admin-container {
+                    < !-- TAB NAVIGATION PILLS --><div class="nav-pills">< !-- 1. Perfil --><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=perfil" class="nav-pill <?= ($active_tab == 'perfil' || $active_tab == 'cadastro') ? 'active' : '' ?>"><span class="material-symbols-rounded">person</span>Perfil </a>< !-- 2. Abertura de Processo (Antigo Documentos) --><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=docs_iniciais" class="nav-pill <?= ($active_tab == 'docs_iniciais') ? 'active' : '' ?>"><span class="material-symbols-rounded">folder_open</span>Abertura de Processo </a>< !-- 3. Linha do Tempo (Antigo Timeline) --><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="nav-pill <?= ($active_tab == 'andamento') ? 'active' : '' ?>"><span class="material-symbols-rounded">history</span>Linha do Tempo </a>< !-- 4. Pendências --><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias" class="nav-pill <?= ($active_tab == 'pendencias') ? 'active' : '' ?>"><span class="material-symbols-rounded">warning</span>Pendências </a>< !-- 5. Financeiro --><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=financeiro" class="nav-pill <?= ($active_tab == 'financeiro') ? 'active' : '' ?>"><span class="material-symbols-rounded">paid</span>Financeiro </a>< !-- 6. Documentos Finais (Antigo Arquivos) --><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=arquivos" class="nav-pill <?= ($active_tab == 'arquivos') ? 'active' : '' ?>"><span class="material-symbols-rounded">inventory_2</span>Documentos Finais </a></div>< !-- Modal Timeline e Andamento --><?php require 'includes/modals/timeline.php'; ?>< !-- STYLE FOR FLEX LAYOUT & HIDDEN TABS --><style>.admin-container {
                         display: block !important;
                         /* Sidebar is fixed, so block is safer */
                         max-width: 100% !important;
@@ -635,7 +635,7 @@ if ($cliente_ativo) {
                             <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:30px; gap:20px;">
                                 <div>
                                     <h3 style="margin:0 0 6px 0; font-size:1.6rem; font-weight:800; color:#2c3e50; letter-spacing:-0.5px; display:flex; align-items:center; gap:10px;">
-                                        Histórico do Processo
+                                        Linha do Tempo do Processo
                                     </h3>
                                     <p style="margin:0; font-size:0.95rem; color:#6c757d; font-weight:400;">Linha do tempo completa e registros do cliente.</p>
                                 </div>
@@ -1215,7 +1215,7 @@ if ($cliente_ativo) {
                                 <!-- HEADER CONFIG DO PROCESSO -->
                                 <div class="admin-header-row">
                                     <div>
-                                        <h3 class="admin-title" style="color:#198754;">📑 Checklist de Documentos</h3>
+                                        <h3 class="admin-title" style="color:#198754;">📑 Checklist de Abertura de Processo</h3>
                                         <p class="admin-subtitle">Gerencie o recebimento e aprovação de documentos do cliente.</p>
                                     </div>
                                     <button type="submit" class="btn-save" style="background:#198754; color:white; border:none; padding:8px 20px; font-size: 0.9rem; box-shadow: 0 4px 10px rgba(25, 135, 84, 0.2);">
@@ -1392,7 +1392,7 @@ if ($cliente_ativo) {
                         <div class="admin-tab-content">
                             <div class="admin-header-row">
                                 <div>
-                                    <h3 class="admin-title">📂 Arquivos do Cliente</h3>
+                                    <h3 class="admin-title">📂 Documentos Finais</h3>
                                     <p class="admin-subtitle">Central de links e pastas do Google Drive.</p>
                                 </div>
                             </div>
