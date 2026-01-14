@@ -414,13 +414,13 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             </style>
             
             <div class="tabs-container">
-                <!-- 1. CHECKLIST (Antigo Docs. Iniciais) -->
+                <!-- 1. CHECKLIST -->
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=docs_iniciais" class="tab-link t-docs <?= ($active_tab=='docs_iniciais')?'active':'' ?>">
                     <span>📑</span> Checklist
                 </a>
-                <!-- 2. HISTÓRICO -->
+                <!-- 2. TIMELINE -->
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="tab-link t-hist <?= ($active_tab=='andamento'||$active_tab=='cadastro')?'active':'' ?>">
-                    <span>📜</span> Histórico
+                    <span>📜</span> Timeline
                 </a>
                 
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias" class="tab-link t-pend <?= ($active_tab=='pendencias')?'active':'' ?>">
@@ -430,7 +430,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     <span>💰</span> Financeiro
                 </a>
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=arquivos" class="tab-link t-arq <?= ($active_tab=='arquivos')?'active':'' ?>">
-                    <span>📂</span> Arquivos
+                    <span>📂</span> Arquivos Finais
                 </a>
             </div>
 
