@@ -692,6 +692,20 @@ body {
     }
 }
 
+@keyframes pulse-gold-ripple {
+    0% {
+        box-shadow: 0 0 0 0 rgba(212, 172, 55, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 15px rgba(212, 172, 55, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(212, 172, 55, 0);
+    }
+}
+
 @keyframes shake-gentle {
 
     0%,
@@ -775,6 +789,8 @@ body {
     background: linear-gradient(135deg, #d4ac36 0%, #b48308 100%);
     /* Dourado mais forte para botão pequeno */
     color: #ffffff;
+    animation: pulse-gold-ripple 2s infinite;
+    z-index: 100;
 }
 
 .floating-btn--client:hover {
