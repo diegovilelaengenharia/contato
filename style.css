@@ -534,23 +534,38 @@ body {
 
 
 .link-card--city {
-    --icon-bg: linear-gradient(135deg, #48cae4, #0096c7);
-    --icon-glow: rgba(0, 150, 199, 0.5);
+    --icon-bg: linear-gradient(135deg, #bde0fe 0%, #a2d2ff 100%);
+    /* Soft Baby Blue */
+    --icon-glow: rgba(162, 210, 255, 0.6);
+    --icon-border: rgba(255, 255, 255, 0.8);
 }
 
 .link-card--federal {
-    --icon-bg: linear-gradient(135deg, #52b788, #2d6a4f);
-    --icon-glow: rgba(45, 106, 79, 0.5);
+    --icon-bg: linear-gradient(135deg, #d8f3dc 0%, #95d5b2 100%);
+    /* Soft Mint */
+    --icon-glow: rgba(149, 213, 178, 0.6);
+    --icon-border: rgba(255, 255, 255, 0.8);
 }
 
 .link-card--registry {
-    --icon-bg: linear-gradient(135deg, #ddb892, #b08968);
-    --icon-glow: rgba(156, 102, 68, 0.5);
+    --icon-bg: linear-gradient(135deg, #fae1dd 0%, #f4acb7 100%);
+    /* Soft Rose/Sand */
+    --icon-glow: rgba(244, 172, 183, 0.6);
+    --icon-border: rgba(255, 255, 255, 0.8);
 }
 
 .link-card--engineering {
-    --icon-bg: linear-gradient(135deg, #2b2d42, #8d99ae);
-    --icon-glow: rgba(43, 45, 66, 0.5);
+    --icon-bg: linear-gradient(135deg, #e9ecef 0%, #adb5bd 100%);
+    /* Soft Silver */
+    --icon-glow: rgba(173, 181, 189, 0.6);
+    --icon-border: rgba(255, 255, 255, 0.8);
+}
+
+.link-card--consultancy {
+    --icon-bg: linear-gradient(135deg, #fff3b0 0%, #ffe66d 100%);
+    /* Soft Champagne */
+    --icon-glow: rgba(255, 230, 109, 0.6);
+    --icon-border: rgba(255, 255, 255, 0.8);
 }
 
 .link-card::after {
