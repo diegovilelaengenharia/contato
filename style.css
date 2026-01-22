@@ -253,6 +253,36 @@ body {
     color: var(--color-text-subtle);
 }
 
+/* Botão de Canto no Header (O antigo flutuante, agora fixo no card) */
+.header-corner-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #d4ac36 0%, #b48308 100%);
+    /* Dourado Nobre */
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(212, 172, 55, 0.25);
+    z-index: 10;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    animation: pulse-gold-ripple 2s infinite;
+}
+
+.header-corner-btn:hover {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 6px 16px rgba(212, 172, 55, 0.4);
+    background: linear-gradient(135deg, #e0bc4e 0%, #c4961b 100%);
+}
+
+.header-corner-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
 .hero-actions {
     display: flex;
     flex-wrap: wrap;
