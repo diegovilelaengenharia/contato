@@ -1,0 +1,30 @@
+# Build artifacts
+node_modules
+/.pnp
+.pnp.js
+
+.DS_Store
+thumbs.db
+desktop.ini
+
+# Gemini Artifacts
+.gemini/
+
+# Planning artifacts (GSD) and Claude Code
+.planning/
+.claude/
+
+# Debug / test files (não vão para produção)
+debug_live.html
+debug_*.php
+login_test.php
+test_*.php
+propostas_sistema.md
+
+# Database / backups
+banco de dados/
+*.bkp
+
+# Client app build cache
+client-app/.vite/
+area-cliente/assets/

@@ -1,0 +1,39 @@
+name: Deploy para Hostinger via FTP
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Upload via FTP
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Deploy via FTP para Hostinger
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          server-dir: /domains/vilela.eng.br/public_html/
+          local-dir: ./
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/*.bkp
+            **/desktop.ini
+            **/propostas_sistema.md
+            **/README.md
+            **/.planning/**
+            **/banco de dados/**
+            **/debug_*.php
+            **/login_test.php
+            **/test_*.php

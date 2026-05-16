@@ -1,0 +1,18 @@
+# Arquivo de índice padrão
+DirectoryIndex index.html index.php
+
+# Desabilitar listagem de diretórios
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # 1. Forçar HTTPS
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # 2. Redirecionar área-cliente para o index.php correto
+    RewriteRule ^area-cliente/?$ area-cliente/index.php [L]
+</IfModule>
+
