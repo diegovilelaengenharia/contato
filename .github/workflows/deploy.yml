@@ -20,7 +20,7 @@ jobs:
             echo "DB_HOST=${{ secrets.DB_HOST }}"
             echo "DB_NAME=${{ secrets.DB_NAME }}"
             echo "DB_USER=${{ secrets.DB_USER }}"
-            echo "DB_PASS=${{ secrets.DB_PASS }}"
+            echo 'DB_PASS="${{ secrets.DB_PASS }}"'
             echo "ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}"
           } > area-cliente/.env
 
