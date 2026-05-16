@@ -29,6 +29,7 @@ Plans:
 **Mode:** standard
 **Requirements:** LAND-01, LAND-02, LAND-03, LAND-04, LAND-05, LAND-06, LAND-07, LAND-08
 **UI hint:** yes
+**Plans:** 3 planos
 **Success Criteria:**
 1. Página abre em celular sem scroll horizontal, todos os elementos legíveis sem zoom
 2. Botão WhatsApp abre conversa com Diego no app
@@ -36,6 +37,11 @@ Plans:
 4. Seções de serviços e sobre visíveis com conteúdo real de Diego Vilela
 5. Botão "Área do Cliente" leva para o login do portal
 6. Modal de orçamento funcional (ou link direto para WhatsApp com mensagem pré-formatada)
+
+Plans:
+- [ ] 02-01-PLAN.md — SEO corrigido (title, meta description, sem noindex) + hero renovado (degradê verde, tagline estática, novas CSS vars)
+- [ ] 02-02-PLAN.md — Seção "Como Funciona" (3 passos com ícones, layout mobile/desktop)
+- [ ] 02-03-PLAN.md — Card descriptions nos 5 serviços + seção "Sobre" (foto, bio, badges) + remoção do bioModal + footer âncora
 
 ---
 
