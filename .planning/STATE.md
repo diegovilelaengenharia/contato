@@ -10,11 +10,11 @@ See: `.planning/PROJECT.md` (updated 2026-05-16)
 ## Current Phase
 
 **Phase:** 2 — Landing Page Mobile-First
-**Status:** not started
+**Status:** Ready to execute
 **Goal:** Substituir a landing page atual (linktree) por uma página de apresentação completa, focada em mobile, com hero, serviços, sobre e links de contato
-**Plans:** a definir
+**Plans:** 3 planos (waves 1-2-3)
 **Last Activity:** 2026-05-16
-**Resume:** `/gsd-discuss-phase 2`
+**Resume:** `/gsd-execute-phase 2`
 
 ## Phase History
 
