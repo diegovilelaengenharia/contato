@@ -8,12 +8,19 @@
 **Goal:** Proteger credenciais, remover arquivos perigosos e garantir deploy estável antes de qualquer reescrita
 **Mode:** standard
 **Requirements:** SEC-01, SEC-02, SEC-03, SEC-04, SEC-05
+**Plans:** 4 planos
 **Success Criteria:**
 1. `db.php` lê credenciais de variáveis de ambiente — nenhuma senha no código
 2. `.htaccess` bloqueia acesso direto a `db.php`, `.env` e `config/`
 3. Scripts de debug/reset removidos ou movidos para fora do public_html
 4. Push para `main` dispara deploy automático e site atualiza sem erros no GitHub Actions
 5. Senha do admin lida do `.env`, não hardcoded
+
+Plans:
+- [ ] 01-01-PLAN.md — Reescrever db.php para parse_ini_file() + criar .env.example + atualizar .gitignore
+- [ ] 01-02-PLAN.md — Criar area-cliente/.htaccess com bloqueios FilesMatch para db.php, .env e config/
+- [ ] 01-03-PLAN.md — Atualizar deploy.yml com step de geração do .env e exclude list expandida
+- [ ] 01-04-PLAN.md — Corrigir admin_config.php para gravar senha no .env em vez de db.php
 
 ---
 
