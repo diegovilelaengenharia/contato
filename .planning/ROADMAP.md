@@ -17,10 +17,10 @@
 5. Senha do admin lida do `.env`, não hardcoded
 
 Plans:
-- [ ] 01-01-PLAN.md — Reescrever db.php para parse_ini_file() + criar .env.example + atualizar .gitignore
-- [ ] 01-02-PLAN.md — Criar area-cliente/.htaccess com bloqueios FilesMatch para db.php, .env e config/
-- [ ] 01-03-PLAN.md — Atualizar deploy.yml com step de geração do .env e exclude list expandida
-- [ ] 01-04-PLAN.md — Corrigir admin_config.php para gravar senha no .env em vez de db.php
+- [x] 01-01-PLAN.md — Reescrever db.php para parse_ini_file() + criar .env.example + atualizar .gitignore
+- [x] 01-02-PLAN.md — Criar area-cliente/.htaccess com bloqueios FilesMatch para db.php, .env e config/
+- [x] 01-03-PLAN.md — Atualizar deploy.yml com step de geração do .env e exclude list expandida
+- [x] 01-04-PLAN.md — Corrigir admin_config.php para gravar senha no .env em vez de db.php
 
 ---
 
