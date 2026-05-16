@@ -15,6 +15,8 @@ desktop.ini
 
 # .env com credenciais reais
 .env
+# .env gerado pelo deploy — credenciais reais
+area-cliente/.env
 
 # Debug / test files (não vão para produção)
 debug_live.html
@@ -22,9 +24,6 @@ debug_*.php
 login_test.php
 test_*.php
 propostas_sistema.md
-
-# Credenciais reais — use db.example.php como template
-area-cliente/db.php
 
 # Scripts de seed/reset/probe (ferramentas de manutenção local)
 area-cliente/seed_test_user.php

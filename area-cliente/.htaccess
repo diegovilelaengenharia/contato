@@ -1,0 +1,13 @@
+# Bloquear acesso HTTP direto a arquivos de configuração e credenciais
+
+# Bloquear db.php e .env (credenciais e configuração sensível)
+<FilesMatch "^(db\.php|\.env)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Bloquear diretório config/ inteiro (configurações internas)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^config/ - [F,L]
+</IfModule>
