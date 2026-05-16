@@ -10,8 +10,9 @@ See: `.planning/PROJECT.md` (updated 2026-05-16)
 ## Current Phase
 
 **Phase:** 1 — Segurança e Base
-**Status:** not_started
+**Status:** context_gathered
 **Goal:** Proteger credenciais, remover arquivos perigosos e garantir deploy estável
+**Resume:** `.planning/phases/01-seguranca-e-base/01-CONTEXT.md`
 
 ## Phase History
 
