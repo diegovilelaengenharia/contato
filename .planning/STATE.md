@@ -10,9 +10,11 @@ See: `.planning/PROJECT.md` (updated 2026-05-16)
 ## Current Phase
 
 **Phase:** 1 — Segurança e Base
-**Status:** context_gathered
+**Status:** planned
 **Goal:** Proteger credenciais, remover arquivos perigosos e garantir deploy estável
-**Resume:** `.planning/phases/01-seguranca-e-base/01-CONTEXT.md`
+**Plans:** 4 planos em 2 waves (01-01, 01-02, 01-03, 01-04)
+**Last Activity:** 2026-05-16
+**Resume:** `.planning/phases/01-seguranca-e-base/` → `/gsd-execute-phase 1`
 
 ## Phase History
 
