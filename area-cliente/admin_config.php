@@ -22,24 +22,21 @@ if (isset($_POST['update_password'])) {
     if (strlen($new_pass) < 6) {
         $msg = "❌ A senha deve ter pelo menos 6 caracteres.";
     } else {
-        // Read db.php
-        $db_file = 'db.php';
-        $content = file_get_contents($db_file);
-        
-        // Replace constant define('ADMIN_PASSWORD', '... Old ...');
-        // Pattern: define('ADMIN_PASSWORD',\s*'[^']*');
-        $pattern = "/define\('ADMIN_PASSWORD',\s*'([^']*)'\);/";
-        $replacement = "define('ADMIN_PASSWORD', '$new_pass');";
-        
-        if (preg_match($pattern, $content)) {
-            $new_content = preg_replace($pattern, $replacement, $content);
-            if (file_put_contents($db_file, $new_content)) {
-                $msg = "✅ Senha alterada com sucesso! A nova senha já está valendo.";
-            } else {
-                $msg = "❌ Erro ao escrever no arquivo db.php. Verifique as permissões.";
-            }
+        $env_file = __DIR__ . '/.env';
+        $env = parse_ini_file($env_file);
+        if ($env === false) {
+            $msg = "❌ Erro: Arquivo .env não encontrado. Contate o suporte.";
         } else {
-            $msg = "❌ Não foi possível localizar a definição de senha no arquivo db.php.";
+            $env['ADMIN_PASSWORD'] = $new_pass;
+            $lines = [];
+            foreach ($env as $key => $value) {
+                $lines[] = $key . '=' . $value;
+            }
+            if (file_put_contents($env_file, implode("\n", $lines) . "\n") !== false) {
+                $msg = "✅ Senha alterada com sucesso! Faça logout e login para ativar a nova senha.";
+            } else {
+                $msg = "❌ Erro ao escrever no arquivo .env. Verifique as permissões (chmod 664).";
+            }
         }
     }
 }
