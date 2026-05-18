@@ -1,18 +1,40 @@
-# Vilela Engenharia - Links oficiais
+# Vilela Engenharia - Portal & Landing Page
 
-Esta e a versao 1.0 Completa (04/10/25) da landing page estatica, pronta para hospedagem em qualquer provedor.
+Sistema completo de acompanhamento de processos para a Vilela Engenharia, incluindo Landing Page institucional, Portal do Cliente e Painel Administrativo.
 
-## Conteudo
+## Conteúdo do Projeto
 
-- `index.html`: Pagina principal com links oficiais, modal de orcamento validado e registro do service worker.
-- `style.css`: Estilos responsivos, animacoes leves e tratamento dedicado para os icones dos cards.
-- `manifest.json`: Manifesto PWA para instalacao em dispositivos moveis.
-- `service-worker.js`: Cache offline basico para os principais assets.
-- `assets/`: Logotipo e arquivos auxiliares (ex.: `diego-vilela.vcf`).
+- **Landing Page (Raiz):** Interface institucional mobile-first com PWA (Manifest + Service Worker).
+- **Portal do Cliente (`/area-cliente/client-app/`):** Dashboard para clientes acompanharem timeline, pendências, financeiro e baixarem documentos finais.
+- **Painel Administrativo (`/area-cliente/gestao_admin_99.php`):** Gestão completa de clientes, processos, lançamentos financeiros e uploads.
 
-## Observacoes
+## Tecnologias e Arquitetura
 
-- O botao "Area do Cliente" aponta para `/portal`, pronto para integrar com o futuro dashboard seguro dos clientes.
-- O botao "Orcamento online" abre um modal acessivel, valida entradas e envia o briefing para o WhatsApp da equipe.
-- O site pode ser instalado como atalho em navegadores compativeis, gracas ao manifesto e ao service worker.
-- Para publicar atualizacoes, execute `git add`, `git commit` e `git push origin main`.
+- **Frontend:** HTML5, CSS3 (Vanilla), JavaScript (ES6).
+- **Backend:** PHP 8.x (Arquitetura modular em `/area-cliente/core/`).
+- **Banco de Dados:** MySQL/MariaDB (PDO).
+- **Segurança:** Proteção CSRF, hashing de senhas (bcrypt), bloqueio de diretórios via `.htaccess` e gestão de segredos via `.env`.
+- **Deploy:** Workflow automatizado via GitHub Actions para Hostinger (FTP).
+
+## Como Instalar (Desenvolvimento)
+
+1. Clone o repositório.
+2. Configure o banco de dados usando os schemas em `.planning/intel/database_schema.sql` (ou rode os scripts em `area-cliente/maintenance/` em ambiente seguro).
+3. Crie o arquivo `area-cliente/db.php` a partir do `db.example.php`.
+4. Crie o arquivo `area-cliente/.env` com as credenciais (DB_HOST, DB_NAME, DB_USER, DB_PASS, ADMIN_PASSWORD).
+
+## Deploy para Produção
+
+O deploy é automático ao realizar push para a branch `main`. 
+Os segredos devem ser configurados nos **GitHub Secrets** do repositório:
+- `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS`, `ADMIN_PASSWORD`
+- `FTP_HOST`, `FTP_USER`, `FTP_PASSWORD`
+
+## Manutenção
+
+- O sistema possui um "Modo Manutenção" que pode ser ativado no banco de dados para bloquear acesso de clientes.
+- Logs de erro são gerados automaticamente pelo PHP se configurado no servidor.
+- Os uploads são armazenados em `area-cliente/uploads/`.
+
+---
+*Vilela Engenharia - Regularização e Aprovação de Imóveis*

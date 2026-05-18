@@ -5,22 +5,29 @@
 See: `.planning/PROJECT.md` (updated 2026-05-16)
 
 **Core value:** Clientes acompanham seu processo sem precisar ligar para Diego, e Diego consegue atualizar tudo pelo admin sem erros ou retrabalho.
-**Current focus:** Phase 2 — Landing Page Mobile-First
+**Current focus:** Phase 8 — Polimento e Deploy Final
 
 ## Current Phase
 
-**Phase:** 2 — Landing Page Mobile-First
-**Status:** Ready to execute
-**Goal:** Substituir a landing page atual (linktree) por uma página de apresentação completa, focada em mobile, com hero, serviços, sobre e links de contato
-**Plans:** 3 planos (waves 1-2-3)
-**Last Activity:** 2026-05-16
-**Resume:** `/gsd-execute-phase 2`
+**Phase:** 8 — Polimento, Responsividade e Deploy Final
+**Status:** DONE
+**Goal:** Revisão geral de UX/UI, garantir responsividade em todos os dispositivos e validar deploy end-to-end.
+**Plans:** 08-01-PLAN.md
+**Last Activity:** 2026-05-18
+**Resume:** Fase 8 concluída. Sistema v1.5 estável e responsivo.
 
 ## Phase History
 
 | Phase | Status | Completed |
 |-------|--------|-----------|
 | 1 — Segurança e Base | done | 2026-05-16 |
+| 2 — Landing Page Mobile-First | done | 2026-05-18 |
+| 3 — Camada de Compatibilidade Core | done | 2026-05-18 |
+| 4 — Desmembramento Admin (Actions) | done | 2026-05-18 |
+| 5 — Desmembramento Admin (Views) | done | 2026-05-18 |
+| 6 — Painel Admin (Processo e Timeline) | done | 2026-05-18 |
+| 7 — Admin (Financeiro e Documentos) | done | 2026-05-18 |
+| 8 — Polimento e Responsividade | done | 2026-05-18 |
 
 ## Blockers
 
@@ -28,8 +35,7 @@ None.
 
 ## Notes
 
-- Phase 1 concluída: credenciais movidas para .env, .htaccess bloqueando db.php (403), deploy via GitHub Actions gerando .env automaticamente dos Secrets
-- DB_PASS requer aspas duplas no .env por conter caracteres especiais (`;`, `#`)
-- GitHub Secrets configurados: DB_HOST, DB_NAME, DB_USER, DB_PASS, ADMIN_PASSWORD, FTP_HOST, FTP_USER, FTP_PASSWORD
-- Pasta `public_html/contato/` criada pelo Hostinger Git integration — apagar via Gerenciador de Arquivos
-- Deploy correto via GitHub Actions FTP → public_html/
+- **Fase 8 Concluída:** Responsividade corrigida, funcionalidade "Ver como Cliente" implementada e segurança do diretório `maintenance/` reforçada.
+- **Segurança:** Proteção CSRF implementada em todos os formulários administrativos.
+- **Arquitetura:** `init.php` agora carrega classes do `core/` globalmente.
+- **Deploy:** GitHub Actions validado e funcional.

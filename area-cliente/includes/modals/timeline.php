@@ -76,9 +76,8 @@
 
         <!-- iframe Content -->
         <div style="flex:1; background:#f4f6f8; position:relative; overflow:hidden;">
-             <!-- Passamos o ID do cliente se necessário, aqui assume sessão ou parametro -->
-             <!-- Importante: Ajustar URL para incluir cliente_id se a sessão admin não passar pra iframe auto -->
-             <iframe src="area_cliente.php?simular_timeline=1" style="width:100%; height:100%; border:none; display:block;"></iframe>
+             <!-- Passamos o ID do cliente para simulação -->
+             <iframe src="client-app/timeline.php?cliente_id=<?= $cliente_ativo['id'] ?>&simular_timeline=1" style="width:100%; height:100%; border:none; display:block;"></iframe>
         </div>
     </div>
 </dialog>
@@ -99,7 +98,8 @@
     </div>
     
     <div style="padding:25px;">
-        <form method="POST" enctype="multipart/form-data">
+        <form action="actions/admin/etapa_update.php" method="POST" enctype="multipart/form-data">
+            <?= Csrf::getHtmlField() ?>
             <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
             
             <!-- LINHA 1: Fase e Título -->

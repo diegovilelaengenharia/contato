@@ -361,6 +361,16 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
 </head>
 <body>
 
+    <?php if(isset($_SESSION['admin_logado']) && $_SESSION['admin_logado'] === true): ?>
+        <div style="background: #2f3e36; color: white; padding: 10px 20px; text-align: center; font-size: 0.85rem; font-weight: 600; position: sticky; top: 0; z-index: 100000; display: flex; align-items: center; justify-content: center; gap: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
+            <span class="material-symbols-rounded" style="font-size: 1.2rem;">admin_panel_settings</span>
+            MODO VISUALIZAÇÃO ADMINISTRATIVA
+            <a href="../gestao_admin_99.php" style="color: #4fb09b; text-decoration: none; background: rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); transition: 0.2s;">
+                Voltar ao Painel Admin
+            </a>
+        </div>
+    <?php endif; ?>
+
     <div class="app-container" style="padding: 20px;">
         
         <!-- NOVO HARDER: PORTAL DE ACOMPANHAMENTO -->

@@ -2,6 +2,34 @@
 // FIX: Ensure DB connection is available
 require_once __DIR__ . '/init.php';
 
+// --- LOGICA DE AVATAR AUTÔNOMO (Admin context) ---
+if (isset($_GET['cliente_id']) && isset($_FILES['avatar_upload']) && $_FILES['avatar_upload']['error'] == 0) {
+    $cid = $_GET['cliente_id'];
+    $ext = strtolower(pathinfo($_FILES['avatar_upload']['name'], PATHINFO_EXTENSION));
+    $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+    if(in_array($ext, $allowed)) {
+        $target_dir_abs = __DIR__ . '/../uploads/avatars/';
+        if(!is_dir($target_dir_abs)) mkdir($target_dir_abs, 0755, true);
+        
+        $new_name = "avatar_{$cid}.{$ext}";
+        
+        // Remove antigos para garantir que só haja um
+        array_map('unlink', glob($target_dir_abs . "avatar_{$cid}.*"));
+        
+        if(move_uploaded_file($_FILES['avatar_upload']['tmp_name'], $target_dir_abs . $new_name)) {
+            try {
+                 $db_path = "uploads/avatars/" . $new_name;
+                 $pdo->prepare("UPDATE clientes SET foto_perfil=? WHERE id=?")->execute([$db_path, $cid]);
+                 
+                 // Reload to show changes
+                 $tab_redir = $_GET['tab'] ?? 'perfil';
+                 header("Location: ?cliente_id={$cid}&tab={$tab_redir}&avatar_updated=1");
+                 exit;
+            } catch(Exception $e) {}
+        }
+    }
+}
+
 // 0. Update Process Header (Top of Client Page)
 if (isset($_POST['update_processo_header'])) {
     $cid = $_POST['cliente_id'];
@@ -298,6 +326,43 @@ if (isset($_GET['delete_pendencia'])) {
         header("Location: ?cliente_id=$cid&tab=pendencias");
         exit;
     } catch(PDOException $e) { $erro = "Erro ao excluir: " . $e->getMessage(); }
+}
+
+// --- LÓGICA DE EXCLUSÃO DE ARQUIVOS DE PENDÊNCIAS ---
+// 1. Exclusão Individual
+if(isset($_GET['delete_file_pendencia']) && isset($_GET['file_name'])) {
+    $f_delete = basename($_GET['file_name']);
+    $cid = $_GET['cliente_id'];
+    $p_delete = __DIR__ . '/../client-app/uploads/pendencias/' . $f_delete;
+    if(file_exists($p_delete)) {
+        unlink($p_delete);
+        header("Location: ?cliente_id=$cid&tab=pendencias&msg=file_deleted");
+        exit;
+    }
+}
+
+// 2. Limpar Pasta Completa (Bulk)
+if(isset($_GET['clear_all_files']) && $_GET['clear_all_files'] == 'true') {
+    $cid = $_GET['cliente_id'];
+    $p_dir = __DIR__ . '/../client-app/uploads/pendencias/';
+    $stmtIds = $pdo->prepare("SELECT id FROM processo_pendencias WHERE cliente_id=?");
+    $stmtIds->execute([$cid]);
+    $ids = $stmtIds->fetchAll(PDO::FETCH_COLUMN);
+    
+    $count_del = 0;
+    if($ids) {
+        foreach($ids as $pid) {
+            $files = glob($p_dir . $pid . "_*.*");
+            if($files) {
+                foreach($files as $f) {
+                    unlink($f);
+                    $count_del++;
+                }
+            }
+        }
+    }
+    header("Location: ?cliente_id=$cid&tab=pendencias&msg=all_files_cleared&count={$count_del}");
+    exit;
 }
 
 // Ação de Atualizar Status Financeiro (Via Modal)

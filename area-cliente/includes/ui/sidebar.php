@@ -1,3 +1,29 @@
+<?php
+/**
+ * Componente: Sidebar Admin
+ */
+
+// --- DATA FETCHING FOR SIDEBAR WIDGETS ---
+try {
+    // Aniversariantes
+    $aniversariantes = $pdo->query("SELECT c.id, c.nome, pd.data_nascimento, DAY(pd.data_nascimento) as dia 
+        FROM clientes c 
+        JOIN processo_detalhes pd ON c.id = pd.cliente_id 
+        WHERE MONTH(pd.data_nascimento) = MONTH(CURRENT_DATE()) 
+        ORDER BY dia ASC")->fetchAll();
+
+    // Processos Parados (> 15 dias)
+    $parados = $pdo->query("SELECT c.id, c.nome, MAX(pm.data_movimento) as ultima_mov 
+        FROM clientes c 
+        JOIN processo_movimentos pm ON c.id = pm.cliente_id 
+        GROUP BY c.id 
+        HAVING DATEDIFF(NOW(), ultima_mov) > 15 
+        ORDER BY ultima_mov ASC")->fetchAll();
+} catch (Exception $e) {
+    $aniversariantes = [];
+    $parados = [];
+}
+?>
 <aside class="sidebar admin-nav-sidebar">
     
     <!-- ADMIN PROFILE (Sidebar Header - Clean & Simple) -->
@@ -29,8 +55,6 @@
         </div>
     </div>
 
-    <!-- BRANDING HEADER (REMOVED) -->
-    
     <!-- SEÇÃO CLIENTE SELECIONADO (Topo) -->
     <?php if($cliente_ativo): ?>
         <div class="nav-section">
@@ -71,7 +95,7 @@
                     <a href="relatorio_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="client-action-btn" style="color:#6f42c1;" title="Resumo PDF">
                         <span class="material-symbols-rounded">picture_as_pdf</span>
                     </a>
-                    <a href="area_cliente.php" target="_blank" class="client-action-btn" style="color:#198754;" title="Ver como Cliente">
+                    <a href="actions/admin/cliente_impersonate.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="client-action-btn" style="color:#198754;" title="Ver como Cliente">
                         <span class="material-symbols-rounded">visibility</span>
                     </a>
                     <!-- BOTAO EXCLUIR VERMELHO -->
@@ -80,20 +104,11 @@
                     </a>
                 </div>
             </div>
-
-            <style>
-                .client-action-btn { flex: 1; display: flex; align-items: center; justify-content: center; padding: 10px 0; color: #6c757d; text-decoration: none; transition: all 0.2s; border-right: 1px solid #f9f9f9; }
-                .client-action-btn:last-child { border-right: none; }
-                .client-action-btn:hover { background: #f8f9fa; transform: translateY(-1px); }
-                .client-action-btn .material-symbols-rounded { font-size: 1.1rem; }
-                .btn-danger-hover:hover { background: #fee2e2 !important; color: #dc3545 !important; }
-            </style>
         </div>
-        
     <?php endif; ?>
 
     <!-- SEÇÃO GERAL -->
-    <div class="nav-section" style="flex:1;">
+    <div class="nav-section">
         <h6 class="nav-header">GERAL</h6>
         
         <a href="gestao_admin_99.php" class="nav-item <?= (!$cliente_ativo) ? 'active' : '' ?>">
@@ -106,6 +121,30 @@
             Novo Cliente
         </a>
     </div>
+
+    <!-- SEÇÃO ALERTAS -->
+    <div class="nav-section" style="flex:1;">
+        <h6 class="nav-header">ALERTAS</h6>
+        
+        <button onclick="document.getElementById('modalAniversariantes').showModal()" class="nav-item" style="width:100%; border:none; background:none; cursor:pointer; text-align:left;">
+            <span class="material-symbols-rounded" style="color:#ffc107;">cake</span>
+            Aniversários
+            <?php if(count($aniversariantes) > 0): ?>
+                <span style="background:#ffc107; color:#000; font-size:0.7rem; padding:2px 6px; border-radius:10px; margin-left:auto; font-weight:800;"><?= count($aniversariantes) ?></span>
+            <?php endif; ?>
+        </button>
+
+        <button onclick="document.getElementById('modalParados').showModal()" class="nav-item" style="width:100%; border:none; background:none; cursor:pointer; text-align:left;">
+            <span class="material-symbols-rounded" style="color:#dc3545;">timer_off</span>
+            Processos Parados
+            <?php if(count($parados) > 0): ?>
+                <span style="background:#dc3545; color:#fff; font-size:0.7rem; padding:2px 6px; border-radius:10px; margin-left:auto; font-weight:800;"><?= count($parados) ?></span>
+            <?php endif; ?>
+        </button>
+    </div>
+
+    <!-- Inclui os modais necessários para a sidebar -->
+    <?php require 'includes/modals/sidebar_widgets.php'; ?>
 
     <!-- TECHNICAL RESPONSIBLE FOOTER (Pinned to Bottom) -->
     <div style="margin-top:auto; padding:20px; border-top:1px solid #f0f0f0; background: linear-gradient(to bottom, #fff 0%, #f1f8f5 100%); border-radius: 0 0 16px 16px; text-align:center; position:relative; overflow:hidden;">

@@ -5,7 +5,8 @@
         <button onclick="document.getElementById('modalNovaPendencia').close()" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:#ef6c00;">&times;</button>
     </div>
     
-    <form method="POST" enctype="multipart/form-data" style="padding:20px;">
+    <form action="actions/admin/pendencia_create.php" method="POST" enctype="multipart/form-data" style="padding:20px;">
+        <?= Csrf::getHtmlField() ?>
         <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
         
         <div style="display:flex; flex-direction:column; gap:15px;">
@@ -34,7 +35,8 @@
 
 <!-- Modal Editar Pendência -->
 <dialog id="modalEditPendencia" style="border:none; border-radius:10px; padding:0; width:90%; max-width:600px; box-shadow:0 10px 40px rgba(0,0,0,0.3);">
-    <form method="POST" style="display:flex; flex-direction:column;">
+    <form action="actions/admin/pendencia_update.php" method="POST" style="display:flex; flex-direction:column;">
+        <?= Csrf::getHtmlField() ?>
         <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
         <input type="hidden" name="pendencia_id" id="edit_pendencia_id">
         

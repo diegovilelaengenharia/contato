@@ -4,7 +4,7 @@
 // Ele espera que variáveis como $cliente, $detalhes, $campos_extras estejam definidas se for edição.
 
 $is_edit = isset($cliente) && !empty($cliente);
-$action_url = "includes/processamento.php";
+$action_url = $is_edit ? "actions/admin/cliente_update.php" : "actions/admin/cliente_create.php";
 $btn_text = $is_edit ? "💾 Salvar Alterações" : "✅ Criar Cadastro Completo";
 $btn_name = $is_edit ? "btn_salvar_tudo" : "novo_cliente";
 $hidden_acao = $is_edit ? "editar_cliente_completo" : "novo_cliente";
@@ -46,59 +46,21 @@ $i_lote = $detalhes['imovel_area_lote'] ?? ($detalhes['area_terreno'] ?? '');
 $i_area = $detalhes['area_construida'] ?? '';
 
 // Dados do Processo
-$p_num = $detalhes['numero_processo'] ?? '';
+$p_num = $detalhes['processo_numero'] ?? ($detalhes['numero_processo'] ?? '');
 $p_data = $detalhes['data_inicio'] ?? '';
-$p_obj = $detalhes['objeto_processo'] ?? '';
+$p_obj = $detalhes['processo_objeto'] ?? ($detalhes['objeto_processo'] ?? '');
+$p_tipo_chave = $detalhes['tipo_processo_chave'] ?? '';
 
 ?>
 
 <form action="<?= $action_url ?>" method="POST" enctype="multipart/form-data" class="main-wrapper" style="<?= $is_edit ? '' : 'box-shadow:none; padding:0;' ?>">
+    <?= Csrf::getHtmlField() ?>
     <input type="hidden" name="acao" value="<?= $hidden_acao ?>">
     <?php if($is_edit): ?>
         <input type="hidden" name="cliente_id" value="<?= $cliente['id'] ?>">
     <?php endif; ?>
 
-    <!-- 1. ACESSO -->
-<!-- ... (existing form content) ... -->
-
-    <div class="form-grid" style="margin-top:15px; background:#f8f9fa; padding:15px; border-radius:8px;">
-        <div class="form-group"><label>Inscrição Imobiliária (IPTU)</label><input type="text" name="inscricao_imob" value="<?= htmlspecialchars($i_iptu) ?>"></div>
-        <div class="form-group"><label>Matrícula Cartório</label><input type="text" name="num_matricula" value="<?= htmlspecialchars($i_mat) ?>"></div>
-        <div class="form-group"><label>Área do Lote (m²)</label><input type="text" name="imovel_area_lote" value="<?= htmlspecialchars($i_lote) ?>"></div>
-        <div class="form-group"><label>Área Construída (m²)</label><input type="text" name="area_construida" value="<?= htmlspecialchars($i_area) ?>"></div>
-    </div>
-
-    <!-- 5. DADOS DO PROCESSO (NOVO) -->
-    <h3 style="margin:20px 0 15px 0; color:var(--color-primary); border-bottom:1px solid #eee; padding-bottom:5px;">5. Dados do Processo</h3>
-    <div class="form-grid">
-        <div class="form-group"><label>Número do Processo</label><input type="text" name="processo_numero" value="<?= htmlspecialchars($p_num) ?>" placeholder="Ex: 2024/0058"></div>
-        <div class="form-group"><label>Data de Início</label><input type="date" name="data_inicio" value="<?= htmlspecialchars($p_data) ?>"></div>
-        
-        <div class="form-group" style="grid-column: span 2;">
-            <label>Tipo de Processo (Lista de Documentos)</label>
-            <?php 
-                // Load Docs Config safely
-                $docs_config_path = __DIR__ . '/../config/docs_config.php';
-                if(file_exists($docs_config_path)) {
-                    $docs_data_conf = require $docs_config_path;
-                    $processos_opts = $docs_data_conf['processes'] ?? [];
-                } else {
-                    $processos_opts = [];
-                }
-                $p_tipo_chave = $detalhes['tipo_processo_chave'] ?? '';
-            ?>
-            <select name="tipo_processo_chave" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px; background-color:#fff;">
-                <option value="">-- Selecione o Tipo (Define o Checklist) --</option>
-                <?php foreach($processos_opts as $chave => $proc): ?>
-                    <option value="<?= $chave ?>" <?= ($p_tipo_chave == $chave) ? 'selected' : '' ?>>
-                        <?= htmlspecialchars($proc['titulo']) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-            <small style="color:#666; font-size:0.8rem;">Selecionar o tipo correto ativa a lista de documentos personalizada.</small>
-        </div>
-
-    </div>
+    <!-- 1. ACESSO & FOTOS -->
     <h3 style="margin:0 0 15px 0; color:var(--color-primary); border-bottom:1px solid #eee; padding-bottom:5px;">1. Acesso & Fotos</h3>
     <div style="display:flex; gap:20px; margin-bottom:20px;">
         <div style="flex:1;">
@@ -178,7 +140,7 @@ $p_obj = $detalhes['objeto_processo'] ?? '';
         <div class="form-group"><label>UF</label><input type="text" name="res_uf" value="<?= htmlspecialchars($r_uf) ?>" maxlength="2" style="text-transform:uppercase;"></div>
     </div>
 
-    <!-- 4. DADOS DO IMÓVEL -->
+    <!-- 4. DADOS DO IMÓVEL / OBRA -->
     <h3 style="margin:20px 0 15px 0; color:var(--color-primary); border-bottom:1px solid #eee; padding-bottom:5px;">4. Dados do Imóvel / Obra</h3>
     <div class="form-grid">
         <div class="form-group" style="grid-column: span 3;">
@@ -208,10 +170,40 @@ $p_obj = $detalhes['objeto_processo'] ?? '';
         <div class="form-group"><label>Área Construída (m²)</label><input type="text" name="area_construida" value="<?= htmlspecialchars($i_area) ?>"></div>
     </div>
 
-    <!-- SECTION 5: CUSTOM FIELDS (DINÂMICOS) - UNIFIED -->
+    <!-- 5. DADOS DO PROCESSO -->
+    <h3 style="margin:20px 0 15px 0; color:var(--color-primary); border-bottom:1px solid #eee; padding-bottom:5px;">5. Dados do Processo</h3>
+    <div class="form-grid">
+        <div class="form-group"><label>Número do Processo</label><input type="text" name="processo_numero" value="<?= htmlspecialchars($p_num) ?>" placeholder="Ex: 2024/0058"></div>
+        <div class="form-group"><label>Data de Início</label><input type="date" name="data_inicio" value="<?= htmlspecialchars($p_data) ?>"></div>
+        
+        <div class="form-group" style="grid-column: span 2;">
+            <label>Tipo de Processo (Lista de Documentos)</label>
+            <?php 
+                // Load Docs Config safely
+                $docs_config_path = __DIR__ . '/../config/docs_config.php';
+                if(file_exists($docs_config_path)) {
+                    $docs_data_conf = require $docs_config_path;
+                    $processos_opts = $docs_data_conf['processes'] ?? [];
+                } else {
+                    $processos_opts = [];
+                }
+            ?>
+            <select name="tipo_processo_chave" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px; background-color:#fff;">
+                <option value="">-- Selecione o Tipo (Define o Checklist) --</option>
+                <?php foreach($processos_opts as $chave => $proc): ?>
+                    <option value="<?= $chave ?>" <?= ($p_tipo_chave == $chave) ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($proc['titulo']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            <small style="color:#666; font-size:0.8rem;">Selecionar o tipo correto ativa a lista de documentos personalizada.</small>
+        </div>
+    </div>
+
+    <!-- SECTION 6: OUTRAS INFORMAÇÕES (DINÂMICOS) -->
     <div class="section-header" style="margin-top:20px;">
         <div class="section-icon">📝</div>
-        <h2>Outras Informações</h2>
+        <h3 style="margin:0; color:var(--color-primary); border-bottom:1px solid #eee; padding-bottom:5px;">6. Outras Informações</h3>
     </div>
     <div class="section-body">
         <p style="font-size:0.9rem; color:#666; margin-bottom:20px;">Use esta seção para adicionar dados personalizados (Ex: CNH, Nome do Cônjuge, etc).</p>
@@ -255,11 +247,6 @@ $p_obj = $detalhes['objeto_processo'] ?? '';
     <script>
         // LOGIN AUTOMÁTICO (UI)
         function atualizarLoginAuto() {
-            // Se o campo usuario já tem valor e o usuario digitou manualmente, talvez não devêssemos sobrescrever?
-            // Mas a regra é: Se estiver vazio ou se for uma geração automatica recente.
-            // Simplificação: Sempre atualiza se for "Create Mode" (input hidden acao=novo_cliente)
-            // Mas aqui só temos checkbox.
-            
             const radioCpf = document.querySelector('input[name="auto_login_source"][value="cpf"]');
             const radioTel = document.querySelector('input[name="auto_login_source"][value="tel"]');
             
@@ -294,7 +281,7 @@ $p_obj = $detalhes['objeto_processo'] ?? '';
                 document.querySelectorAll(`input[name="${name}"]`).forEach(input => {
                     input.addEventListener('input', (e) => {
                         e.target.value = fn(e.target.value);
-                        atualizarLoginAuto(); // Update on input change too
+                        atualizarLoginAuto();
                     });
                 });
             }

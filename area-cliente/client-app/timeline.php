@@ -4,13 +4,19 @@ session_name('CLIENTE_SESSID');
 session_start();
 require_once '../db.php';
 
-// VERIFICAR LOGIN
-if (!isset($_SESSION['cliente_id'])) {
-    header("Location: ../index.php");
-    exit;
-}
+// --- LOGICA DE SIMULAÇÃO PELO ADMIN ---
+$is_simulated = isset($_GET['simular_timeline']) && $_GET['simular_timeline'] == 1 && isset($_SESSION['admin_logado']);
 
-$cliente_id = $_SESSION['cliente_id'];
+if ($is_simulated && isset($_GET['cliente_id'])) {
+    $cliente_id = $_GET['cliente_id'];
+} else {
+    // VERIFICAR LOGIN PADRÃO DO CLIENTE
+    if (!isset($_SESSION['cliente_id'])) {
+        header("Location: ../index.php");
+        exit;
+    }
+    $cliente_id = $_SESSION['cliente_id'];
+}
 
 // BUSCAR DADOS DO CLIENTE
 $stmt = $pdo->prepare("SELECT * FROM clientes WHERE id = ?");
@@ -353,7 +359,7 @@ $obs_atual = $stmt_obs->fetchColumn();
 
         </div>
 
-        
+        <?php if(!$is_simulated): ?>
         <!-- FLOATING SOCIAL BUTTONS (OFFICIAL LANDING PAGE STYLE) -->
         <div class="floating-buttons" style="z-index: 99999;">
             <a href="https://wa.me/5535984529577?text=Ola%20Diego%20Vilela" class="floating-btn floating-btn--whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp">
@@ -366,8 +372,11 @@ $obs_atual = $stmt_obs->fetchColumn();
 
         <!-- FOOTER -->
         <?php include 'includes/footer.php'; ?>
+        <?php endif; ?>
 
     </div>
 
 </body>
+</html>
+
 </html>

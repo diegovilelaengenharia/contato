@@ -105,3 +105,13 @@ try {
 } catch (Exception $e) {
     $pdo->exec("ALTER TABLE processo_docs_entregues ADD COLUMN status ENUM('pendente', 'em_analise', 'aprovado', 'rejeitado') DEFAULT 'pendente'");
 }
+
+// Create Table for Final Deliverables (Diego -> Client)
+$pdo->exec("CREATE TABLE IF NOT EXISTS processo_entregaveis (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cliente_id INT NOT NULL,
+    titulo VARCHAR(255) NOT NULL,
+    arquivo_path VARCHAR(255) NOT NULL,
+    data_upload DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
+);");

@@ -6,8 +6,11 @@
     Deny from all
 </FilesMatch>
 
-# Bloquear diretório config/ inteiro (configurações internas)
+# Bloquear diretórios internos da nova arquitetura
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteRule ^config/ - [F,L]
+    RewriteRule ^core/ - [F,L]
+    RewriteRule ^actions/ - [F,L]
+    RewriteRule ^maintenance/ - [F,L]
 </IfModule>

@@ -1,7 +1,9 @@
 <?php
 ob_start();
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+
+// Segurança: Não exibir erros em produção. Logs devem ser consultados via servidor.
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
 
 // Session Configuration
@@ -10,30 +12,37 @@ session_name('CLIENTE_SESSID');
 session_start();
 
 // Database Connection
+require __DIR__ . '/../core/Database.php';
+require __DIR__ . '/../core/Auth.php';
+require __DIR__ . '/../core/Csrf.php';
+require __DIR__ . '/../core/Processo.php';
+
 try {
     require __DIR__ . '/../db.php';
 } catch (Throwable $e) {
-    die("<h1>Erro Crítico (Sintaxe ou Banco)</h1><p><strong>Arquivo:</strong> " . $e->getFile() . " <br><strong>Linha:</strong> " . $e->getLine() . "<br><strong>Erro:</strong> " . $e->getMessage() . "</p>");
+    // Erro crítico: Logar e mostrar mensagem amigável 503
+    error_log("Erro Crítico Vilela: " . $e->getMessage());
+    http_response_code(503);
+    die("<h1>Serviço Temporariamente Indisponível</h1><p>Estamos realizando uma manutenção rápida. Por favor, tente novamente em instantes.</p>");
 }
 
 register_shutdown_function(function() {
     $error = error_get_last();
     if ($error !== NULL && $error['type'] === E_ERROR) {
-        die("<h1>Erro Fatal PHP</h1><p><strong>Arquivo:</strong> " . $error['file'] . " <br><strong>Linha:</strong> " . $error['line'] . "<br><strong>Erro:</strong> " . $error['message'] . "</p>");
+        error_log("Erro Fatal Vilela: " . $error['message'] . " in " . $error['file'] . " on line " . $error['line']);
+        if (!headers_sent()) {
+            http_response_code(500);
+        }
+        die("<h1>Ocorreu um erro interno</h1><p>Nossa equipe técnica foi notificada. Pedimos desculpas pelo transtorno.</p>");
     }
 });
 
-// --- SELF-HEALING DATABASE (Correção de Colunas Faltantes) ---
+// --- SELF-HEALING DATABASE (Manter compatibilidade por enquanto) ---
 try {
     $pdo->exec("ALTER TABLE processo_detalhes ADD COLUMN data_nascimento DATE DEFAULT NULL");
-} catch (Exception $e) { 
-    // Ignora erro se coluna já existe
-}
+} catch (Exception $e) { }
 
-// --- Configuração e Segurança ---
-$minha_senha_mestra = defined('ADMIN_PASSWORD') ? ADMIN_PASSWORD : 'VilelaAdmin2025'; 
-
-// Verifica Sessão
+// Verifica Sessão Admin
 if (!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true) {
     header("Location: index.php");
     exit;

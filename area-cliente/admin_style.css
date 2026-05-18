@@ -58,11 +58,29 @@ body {
 }
 
 .admin-container {
-    display: block;
-    max-width: 100%;
-    margin: 20px auto;
-    padding: 0 20px;
+    display: flex;
+    max-width: 1400px;
+    margin: 30px auto;
+    padding: 0 30px;
     box-sizing: border-box;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+@media (max-width: 992px) {
+    .admin-container {
+        flex-direction: column;
+        padding: 0 15px;
+        margin: 15px auto;
+        gap: 20px;
+    }
+    
+    .sidebar {
+        width: 100% !important;
+        min-width: 100% !important;
+        position: static !important;
+        height: auto !important;
+    }
 }
 
 /* --- Floating Action Menu (FAB) --- */
@@ -1040,9 +1058,7 @@ html.sidebar-collapsed .sidebar-toggler {
 
 
 /* Remove old sidebar styles that might conflict */
-.sidebar {
-    display: none !important;
-}
+/* Sidebar handled by component styles */
 
 /* Remove FAB styles that are no longer used */
 .fab-container,
@@ -1326,4 +1342,57 @@ h1, h2, h3, h4, h5, h6 {
 .status-badge.warning { background: #fff3cd; color: #856404; }
 .status-badge.danger  { background: #f8d7da; color: #842029; }
 .status-badge.info    { background: #cff4fc; color: #055160; }
+
+/* 6. Navigation Pills */
+.nav-pills {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+.nav-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 50px;
+    text-decoration: none;
+    color: #555;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+.nav-pill:hover {
+    background: #f8f9fa;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+.nav-pill.active {
+    background: #2f3e36;
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(47, 62, 54, 0.2);
+}
+.nav-pill .material-symbols-rounded {
+    font-size: 1.2rem;
+}
+
+/* 7. Timeline Stepper Header */
+.timeline-header {
+    background: #fff;
+    border-radius: 20px;
+    padding: 30px 40px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    margin-bottom: 30px;
+    border: 1px solid #f0f0f0;
+    position: relative;
+    overflow: visible;
+}
+.th-container { display: flex; align-items: center; justify-content: center; width: 100%; }
+.th-stepper { flex: 1; display: flex; align-items: center; justify-content: space-between; position: relative; max-width: 900px; margin: 0 auto; }
+.th-line-bg { position: absolute; left: 0; right: 0; top: 15px; height: 4px; background: #e9ecef; z-index: 0; border-radius: 3px; }
+.th-line-fill { position: absolute; left: 0; top: 15px; height: 4px; background: #198754; z-index: 0; border-radius: 3px; transition: width 1s ease; }
 

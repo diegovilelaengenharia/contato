@@ -5,7 +5,8 @@
         <button onclick="document.getElementById('modalFinanceiro').close()" style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
     </div>
     
-    <form method="POST" style="padding:25px;">
+    <form action="actions/admin/financeiro_create.php" method="POST" style="padding:25px;">
+        <?= Csrf::getHtmlField() ?>
         <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
         
         <div style="background:#f0f8ff; border:1px solid #cfe2ff; padding:15px; border-radius:8px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
@@ -54,9 +55,10 @@
 
 <!-- Modal Status Financeiro -->
 <dialog id="modalStatusFin" style="border:none; border-radius:8px; padding:20px; box-shadow:0 5px 20px rgba(0,0,0,0.2);">
-    <form method="POST">
+    <form action="actions/admin/financeiro_status_update.php" method="POST">
+        <?= Csrf::getHtmlField() ?>
         <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
-        <input type="hidden" name="fin_id" id="edit_fin_id">
+        <input type="hidden" name="financeiro_id" id="edit_fin_id">
         
         <h3 style="margin-top:0;">Alterar Status Financeiro</h3>
         

@@ -5,7 +5,8 @@
         <button onclick="document.getElementById('modalAprovarCadastro').close()" style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
     </div>
     
-    <form method="POST" style="padding:25px;">
+    <form action="actions/admin/cliente_approve_pre.php" method="POST" style="padding:25px;">
+        <?= Csrf::getHtmlField() ?>
         <input type="hidden" name="id_pre" id="apr_id_pre">
         
         <div class="form-group">
