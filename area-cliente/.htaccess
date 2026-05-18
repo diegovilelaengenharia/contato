@@ -1,7 +1,7 @@
 # Bloquear acesso HTTP direto a arquivos de configuração e credenciais
 
-# Bloquear db.php e .env (credenciais e configuração sensível)
-<FilesMatch "^(db\.php|\.env)$">
+# Bloquear db.php, .env e db_config.ini (credenciais e configuração sensível)
+<FilesMatch "^(db\.php|\.env|db_config\.ini)$">
     Order Allow,Deny
     Deny from all
 </FilesMatch>
