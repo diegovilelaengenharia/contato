@@ -17,6 +17,7 @@ jobs:
       - name: Gerar area-cliente/.env a partir dos Secrets
         run: |
           {
+            echo "; Generated at $(date -u +%Y-%m-%dT%H:%M:%SZ) by GitHub Actions run ${{ github.run_id }}"
             echo "DB_HOST=${{ secrets.DB_HOST }}"
             echo "DB_NAME=${{ secrets.DB_NAME }}"
             echo "DB_USER=${{ secrets.DB_USER }}"
