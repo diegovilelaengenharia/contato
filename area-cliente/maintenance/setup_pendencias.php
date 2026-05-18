@@ -1,4 +1,5 @@
-<?php
+<?php if (php_sapi_name() !== 'cli') die('CLI ONLY');
+
 require 'db.php';
 
 try {

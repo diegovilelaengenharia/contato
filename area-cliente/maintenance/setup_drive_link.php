@@ -1,4 +1,5 @@
-<?php
+<?php if (php_sapi_name() !== 'cli') die('CLI ONLY');
+
 // Script para adicionar coluna de Link do Drive
 // Rodar uma vez via browser: /area-cliente/setup_drive_link.php
 

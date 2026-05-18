@@ -1,4 +1,5 @@
-<?php
+<?php if (php_sapi_name() !== 'cli') die('CLI ONLY');
+
 // setup_update_db_v2.php
 // Adiciona coluna para Tipo de Responsável Técnico
 require 'db.php';

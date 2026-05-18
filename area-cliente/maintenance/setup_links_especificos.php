@@ -1,4 +1,5 @@
-<?php
+<?php if (php_sapi_name() !== 'cli') die('CLI ONLY');
+
 // Script para adicionar colunas de Links Específicos
 // Rodar uma vez via browser: /area-cliente/setup_links_especificos.php
 
