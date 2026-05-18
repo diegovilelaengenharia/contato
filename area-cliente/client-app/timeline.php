@@ -1,8 +1,6 @@
 <?php
-session_set_cookie_params(0, '/');
-session_name('CLIENTE_SESSID');
-session_start();
-require_once '../db.php';
+$SKIP_CLIENT_AUTH = true;
+require_once __DIR__ . '/init_client.php';
 
 // --- LOGICA DE SIMULAÇÃO PELO ADMIN ---
 $is_simulated = isset($_GET['simular_timeline']) && $_GET['simular_timeline'] == 1 && isset($_SESSION['admin_logado']);

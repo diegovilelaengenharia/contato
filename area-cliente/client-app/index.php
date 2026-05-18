@@ -1,16 +1,5 @@
 <?php
-session_set_cookie_params(0, '/');
-session_name('CLIENTE_SESSID');
-session_start();
-require_once '../db.php';
-
-// VERIFICAR LOGIN
-if (!isset($_SESSION['cliente_id'])) {
-    header("Location: ../index.php");
-    exit;
-}
-
-$cliente_id = $_SESSION['cliente_id'];
+require_once __DIR__ . '/init_client.php';
 
 // BUSCAR DADOS DO CLIENTE
 $stmt = $pdo->prepare("SELECT * FROM clientes WHERE id = ?");

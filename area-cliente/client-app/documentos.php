@@ -1,15 +1,5 @@
 <?php
-session_set_cookie_params(0, '/');
-session_name('CLIENTE_SESSID');
-session_start();
-require_once '../db.php';
-
-// 1. AUTHENTICATION
-if (!isset($_SESSION['cliente_id'])) {
-    header("Location: ../index.php");
-    exit;
-}
-$cliente_id = $_SESSION['cliente_id'];
+require_once __DIR__ . '/init_client.php';
 
 // 2. FETCH DATA
 $stmt = $pdo->prepare("SELECT link_drive_pasta FROM processo_detalhes WHERE cliente_id = ?");

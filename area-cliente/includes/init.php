@@ -6,8 +6,14 @@ ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
 
-// Session Configuration
-session_set_cookie_params(0, '/');
+// Session Configuration (S5: cookies seguros)
+session_set_cookie_params([
+    'lifetime' => 0,
+    'path'     => '/',
+    'secure'   => true,
+    'httponly'  => true,
+    'samesite'  => 'Lax',
+]);
 session_name('CLIENTE_SESSID');
 session_start();
 

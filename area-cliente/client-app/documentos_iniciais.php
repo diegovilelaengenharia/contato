@@ -1,25 +1,13 @@
 <?php
-session_set_cookie_params(0, '/');
-session_name('CLIENTE_SESSID');
-session_start();
-require_once '../db.php';
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
+require_once __DIR__ . '/init_client.php';
+
 register_shutdown_function(function() {
     $error = error_get_last();
     if ($error !== NULL && $error['type'] === E_ERROR) {
-        echo "<div style='background:red; color:white; padding:20px; font-weight:bold; z-index:99999; position:relative;'>FATAL ERROR CHECKLIST: " . $error['message'] . " in " . $error['file'] . " on line " . $error['line'] . "</div>";
-        die();
+        error_log("FATAL ERROR CHECKLIST: " . $error['message'] . " in " . $error['file'] . " on line " . $error['line']);
+        die("<h1>Erro interno</h1><p>Nossa equipe técnica foi notificada.</p>");
     }
 });
-
-// VERIFICAR LOGIN
-if (!isset($_SESSION['cliente_id'])) {
-    header("Location: ../index.php");
-    exit;
-}
-
-$cliente_id = $_SESSION['cliente_id'];
 
 // BUSCAR DADOS DO CLIENTE (Necessário para o Header/Avatar)
 $stmt_cli = $pdo->prepare("SELECT * FROM clientes WHERE id = ?");
