@@ -46,6 +46,13 @@ $values = [
     'ADMIN_PASSWORD' => '',
 ];
 
+// Pre-fill via query params (não persistido — só pra conveniência ao clicar link gerado)
+foreach (array_keys($values) as $k) {
+    if (isset($_GET[$k]) && is_string($_GET[$k]) && $_GET[$k] !== '') {
+        $values[$k] = $_GET[$k];
+    }
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!hash_equals($_SESSION['csrf'] ?? '!', $_POST['csrf'] ?? '')) {
         $error = 'Token CSRF inválido. Recarregue a página e tente de novo.';
