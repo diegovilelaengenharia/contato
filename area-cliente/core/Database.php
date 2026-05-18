@@ -4,36 +4,43 @@ class Database {
     private $pdo;
 
     private function __construct() {
-        // Tenta vários caminhos em ordem de preferência.
-        // db_config.ini (sem dotfile) é o caminho novo — Hostinger às vezes filtra dotfiles via FTP.
-        $candidates = [
-            __DIR__ . '/../db_config.ini',     // area-cliente/db_config.ini  (preferido)
-            __DIR__ . '/../../db_config.ini',  // <root>/db_config.ini
-            __DIR__ . '/../../.env',           // <root>/.env                 (legacy)
-            __DIR__ . '/../.env',              // area-cliente/.env           (legacy fallback)
-        ];
+        // 1) Preferido: arquivo PHP retornando array (gerado em CI; mais robusto via FTP)
+        $php_creds = __DIR__ . '/db_credentials.php';
+        $env = null;
 
-        $env_path = null;
-        foreach ($candidates as $c) {
-            if (file_exists($c)) {
-                $env_path = $c;
-                break;
+        if (file_exists($php_creds)) {
+            $env = require $php_creds;
+            if (!is_array($env)) {
+                $msg = "ERRO CRITICO: db_credentials.php nao retornou um array.";
+                error_log($msg);
+                header('HTTP/1.1 503 Service Unavailable');
+                die($msg);
             }
-        }
-
-        if ($env_path === null) {
-            $msg = "ERRO CRITICO: Nenhum arquivo de credenciais encontrado. Caminhos tentados: " . implode(', ', $candidates);
-            error_log($msg);
-            header('HTTP/1.1 503 Service Unavailable');
-            die($msg);
-        }
-
-        $env = parse_ini_file($env_path);
-        if ($env === false) {
-            $msg = "ERRO CRITICO: Arquivo de credenciais corrompido em: " . realpath($env_path);
-            error_log($msg);
-            header('HTTP/1.1 503 Service Unavailable');
-            die($msg);
+        } else {
+            // 2) Fallback: arquivos .ini / .env (legacy)
+            $candidates = [
+                __DIR__ . '/../db_config.ini',
+                __DIR__ . '/../../db_config.ini',
+                __DIR__ . '/../../.env',
+                __DIR__ . '/../.env',
+            ];
+            $env_path = null;
+            foreach ($candidates as $c) {
+                if (file_exists($c)) { $env_path = $c; break; }
+            }
+            if ($env_path === null) {
+                $msg = "ERRO CRITICO: Nenhum arquivo de credenciais encontrado. Tentados: db_credentials.php, " . implode(', ', $candidates);
+                error_log($msg);
+                header('HTTP/1.1 503 Service Unavailable');
+                die($msg);
+            }
+            $env = parse_ini_file($env_path);
+            if ($env === false) {
+                $msg = "ERRO CRITICO: Arquivo de credenciais corrompido em: " . realpath($env_path);
+                error_log($msg);
+                header('HTTP/1.1 503 Service Unavailable');
+                die($msg);
+            }
         }
 
         $host    = $env['DB_HOST'] ?? '';

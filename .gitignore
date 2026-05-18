@@ -19,6 +19,8 @@ desktop.ini
 area-cliente/.env
 # db_config.ini gerado pelo deploy — credenciais reais (substituto do .env)
 area-cliente/db_config.ini
+# db_credentials.php gerado pelo deploy — credenciais reais (preferido)
+area-cliente/core/db_credentials.php
 
 # Debug / test files (não vão para produção)
 debug_live.html
