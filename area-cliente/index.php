@@ -1,11 +1,21 @@
 <?php
 // Force session cookie to be available to entire domain, preventing subdirectory issues
-session_set_cookie_params(0, '/');
+session_set_cookie_params([
+    'lifetime' => 0,
+    'path'     => '/',
+    'secure'   => true,
+    'httponly'  => true,
+    'samesite'  => 'Lax',
+]);
 session_name('CLIENTE_SESSID');
 session_start();
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+
+// Em produção, erros nunca devem ser exibidos ao usuário.
+// Erros vão para o log do servidor (error_log do PHP).
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
+
 // Conexão com banco de dados
 try {
     if (!file_exists('db.php')) {
@@ -40,61 +50,95 @@ if (isset($_SESSION['admin_logado']) && $_SESSION['admin_logado'] === true) {
 // MAINTENANCE CHECK REMOVED FROM HERE TO ALLOW LOGIN FORM VISIBILITY
 // Logic moved to inside POST handling below
 
+// ── S3: Rate-limit — proteção contra força bruta ──
+// Cria tabela se não existir (idempotente, custo mínimo)
+$pdo->exec("CREATE TABLE IF NOT EXISTS login_attempts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ip_address VARCHAR(45) NOT NULL,
+    attempted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_ip_time (ip_address, attempted_at)
+)");
+
+// Limpeza periódica de registros antigos (1% das requisições)
+if (mt_rand(1, 100) === 1) {
+    $pdo->exec("DELETE FROM login_attempts WHERE attempted_at < DATE_SUB(NOW(), INTERVAL 1 HOUR)");
+}
+
+$max_attempts = 5;
+$lockout_minutes = 15;
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usuario = trim($_POST['usuario']);
     $senha = trim($_POST['senha']);
+    $ip = $_SERVER['REMOTE_ADDR'];
 
-    // 1. Verifica se é ADMIN
-    // Senha mestra definida em db.php a partir de ADMIN_PASSWORD do config.
-    // Sem fallback hardcoded: se a env não estiver configurada, login admin é desabilitado.
-    $senhaMestraAdmin = defined('ADMIN_PASSWORD') ? ADMIN_PASSWORD : '';
-    $isAdminUser = strtolower($usuario) === 'admin' || strtolower($usuario) === 'vilela';
+    // Verifica se o IP está bloqueado por excesso de tentativas
+    $stmtAttempts = $pdo->prepare(
+        "SELECT COUNT(*) FROM login_attempts WHERE ip_address = ? AND attempted_at > DATE_SUB(NOW(), INTERVAL ? MINUTE)"
+    );
+    $stmtAttempts->execute([$ip, $lockout_minutes]);
+    $recentAttempts = (int) $stmtAttempts->fetchColumn();
 
-    if ($isAdminUser && $senhaMestraAdmin !== '' && hash_equals($senhaMestraAdmin, $senha)) {
-        $_SESSION['admin_logado'] = true;
-        header("Location: gestao_admin_99.php");
-        exit;
-    }
+    if ($recentAttempts >= $max_attempts) {
+        $erro = "Muitas tentativas de login. Aguarde {$lockout_minutes} minutos e tente novamente.";
+    } else {
+        // 1. Verifica se é ADMIN
+        // Senha mestra definida em db.php a partir de ADMIN_PASSWORD do config.
+        // Sem fallback hardcoded: se a env não estiver configurada, login admin é desabilitado.
+        $senhaMestraAdmin = defined('ADMIN_PASSWORD') ? ADMIN_PASSWORD : '';
+        $isAdminUser = strtolower($usuario) === 'admin' || strtolower($usuario) === 'vilela';
 
-
-
-    // CHECK MAINTENANCE BLOCK FOR CLIENTS
-    // If we are here, it's not admin. Check maintenance again to block client login.
-    try {
-        $stmtMaint = $pdo->query("SELECT setting_value FROM admin_settings WHERE setting_key = 'maintenance_mode'");
-        if ($stmtMaint && $stmtMaint->fetchColumn() == 1) {
-            
-            // SE FOR ADMIN TENTANDO LOGAR (E ERROU A SENHA), NÃO MOSTRA MANUTENÇÃO, MOSTRA ERRO
-            if (strtolower($usuario) !== 'admin' && strtolower($usuario) !== 'vilela') {
-                 // MOSTRAR AVISO DE MANUTENÇÃO (PÁGINA COMPLETA) PARA CLIENTES
-                require 'maintenance.php';
-                exit;
-            }
+        if ($isAdminUser && $senhaMestraAdmin !== '' && hash_equals($senhaMestraAdmin, $senha)) {
+            // Login admin OK — limpa tentativas deste IP
+            $pdo->prepare("DELETE FROM login_attempts WHERE ip_address = ?")->execute([$ip]);
+            $_SESSION['admin_logado'] = true;
+            header("Location: gestao_admin_99.php");
+            exit;
         }
-        
-        // Se não caiu no exit acima, continua tentando logar (vai dar erro de senha se não for admin)
-            // 2. Se não for Admin, busca Cliente no banco
-            $stmt = $pdo->prepare("SELECT * FROM clientes WHERE usuario = ?");
-            $stmt->execute([$usuario]);
-            $user = $stmt->fetch();
-            
-            // Verifica a senha (usando hash seguro)
-            if ($user && password_verify($senha, $user['senha'])) {
-                session_regenerate_id(true);
-                // CLEAR PREVIOUS SESSION DATA (Prevent Admin/Client Mix)
-                session_unset();
-                
-                $_SESSION['cliente_id'] = $user['id'];
-                $_SESSION['cliente_nome'] = $user['nome'];
-                session_write_close();
-                header("Location: client-app/index.php");
-                exit;
-            } else {
-                $erro = "Usuário ou senha inválidos!";
-            }
 
-    } catch(Exception $e) {
-        $erro = "Erro Login: " . $e->getMessage();
+        // CHECK MAINTENANCE BLOCK FOR CLIENTS
+        // If we are here, it's not admin. Check maintenance again to block client login.
+        try {
+            $stmtMaint = $pdo->query("SELECT setting_value FROM admin_settings WHERE setting_key = 'maintenance_mode'");
+            if ($stmtMaint && $stmtMaint->fetchColumn() == 1) {
+                
+                // SE FOR ADMIN TENTANDO LOGAR (E ERROU A SENHA), NÃO MOSTRA MANUTENÇÃO, MOSTRA ERRO
+                if (strtolower($usuario) !== 'admin' && strtolower($usuario) !== 'vilela') {
+                     // MOSTRAR AVISO DE MANUTENÇÃO (PÁGINA COMPLETA) PARA CLIENTES
+                    require 'maintenance.php';
+                    exit;
+                }
+            }
+            
+            // Se não caiu no exit acima, continua tentando logar (vai dar erro de senha se não for admin)
+                // 2. Se não for Admin, busca Cliente no banco
+                $stmt = $pdo->prepare("SELECT * FROM clientes WHERE usuario = ?");
+                $stmt->execute([$usuario]);
+                $user = $stmt->fetch();
+                
+                // Verifica a senha (usando hash seguro)
+                if ($user && password_verify($senha, $user['senha'])) {
+                    // Login cliente OK — limpa tentativas deste IP
+                    $pdo->prepare("DELETE FROM login_attempts WHERE ip_address = ?")->execute([$ip]);
+                    session_regenerate_id(true);
+                    // CLEAR PREVIOUS SESSION DATA (Prevent Admin/Client Mix)
+                    $_SESSION = [];
+                    
+                    $_SESSION['cliente_id'] = $user['id'];
+                    $_SESSION['cliente_nome'] = $user['nome'];
+                    session_write_close();
+                    header("Location: client-app/index.php");
+                    exit;
+                } else {
+                    // Login falhou — registra tentativa
+                    $pdo->prepare("INSERT INTO login_attempts (ip_address) VALUES (?)")->execute([$ip]);
+                    $erro = "Usuário ou senha inválidos!";
+                }
+
+        } catch(Exception $e) {
+            $erro = "Erro no sistema de login. Tente novamente.";
+            error_log("Erro Login: " . $e->getMessage());
+        }
     }
 }
 ?>

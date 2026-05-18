@@ -1,8 +1,6 @@
 <?php
-session_set_cookie_params(0, '/');
-session_name('CLIENTE_SESSID');
-session_start();
-session_destroy();
-header("Location: ../index.php");
-exit;
-?>
+/**
+ * Logout cliente — usa Auth::logout() centralizado (S5/S7).
+ */
+require_once __DIR__ . '/../core/Auth.php';
+Auth::logout();
