@@ -19,7 +19,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="style.css?v=13">
+    <link rel="stylesheet" href="style.css?v=14">
 
     <!-- Schema.org - SEO Local -->
     <script type="application/ld+json">
@@ -41,6 +41,11 @@
 </head>
 
 <body>
+    <a href="area-cliente/" class="client-portal-fab" aria-label="Área do Cliente">
+        <span class="material-symbols-rounded" aria-hidden="true">person</span>
+        <span class="client-portal-fab__label">Área do Cliente</span>
+    </a>
+
     <div class="page">
         <!-- HEADER / HERO -->
         <header class="hero" role="banner">
@@ -62,9 +67,6 @@
             <div class="v-actions">
                 <a class="v-btn-base v-btn-phone" href="https://wa.me/5535984529577?text=Olá%20Eng.%20Diego!%20Gostaria%20de%20um%20orçamento." target="_blank" rel="noopener">
                     <span class="material-symbols-rounded">call</span> (35) 98452-9577
-                </a>
-                <a class="v-btn-base v-btn-client" href="area-cliente/">
-                    <span class="material-symbols-rounded">person</span> Área do Cliente
                 </a>
             </div>
         </header>
@@ -187,12 +189,11 @@
                     </div>
                     <div class="sobre-content">
                         <p class="sobre-text">Sou Diego Vilela, Engenheiro Civil formado pela Universidade Federal de São João Del Rei (UFSJ), especializado em regularização e aprovação de imóveis.</p>
-                        <p class="sobre-text">Com experiência como Analista de Projetos na Prefeitura de Oliveira, conheço por dentro os trâmites da prefeitura, receita federal e cartório — o que agiliza cada etapa do processo para meus clientes.</p>
+                        <p class="sobre-text">Conheço por dentro os trâmites de prefeitura, receita federal e cartório — o que agiliza cada etapa do processo para meus clientes.</p>
                         <p class="sobre-text">Meu compromisso é levar seu imóvel à regularização completa pelo caminho mais eficiente, evitando atrasos e custos desnecessários. Estou à disposição para cuidar do seu patrimônio.</p>
                         <div class="credential-badges">
                             <span class="credential-badge">CREA 235.474/D</span>
                             <span class="credential-badge">Eng. Civil · UFSJ</span>
-                            <span class="credential-badge">Ex-Analista de Projetos · Pref. Oliveira</span>
                         </div>
                     </div>
                 </div>
@@ -201,13 +202,36 @@
 
         <footer class="footer-premium">
             <div class="footer-premium__content">
-                <img src="assets/foto-diego-new.jpg" alt="Diego Vilela" class="footer-avatar">
-                <div class="footer-info">
-                    <span class="footer-label">ENGENHEIRO CIVIL</span>
-                    <h3>Diego T. N. Vilela</h3>
-                    <span class="footer-crea">UFSJ | CREA 235.474/D</span>
-                    <a href="#sobre" class="footer-bio-link">Sobre Mim</a>
+                <div class="footer-brand">
+                    <strong class="footer-brand__name">Vilela Engenharia</strong>
+                    <span class="footer-brand__credentials">CREA 235.474/D &middot; Eng. Civil &middot; UFSJ</span>
                 </div>
+
+                <ul class="footer-social" aria-label="Redes e contato">
+                    <li>
+                        <a href="https://wa.me/5535984529577" target="_blank" rel="noopener" class="footer-social__link">
+                            <span class="material-symbols-rounded" aria-hidden="true">chat</span>
+                            <span>WhatsApp</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://instagram.com/diegovilela.eng" target="_blank" rel="noopener" class="footer-social__link">
+                            <span class="material-symbols-rounded" aria-hidden="true">photo_camera</span>
+                            <span>Instagram</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="mailto:diegonunesvilela@gmail.com" class="footer-social__link">
+                            <span class="material-symbols-rounded" aria-hidden="true">mail</span>
+                            <span>E-mail</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <p class="footer-meta">
+                    <span class="material-symbols-rounded" aria-hidden="true">place</span>
+                    Atendimento em Oliveira/MG e região
+                </p>
             </div>
             <div class="footer-premium__bottom">
                 &copy; <span id="year"></span> Vilela Engenharia &middot; Todos os direitos reservados.
@@ -215,8 +239,15 @@
         </footer>
 
         <div class="floating-buttons">
+            <a href="https://instagram.com/diegovilela.eng" class="floating-btn floating-btn--instagram" target="_blank" rel="noopener" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="3" y="3" width="18" height="18" rx="5" ry="5"></rect>
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                </svg>
+            </a>
             <a href="https://wa.me/5535984529577" class="floating-btn floating-btn--whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp">
-                <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor" aria-hidden="true">
                     <path d="M12 2a10 10 0 0 0-8.66 15.14L2 22l5-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.08-1.13l-.29-.18-3 .79.8-2.91-.19-.3A8 8 0 1 1 12 20zm4.37-5.73-.52-.26a1.32 1.32 0 0 0-1.15.04l-.4.21a.5.5 0 0 1-.49 0 8.14 8.14 0 0 1-2.95-2.58.5.5 0 0 1 0-.49l.21-.4a1.32 1.32 0 0 0 .04-1.15l-.26-.52a1.32 1.32 0 0 0-1.18-.73h-.37a1 1 0 0 0-1 .86 3.47 3.47 0 0 0 .18 1.52A10.2 10.2 0 0 0 13 15.58a3.47 3.47 0 0 0 1.52.18 1 1 0 0 0 .86-1v-.37a1.32 1.32 0 0 0-.73-1.18z"></path>
                 </svg>
             </a>
