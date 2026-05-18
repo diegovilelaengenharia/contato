@@ -15,10 +15,9 @@ try {
     die("Erro interno no servidor de banco de dados.");
 }
 
-// Definições globais úteis para o legado
+// Definições globais úteis para o legado.
+// Reusa a fonte de credenciais que Database.php já carregou em getInstance() acima,
+// evitando duplicar a lógica de fallback e o warning de .env ausente.
 if (!defined('ADMIN_PASSWORD')) {
-    $env_path = __DIR__ . '/../.env';
-    if (!file_exists($env_path)) $env_path = __DIR__ . '/.env';
-    $env_legacy = parse_ini_file($env_path);
-    define('ADMIN_PASSWORD', $env_legacy['ADMIN_PASSWORD'] ?? '');
+    define('ADMIN_PASSWORD', Database::getConfig('ADMIN_PASSWORD') ?? '');
 }

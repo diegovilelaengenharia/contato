@@ -1,6 +1,7 @@
 <?php
 class Database {
     private static $instance = null;
+    private static $env = [];
     private $pdo;
 
     private function __construct() {
@@ -43,6 +44,8 @@ class Database {
             }
         }
 
+        self::$env = $env; // expõe pros consumidores legados (db.php)
+
         $host    = $env['DB_HOST'] ?? '';
         $db      = $env['DB_NAME'] ?? '';
         $user    = $env['DB_USER'] ?? '';
@@ -78,5 +81,17 @@ class Database {
             self::$instance = new self();
         }
         return self::$instance->pdo;
+    }
+
+    /**
+     * Retorna um valor de configuração lido da fonte de credenciais
+     * (db_credentials.php ou fallback .env/.ini). Garante que a inicialização
+     * já ocorreu antes de consultar.
+     */
+    public static function getConfig($key) {
+        if (self::$instance === null) {
+            self::getInstance();
+        }
+        return self::$env[$key] ?? null;
     }
 }
