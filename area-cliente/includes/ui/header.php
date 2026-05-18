@@ -11,7 +11,7 @@
 <div class="top-nav-container">
     
     <!-- 1. Visão Geral -->
-    <a href="gestao_admin_99.php" class="top-nav-btn" style="border-color:var(--color-primary);">
+    <a href="admin.php" class="top-nav-btn" style="border-color:var(--color-primary);">
         <span class="material-symbols-rounded" style="color:var(--color-primary);">dashboard</span>
         Visão Geral
     </a>
@@ -36,7 +36,7 @@
                 <div style="padding:10px; color:#666; font-size:0.9rem;">Nenhum cliente</div>
             <?php else: ?>
                 <?php foreach($clientes_nav as $cnav): ?>
-                    <a href="gestao_admin_99.php?cliente_id=<?= $cnav['id'] ?>" class="dropdown-item">
+                    <a href="admin.php?cliente_id=<?= $cnav['id'] ?>" class="dropdown-item">
                         <?= htmlspecialchars($cnav['nome']) ?>
                     </a>
                 <?php endforeach; ?>

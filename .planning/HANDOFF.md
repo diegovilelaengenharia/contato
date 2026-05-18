@@ -79,7 +79,7 @@
 
 | ID | Onde | Observação | Ação |
 |----|------|-----------|------|
-| Q1 | `area-cliente/gestao_admin_99.php` | Sufixo `_99` legado | Renomear `admin.php` (atualizar ~50 redirects) |
+| Q1 | `area-cliente/admin.php` | Sufixo `_99` legado | Renomear `admin.php` (atualizar ~50 redirects) |
 | Q2 | `area-cliente/includes/schema.php` | `ALTER TABLE` em toda request | Mover pra `core/Migrations.php` (run-once) |
 | Q3 | `area-cliente/maintenance/` | Setup scripts sem gate (já bloqueados por `.htaccess`) | Adicionar token único ou mover pra CLI |
 | Q4 | Mistura `db.php` global `$pdo` vs `core/Database.php` singleton | Padronizar | Refatorar pra `Database::pdo()` em todo lugar |
@@ -159,7 +159,7 @@ Para criar uma fase nova:
 
 - Site live: https://vilela.eng.br/contato/
 - Portal cliente: https://vilela.eng.br/contato/area-cliente/
-- Admin: https://vilela.eng.br/contato/area-cliente/gestao_admin_99.php
+- Admin: https://vilela.eng.br/contato/area-cliente/admin.php
 - Para testar localmente PHP é preciso XAMPP/WAMP — Diego não usa local server, prefere deploy direto
 - Banco: MySQL em `srv1074.hstgr.io`, banco `u884436813_cliente`
 - Para depurar: olhar logs do Hostinger via cPanel

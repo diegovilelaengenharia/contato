@@ -200,7 +200,7 @@ $target_exists = file_exists(TARGET);
       <label>DB_PASS <span class="hint">Senha do banco MySQL</span></label>
       <input type="password" name="DB_PASS" value="<?= htmlspecialchars($values['DB_PASS']) ?>" required>
 
-      <label>ADMIN_PASSWORD <span class="hint">Senha do admin pra entrar em <code>gestao_admin_99.php</code></span></label>
+      <label>ADMIN_PASSWORD <span class="hint">Senha do admin pra entrar em <code>admin.php</code></span></label>
       <input type="password" name="ADMIN_PASSWORD" value="<?= htmlspecialchars($values['ADMIN_PASSWORD']) ?>" required>
 
       <div class="row-actions">

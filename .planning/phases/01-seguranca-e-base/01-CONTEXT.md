@@ -71,7 +71,7 @@ Proteger credenciais hardcoded, bloquear acesso a arquivos sensíveis via .htacc
 ### Established Patterns
 - O projeto já usa `.gitignore` para excluir `area-cliente/db.php` e `.env` — padrão estabelecido de não commitar credenciais.
 - O `db.php` usa PDO com `PDO::ERRMODE_EXCEPTION` — manter este padrão no novo arquivo.
-- `define('ADMIN_PASSWORD', ...)` em `db.php` — esta constante precisa ser migrada para o .env e o código que a usa (`gestao_admin_99.php` e `includes/init.php`) precisará usar `getenv()` ou a variável carregada do .env.
+- `define('ADMIN_PASSWORD', ...)` em `db.php` — esta constante precisa ser migrada para o .env e o código que a usa (`admin.php` e `includes/init.php`) precisará usar `getenv()` ou a variável carregada do .env.
 
 ### Integration Points
 - `area-cliente/db.php` é incluído por quase todos os arquivos PHP do projeto via `require_once` — a interface (`$pdo`, `ADMIN_PASSWORD`) deve permanecer igual após a reescrita.

@@ -33,5 +33,5 @@ if (isset($_GET['id'])) {
 }
 
 // Fallback: volta para o admin
-header("Location: ../../gestao_admin_99.php");
+header("Location: ../../admin.php");
 exit;

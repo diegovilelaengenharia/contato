@@ -34,7 +34,7 @@ if ($cliente_id) {
         } catch (Exception $e) { $campos_extras = []; }
     } else {
         // ID provided but not found? standard generic error or redirect
-        header("Location: gestao_admin_99.php?msg=error&details=Cliente nao encontrado");
+        header("Location: admin.php?msg=error&details=Cliente nao encontrado");
         exit;
     }
 } else {
@@ -89,7 +89,7 @@ if(isset($_GET['msg'])) {
                         <h2><?= $is_edit ? 'Editar Cadastro' : 'Cadastrar Novo Cliente' ?></h2>
                         <p style="color:#666; font-size:0.9rem;"><?= $is_edit ? 'Atualize as informações do cliente abaixo.' : 'Preencha o formulário para adicionar um novo cliente.' ?></p>
                     </div>
-                    <a href="gestao_admin_99.php" class="btn-cancel" style="text-decoration:none; padding:8px 16px; border-radius:5px; background:#f8f9fa; border:1px solid #ddd; color:#333;">&larr; Voltar</a>
+                    <a href="admin.php" class="btn-cancel" style="text-decoration:none; padding:8px 16px; border-radius:5px; background:#f8f9fa; border:1px solid #ddd; color:#333;">&larr; Voltar</a>
                 </div>
 
                 <?php include 'includes/form_cliente_template.php'; ?>

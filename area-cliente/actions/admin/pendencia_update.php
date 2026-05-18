@@ -15,7 +15,7 @@ if (isset($_POST['csrf_token']) && !Csrf::validateToken($_POST['csrf_token'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header("Location: ../../gestao_admin_99.php");
+    header("Location: ../../admin.php");
     exit;
 }
 
@@ -29,7 +29,7 @@ try {
     $pdo->prepare("UPDATE processo_pendencias SET descricao = ? WHERE id = ? AND cliente_id = ?")
         ->execute([$texto, $pid, $cid]);
 
-    header("Location: ../../gestao_admin_99.php?cliente_id=$cid&tab=pendencias&msg=pend_updated");
+    header("Location: ../../admin.php?cliente_id=$cid&tab=pendencias&msg=pend_updated");
     exit;
 
 } catch(PDOException $e) {

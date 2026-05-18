@@ -15,7 +15,7 @@ if (isset($_POST['csrf_token']) && !Csrf::validateToken($_POST['csrf_token'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header("Location: ../../gestao_admin_99.php");
+    header("Location: ../../admin.php");
     exit;
 }
 
@@ -59,7 +59,7 @@ try {
     $pdo->prepare($sql)->execute([$cid, $titulo_ev, $sys_desc, $tipo_mov]);
 
     // Redirecionamento
-    header("Location: ../../gestao_admin_99.php?cliente_id=$cid&tab=andamento&msg=mov_added");
+    header("Location: ../../admin.php?cliente_id=$cid&tab=andamento&msg=mov_added");
     exit;
 
 } catch(PDOException $e) {

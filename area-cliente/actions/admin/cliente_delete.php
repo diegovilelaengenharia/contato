@@ -15,12 +15,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_cliente'])) {
 
     try {
         $pdo->prepare("DELETE FROM clientes WHERE id = ?")->execute([$cid]);
-        header("Location: ../../gestao_admin_99.php?msg=client_deleted");
+        header("Location: ../../admin.php?msg=client_deleted");
         exit;
     } catch(PDOException $e) {
         die("Erro ao excluir cliente: " . $e->getMessage());
     }
 }
 
-header("Location: ../../gestao_admin_99.php");
+header("Location: ../../admin.php");
 exit;

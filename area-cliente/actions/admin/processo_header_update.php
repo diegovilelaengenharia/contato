@@ -22,7 +22,7 @@ if (isset($_POST['csrf_token']) && !Csrf::validateToken($_POST['csrf_token'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header("Location: ../../gestao_admin_99.php");
+    header("Location: ../../admin.php");
     exit;
 }
 
@@ -68,7 +68,7 @@ try {
          $pdo->prepare($sql)->execute([$proc_num, $proc_obj, $proc_map, $valor_venal, $area_total, $area_existente, $area_acrescimo, $area_permeavel, $taxa_ocupacao, $fator_aproveitamento, $geo_coords, $cid]);
     }
     
-    header("Location: ../../gestao_admin_99.php?cliente_id=$cid&tab=andamento&msg=header_updated");
+    header("Location: ../../admin.php?cliente_id=$cid&tab=andamento&msg=header_updated");
     exit;
 } catch(PDOException $e) {
     die("Erro ao atualizar dados do processo: " . $e->getMessage());

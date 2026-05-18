@@ -15,7 +15,7 @@ if (isset($_POST['csrf_token']) && !Csrf::validateToken($_POST['csrf_token'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header("Location: ../../gestao_admin_99.php");
+    header("Location: ../../admin.php");
     exit;
 }
 
@@ -82,7 +82,7 @@ try {
     }
 
     $pdo->commit();
-    header("Location: ../../gestao_admin_99.php?cliente_id=$novo_id&msg=client_created");
+    header("Location: ../../admin.php?cliente_id=$novo_id&msg=client_created");
     exit;
 
 } catch(Exception $e) {

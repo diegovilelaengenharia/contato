@@ -5,7 +5,7 @@
 Site da Vilela Engenharia (vilela.eng.br) com três componentes:
 1. **Landing page** (`index.html`) — mobile-first, serviços, WhatsApp, redes sociais
 2. **Portal do cliente** (`area-cliente/client-app/`) — acompanhamento de processo
-3. **Painel admin** (`area-cliente/gestao_admin_99.php` e includes/) — gestão de clientes
+3. **Painel admin** (`area-cliente/admin.php` e includes/) — gestão de clientes
 
 ## GSD Workflow
 

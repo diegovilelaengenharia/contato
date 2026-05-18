@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $pdo->prepare("UPDATE processo_financeiro SET status = ? WHERE id = ? AND cliente_id = ?")
             ->execute([$new_status, $fid, $cid]);
-        header("Location: ../../gestao_admin_99.php?cliente_id=$cid&tab=financeiro&msg=status_updated");
+        header("Location: ../../admin.php?cliente_id=$cid&tab=financeiro&msg=status_updated");
         exit;
     } catch(PDOException $e) {
         die("Erro ao atualizar status financeiro: " . $e->getMessage());
@@ -43,12 +43,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['fid']) && isset($_GET['
         $pdo->prepare("UPDATE processo_financeiro SET status=? WHERE id=? AND cliente_id=?")
             ->execute([$novo, $fid, $cid]);
             
-        header("Location: ../../gestao_admin_99.php?cliente_id=$cid&tab=financeiro");
+        header("Location: ../../admin.php?cliente_id=$cid&tab=financeiro");
         exit;
     } catch(PDOException $e) {
         die("Erro ao alternar status financeiro: " . $e->getMessage());
     }
 }
 
-header("Location: ../../gestao_admin_99.php");
+header("Location: ../../admin.php");
 exit;

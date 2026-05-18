@@ -44,7 +44,7 @@ Clientes acompanham seu processo sem precisar ligar para Diego, e Diego consegue
 **Tecnologia atual:** PHP + MySQL (PDO), HTML/CSS vanilla, JavaScript puro, hospedagem compartilhada Hostinger. Sem frameworks JS ou PHP.
 
 **Problemas atuais identificados:**
-- Painel admin (`gestao_admin_99.php`) acumulou bugs ao longo do desenvolvimento — difícil de manter
+- Painel admin (`admin.php`) acumulou bugs ao longo do desenvolvimento — difícil de manter
 - Portal do cliente foi construído de forma não profissional — código funciona mas com muitos patches
 - Credenciais do banco expostas no `db.php` (Diego@159753, host srv1074.hstgr.io)
 - Scripts de debug e reset em produção (probe.php, session_test*, reset_db_diego.php)

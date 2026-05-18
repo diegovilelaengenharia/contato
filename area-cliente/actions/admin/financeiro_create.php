@@ -15,7 +15,7 @@ if (isset($_POST['csrf_token']) && !Csrf::validateToken($_POST['csrf_token'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header("Location: ../../gestao_admin_99.php");
+    header("Location: ../../admin.php");
     exit;
 }
 
@@ -44,7 +44,7 @@ try {
         $referencia_legal
     ]);
 
-    header("Location: ../../gestao_admin_99.php?cliente_id=$cid&tab=financeiro&msg=fin_added");
+    header("Location: ../../admin.php?cliente_id=$cid&tab=financeiro&msg=fin_added");
     exit;
 
 } catch(PDOException $e) {

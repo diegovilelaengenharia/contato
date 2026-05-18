@@ -34,7 +34,7 @@ try {
         $pdo->prepare("DELETE FROM processo_entregaveis WHERE id = ?")->execute([$id]);
     }
 
-    header("Location: ../../gestao_admin_99.php?cliente_id=$cid&tab=arquivos&msg=entregavel_deleted");
+    header("Location: ../../admin.php?cliente_id=$cid&tab=arquivos&msg=entregavel_deleted");
     exit;
 
 } catch(PDOException $e) {

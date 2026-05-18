@@ -111,7 +111,7 @@ try {
     <div class="nav-section">
         <h6 class="nav-header">GERAL</h6>
         
-        <a href="gestao_admin_99.php" class="nav-item <?= (!$cliente_ativo) ? 'active' : '' ?>">
+        <a href="admin.php" class="nav-item <?= (!$cliente_ativo) ? 'active' : '' ?>">
             <span class="material-symbols-rounded">grid_view</span>
             Visão Geral
         </a>

@@ -21,12 +21,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['pid']) && isset($_GET['
         $pdo->prepare("UPDATE processo_pendencias SET status = ? WHERE id = ? AND cliente_id = ?")
             ->execute([$new, $pid, $cid]);
 
-        header("Location: ../../gestao_admin_99.php?cliente_id=$cid&tab=pendencias");
+        header("Location: ../../admin.php?cliente_id=$cid&tab=pendencias");
         exit;
     } catch(PDOException $e) {
         die("Erro ao alternar status da pendência: " . $e->getMessage());
     }
 }
 
-header("Location: ../../gestao_admin_99.php");
+header("Location: ../../admin.php");
 exit;

@@ -8,7 +8,7 @@
 
 | Item | Estado verificado em 2026-05-18 |
 |---|---|
-| `area-cliente/gestao_admin_99.php` | **1.393 linhas / 85 KB** (monolito principal) |
+| `area-cliente/admin.php` | **1.393 linhas / 85 KB** (monolito principal) |
 | `area-cliente/includes/processamento.php` | **857 linhas / 42 KB** (todos os POST handlers do admin num só lugar) |
 | `area-cliente/includes/form_cliente_template.php` | 323 linhas / 22 KB (form gigante reusado) |
 | `area-cliente/client-app/index.php` | 683 linhas (queries SQL direto na view) |
@@ -29,7 +29,7 @@
 
 ### 1.1. O que o Gemini acertou ✅
 
-- **Diagnóstico do monolito:** `gestao_admin_99.php` com ~1.300 linhas está correto (real: 1.393).
+- **Diagnóstico do monolito:** `admin.php` com ~1.300 linhas está correto (real: 1.393).
 - **Padrão MVC simplificado (Vanilla PHP):** apropriado para Hostinger compartilhado, sem dependências.
 - **Criação proativa das pastas** `core/`, `actions/`, `admin/` + 3 classes base.
 - **Restrições técnicas preservadas:** sem React/Vue, manter PHP/MySQL, credenciais via `.env`.
@@ -59,7 +59,7 @@
 9. **Cache busting com `?v=<?php echo time(); ?>`** (header.php linha 16) — destrói cache HTTP. Trocar por versão fixa por release.
 10. **CDNs externos sem SRI** (SweetAlert2, CKEditor, Toastify) — sem `integrity=` hash, supply-chain attack possível.
 11. **9 fases do processo hardcoded** em `Processo::$fases_padrao`. Mudança exige redeploy. Considerar mover para `admin_settings` ou config.
-12. **Sem plano de migração paralela** — Gemini quer "fatiar `gestao_admin_99.php`" direto. Sem rota paralela, qualquer bug derruba o admin de produção que você usa hoje.
+12. **Sem plano de migração paralela** — Gemini quer "fatiar `admin.php`" direto. Sem rota paralela, qualquer bug derruba o admin de produção que você usa hoje.
 13. **Logging e auditoria:** zero menção. Já está em REQUIREMENTS v2 ("log de auditoria do admin") — mas sem isso, debug em prod é cego.
 14. **CSS bundling:** ~55 KB de CSS em 2 arquivos não-minificados servidos sem `gzip` explícito.
 
@@ -109,7 +109,7 @@ Mapa de extração (12 actions, uma por handler POST):
 
 Cada action: valida CSRF → valida input → chama método do Model em `core/` → redireciona com flash message em `$_SESSION`.
 
-### Fase D — Desmembramento de `gestao_admin_99.php` (admin views)
+### Fase D — Desmembramento de `admin.php` (admin views)
 **Estratégia:** roteador em `admin/index.php?view=xxx`, cada `view` é um include curto.
 
 - `admin/index.php` (router + auth check + layout)
@@ -122,7 +122,7 @@ Cada action: valida CSRF → valida input → chama método do Model em `core/` 
 - `admin/views/cliente_documentos.php`
 - `admin/views/cliente_dados.php` (form pessoal/imóvel)
 - `admin/partials/topbar.php`, `sidebar.php`, `flash.php`, `csrf_field.php`
-- Manter `gestao_admin_99.php` como redirect 301 → `admin/index.php` por 30 dias, depois apagar.
+- Manter `admin.php` como redirect 301 → `admin/index.php` por 30 dias, depois apagar.
 
 ### Fase E — Portal do Cliente (refator + UX)
 **Goal:** remover SQL das views, garantir mobile-first impecável (iPhone SE 320px).
@@ -185,7 +185,7 @@ Não jogar fora o GSD. Mapeamento sugerido:
 | A (Higiene + Segurança Crítica) | **Nova Phase 1.5** — inserir entre Phase 1 (done) e Phase 2 |
 | B (Core wrappers) | **Nova Phase 1.6** ou prerequisito de Phase 5 |
 | C (`processamento.php` → `actions/`) | Phase 6+7 do GSD |
-| D (`gestao_admin_99.php` → `admin/views`) | Phase 5+6 do GSD |
+| D (`admin.php` → `admin/views`) | Phase 5+6 do GSD |
 | E (Portal) | Phase 3 + 4 do GSD |
 | F (Landing) | Phase 2 do GSD (em curso) |
 | G (Regras de negócio) | Nova Phase 9 (post-v1) |
@@ -202,7 +202,7 @@ Não jogar fora o GSD. Mapeamento sugerido:
 2. **Migrations versionadas:** vale CLI via SSH (Hostinger oferece SSH em planos Premium+) ou um runner web protegido por token? Decidir antes da Fase B6.
 3. **Notificações in-app vs WhatsApp:** começar por qual? `propostas_sistema.md` item 4 já apontava para WhatsApp wa.me links. Decidir antes da Fase E4.
 4. **Auditoria minimum viable:** logar só admin actions ou também leituras sensíveis (download de doc do cliente)?
-5. **Renomear `gestao_admin_99.php`:** o nome com `_99` é vestígio histórico. Pode quebrar bookmark/atalho seu — confirmar.
+5. **Renomear `admin.php`:** o nome com `_99` é vestígio histórico. Pode quebrar bookmark/atalho seu — confirmar.
 
 ---
 

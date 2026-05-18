@@ -235,7 +235,7 @@ $p_tipo_chave = $detalhes['tipo_processo_chave'] ?? '';
     <!-- Sticky Footer -->
     <div class="<?= $is_edit ? 'sticky-footer' : '' ?>" style="<?= $is_edit ? 'display:flex; justify-content:flex-end; gap:15px; padding:15px; background:white; border-top:1px solid #ddd; position:sticky; bottom:0; box-shadow:0 -2px 10px rgba(0,0,0,0.05); z-index:100;' : 'margin-top:20px;' ?>">
         <?php if($is_edit): ?>
-            <a href="gestao_admin_99.php?cliente_id=<?= $cliente['id'] ?>&tab=andamento" class="btn-close" style="background:#f8d7da; color:#721c24; text-decoration:none; padding:10px 20px; border-radius:8px; border:1px solid #f5c6cb; font-weight:bold;">Cancelar</a>
+            <a href="admin.php?cliente_id=<?= $cliente['id'] ?>&tab=andamento" class="btn-close" style="background:#f8d7da; color:#721c24; text-decoration:none; padding:10px 20px; border-radius:8px; border:1px solid #f5c6cb; font-weight:bold;">Cancelar</a>
         <?php endif; ?>
         
         <button type="submit" name="<?= $btn_name ?>" class="btn-save" style="<?= $is_edit ? 'background:#0d6efd; color:white; border:none; padding:10px 30px; border-radius:8px; font-weight:bold; cursor:pointer;' : 'width:100%; justify-content:center;' ?>">

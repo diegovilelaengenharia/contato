@@ -115,7 +115,7 @@ $historico = $pdo->query("SELECT * FROM sistema_avisos ORDER BY data_criacao DES
         </div>
     </div>
     <div style="display:flex; align-items:center; gap:20px;">
-        <a href="gestao_admin_99.php" style="color:white; text-decoration:none; display:flex; align-items:center; gap:6px;">
+        <a href="admin.php" style="color:white; text-decoration:none; display:flex; align-items:center; gap:6px;">
             <span class="material-symbols-rounded">arrow_back</span> Voltar ao Painel
         </a>
         <a href="?sair=true" style="color: white; opacity:0.8;">Sair</a>
@@ -127,7 +127,7 @@ $historico = $pdo->query("SELECT * FROM sistema_avisos ORDER BY data_criacao DES
     <aside class="sidebar">
         <nav class="sidebar-menu">
             <h4 style="font-size:0.75rem; text-transform:uppercase; color:#adb5bd; font-weight:700; margin:10px 0 5px 10px;">Navegação</h4>
-            <a href="gestao_admin_99.php" class="btn-menu">
+            <a href="admin.php" class="btn-menu">
                 <span class="material-symbols-rounded">dashboard</span>
                 Visão Geral
             </a>

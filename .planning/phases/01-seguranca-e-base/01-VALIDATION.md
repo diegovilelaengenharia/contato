@@ -66,7 +66,7 @@ created: 2026-05-16
 | Behavior | Requirement | Why Manual | Test Instructions |
 |----------|-------------|------------|-------------------|
 | Site conecta ao banco em produção após deploy | SEC-01 | Requer deploy real + banco de produção | Abrir `https://vilela.eng.br/area-cliente/` — deve exibir página de login sem erro PDO |
-| Login admin funciona com senha do .env | SEC-02 | Requer credencial real do .env | Login em `/area-cliente/gestao_admin_99.php` com usuario `admin` e senha do GitHub Secret |
+| Login admin funciona com senha do .env | SEC-02 | Requer credencial real do .env | Login em `/area-cliente/admin.php` com usuario `admin` e senha do GitHub Secret |
 | db.php retorna 403 | SEC-03 | Requer servidor Apache em produção | `curl -I https://vilela.eng.br/area-cliente/db.php` — HTTP 403 |
 | .env retorna 403 | SEC-03 | Requer servidor Apache em produção | `curl -I https://vilela.eng.br/area-cliente/.env` — HTTP 403 |
 | debug_admin.php retorna 404 | SEC-04 | Requer deploy com exclude list ativo | `curl -I https://vilela.eng.br/area-cliente/debug_admin.php` — HTTP 404 |

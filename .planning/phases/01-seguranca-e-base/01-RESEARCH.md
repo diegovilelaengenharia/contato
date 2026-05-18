@@ -135,7 +135,7 @@ GitHub push (main)
   define('ADMIN_PASSWORD', $env['ADMIN_PASSWORD'])
       |
       v
-[gestao_admin_99.php / index.php / includes/init.php]
+[admin.php / index.php / includes/init.php]
   Lê ADMIN_PASSWORD via constante definida em db.php
 ```
 
@@ -582,7 +582,7 @@ exclude: |
 
 **Confidence breakdown:**
 - Standard stack: HIGH — arquivos do projeto lidos diretamente, sem suposições sobre libs externas
-- Architecture: HIGH — todos os integration points identificados via leitura de código (init.php, index.php, admin_config.php, gestao_admin_99.php)
+- Architecture: HIGH — todos os integration points identificados via leitura de código (init.php, index.php, admin_config.php, admin.php)
 - Pitfalls: HIGH para pitfalls baseados em código (Pitfalls 1, 3, 5, 6); MEDIUM para pitfalls de infraestrutura (Pitfalls 2, 4)
 - Security: HIGH — ameaças identificadas via leitura direta do código com credenciais expostas
 

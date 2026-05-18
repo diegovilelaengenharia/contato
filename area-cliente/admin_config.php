@@ -148,7 +148,7 @@ $notify = $curr_settings['notify_email'] ?? 0;
         
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
             <h1 style="margin:0; color:#333;">⚙️ Configurações do Sistema</h1>
-            <a href="gestao_admin_99.php" class="btn-action" style="background:#e9ecef; color:#444;">← Voltar ao Painel</a>
+            <a href="admin.php" class="btn-action" style="background:#e9ecef; color:#444;">← Voltar ao Painel</a>
         </div>
 
         <?php if($msg): ?>

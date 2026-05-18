@@ -43,7 +43,7 @@ $erro = '';
 // 0. QUICK CHECK: ADMIN ALREADY LOGGED IN?
 // Bypass everything and go to dashboard
 if (isset($_SESSION['admin_logado']) && $_SESSION['admin_logado'] === true) {
-    header("Location: gestao_admin_99.php");
+    header("Location: admin.php");
     exit;
 }
 
@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Login admin OK — limpa tentativas deste IP
             $pdo->prepare("DELETE FROM login_attempts WHERE ip_address = ?")->execute([$ip]);
             $_SESSION['admin_logado'] = true;
-            header("Location: gestao_admin_99.php");
+            header("Location: admin.php");
             exit;
         }
 

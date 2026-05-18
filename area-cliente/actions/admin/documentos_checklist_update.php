@@ -1,7 +1,7 @@
 <?php
 /**
  * Action: Atualizar Checklist de Documentos (Aprovar/Rejeitar/Config)
- * Extratado de gestao_admin_99.php
+ * Extratado de admin.php
  */
 
 require_once __DIR__ . '/../../includes/init.php';
@@ -15,7 +15,7 @@ if (isset($_POST['csrf_token']) && !Csrf::validateToken($_POST['csrf_token'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header("Location: ../../gestao_admin_99.php");
+    header("Location: ../../admin.php");
     exit;
 }
 
@@ -80,7 +80,7 @@ try {
         }
     }
 
-    header("Location: ../../gestao_admin_99.php?cliente_id=$cliente_id&tab=docs_iniciais&msg=saved");
+    header("Location: ../../admin.php?cliente_id=$cliente_id&tab=docs_iniciais&msg=saved");
     exit;
 
 } catch(PDOException $e) {

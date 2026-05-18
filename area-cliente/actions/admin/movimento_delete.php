@@ -24,12 +24,12 @@ $cid = $_GET['cliente_id'] ?? null;
 if ($hid && $cid) {
     try {
         $pdo->prepare("DELETE FROM processo_movimentos WHERE id=? AND cliente_id=?")->execute([$hid, $cid]);
-        header("Location: ../../gestao_admin_99.php?cliente_id=$cid&tab=andamento&msg=hist_deleted");
+        header("Location: ../../admin.php?cliente_id=$cid&tab=andamento&msg=hist_deleted");
         exit;
     } catch(PDOException $e) {
         die("Erro ao excluir histórico: " . $e->getMessage());
     }
 }
 
-header("Location: ../../gestao_admin_99.php");
+header("Location: ../../admin.php");
 exit;

@@ -6,7 +6,7 @@ Sistema completo de acompanhamento de processos para a Vilela Engenharia, inclui
 
 - **Landing Page (Raiz):** Interface institucional mobile-first com PWA (Manifest + Service Worker).
 - **Portal do Cliente (`/area-cliente/client-app/`):** Dashboard para clientes acompanharem timeline, pendências, financeiro e baixarem documentos finais.
-- **Painel Administrativo (`/area-cliente/gestao_admin_99.php`):** Gestão completa de clientes, processos, lançamentos financeiros e uploads.
+- **Painel Administrativo (`/area-cliente/admin.php`):** Gestão completa de clientes, processos, lançamentos financeiros e uploads.
 
 ## Tecnologias e Arquitetura
 

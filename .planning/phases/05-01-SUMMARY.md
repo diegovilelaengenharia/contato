@@ -1,6 +1,6 @@
 # SUMMARY 05-01: Finalização do Desmembramento do Admin
 
-A refatoração do arquivo `gestao_admin_99.php` foi concluída com sucesso, transformando-o de um monolito complexo em um controlador enxuto e componentizado.
+A refatoração do arquivo `admin.php` foi concluída com sucesso, transformando-o de um monolito complexo em um controlador enxuto e componentizado.
 
 ## Mudanças Realizadas
 1. **Isolamento da UI:**
@@ -12,7 +12,7 @@ A refatoração do arquivo `gestao_admin_99.php` foi concluída com sucesso, tra
    - Lógica de Alertas (Aniversariantes e Processos Parados) movida para a `sidebar.php`, centralizando a funcionalidade.
    - Lógica de upload de avatar autônomo movida para `includes/processamento.php`.
 3. **Limpeza do Controlador:**
-   - O arquivo `gestao_admin_99.php` agora atua puramente como controlador, orquestrando a inclusão de componentes e views baseada no estado da requisição.
+   - O arquivo `admin.php` agora atua puramente como controlador, orquestrando a inclusão de componentes e views baseada no estado da requisição.
 
 ## Benefícios
 - **Manutenibilidade:** Menos de 100 linhas no arquivo principal.
