@@ -19,7 +19,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="style.css?v=15">
+    <link rel="stylesheet" href="style.css?v=16">
 
     <!-- Schema.org - SEO Local -->
     <script type="application/ld+json">
@@ -68,7 +68,7 @@
 
         <!-- Seção Como Funciona -->
         <section id="como-funciona" class="como-funciona-section reveal">
-            <h2 class="section-heading">Como Funciona</h2>
+            <h2 class="section-heading"><span class="section-heading__num">01</span>Como Funciona</h2>
             <div class="steps-grid">
                 <!-- Passo 1 -->
                 <div class="step">
@@ -113,7 +113,7 @@
         <main class="content">
             <!-- 1. Regularizações -->
             <section class="links reveal">
-                <h2 class="section-heading">Regularização de Imóveis</h2>
+                <h2 class="section-heading"><span class="section-heading__num">02</span>Regularização de Imóveis</h2>
                 <ul class="links-grid">
                     <li>
                         <button class="link-card" onclick="openModal('Prefeitura')">
@@ -150,7 +150,7 @@
 
             <!-- 2. Projetos e Consultoria -->
             <section class="links reveal">
-                <h2 class="section-heading">Projetos e Consultoria</h2>
+                <h2 class="section-heading"><span class="section-heading__num">03</span>Projetos e Consultoria</h2>
                 <ul class="links-grid">
                     <li>
                         <button class="link-card" onclick="openModal('Projetos de Engenharia')">
@@ -177,7 +177,7 @@
 
             <!-- Seção Sobre -->
             <section id="sobre" class="sobre-section reveal">
-                <h2 class="section-heading">Sobre Diego Vilela</h2>
+                <h2 class="section-heading"><span class="section-heading__num">04</span>Sobre Diego Vilela</h2>
                 <div class="sobre-container">
                     <div class="sobre-photo">
                         <img src="assets/foto-diego-new.jpg" alt="Diego Vilela, Engenheiro Civil" class="sobre-img" loading="lazy">
@@ -187,8 +187,8 @@
                         <p class="sobre-text">Conheço por dentro os trâmites de prefeitura, receita federal e cartório — o que agiliza cada etapa do processo para meus clientes.</p>
                         <p class="sobre-text">Meu compromisso é levar seu imóvel à regularização completa pelo caminho mais eficiente, evitando atrasos e custos desnecessários. Estou à disposição para cuidar do seu patrimônio.</p>
                         <div class="credential-badges">
-                            <span class="credential-badge">CREA 235.474/D</span>
-                            <span class="credential-badge">Eng. Civil · UFSJ</span>
+                            <span class="credential-badge"><span class="material-symbols-rounded" aria-hidden="true">verified</span>CREA 235.474/D</span>
+                            <span class="credential-badge"><span class="material-symbols-rounded" aria-hidden="true">school</span>Eng. Civil · UFSJ</span>
                         </div>
                     </div>
                 </div>
@@ -234,10 +234,10 @@
         </footer>
 
         <div class="floating-buttons">
-            <a href="area-cliente/" class="floating-btn floating-btn--client" aria-label="Área do Cliente">
+            <a href="area-cliente/" class="floating-btn floating-btn--client" aria-label="Área do Cliente" data-tooltip="Área do Cliente">
                 <span class="material-symbols-rounded" aria-hidden="true">person</span>
             </a>
-            <a href="https://instagram.com/diegovilela.eng" class="floating-btn floating-btn--instagram" target="_blank" rel="noopener" aria-label="Instagram">
+            <a href="https://instagram.com/diegovilela.eng" class="floating-btn floating-btn--instagram" target="_blank" rel="noopener" aria-label="Instagram" data-tooltip="Instagram">
                 <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <rect x="3" y="3" width="18" height="18" rx="5" ry="5"></rect>
                     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
