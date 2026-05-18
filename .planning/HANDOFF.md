@@ -3,15 +3,17 @@
 > **Pra próxima IA:** este documento é auto-contido. Leia ele inteiro antes de qualquer ação. Não pressuponha contexto de sessões anteriores.
 
 **Data do handoff:** 2026-05-18
-**Sessão anterior:** auditoria do código + ideação v2 + fixes de segurança S1 e S2
-**Próxima IA:** continuar de onde paramos, na ordem que o Diego escolher
+**Sessão anterior:** segurança S1–S7 completa + dívida técnica Q5 concluída
+**Próxima IA:** continuar Q1–Q4 ou iniciar milestone v2.0
 
 ---
 
 ## 1. Estado atual do projeto
 
 - Sistema **v1.5 em produção** em https://vilela.eng.br
-- **Todas as 8 fases do roadmap v1 concluídas** em 2026-05-18 (ver [.planning/STATE.md](STATE.md))
+- **Todas as 8 fases do roadmap v1 concluídas** (ver [.planning/STATE.md](STATE.md))
+- **Segurança S1–S7 totalmente fechada** ✅
+- **Dívida técnica Q5 concluída** ✅
 - Stack: PHP 8 + PDO/MySQL, vanilla HTML/CSS/JS, Hostinger shared hosting
 - Deploy: GitHub Actions → FTPS (push em `main` dispara)
 - Login dual (admin + cliente) em `area-cliente/index.php`
@@ -23,68 +25,73 @@
 
 ## 2. O que foi feito nesta sessão (2026-05-18)
 
-### ✅ Memória atualizada
-- `~/.claude/projects/.../memory/project_vilela_state.md` reescrito (refletindo v1 done)
-- `~/.claude/projects/.../memory/MEMORY.md` linha do estado atualizada
-
 ### ✅ S1 — Fallback de senha admin hardcoded removido
-- **Arquivo:** [area-cliente/index.php:48-54](../area-cliente/index.php#L48-L54)
-- **Mudança:** removido `'VilelaAdmin2025'` como fallback, adicionado guard pra senha vazia, trocado `===` por `hash_equals()` (timing-safe)
-- **⚠️ Pendência operacional:** o histórico do git ainda contém `'VilelaAdmin2025'`. Se essa string foi a senha real em produção, **Diego precisa rotacionar `ADMIN_PASSWORD` no GitHub Secrets**. Verificar com ele antes de prosseguir.
+- **Commit:** `65cbcc7`
+- Removido `'VilelaAdmin2025'` como fallback, adicionado guard pra senha vazia, trocado `===` por `hash_equals()`
 
 ### ✅ S2 — Script destrutivo deletado
-- **Arquivo:** `area-cliente/tools/reset_db_diego.php` (removido)
-- Era one-shot que já cumpriu propósito (Diego é cliente #1). Estava gitignored, nunca foi pra produção. Risco era menor que o plano original sugeriu.
-- Pasta `tools/` ficou só com `desktop.ini` do Windows — ignorar.
+- **Commit:** `65cbcc7`
+- `area-cliente/tools/reset_db_diego.php` removido
 
-### ⏳ Fixes ainda NÃO commitados
-Diego não decidiu se commita agora ou continua mais coisas antes. Verificar com:
-```bash
-git status
-git diff area-cliente/index.php
-```
-Mensagem sugerida quando commitar:
-```
-security(audit): remove hardcoded admin password fallback (S1)
+### ✅ S3 — Rate-limit no login
+- **Commit:** `2c23c0c`
+- Tabela `login_attempts` criada automaticamente (CREATE IF NOT EXISTS em index.php)
+- 5 tentativas por IP em 15 minutos, depois bloqueia
+- Limpeza automática de registros antigos (1% chance por request)
 
-- Remove fallback 'VilelaAdmin2025' do area-cliente/index.php
-- Adiciona guard para senha vazia (env ausente desabilita admin)
-- Troca === por hash_equals() pra comparação timing-safe
-- Remove tools/reset_db_diego.php (one-shot já cumprido, gitignored)
-```
+### ✅ S4 — Debug files removidos
+- **Commit:** `2c23c0c`
+- `debug_checklist.php` e `debug_syntax_checklist.php` deletados do disco
+- `.gitignore` já cobria — nunca foram pra produção
+
+### ✅ S5 — Cookies de sessão seguros
+- **Commit:** `2c23c0c`
+- `secure=true`, `httponly=true`, `SameSite=Lax` em:
+  - `Auth.php` (central), `index.php`, `init.php`, `init_client.php`
+
+### ✅ S6 — XSS em admin_helpers.php
+- **Commit:** `2c23c0c`
+- `htmlspecialchars()` em todos os valores do banco (descricao, status, link_comprovante)
+- Validação de protocolo (só http/https) em URLs de comprovantes
+- IDs cast pra `(int)` pra prevenir injeção
+
+### ✅ S7 — Logout seguro centralizado
+- **Commit:** `2c23c0c`
+- `Auth::logout()` agora: limpa `$_SESSION = []`, invalida cookie, `session_destroy()`
+- `logout.php` e `client-app/logout.php` delegam pra `Auth::logout()`
+
+### ✅ Q5 — init_client.php centralizado
+- **Commit:** `641eadb`
+- Criado `client-app/init_client.php` (session segura + db + auth)
+- 6 arquivos refatorados: index, timeline, financeiro, pendencias, documentos, documentos_iniciais
+- ~60 linhas de boilerplate eliminadas
+- Suporta `$SKIP_CLIENT_AUTH = true` pra modo simulação admin
+
+### Bonus: display_errors=0 em produção
+- `index.php` e `documentos_iniciais.php` não expõem mais erros PHP ao usuário
+- Erros de login retornam mensagem genérica, detalhes vão pro `error_log()`
 
 ---
 
-## 3. Backlog completo (audit + v2)
+## 3. Backlog restante
 
-### 3.1 Segurança — restante
-
-| ID | Severidade | Onde | Problema | Esforço |
-|----|------------|------|----------|---------|
-| S3 | 🟡 MED | [area-cliente/index.php](../area-cliente/index.php) | Sem rate-limit no login — força bruta possível | 2h |
-| S4 | 🟡 MED | `area-cliente/client-app/debug_*.php` | Confirmar que .gitignore cobre todos; remover do disco local também | 30min |
-| S5 | 🟡 MED | Cookies de sessão | `secure`/`httponly`/`SameSite` em `session_set_cookie_params` ([index.php:3](../area-cliente/index.php#L3)) | 30min |
-| S6 | 🟢 LOW | `area-cliente/includes/admin_helpers.php` | URLs/conteúdo nem sempre passam por `htmlspecialchars()` | 1h |
-| S7 | 🟢 LOW | `area-cliente/core/Auth.php` (logout) | `session_unset()` em vez de `session_destroy()` em alguns paths | 30min |
-
-### 3.2 Qualidade / dívida técnica
+### 3.1 Dívida técnica — restante
 
 | ID | Onde | Observação | Ação |
 |----|------|-----------|------|
-| Q1 | `area-cliente/gestao_admin_99.php` | Sufixo `_99` legado | Renomear `admin.php` (atualizar todos os redirects) |
-| Q2 | `area-cliente/includes/schema.php` | `ALTER TABLE` em toda request | Mover pra `core/Migrations.php` (já existe) |
+| Q1 | `area-cliente/gestao_admin_99.php` | Sufixo `_99` legado | Renomear `admin.php` (atualizar ~50 redirects) |
+| Q2 | `area-cliente/includes/schema.php` | `ALTER TABLE` em toda request | Mover pra `core/Migrations.php` (run-once) |
 | Q3 | `area-cliente/maintenance/` | Setup scripts sem gate (já bloqueados por `.htaccess`) | Adicionar token único ou mover pra CLI |
 | Q4 | Mistura `db.php` global `$pdo` vs `core/Database.php` singleton | Padronizar | Refatorar pra `Database::pdo()` em todo lugar |
-| Q5 | `client-app/` | Boilerplate `require 'db.php'; session_start(); Auth::checkClient();` repetido | Criar `init_client.php` único |
 
-### 3.3 UX / Acessibilidade
+### 3.2 UX / Acessibilidade
 
 - Sem **recuperar senha** no portal cliente
 - Sem feedback visual de upload em andamento (spinner)
 - Botões "Voltar" sempre vão pra dashboard em vez de usar history
 - Sem indicação "atualizado há X" no dashboard
 
-### 3.4 Milestones v2 propostos (não iniciados)
+### 3.3 Milestones v2 propostos (não iniciados)
 
 **Milestone v2.0 — Operação sem fricção (foco no Diego)**
 - Fase A: Notificações automáticas (email/WhatsApp Cloud API)
@@ -103,8 +110,6 @@ security(audit): remove hardcoded admin password fallback (S1)
 - Fase J: Depoimentos de clientes
 - Fase K: Blog técnico (SEO local)
 - Fase L: Formulário de orçamento estruturado
-
-Plano completo (este arquivo é resumo): [C:\Users\diego\.claude\plans\leia-tudo-graceful-pond.md](file:///C:/Users/diego/.claude/plans/leia-tudo-graceful-pond.md)
 
 ---
 
@@ -135,31 +140,27 @@ Para criar uma fase nova:
 - Nunca commitar `debug_*.php`, `session_test_*.php`, `probe.php`
 - Deploy automático via push em `main` — nunca FTP manual
 - Idioma da comunicação com Diego: **português brasileiro**
+- **Bootstrap do portal cliente:** sempre usar `require_once __DIR__ . '/init_client.php';` (Q5)
 
 ---
 
 ## 6. Como retomar agora
 
-**Diego precisa decidir** entre estas opções (em ordem de risco/valor decrescente):
+**Diego precisa decidir** entre estas opções:
 
-1. **Commitar S1+S2 já feitos** — fechar o trabalho desta sessão
-2. **Continuar segurança (S3-S7)** — fechar todo o vetor de risco antes de v2
-3. **Atacar dívida técnica (Q1-Q5)** — codebase mais limpo antes de v2
-4. **Iniciar Milestone v2.0** — features novas (notificações, recuperar senha, dashboard, audit log)
-5. **Iniciar Milestone v2.1** — cliente mais autônomo (chat, Pix, feedback docs, calendário)
-6. **Iniciar Milestone v2.2** — marketing (portfólio, depoimentos, blog, orçamento)
-
-**Pergunta padrão pra começar:**
-> "Diego, vi o HANDOFF.md. Os fixes S1+S2 ainda não foram commitados. Você quer commitar primeiro, ou avançar com algum outro item do backlog antes?"
+1. **Continuar dívida técnica (Q1–Q4)** — codebase mais limpo antes de v2
+2. **Iniciar Milestone v2.0** — features novas (notificações, recuperar senha, dashboard, audit log)
+3. **Iniciar Milestone v2.1** — cliente mais autônomo (chat, Pix, feedback docs, calendário)
+4. **Iniciar Milestone v2.2** — marketing (portfólio, depoimentos, blog, orçamento)
 
 ---
 
-## 7. Como rodar/testar localmente (referência rápida)
+## 7. Como rodar/testar (referência rápida)
 
 - Site live: https://vilela.eng.br/contato/
 - Portal cliente: https://vilela.eng.br/contato/area-cliente/
 - Admin: https://vilela.eng.br/contato/area-cliente/gestao_admin_99.php
-- Para testar localmente PHP é preciso XAMPP/WAMP — Diego não usa local server frequentemente, prefere deploy direto e verifica live
+- Para testar localmente PHP é preciso XAMPP/WAMP — Diego não usa local server, prefere deploy direto
 - Banco: MySQL em `srv1074.hstgr.io`, banco `u884436813_cliente`
 - Para depurar: olhar logs do Hostinger via cPanel
 
@@ -167,12 +168,13 @@ Para criar uma fase nova:
 
 - [.planning/PROJECT.md](PROJECT.md) — contexto do projeto
 - [.planning/ROADMAP.md](ROADMAP.md) — fases v1 (todas done)
-- [.planning/REQUIREMENTS.md](REQUIREMENTS.md) — requisitos + v2 deferred (linhas 59-65)
+- [.planning/REQUIREMENTS.md](REQUIREMENTS.md) — requisitos + v2 deferred
 - [.planning/STATE.md](STATE.md) — fonte da verdade do estado
 - [CLAUDE.md](../CLAUDE.md) — convenções do projeto
-- [area-cliente/index.php](../area-cliente/index.php) — login dual
+- [area-cliente/index.php](../area-cliente/index.php) — login dual + rate-limit
+- [area-cliente/core/Auth.php](../area-cliente/core/Auth.php) — sessão segura + logout
+- [area-cliente/client-app/init_client.php](../area-cliente/client-app/init_client.php) — bootstrap cliente (Q5)
 - [area-cliente/core/Database.php](../area-cliente/core/Database.php) — PDO singleton + fallback
-- [area-cliente/core/Auth.php](../area-cliente/core/Auth.php) — checkClient/checkAdmin
 - [.github/workflows/deploy.yml](../.github/workflows/deploy.yml) — CI/CD
 
 ---
