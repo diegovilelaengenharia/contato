@@ -45,10 +45,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $senha = trim($_POST['senha']);
 
     // 1. Verifica se é ADMIN
-    // Senha mestra definida em db.php
-    $senhaMestraAdmin = defined('ADMIN_PASSWORD') ? ADMIN_PASSWORD : 'VilelaAdmin2025'; 
-    
-    if ((strtolower($usuario) === 'admin' || strtolower($usuario) === 'vilela') && $senha === $senhaMestraAdmin) {
+    // Senha mestra definida em db.php a partir de ADMIN_PASSWORD do config.
+    // Sem fallback hardcoded: se a env não estiver configurada, login admin é desabilitado.
+    $senhaMestraAdmin = defined('ADMIN_PASSWORD') ? ADMIN_PASSWORD : '';
+    $isAdminUser = strtolower($usuario) === 'admin' || strtolower($usuario) === 'vilela';
+
+    if ($isAdminUser && $senhaMestraAdmin !== '' && hash_equals($senhaMestraAdmin, $senha)) {
         $_SESSION['admin_logado'] = true;
         header("Location: gestao_admin_99.php");
         exit;
