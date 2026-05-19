@@ -6,11 +6,12 @@
     Deny from all
 </FilesMatch>
 
-# Bloquear diretórios internos da nova arquitetura
+# Bloquear diretorios internos da nova arquitetura
+# IMPORTANTE: actions/ NAO entra aqui pois e onde forms postam (cliente_update, cliente_create, etc).
+# Os actions ja tem protecao interna via Auth::isAdmin() + CSRF, nao precisam de bloqueio HTTP.
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteRule ^config/ - [F,L]
     RewriteRule ^core/ - [F,L]
-    RewriteRule ^actions/ - [F,L]
     RewriteRule ^maintenance/ - [F,L]
 </IfModule>
