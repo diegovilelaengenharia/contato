@@ -116,7 +116,22 @@ Este documento evolui a cada fase e marco do projeto.
 
 GitHub Actions FTPS → Hostinger. Secrets injetados em `area-cliente/core/db_credentials.php` a cada deploy. App Louvor usa webhook Hostinger (`git pull` no servidor).
 
-## Next Milestone Goals (v2.0 — esboço)
+## Current Milestone: v2.0 — Hardening, Auditoria e Features
+
+**Status:** 🟡 Em planejamento (iniciado 2026-05-19)
+**Goal:** Eliminar dívidas técnicas críticas do v1, fortalecer segurança, adicionar features de valor e reescrever camada admin para consolidar arquitetura modular.
+
+**Target features (5 categorias):**
+
+- 🔒 **SEC** — Rotacionar credenciais comprometidas, migrar Variables→Secrets no GitHub, 2FA admin, log de auditoria
+- 🧹 **CLEAN** — Corrigir CSRF (D1), refatorar cliente_impersonate (D2), eliminar processamento.php legacy (D3), fix JS redirect (D4), realocar .git da HOME (D6)
+- 🔍 **AUDIT** — Auditar paths absolutos no App Louvor (D7) + outros aplicativos externos
+- ✨ **FEAT** — Portfólio de obras, blog, automação WhatsApp, exportação financeira em Excel
+- 🔨 **ADMIN** — Reescrita: eliminar `includes/processamento.php` de vez, admin 100% modular
+
+**Key context:** Brownfield, sistema v1.5 em produção. Constraints v1 mantidos (PHP 8 + MySQL + Hostinger + vanilla JS + cache PWA).
+
+## Next Milestone Goals (v2.0 — esboço inicial, refinado no REQUIREMENTS.md)
 
 - **Dívidas técnicas críticas** (D1-D7 registradas em STATE.md)
   - Corrigir validação CSRF nos actions
