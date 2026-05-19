@@ -93,4 +93,53 @@ Este documento evolui a cada fase e marco do projeto.
 3. Out of Scope ainda válido?
 
 ---
+
+## Current State (2026-05-19)
+
+**Sistema:** v1.5 em produção em https://vilela.eng.br
+**Milestone arquivado:** v1.0 (tag `v1.0`)
+**Próximo:** `/gsd-new-milestone` → planejar v2.0
+
+### O que está ao vivo
+
+- Landing page mobile-first (vilela.eng.br/)
+- Cartão de visitas (vilela.eng.br/contato/)
+- Portal do cliente (vilela.eng.br/area-cliente/)
+- Admin (vilela.eng.br/area-cliente/admin.php)
+- App Louvor PIB Oliveira (vilela.eng.br/applouvor/) — projeto separado mas hospedado mesmo domínio
+
+### Arquitetura modular `core/`
+
+`area-cliente/core/` com classes: Auth, Csrf, Database (singleton), Logger, Migrations, Processo, Upload. `actions/admin/*.php` com 17 endpoints POST modulares. Compatibilidade legacy mantida via `area-cliente/db.php` wrapper.
+
+### Deploy CI/CD
+
+GitHub Actions FTPS → Hostinger. Secrets injetados em `area-cliente/core/db_credentials.php` a cada deploy. App Louvor usa webhook Hostinger (`git pull` no servidor).
+
+## Next Milestone Goals (v2.0 — esboço)
+
+- **Dívidas técnicas críticas** (D1-D7 registradas em STATE.md)
+  - Corrigir validação CSRF nos actions
+  - Eliminar `processamento.php` legado
+  - Realocar `.git` para pasta de trabalho dedicada
+  - Auditoria de paths absolutos no App Louvor
+- **Segurança**: rotacionar credenciais comprometidas, migrar todos os Variables para Secrets
+- **Features v2 deferred** (ver `milestones/v1.0-REQUIREMENTS.md`):
+  - Portfólio de obras na landing
+  - Blog/artigos técnicos
+  - Automação WhatsApp ao atualizar etapa
+  - Log de auditoria do admin
+  - Exportação financeira (Excel)
+  - 2FA para admin
+- **Codebase mapping** (`/gsd-map-codebase`) para alimentar agentes futuros
+
+Refinamento via `/gsd-new-milestone` e `/gsd-discuss-phase`.
+
+<details>
+<summary>Estado anterior (v1.0 planning)</summary>
+
 *Last updated: 2026-05-16 após inicialização do projeto GSD*
+
+A seção "Requirements" acima foi a base para o planejamento do Milestone v1.0. Versão arquivada em `milestones/v1.0-REQUIREMENTS.md` com checkboxes marcados.
+
+</details>
