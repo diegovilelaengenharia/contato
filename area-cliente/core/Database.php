@@ -12,10 +12,8 @@ class Database {
         if (file_exists($php_creds)) {
             $env = require $php_creds;
             if (!is_array($env)) {
-                $msg = "ERRO CRITICO: db_credentials.php nao retornou um array.";
-                error_log($msg);
-                header('HTTP/1.1 503 Service Unavailable');
-                die($msg);
+                error_log("ERRO CRITICO: db_credentials.php nao retornou um array.");
+                self::fail();
             }
         } else {
             // 2) Fallback: arquivos .ini / .env (legacy)
@@ -30,17 +28,13 @@ class Database {
                 if (file_exists($c)) { $env_path = $c; break; }
             }
             if ($env_path === null) {
-                $msg = "ERRO CRITICO: Nenhum arquivo de credenciais encontrado. Tentados: db_credentials.php, " . implode(', ', $candidates);
-                error_log($msg);
-                header('HTTP/1.1 503 Service Unavailable');
-                die($msg);
+                error_log("ERRO CRITICO: Nenhum arquivo de credenciais encontrado. Tentados: db_credentials.php, " . implode(', ', $candidates));
+                self::fail();
             }
             $env = parse_ini_file($env_path);
             if ($env === false) {
-                $msg = "ERRO CRITICO: Arquivo de credenciais corrompido em: " . realpath($env_path);
-                error_log($msg);
-                header('HTTP/1.1 503 Service Unavailable');
-                die($msg);
+                error_log("ERRO CRITICO: Arquivo de credenciais corrompido em: " . realpath($env_path));
+                self::fail();
             }
         }
 
@@ -53,10 +47,8 @@ class Database {
         $charset = 'utf8mb4';
 
         if (empty($host) || empty($db) || empty($user)) {
-            $msg = "ERRO CRITICO: Variaveis de ambiente do banco de dados estao incompletas no .env.";
-            error_log($msg);
-            header('HTTP/1.1 503 Service Unavailable');
-            die($msg);
+            error_log("ERRO CRITICO: Variaveis de ambiente do banco de dados estao incompletas.");
+            self::fail();
         }
 
         $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
@@ -69,11 +61,18 @@ class Database {
         try {
             $this->pdo = new PDO($dsn, $user, $pass, $options);
         } catch (\PDOException $e) {
-            $msg = "Erro de conexão com o banco de dados. Detalhe técnico: " . $e->getMessage();
             error_log("DB CONNECTION ERROR: " . $e->getMessage());
-            header('HTTP/1.1 503 Service Unavailable');
-            die($msg);
+            self::fail();
         }
+    }
+
+    /**
+     * Encerra a request com 503 e mensagem genérica.
+     * Detalhe técnico fica no error_log do servidor — nunca exposto ao usuário.
+     */
+    private static function fail() {
+        header('HTTP/1.1 503 Service Unavailable');
+        die("Serviço temporariamente indisponível. Tente novamente em instantes.");
     }
 
     public static function getInstance() {
