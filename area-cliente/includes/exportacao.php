@@ -1,7 +1,7 @@
 <?php
 // 9. Exportar Relatório (Exaustivo e Profissional)
 if (isset($_GET['exportar_cliente'])) {
-    $cid = $_GET['exportar_cliente'];
+    $cid = (int)$_GET['exportar_cliente']; // cast int: previne SQL injection nas queries abaixo
     $c = $pdo->query("SELECT * FROM clientes WHERE id=$cid")->fetch();
     $d = $pdo->query("SELECT * FROM processo_detalhes WHERE cliente_id=$cid")->fetch();
     $f = $pdo->query("SELECT * FROM processo_financeiro WHERE cliente_id=$cid ORDER BY data_vencimento ASC")->fetchAll();

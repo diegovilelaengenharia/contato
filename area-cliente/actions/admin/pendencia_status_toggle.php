@@ -11,8 +11,8 @@ require_once __DIR__ . '/../../core/Database.php';
 $pdo = Database::getInstance();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['pid']) && isset($_GET['cid'])) {
-    $pid = $_GET['pid'];
-    $cid = $_GET['cid'];
+    $pid = (int)$_GET['pid']; // cast int: $pid é interpolado na SELECT abaixo
+    $cid = (int)$_GET['cid'];
 
     try {
         $curr = $pdo->query("SELECT status FROM processo_pendencias WHERE id=$pid")->fetchColumn();

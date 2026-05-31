@@ -33,8 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // 2. Caso GET (Toggle rápido na tabela)
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['fid']) && isset($_GET['cid'])) {
-    $fid = $_GET['fid'];
-    $cid = $_GET['cid'];
+    $fid = (int)$_GET['fid']; // cast int: $fid é interpolado na SELECT abaixo
+    $cid = (int)$_GET['cid'];
 
     try {
         $atual = $pdo->query("SELECT status FROM processo_financeiro WHERE id=$fid")->fetchColumn();
