@@ -1,233 +1,131 @@
 <?php
 /**
- * Componente: Sidebar Admin
+ * Componente: Sidebar Admin (redesenhada 2026 — classes do design system)
  */
 
-// --- DATA FETCHING FOR SIDEBAR WIDGETS ---
+// --- DADOS DOS WIDGETS DA SIDEBAR ---
 try {
-    // Aniversariantes
-    $aniversariantes = $pdo->query("SELECT c.id, c.nome, pd.data_nascimento, DAY(pd.data_nascimento) as dia 
-        FROM clientes c 
-        JOIN processo_detalhes pd ON c.id = pd.cliente_id 
-        WHERE MONTH(pd.data_nascimento) = MONTH(CURRENT_DATE()) 
+    // Aniversariantes do mês
+    $aniversariantes = $pdo->query("SELECT c.id, c.nome, pd.data_nascimento, DAY(pd.data_nascimento) as dia
+        FROM clientes c
+        JOIN processo_detalhes pd ON c.id = pd.cliente_id
+        WHERE MONTH(pd.data_nascimento) = MONTH(CURRENT_DATE())
         ORDER BY dia ASC")->fetchAll();
 
-    // Processos Parados (> 15 dias)
-    $parados = $pdo->query("SELECT c.id, c.nome, MAX(pm.data_movimento) as ultima_mov 
-        FROM clientes c 
-        JOIN processo_movimentos pm ON c.id = pm.cliente_id 
-        GROUP BY c.id 
-        HAVING DATEDIFF(NOW(), ultima_mov) > 15 
+    // Processos parados (> 15 dias sem movimento)
+    $parados = $pdo->query("SELECT c.id, c.nome, MAX(pm.data_movimento) as ultima_mov
+        FROM clientes c
+        JOIN processo_movimentos pm ON c.id = pm.cliente_id
+        GROUP BY c.id
+        HAVING DATEDIFF(NOW(), ultima_mov) > 15
         ORDER BY ultima_mov ASC")->fetchAll();
 } catch (Exception $e) {
     $aniversariantes = [];
     $parados = [];
 }
 ?>
-<aside class="sidebar admin-nav-sidebar">
-    
-    <!-- ADMIN PROFILE (Sidebar Header - Clean & Simple) -->
-    <div style="padding: 20px 20px; margin-bottom: 10px; position:relative; overflow:hidden; border-radius: 16px 16px 0 0;">
-         <!-- Green Accent Line Top -->
-        <div style="position:absolute; top:0; left:0; width:100%; height:4px; background:#198754;"></div>
+<aside id="mobileSidebar" class="admin-nav-sidebar">
 
-        <div style="display:flex; align-items:center; gap:12px; margin-top:5px;">
-            <!-- Avatar -->
-            <div style="width:48px; height:48px; border-radius:50%; background:#f0f2f5; overflow:hidden; border:2px solid #fff; box-shadow:0 2px 8px rgba(0,0,0,0.1); flex-shrink:0;">
-                <img src="../assets/foto-diego-new.jpg" onerror="this.src='https://ui-avatars.com/api/?name=Diego+Vilela&background=0D8ABC&color=fff'" style="width:100%; height:100%; object-fit:cover;">
-            </div>
-            
-            <!-- Info -->
-            <div style="flex:1; overflow:hidden; text-align:left;">
-                <div style="font-weight:800; color:#333; font-size:0.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing:-0.3px;">Diego Vilela</div>
-                <div style="font-size:0.75rem; color:#888; font-weight:500;">Administrador</div>
-            </div>
-
-            <!-- Actions (Cog & Logout) -->
-            <div style="display:flex; gap:5px;">
-                <a href="admin_config.php" title="Configurações" style="color:#666; display:flex; padding:6px; border-radius:8px; transition:0.2s; border-bottom: 2px solid #666;" onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='transparent'">
-                    <span class="material-symbols-rounded" style="font-size:1.3rem;">settings</span>
-                </a>
-                 <a href="logout.php" title="Sair" style="color:#dc3545; display:flex; padding:6px; border-radius:8px; transition:0.2s; border-bottom: 2px solid #dc3545;" onmouseover="this.style.background='#fff0f0'" onmouseout="this.style.background='transparent'">
-                    <span class="material-symbols-rounded" style="font-size:1.3rem;">logout</span>
-                </a>
-            </div>
+    <!-- Perfil do administrador -->
+    <div class="sidebar-profile">
+        <img class="avatar" src="../assets/foto-diego-new.jpg"
+             alt="Diego Vilela"
+             onerror="this.src='https://ui-avatars.com/api/?name=Diego+Vilela&background=197e63&color=fff'">
+        <div class="info">
+            <div class="name">Diego Vilela</div>
+            <div class="role">Administrador</div>
+        </div>
+        <div class="actions">
+            <a href="admin_config.php" class="icon-btn" title="Configurações">
+                <span class="material-symbols-rounded">settings</span>
+            </a>
+            <a href="logout.php" class="icon-btn danger" title="Sair">
+                <span class="material-symbols-rounded">logout</span>
+            </a>
         </div>
     </div>
 
-    <!-- SEÇÃO CLIENTE SELECIONADO (Topo) -->
-    <?php if($cliente_ativo): ?>
-        <div class="nav-section">
-            <h6 class="nav-header" style="color:#198754; font-size:0.75rem; letter-spacing:1px; margin-bottom:12px;">CLIENTE ATUAL</h6>
-            
-            <!-- CLIENTE HEADER & AÇÕES -->
-            <div class="nav-client-card" style="background: white; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); border:1px solid #eee; overflow:hidden;">
-                
-                <!-- Info Principal -->
-                <div style="padding: 15px; display:flex; align-items:center; gap:12px; border-bottom:1px solid #f8f9fa;">
-                    <!-- Avatar -->
-                    <div style="width:42px; height:42px; min-width:42px; position:relative;">
-                        <?php if($avatar_url): ?>
-                            <img src="<?= $avatar_url ?>" style="width:100%; height:100%; object-fit:cover; border-radius:50%; border:2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                        <?php else: ?>
-                            <div style="width:100%; height:100%; background:#198754; color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.1rem; font-weight:700; border:2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                                <?= strtoupper(substr($cliente_ativo['nome'], 0, 1)) ?>
-                            </div>
-                        <?php endif; ?>
-                    </div>
+    <div class="nav-scroll">
 
-                    <!-- Texto -->
-                    <div style="flex:1; overflow:hidden;">
-                        <h3 style="font-size:0.9rem; margin:0 0 2px 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#333; font-weight:700;" title="<?= htmlspecialchars($cliente_ativo['nome']) ?>">
+        <!-- Cliente selecionado -->
+        <?php if ($cliente_ativo): ?>
+        <div class="nav-section">
+            <h6 class="nav-header">Cliente atual</h6>
+            <div class="nav-client-card">
+                <div class="client-head">
+                    <?php if ($avatar_url): ?>
+                        <img class="client-avatar" src="<?= htmlspecialchars($avatar_url) ?>" alt="">
+                    <?php else: ?>
+                        <div class="client-avatar"><?= strtoupper(substr($cliente_ativo['nome'], 0, 1)) ?></div>
+                    <?php endif; ?>
+                    <div style="flex:1; min-width:0;">
+                        <h3 class="client-name" title="<?= htmlspecialchars($cliente_ativo['nome']) ?>">
                             <?= htmlspecialchars($cliente_ativo['nome']) ?>
                         </h3>
-                        <div style="font-size:0.75rem; color:#777;">
-                            📱 <?= $detalhes['contato_tel'] ?? '--' ?>
-                        </div>
+                        <div class="client-phone"><?= htmlspecialchars($detalhes['contato_tel'] ?? '--') ?></div>
                     </div>
                 </div>
-
-                <!-- Barra de Ações -->
-                <div style="display:flex; background:#fff;">
-                    <a href="gerenciar_cliente.php?id=<?= $cliente_ativo['id'] ?>" class="client-action-btn" style="color:#0d6efd;" title="Editar Cadastro">
+                <div class="client-actions">
+                    <a href="gerenciar_cliente.php?id=<?= $cliente_ativo['id'] ?>" class="client-action-btn" title="Editar cadastro">
                         <span class="material-symbols-rounded">edit</span>
                     </a>
-                    <a href="relatorio_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="client-action-btn" style="color:#6f42c1;" title="Resumo PDF">
+                    <a href="relatorio_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="client-action-btn" title="Resumo PDF">
                         <span class="material-symbols-rounded">picture_as_pdf</span>
                     </a>
-                    <a href="actions/admin/cliente_impersonate.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="client-action-btn" style="color:#198754;" title="Ver como Cliente">
+                    <a href="actions/admin/cliente_impersonate.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="client-action-btn" title="Ver como cliente">
                         <span class="material-symbols-rounded">visibility</span>
                     </a>
-                    <!-- BOTAO EXCLUIR VERMELHO -->
-                    <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" class="client-action-btn btn-danger-hover" onclick="return confirm('Deseja excluir este cliente?')" style="color:#dc3545;" title="Excluir Cliente">
+                    <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" class="client-action-btn danger"
+                       onclick="return confirm('Deseja excluir este cliente?')" title="Excluir cliente">
                         <span class="material-symbols-rounded">delete</span>
                     </a>
                 </div>
             </div>
         </div>
-    <?php endif; ?>
+        <?php endif; ?>
 
-    <!-- SEÇÃO GERAL -->
-    <div class="nav-section">
-        <h6 class="nav-header">GERAL</h6>
-        
-        <a href="admin.php" class="nav-item <?= (!$cliente_ativo) ? 'active' : '' ?>">
-            <span class="material-symbols-rounded">grid_view</span>
-            Visão Geral
-        </a>
-        
-        <a href="gerenciar_cliente.php" class="nav-item">
-            <span class="material-symbols-rounded">person_add</span>
-            Novo Cliente
-        </a>
-    </div>
+        <!-- Navegação geral -->
+        <div class="nav-section">
+            <h6 class="nav-header">Geral</h6>
+            <a href="admin.php" class="nav-item <?= !$cliente_ativo ? 'active' : '' ?>">
+                <span class="material-symbols-rounded">grid_view</span>
+                Visão Geral
+            </a>
+            <a href="gerenciar_cliente.php" class="nav-item">
+                <span class="material-symbols-rounded">person_add</span>
+                Novo Cliente
+            </a>
+        </div>
 
-    <!-- SEÇÃO ALERTAS -->
-    <div class="nav-section" style="flex:1;">
-        <h6 class="nav-header">ALERTAS</h6>
-        
-        <button onclick="document.getElementById('modalAniversariantes').showModal()" class="nav-item" style="width:100%; border:none; background:none; cursor:pointer; text-align:left;">
-            <span class="material-symbols-rounded" style="color:#ffc107;">cake</span>
-            Aniversários
-            <?php if(count($aniversariantes) > 0): ?>
-                <span style="background:#ffc107; color:#000; font-size:0.7rem; padding:2px 6px; border-radius:10px; margin-left:auto; font-weight:800;"><?= count($aniversariantes) ?></span>
-            <?php endif; ?>
-        </button>
+        <!-- Alertas -->
+        <div class="nav-section">
+            <h6 class="nav-header">Alertas</h6>
+            <button type="button" class="nav-item" onclick="document.getElementById('modalAniversariantes').showModal()">
+                <span class="material-symbols-rounded">cake</span>
+                Aniversários
+                <?php if (count($aniversariantes) > 0): ?>
+                    <span class="badge-count warn"><?= count($aniversariantes) ?></span>
+                <?php endif; ?>
+            </button>
+            <button type="button" class="nav-item" onclick="document.getElementById('modalParados').showModal()">
+                <span class="material-symbols-rounded">timer_off</span>
+                Processos Parados
+                <?php if (count($parados) > 0): ?>
+                    <span class="badge-count danger"><?= count($parados) ?></span>
+                <?php endif; ?>
+            </button>
+        </div>
 
-        <button onclick="document.getElementById('modalParados').showModal()" class="nav-item" style="width:100%; border:none; background:none; cursor:pointer; text-align:left;">
-            <span class="material-symbols-rounded" style="color:#dc3545;">timer_off</span>
-            Processos Parados
-            <?php if(count($parados) > 0): ?>
-                <span style="background:#dc3545; color:#fff; font-size:0.7rem; padding:2px 6px; border-radius:10px; margin-left:auto; font-weight:800;"><?= count($parados) ?></span>
-            <?php endif; ?>
-        </button>
-    </div>
+        <!-- Modais dos widgets da sidebar -->
+        <?php require 'includes/modals/sidebar_widgets.php'; ?>
 
-    <!-- Inclui os modais necessários para a sidebar -->
-    <?php require 'includes/modals/sidebar_widgets.php'; ?>
+    </div><!-- /nav-scroll -->
 
-    <!-- TECHNICAL RESPONSIBLE FOOTER (Pinned to Bottom) -->
-    <div style="margin-top:auto; padding:20px; border-top:1px solid #f0f0f0; background: linear-gradient(to bottom, #fff 0%, #f1f8f5 100%); border-radius: 0 0 16px 16px; text-align:center; position:relative; overflow:hidden;">
-        <!-- Green Accent Line Bottom -->
-        <div style="position:absolute; bottom:0; left:0; width:100%; height:4px; background:#198754;"></div>
-        
-        <span style="display: block; font-size: 0.65rem; color: #adb5bd; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; margin-bottom:2px;">Engenheiro Responsável</span>
-        <strong style="display: block; font-size: 0.85rem; color: #495057; line-height: 1.2;">Diego T. N. Vilela</strong>
-        <span style="display: block; font-size: 0.75rem; color: #888;">CREA 235.474/D</span>
+    <!-- Rodapé: responsável técnico -->
+    <div class="sidebar-footer">
+        <span class="label">Engenheiro Responsável</span>
+        <strong class="name">Diego T. N. Vilela</strong>
+        <span class="crea">CREA 235.474/D</span>
     </div>
 
 </aside>
-
-<!-- STYLE FOR SIDEBAR (Inline for component encapsulation) -->
-<style>
-    .admin-nav-sidebar {
-        width: 270px;
-        min-width: 270px;
-        background: white;
-        border-radius: 16px;
-        /* Make it flex container to pin footer */
-        display: flex;
-        flex-direction: column;
-        
-        box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-        border: 1px solid #eaeaea;
-        align-self: flex-start;
-        position: sticky;
-        top: 20px;
-        height: calc(100vh - 40px); /* Full height minus padding */
-        overflow: hidden; /* Hide outer scroll */
-    }
-
-    .nav-section {
-        padding: 0 20px;
-        margin-bottom: 15px;
-    }
-
-    .nav-header {
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        color: #adb5bd;
-        font-weight: 800;
-        letter-spacing: 0.6px;
-        margin: 0 0 12px 12px;
-    }
-
-    .nav-divider { border: 0; border-top: 1px solid #f5f5f5; margin: 15px 0 20px 0; }
-
-    /* Client Header */
-    .nav-client-name { font-size: 1.05rem; font-weight: 700; color: #333; margin: 0 0 4px 0; line-height: 1.3; }
-
-    /* Items */
-    .nav-item {
-        display: flex; align-items: center; gap: 12px;
-        padding: 11px 16px;
-        color: #6c757d;
-        text-decoration: none;
-        font-weight: 500;
-        font-size: 0.9rem;
-        border-radius: 10px;
-        transition: all 0.2s ease;
-        margin-bottom: 6px;
-        border: 1px solid transparent;
-    }
-
-    .nav-item .material-symbols-rounded { font-size: 1.25rem; color: #adb5bd; transition: 0.2s; }
-    
-    .nav-item:hover {
-        background: #f8f9fa;
-        color: #333;
-        transform: translateX(3px);
-    }
-    .nav-item:hover .material-symbols-rounded { color: #333; }
-
-    /* Active State (Modern Pill Style) */
-    .nav-item.active {
-        background: #e8f5e9; /* Light Green */
-        color: #146c43; /* Dark Green */
-        font-weight: 700;
-        box-shadow: 0 2px 6px rgba(25, 135, 84, 0.1);
-        border-color: #c3e6cb;
-    }
-    .nav-item.active .material-symbols-rounded { color: #146c43; }
-
-</style>

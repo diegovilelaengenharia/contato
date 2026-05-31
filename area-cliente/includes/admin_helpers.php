@@ -33,16 +33,15 @@ if(!function_exists('renderFinTable')) {
                         <th></th>
                     </tr></thead><tbody>";
             foreach($rows as $r) {
-                $st_icon = '';
-                $badge_class = 'status-badge'; 
+                $badge_class = 'status-badge';
                 $safeStatus = htmlspecialchars($r['status'], ENT_QUOTES, 'UTF-8');
                 $status_label = ucfirst($safeStatus);
-                
+
                 switch($r['status']){
-                    case 'pago': $badge_class.=' success'; $st_icon='✅'; break;
-                    case 'pendente': $badge_class.=' warning'; $st_icon='⏳'; break;
-                    case 'atrasado': $badge_class.=' danger'; $st_icon='❌'; break;
-                    case 'isento': $badge_class.=' info'; $st_icon='⚪'; break;
+                    case 'pago': $badge_class.=' success'; break;
+                    case 'pendente': $badge_class.=' warning'; break;
+                    case 'atrasado': $badge_class.=' danger'; break;
+                    case 'isento': $badge_class.=' info'; break;
                 }
                 $valor = number_format($r['valor'], 2, ',', '.');
                 $data = date('d/m/Y', strtotime($r['data_vencimento']));
@@ -55,9 +54,9 @@ if(!function_exists('renderFinTable')) {
                     $href = $r['link_comprovante'];
                     if (preg_match('#^https?://#i', $href)) {
                         $safeHref = htmlspecialchars($href, ENT_QUOTES, 'UTF-8');
-                        $link = "<a href='{$safeHref}' target='_blank' rel='noopener' style='color:#0d6efd; font-weight:600; text-decoration:none;'>📄 Ver Doc</a>";
+                        $link = "<a href='{$safeHref}' target='_blank' rel='noopener' style='color:var(--text-info); font-weight:600; text-decoration:none;'>Ver Doc</a>";
                     } else {
-                        $link = "<span style='opacity:0.5' title='Link inválido'>⚠️</span>";
+                        $link = "<span style='opacity:0.5' title='Link inválido'>--</span>";
                     }
                 } else {
                     $link = "<span style='opacity:0.5'>--</span>";
@@ -74,7 +73,9 @@ if(!function_exists('renderFinTable')) {
                         </td>
                         <td style='text-align:center;'>{$link}</td>
                         <td style='text-align:right;'>
-                            <a href='actions/admin/financeiro_delete.php?cliente_id={$safeCid}&del_fin={$safeId}' onclick='confirmAction(event, \"Tem certeza que deseja EXCLUIR este lançamento financeiro?\")' style='color:#dc3545; text-decoration:none; font-size:1.1rem;'>🗑️</a>
+                            <a href='actions/admin/financeiro_delete.php?cliente_id={$safeCid}&del_fin={$safeId}' onclick='confirmAction(event, \"Tem certeza que deseja EXCLUIR este lançamento financeiro?\")' class='btn-icon danger' title='Excluir lançamento'>
+                                <span class='material-symbols-rounded'>delete</span>
+                            </a>
                         </td>
                       </tr>";
             }

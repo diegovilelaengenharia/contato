@@ -2,19 +2,10 @@
 /**
  * Controlador Principal do Admin
  * Orquestra views e componentes.
+ *
+ * Tratamento de erros (display_errors off + páginas amigáveis 500/503)
+ * é centralizado em includes/init.php.
  */
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
-// Error Handling Global
-register_shutdown_function(function() {
-    $error = error_get_last();
-    if ($error !== NULL && $error['type'] === E_ERROR) {
-        echo "<div style='background:red; color:white; padding:20px; font-weight:bold; z-index:99999; position:relative;'>FATAL ERROR ADMIN: " . $error['message'] . " in " . $error['file'] . " on line " . $error['line'] . "</div>";
-        die();
-    }
-});
-
 require 'includes/init.php';
 require 'includes/schema.php';
 require 'includes/admin_helpers.php';
@@ -53,9 +44,12 @@ if($cliente_ativo) {
 
     <div class="admin-container">
         <?php require 'includes/ui/sidebar.php'; ?>
-        
-        <main style="padding-bottom: 80px;">
-            <?php 
+
+        <main>
+            <button type="button" class="mobile-menu-toggle" onclick="toggleSidebar()">
+                <span class="material-symbols-rounded">menu</span> Menu
+            </button>
+            <?php
             if(isset($_GET['importar'])) {
                 require 'includes/views/admin/importar.php';
             } elseif(isset($_GET['novo'])) {
@@ -81,19 +75,18 @@ if($cliente_ativo) {
                     </a>
                 </div>
 
-                <div style="background:#fff; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.03); padding: 35px; margin-bottom: 30px; border: 1px solid #f0f0f0;">
-                    <?php 
-                    switch($active_tab) {
-                        case 'docs_iniciais': require 'includes/views/admin/documentos.php'; break;
-                        case 'pendencias':    require 'includes/views/admin/pendencias.php'; break;
-                        case 'financeiro':    require 'includes/views/admin/financeiro.php'; break;
-                        case 'arquivos':      require 'includes/views/admin/arquivos.php'; break;
-                        case 'andamento':
-                        case 'cadastro':
-                        default:              require 'includes/views/admin/timeline.php'; break;
-                    }
-                    ?>
-                </div>
+                <?php
+                // Cada view abre seu próprio container (.admin-tab-content)
+                switch($active_tab) {
+                    case 'docs_iniciais': require 'includes/views/admin/documentos.php'; break;
+                    case 'pendencias':    require 'includes/views/admin/pendencias.php'; break;
+                    case 'financeiro':    require 'includes/views/admin/financeiro.php'; break;
+                    case 'arquivos':      require 'includes/views/admin/arquivos.php'; break;
+                    case 'andamento':
+                    case 'cadastro':
+                    default:              require 'includes/views/admin/timeline.php'; break;
+                }
+                ?>
                 <?php
             } else {
                 require 'includes/views/admin/dashboard.php';
