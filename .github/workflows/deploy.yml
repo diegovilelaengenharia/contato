@@ -78,3 +78,17 @@ jobs:
             **/hello.php
             area-cliente/tools/**
             area-cliente/client-app/debug_*.php
+            # --- Docs internos e artefatos de dev (não devem ir pro servidor) ---
+            **/CLAUDE.md
+            **/REFORMULACAO-*.md
+            **/HANDOFF.md
+            **/update_schema_docs.php
+            **/setup_credentials.php
+            **/.vscode/**
+            **/.agents/**
+            **/.claude/**
+            **/.cursor/**
+            **/.codeium/**
+            # --- Conteúdo que não faz parte do site (vazou pela raiz da home) ---
+            Meu Drive/**
+            **/Meu Drive/**
