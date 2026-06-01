@@ -8,6 +8,7 @@ require_once __DIR__ . '/../../includes/init.php';
 require_once __DIR__ . '/../../core/Auth.php';
 require_once __DIR__ . '/../../core/Csrf.php';
 require_once __DIR__ . '/../../core/Database.php';
+require_once __DIR__ . '/../../core/Logger.php';
 
 // 1. Validar CSRF
 if (isset($_POST['csrf_token']) && !Csrf::validateToken($_POST['csrf_token'])) {
@@ -81,8 +82,10 @@ try {
         }
     }
 
+    Logger::log('CREATE', 'cliente', $novo_id, ['nome' => $nome_original, 'usuario' => $usuario_final]);
+
     $pdo->commit();
-    header("Location: ../../admin.php?cliente_id=$novo_id&msg=client_created");
+    header("Location: ../../admin.php?cliente_id=$novo_id&msg=welcome");
     exit;
 
 } catch(Exception $e) {

@@ -8,6 +8,7 @@ require_once __DIR__ . '/../../includes/init.php';
 require_once __DIR__ . '/../../core/Auth.php';
 require_once __DIR__ . '/../../core/Csrf.php';
 require_once __DIR__ . '/../../core/Database.php';
+require_once __DIR__ . '/../../core/Logger.php';
 
 // 1. Validar CSRF
 if (isset($_POST['csrf_token']) && !Csrf::validateToken($_POST['csrf_token'])) {
@@ -57,6 +58,13 @@ try {
     // 4. Insert Movement
     $sql = "INSERT INTO processo_movimentos (cliente_id, titulo_fase, data_movimento, descricao, status_tipo, tipo_movimento) VALUES (?, ?, NOW(), ?, 'conclusao', ?)";
     $pdo->prepare($sql)->execute([$cid, $titulo_ev, $sys_desc, $tipo_mov]);
+
+    // Gravar Log de Auditoria
+    Logger::log('UPDATE', 'processo_etapa', $cid, [
+        'etapa_atualizada' => $nova_etapa,
+        'evento_titulo' => $titulo_ev,
+        'observacao_etapa' => $obs_etapa
+    ]);
 
     // Redirecionamento
     header("Location: ../../admin.php?cliente_id=$cid&tab=andamento&msg=mov_added");
