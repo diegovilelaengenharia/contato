@@ -88,8 +88,12 @@ try {
     ];
 
     foreach ($tabelas as $tabela) {
-        $pdo->exec("TRUNCATE TABLE `$tabela`;");
-        $detalhes_log[] = "Tabela `$tabela` limpa com sucesso (Truncated).";
+        try {
+            $pdo->exec("TRUNCATE TABLE `$tabela`;");
+            $detalhes_log[] = "Tabela `$tabela` limpa com sucesso (Truncated).";
+        } catch (PDOException $e) {
+            $detalhes_log[] = "⚠️ Tabela `$tabela` não pôde ser limpa (pode não existir): " . $e->getMessage();
+        }
     }
 
     // Reativa as foreign keys
@@ -102,29 +106,41 @@ try {
     $senha_cliente_plana = "cliente123";
     $senha_hash = password_hash($senha_cliente_plana, PASSWORD_DEFAULT);
 
-    // Insere cliente
-    $stmt = $pdo->prepare("INSERT INTO clientes (nome, usuario, senha) VALUES (?, ?, ?)");
-    $stmt->execute([$nome_cliente, $usuario_cliente, $senha_hash]);
-    $novo_cliente_id = $pdo->lastInsertId();
-    $detalhes_log[] = "Cliente de teste padrão cadastrado com ID: $novo_cliente_id.";
+    // Insere cliente com tratamento individual de erros
+    try {
+        $stmt = $pdo->prepare("INSERT INTO clientes (nome, usuario, senha) VALUES (?, ?, ?)");
+        $stmt->execute([$nome_cliente, $usuario_cliente, $senha_hash]);
+        $novo_cliente_id = $pdo->lastInsertId();
+        $detalhes_log[] = "Cliente de teste padrão cadastrado com ID: $novo_cliente_id.";
+    } catch (PDOException $e) {
+        throw new Exception("Falha ao inserir cliente de teste: " . $e->getMessage());
+    }
 
-    // Insere detalhes do processo imobiliário padrão do cliente
-    $sql_detalhes = "INSERT INTO processo_detalhes (
-        cliente_id, tipo_pessoa, cpf_cnpj, contato_tel, contato_email, tipo_servico,
-        imovel_rua, imovel_numero, imovel_bairro, imovel_cidade, imovel_uf,
-        tipo_processo_chave, data_inicio
-    ) VALUES (?, 'Fisica', '123.456.789-01', '(35) 99999-9999', 'cliente@vilela.eng.br', 'Aprovação de Projeto de Regularização',
-        'Avenida Principal', '100', 'Centro', 'Oliveira', 'MG', 'regularizacao', NOW()
-    )";
-    $pdo->prepare($sql_detalhes)->execute([$novo_cliente_id]);
-    $detalhes_log[] = "Detalhes do processo padrão inseridos para o cliente.";
+    // Insere detalhes do processo imobiliário padrão do cliente com tratamento de erros
+    try {
+        $sql_detalhes = "INSERT INTO processo_detalhes (
+            cliente_id, tipo_pessoa, cpf_cnpj, contato_tel, contato_email, tipo_servico,
+            imovel_rua, imovel_numero, imovel_bairro, imovel_cidade, imovel_uf,
+            tipo_processo_chave, data_inicio
+        ) VALUES (?, 'Fisica', '123.456.789-01', '(35) 99999-9999', 'cliente@vilela.eng.br', 'Aprovação de Projeto de Regularização',
+            'Avenida Principal', '100', 'Centro', 'Oliveira', 'MG', 'regularizacao', NOW()
+        )";
+        $pdo->prepare($sql_detalhes)->execute([$novo_cliente_id]);
+        $detalhes_log[] = "Detalhes do processo padrão inseridos para o cliente.";
+    } catch (PDOException $e) {
+        throw new Exception("Falha ao inserir detalhes do processo: " . $e->getMessage());
+    }
 
     // Opcional: Adiciona um movimento inicial na timeline do processo do cliente para fins de teste visual
-    $sql_movimento = "INSERT INTO processo_movimentos (
-        cliente_id, titulo_fase, descricao, data_movimento, status_tipo, tipo_movimento
-    ) VALUES (?, 'Abertura do Processo', 'Seu processo de regularização imobiliária foi iniciado com sucesso no sistema da Vilela Engenharia.', NOW(), 'tramite', 'padrao')";
-    $pdo->prepare($sql_movimento)->execute([$novo_cliente_id]);
-    $detalhes_log[] = "Movimento inicial de boas-vindas cadastrado na timeline.";
+    try {
+        $sql_movimento = "INSERT INTO processo_movimentos (
+            cliente_id, titulo_fase, descricao, data_movimento, status_tipo, tipo_movimento
+        ) VALUES (?, 'Abertura do Processo', 'Seu processo de regularização imobiliária foi iniciado com sucesso no sistema da Vilela Engenharia.', NOW(), 'tramite', 'padrao')";
+        $pdo->prepare($sql_movimento)->execute([$novo_cliente_id]);
+        $detalhes_log[] = "Movimento inicial de boas-vindas cadastrado na timeline.";
+    } catch (PDOException $e) {
+        $detalhes_log[] = "⚠️ Não foi possível inserir movimento inicial (timeline): " . $e->getMessage();
+    }
 
     $sucesso = true;
 
@@ -322,6 +338,9 @@ if ($is_cli) {
                     <span>✕</span> Erro no Reset
                 </div>
                 <h1>Falha na Operação</h1>
+                <div style="background-color: #fee2e2; border: 1px solid #fca5a5; border-radius: 8px; padding: 12px; margin: 15px 0; color: var(--color-danger); font-size: 14px; font-weight: 600; line-height: 1.4; text-align: left;">
+                    🚨 Detalhe do Erro: <span style="font-family: monospace; font-weight: normal; color: #7f1d1d;"><?= htmlspecialchars($erro) ?></span>
+                </div>
                 <p>Ocorreu um erro ao tentar reconfigurar o banco de dados.</p>
             <?php endif; ?>
         </div>
