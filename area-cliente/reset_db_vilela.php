@@ -16,12 +16,17 @@ require_once __DIR__ . '/core/Database.php';
 $is_cli = (php_sapi_name() === 'cli');
 $token_secreto = 'vilela_reset_2026';
 
+// Senha padrão solicitada pelo Diego para o Admin
+$nova_senha_admin = '08472320693';
+
 if (!$is_cli) {
     // Acesso via Browser exige token
     $token_informado = $_GET['token'] ?? '';
+    
+    // Tentamos obter a senha atual do config, mas permitimos o reset
+    // via token secreto se o usuário não souber a senha atual.
     $admin_password_env = Database::getConfig('ADMIN_PASSWORD') ?? '';
 
-    // Permite logar via token estático ou via senha mestra do admin
     $auth_ok = false;
     if (!empty($token_informado)) {
         if ($token_informado === $token_secreto || ($admin_password_env !== '' && $token_informado === $admin_password_env)) {
@@ -67,6 +72,88 @@ try {
 
     // Inicia processo de limpeza
     $detalhes_log[] = "Conexão com o banco de dados estabelecida com sucesso.";
+
+    // ==========================================
+    // 🔑 MUDANÇA DA SENHA DO ADMIN (SOLICITAÇÃO DO DIEGO)
+    // ==========================================
+    $detalhes_log[] = "Iniciando atualização da senha mestra do Administrador...";
+
+    // 1. Atualizar arquivo .env (pasta area-cliente)
+    $env_file = __DIR__ . '/.env';
+    if (file_exists($env_file)) {
+        $env = parse_ini_file($env_file);
+        if ($env !== false) {
+            $env['ADMIN_PASSWORD'] = $nova_senha_admin;
+            $lines = [];
+            foreach ($env as $key => $value) {
+                $lines[] = $key . '=' . $value;
+            }
+            if (file_put_contents($env_file, implode("\n", $lines) . "\n") !== false) {
+                $detalhes_log[] = "🔑 Senha do Admin atualizada no arquivo 'area-cliente/.env'.";
+            }
+        }
+    }
+
+    // 2. Atualizar arquivo .env (pasta raiz)
+    $env_root_file = __DIR__ . '/../.env';
+    if (file_exists($env_root_file)) {
+        $env = parse_ini_file($env_root_file);
+        if ($env !== false) {
+            $env['ADMIN_PASSWORD'] = $nova_senha_admin;
+            $lines = [];
+            foreach ($env as $key => $value) {
+                $lines[] = $key . '=' . $value;
+            }
+            if (file_put_contents($env_root_file, implode("\n", $lines) . "\n") !== false) {
+                $detalhes_log[] = "🔑 Senha do Admin atualizada no arquivo raiz '.env'.";
+            }
+        }
+    }
+
+    // 3. Atualizar arquivo db_config.ini (pasta area-cliente)
+    $ini_file = __DIR__ . '/db_config.ini';
+    if (file_exists($ini_file)) {
+        $ini = parse_ini_file($ini_file);
+        if ($ini !== false) {
+            $ini['ADMIN_PASSWORD'] = $nova_senha_admin;
+            $lines = [];
+            foreach ($ini as $key => $value) {
+                $lines[] = $key . '=' . $value;
+            }
+            if (file_put_contents($ini_file, implode("\n", $lines) . "\n") !== false) {
+                $detalhes_log[] = "🔑 Senha do Admin atualizada no arquivo 'area-cliente/db_config.ini'.";
+            }
+        }
+    }
+
+    // 4. Atualizar arquivo db_config.ini (pasta raiz)
+    $ini_root_file = __DIR__ . '/../db_config.ini';
+    if (file_exists($ini_root_file)) {
+        $ini = parse_ini_file($ini_root_file);
+        if ($ini !== false) {
+            $ini['ADMIN_PASSWORD'] = $nova_senha_admin;
+            $lines = [];
+            foreach ($ini as $key => $value) {
+                $lines[] = $key . '=' . $value;
+            }
+            if (file_put_contents($ini_root_file, implode("\n", $lines) . "\n") !== false) {
+                $detalhes_log[] = "🔑 Senha do Admin atualizada no arquivo raiz 'db_config.ini'.";
+            }
+        }
+    }
+
+    // 5. Atualizar arquivo PHP de credenciais do deploy (core/db_credentials.php)
+    $creds_file = __DIR__ . '/core/db_credentials.php';
+    if (file_exists($creds_file)) {
+        $creds = require $creds_file;
+        if (is_array($creds)) {
+            $creds['ADMIN_PASSWORD'] = $nova_senha_admin;
+            $conteudo = "<?php\nreturn " . var_export($creds, true) . ";\n";
+            if (file_put_contents($creds_file, $conteudo) !== false) {
+                $detalhes_log[] = "🔑 Senha do Admin atualizada no arquivo 'core/db_credentials.php'.";
+            }
+        }
+    }
 
     // Desativa temporariamente as foreign keys para poder limpar sem restrições
     $pdo->exec("SET FOREIGN_KEY_CHECKS = 0;");
@@ -368,7 +455,8 @@ if ($is_cli) {
                     <div class="credential-label">👨‍💼 Administrador (Diego)</div>
                     <div>
                         <span class="credential-label">Login:</span> <span class="credential-value">admin</span> ou <span class="credential-value">vilela</span><br>
-                        <span class="credential-label" style="font-size: 11px; color: #718096; display: block; text-align: right; margin-top: 4px;">Utilize a Senha Mestra cadastrada no arquivo .env</span>
+                        <span class="credential-label">Senha Atualizada:</span> <span class="credential-value"><?= htmlspecialchars($nova_senha_admin) ?></span><br>
+                        <span class="credential-label" style="font-size: 11px; color: #718096; display: block; text-align: right; margin-top: 4px;">Atualizada em todos os arquivos de configuração remotos</span>
                     </div>
                 </div>
                 
