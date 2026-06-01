@@ -118,15 +118,16 @@ try {
 
     // AUTO-MIGRAÇÃO DE SEGURANÇA: Garante que a coluna tipo_servico existe em processo_detalhes
     try {
-        $pdo->query("SELECT tipo_servico FROM processo_detalhes LIMIT 1");
-    } catch (PDOException $e) {
-        // Coluna tipo_servico está faltando no banco de produção. Cria-a!
-        try {
-            $pdo->exec("ALTER TABLE processo_detalhes ADD COLUMN tipo_servico VARCHAR(255) DEFAULT NULL;");
+        $q = $pdo->query("SHOW COLUMNS FROM `processo_detalhes` LIKE 'tipo_servico'");
+        if ($q->rowCount() === 0) {
+            // Coluna tipo_servico está faltando no banco de produção. Cria-a!
+            $pdo->exec("ALTER TABLE `processo_detalhes` ADD COLUMN `tipo_servico` VARCHAR(255) DEFAULT NULL;");
             $detalhes_log[] = "🔧 Coluna 'tipo_servico' de segurança criada com sucesso em 'processo_detalhes'!";
-        } catch (PDOException $ex) {
-            throw new Exception("Falha ao criar coluna faltante 'tipo_servico': " . $ex->getMessage());
+        } else {
+            $detalhes_log[] = "A coluna 'tipo_servico' já existe no banco de dados.";
         }
+    } catch (PDOException $e) {
+        throw new Exception("Falha ao verificar/criar coluna 'tipo_servico': " . $e->getMessage());
     }
 
     // Insere detalhes do processo imobiliário padrão do cliente com tratamento de erros
