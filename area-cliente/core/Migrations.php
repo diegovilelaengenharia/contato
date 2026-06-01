@@ -88,7 +88,9 @@ class Migrations {
                     'area_existente', 'area_acrescimo', 'area_permeavel',
                     'taxa_ocupacao', 'fator_aproveitamento', 'geo_coords',
                     // New Personal Fields
-                    'data_nascimento', 'nome_conjuge', 'cpf_conjuge', 'nacionalidade', 'eh_procurador'
+                    'data_nascimento', 'nome_conjuge', 'cpf_conjuge', 'nacionalidade', 'eh_procurador',
+                    // Campo de Serviço
+                    'tipo_servico'
                 ];
 
                 foreach($cols_needed as $col) {

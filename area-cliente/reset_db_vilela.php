@@ -116,6 +116,19 @@ try {
         throw new Exception("Falha ao inserir cliente de teste: " . $e->getMessage());
     }
 
+    // AUTO-MIGRAÇÃO DE SEGURANÇA: Garante que a coluna tipo_servico existe em processo_detalhes
+    try {
+        $pdo->query("SELECT tipo_servico FROM processo_detalhes LIMIT 1");
+    } catch (PDOException $e) {
+        // Coluna tipo_servico está faltando no banco de produção. Cria-a!
+        try {
+            $pdo->exec("ALTER TABLE processo_detalhes ADD COLUMN tipo_servico VARCHAR(255) DEFAULT NULL;");
+            $detalhes_log[] = "🔧 Coluna 'tipo_servico' de segurança criada com sucesso em 'processo_detalhes'!";
+        } catch (PDOException $ex) {
+            throw new Exception("Falha ao criar coluna faltante 'tipo_servico': " . $ex->getMessage());
+        }
+    }
+
     // Insere detalhes do processo imobiliário padrão do cliente com tratamento de erros
     try {
         $sql_detalhes = "INSERT INTO processo_detalhes (
