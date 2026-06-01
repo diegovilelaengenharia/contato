@@ -1,3 +1,22 @@
+# === Proteção: o repositório está enraizado na pasta HOME do usuário. ===
+# Estes diretórios são pessoais/sincronizados e NUNCA devem ser versionados
+# nem subir no deploy (um 'git add -A' acidental pegaria .ssh, NTUSER.DAT etc).
+Meu Drive/
+OneDrive/
+Desktop/
+Downloads/
+Documents/
+Pictures/
+Videos/
+Searches/
+Favorites/
+Music/
+AppData/
+.ssh/
+.config/
+NTUSER.DAT*
+ntuser.dat*
+
 # Build artifacts
 node_modules
 /.pnp
