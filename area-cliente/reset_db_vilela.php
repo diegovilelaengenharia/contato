@@ -1,7 +1,7 @@
 <?php
 /**
  * Script de Manutenção: Reset de Banco de Dados e Carga Inicial
- * Caminho: area-cliente/maintenance/reset_db_vilela.php
+ * Caminho: area-cliente/reset_db_vilela.php
  * 
  * Este script limpa de forma segura todas as tabelas transacionais e do portal
  * do cliente, restabelecendo a base para um estado limpo, contendo apenas 
@@ -10,7 +10,7 @@
  * Segurança: Exige chave de autenticação quando acessado via web (?token=vilela_reset_2026).
  */
 
-require_once __DIR__ . '/../core/Database.php';
+require_once __DIR__ . '/core/Database.php';
 
 // Proteção de Acesso
 $is_cli = (php_sapi_name() === 'cli');
@@ -358,7 +358,7 @@ if ($is_cli) {
         </div>
 
         <?php if ($sucesso): ?>
-            <a href="../index.php" class="btn-action">Ir para a Tela de Login</a>
+            <a href="index.php" class="btn-action">Ir para a Tela de Login</a>
         <?php else: ?>
             <a href="javascript:location.reload()" class="btn-action" style="background-color: var(--color-danger)">Tentar Novamente</a>
         <?php endif; ?>
