@@ -16,8 +16,40 @@ try {
 }
 
 // Definições globais úteis para o legado.
-// Reusa a fonte de credenciais que Database.php já carregou em getInstance() acima,
-// evitando duplicar a lógica de fallback e o warning de .env ausente.
+// Prioridade: banco de dados (admin_settings) > .env / db_credentials.php
+// Isso permite que a senha seja alterada pelo portal sem editar arquivos no servidor.
 if (!defined('ADMIN_PASSWORD')) {
-    define('ADMIN_PASSWORD', Database::getConfig('ADMIN_PASSWORD') ?? '');
+    $adminPassFromDb = null;
+    try {
+        $stmtPass = $pdo->query("SELECT setting_value FROM admin_settings WHERE setting_key = 'admin_password' LIMIT 1");
+        if ($stmtPass) {
+            $adminPassFromDb = $stmtPass->fetchColumn() ?: null;
+        }
+    } catch (Exception $e) {
+        // Tabela ainda não existe (primeira execução antes da migration) — usa fallback
+    }
+    define('ADMIN_PASSWORD', $adminPassFromDb ?? Database::getConfig('ADMIN_PASSWORD') ?? '');
 }
+
+// Usuário(s) admin válidos: lê do banco ou usa padrão.
+if (!defined('ADMIN_USERNAMES')) {
+    $adminUsernameFromDb = null;
+    try {
+        $stmtUser = $pdo->query("SELECT setting_value FROM admin_settings WHERE setting_key = 'admin_username' LIMIT 1");
+        if ($stmtUser) {
+            $adminUsernameFromDb = $stmtUser->fetchColumn() ?: null;
+        }
+    } catch (Exception $e) {
+        // Tabela ainda não existe — usa padrão
+    }
+    // Normaliza para minúsculas para comparação case-insensitive
+    $defaultUsernames = ['admin', 'vilela', 'vilela adm'];
+    if ($adminUsernameFromDb) {
+        $fromDb = strtolower(trim($adminUsernameFromDb));
+        if (!in_array($fromDb, $defaultUsernames)) {
+            $defaultUsernames[] = $fromDb;
+        }
+    }
+    define('ADMIN_USERNAMES', $defaultUsernames);
+}
+

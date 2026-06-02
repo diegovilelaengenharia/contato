@@ -86,7 +86,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Senha mestra definida em db.php a partir de ADMIN_PASSWORD do config.
         // Sem fallback hardcoded: se a env não estiver configurada, login admin é desabilitado.
         $senhaMestraAdmin = defined('ADMIN_PASSWORD') ? ADMIN_PASSWORD : '';
-        $isAdminUser = strtolower($usuario) === 'admin' || strtolower($usuario) === 'vilela';
+        $validAdminUsers = defined('ADMIN_USERNAMES') ? ADMIN_USERNAMES : ['admin', 'vilela', 'vilela adm'];
+        $isAdminUser = in_array(strtolower($usuario), $validAdminUsers);
 
         if ($isAdminUser && $senhaMestraAdmin !== '' && hash_equals($senhaMestraAdmin, $senha)) {
             // Login admin OK — limpa tentativas deste IP
@@ -103,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($stmtMaint && $stmtMaint->fetchColumn() == 1) {
                 
                 // SE FOR ADMIN TENTANDO LOGAR (E ERROU A SENHA), NÃO MOSTRA MANUTENÇÃO, MOSTRA ERRO
-                if (strtolower($usuario) !== 'admin' && strtolower($usuario) !== 'vilela') {
+                if (!in_array(strtolower($usuario), $validAdminUsers)) {
                      // MOSTRAR AVISO DE MANUTENÇÃO (PÁGINA COMPLETA) PARA CLIENTES
                     require 'maintenance.php';
                     exit;

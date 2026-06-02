@@ -100,33 +100,28 @@ if (isset($_POST['update_password_admin'])) {
     if (strlen($new_pass) < 6) {
         $_SESSION['flash_message'] = ['type' => 'error', 'text' => 'A senha deve conter no mínimo 6 caracteres.'];
     } else {
-        $env_file = __DIR__ . '/../.env';
-        if (!file_exists($env_file)) {
-            $_SESSION['flash_message'] = ['type' => 'error', 'text' => 'Erro: Arquivo de ambiente .env não encontrado.'];
-        } else {
-            $env = parse_ini_file($env_file);
-            if ($env === false) {
-                $_SESSION['flash_message'] = ['type' => 'error', 'text' => 'Falha ao analisar o arquivo .env.'];
+        try {
+            // Salva no banco de dados (admin_settings) — sem depender de permissão de arquivo no servidor
+            $chk = $pdo->prepare("SELECT id FROM admin_settings WHERE setting_key = 'admin_password'");
+            $chk->execute();
+            if ($chk->fetch()) {
+                $pdo->prepare("UPDATE admin_settings SET setting_value = ? WHERE setting_key = 'admin_password'")->execute([$new_pass]);
             } else {
-                $env['ADMIN_PASSWORD'] = $new_pass;
-                $lines = [];
-                foreach ($env as $key => $value) {
-                    $lines[] = $key . '=' . $value;
-                }
-                
-                if (file_put_contents($env_file, implode("\n", $lines) . "\n") !== false) {
-                    // Auditoria
-                    Logger::log('UPDATE_PASSWORD', 'admin_credential', null, null);
-                    $_SESSION['flash_message'] = ['type' => 'success', 'text' => 'Senha master do admin alterada com sucesso!'];
-                } else {
-                    $_SESSION['flash_message'] = ['type' => 'error', 'text' => 'Sem permissão de gravação no arquivo .env do servidor.'];
-                }
+                $pdo->prepare("INSERT INTO admin_settings (setting_key, setting_value) VALUES ('admin_password', ?)")->execute([$new_pass]);
             }
+
+            // Auditoria
+            Logger::log('UPDATE_PASSWORD', 'admin_credential', null, null);
+            $_SESSION['flash_message'] = ['type' => 'success', 'text' => 'Senha master do admin alterada com sucesso!'];
+        } catch (Exception $e) {
+            error_log("Erro ao atualizar senha admin no banco: " . $e->getMessage());
+            $_SESSION['flash_message'] = ['type' => 'error', 'text' => 'Falha ao salvar a nova senha no banco de dados.'];
         }
     }
     header("Location: ?route=configuracoes");
     exit;
 }
+
 
 // --- DEFINE VARIÁVEIS DO BANCO PARA EXIBIÇÃO ---
 $maint_mode = $curr_settings['maintenance_mode'] ?? 0;
