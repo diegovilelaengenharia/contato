@@ -15,6 +15,20 @@ try {
     die("Erro interno no servidor de banco de dados.");
 }
 
+// Executa migrations pendentes ANTES de ler as credenciais do banco.
+// A classe Migrations é idempotente: só roda migrations que ainda não foram executadas.
+// Isso garante que a migration 002 (admin_password_db) rode na primeira requisição após o deploy.
+if (!defined('MIGRATIONS_RAN')) {
+    define('MIGRATIONS_RAN', true);
+    try {
+        require_once __DIR__ . '/core/Migrations.php';
+        Migrations::run();
+    } catch (Exception $e) {
+        error_log("AVISO: Falha ao executar migrations em db.php: " . $e->getMessage());
+        // Não é fatal — continua com as credenciais disponíveis
+    }
+}
+
 // Definições globais úteis para o legado.
 // Prioridade: banco de dados (admin_settings) > .env / db_credentials.php
 // Isso permite que a senha seja alterada pelo portal sem editar arquivos no servidor.
