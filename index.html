@@ -71,6 +71,24 @@
 </head>
 
 <body>
+    <!-- Navbar Inteligente (Scroll-up Reveal) -->
+    <nav class="smart-nav" id="smartNav">
+        <div class="nav-container">
+            <a href="#" class="nav-brand">
+                <img src="assets/logo.png" alt="Vilela Engenharia Logo" class="nav-logo-img" width="32" height="32">
+                <span class="nav-brand-name">Vilela Engenharia</span>
+            </a>
+            <div class="nav-menu">
+                <a href="https://wa.me/5535984529577?text=Olá%20Eng.%20Diego!%20Gostaria%20de%20um%20orçamento." class="nav-link nav-link--primary" target="_blank" rel="noopener">
+                    <span class="material-symbols-rounded">chat</span> <span>Orçamento</span>
+                </a>
+                <a href="area-cliente/" class="nav-link nav-link--secondary">
+                    <span class="material-symbols-rounded">person</span> <span>Portal do Cliente</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
     <div class="page">
         <!-- HEADER / HERO -->
         <header class="hero" role="banner">
@@ -107,8 +125,8 @@
                     </div>
                     <div class="step-body">
                         <span class="material-symbols-rounded step-icon" aria-hidden="true">forum</span>
-                        <p class="step-label">Me chama no WhatsApp</p>
-                        <p class="step-desc">Me conta o que precisa — regularização, aprovação ou projeto. Sem compromisso.</p>
+                        <p class="step-label">WhatsApp</p>
+                        <p class="step-desc">Envie uma mensagem explicando seu caso.</p>
                     </div>
                 </div>
                 <!-- Conector (desktop) -->
@@ -120,8 +138,8 @@
                     </div>
                     <div class="step-body">
                         <span class="material-symbols-rounded step-icon" aria-hidden="true">search</span>
-                        <p class="step-label">Analiso seu caso</p>
-                        <p class="step-desc">Avalio a situação do imóvel e indico o caminho mais rápido e econômico.</p>
+                        <p class="step-label">Análise</p>
+                        <p class="step-desc">Avalio a situação do imóvel e indico o melhor caminho.</p>
                     </div>
                 </div>
                 <!-- Conector (desktop) -->
@@ -133,42 +151,16 @@
                     </div>
                     <div class="step-body">
                         <span class="material-symbols-rounded step-icon" aria-hidden="true">verified</span>
-                        <p class="step-label">Cuido de tudo</p>
-                        <p class="step-desc">Executo cada etapa — da prefeitura ao cartório — até seu imóvel estar 100% regularizado.</p>
+                        <p class="step-label">Resolução</p>
+                        <p class="step-desc">Executo toda a burocracia, da prefeitura ao cartório.</p>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Seção Diferenciais -->
-        <section id="diferenciais" class="diferenciais-section reveal">
-            <div class="diferenciais-grid">
-                <div class="diferencial-card">
-                    <span class="material-symbols-rounded diferencial-icon">school</span>
-                    <h3 class="diferencial-title">Rigor Técnico</h3>
-                    <p class="diferencial-desc">Formação de excelência pela UFSJ (Universidade Federal de São João Del Rei), com base técnica sólida aplicada a cada projeto.</p>
-                </div>
-                <div class="diferencial-card">
-                    <span class="material-symbols-rounded diferencial-icon">gavel</span>
-                    <h3 class="diferencial-title">Normas Atualizadas</h3>
-                    <p class="diferencial-desc">Domínio completo das últimas revisões de normas técnicas (ABNT) e códigos de obras municipais vigentes na região.</p>
-                </div>
-                <div class="diferencial-card">
-                    <span class="material-symbols-rounded diferencial-icon">devices</span>
-                    <h3 class="diferencial-title">Transparência Digital</h3>
-                    <p class="diferencial-desc">Acompanhamento em tempo real das etapas de regularização do seu imóvel através do nosso Portal do Cliente exclusivo.</p>
-                </div>
-                <div class="diferencial-card">
-                    <span class="material-symbols-rounded diferencial-icon">handshake</span>
-                    <h3 class="diferencial-title">Suporte Personalizado</h3>
-                    <p class="diferencial-desc">Atendimento próximo e focado em resolver a sua demanda de forma ágil, sem intermediários ou burocracia excessiva.</p>
                 </div>
             </div>
         </section>
 
         <main class="content">
             <!-- 1. Regularizações -->
-            <section class="links reveal">
+            <section id="regularizacao" class="links reveal">
                 <h2 class="section-heading"><span class="section-heading__num">02</span>Regularização de Imóveis</h2>
                 <ul class="links-grid">
                     <li>
@@ -205,7 +197,7 @@
             </section>
 
             <!-- 2. Projetos e Consultoria -->
-            <section class="links reveal">
+            <section id="projetos-consultoria" class="links reveal">
                 <h2 class="section-heading"><span class="section-heading__num">03</span>Projetos e Consultoria</h2>
                 <ul class="links-grid">
                     <li>
@@ -234,78 +226,71 @@
             <!-- Seção Portfólio / Cases -->
             <section id="portfolio" class="portfolio-section reveal">
                 <h2 class="section-heading"><span class="section-heading__num">04</span>Cases de Sucesso</h2>
-                <p class="section-subheading">Exemplos práticos de soluções entregues pelo nosso escritório.</p>
+                <p class="section-subheading">Exemplos práticos de regularizações documentais e trâmites concluídos.</p>
                 
                 <div class="portfolio-grid">
                     <div class="portfolio-card">
                         <div class="portfolio-image-wrapper">
-                            <img src="assets/case_aprovacao_residencial.png" alt="Aprovação e Regularização Residencial" class="portfolio-img" loading="lazy">
+                            <img src="assets/case_habite_se.png" alt="Mockup de Habite-se municipal aprovado" class="portfolio-img" loading="lazy">
                         </div>
                         <div class="portfolio-body">
-                            <span class="portfolio-tag">Regularização</span>
-                            <h3 class="portfolio-title">Aprovação Residencial</h3>
-                            <p class="portfolio-desc">Processo completo de habite-se e averbação de residência unifamiliar, regularizando a situação cadastral junto à Prefeitura e Cartório.</p>
+                            <span class="portfolio-tag">Prefeitura</span>
+                            <h3 class="portfolio-title">Habite-se & Aprovação</h3>
+                            <p class="portfolio-desc">Processo de regularização as-built com aprovação de projeto residencial na prefeitura e emissão do Habite-se de conclusão de obra.</p>
                         </div>
                     </div>
                     <div class="portfolio-card">
                         <div class="portfolio-image-wrapper">
-                            <img src="assets/case_projeto_arquitetonico.png" alt="Projeto Arquitetônico e Complementar" class="portfolio-img" loading="lazy">
+                            <img src="assets/case_cnd_receita.png" alt="Mockup de Certidão de Regularidade da Receita Federal" class="portfolio-img" loading="lazy">
                         </div>
                         <div class="portfolio-body">
-                            <span class="portfolio-tag">Projeto</span>
-                            <h3 class="portfolio-title">Projetos Técnicos</h3>
-                            <p class="portfolio-desc">Elaboração de projeto arquitetônico moderno e estrutural detalhado de edificação, devidamente aprovado com emissão de ART.</p>
+                            <span class="portfolio-tag">Receita Federal</span>
+                            <h3 class="portfolio-title">Aferição SERO & CND</h3>
+                            <p class="portfolio-desc">Inscrição de obra no CNO, conciliação e aferição eletrônica previdenciária via portal SERO, com emissão da CND de Obra sem multas.</p>
                         </div>
                     </div>
                     <div class="portfolio-card">
                         <div class="portfolio-image-wrapper">
-                            <img src="assets/case_laudo_tecnico.png" alt="Laudo Técnico de Vistoria Cautelar" class="portfolio-img" loading="lazy">
+                            <img src="assets/case_averbacao_cartorio.png" alt="Mockup de matrícula de imóvel averbada" class="portfolio-img" loading="lazy">
                         </div>
                         <div class="portfolio-body">
-                            <span class="portfolio-tag">Laudo</span>
-                            <h3 class="portfolio-title">Vistorias & Laudos</h3>
-                            <p class="portfolio-desc">Laudo pericial de vistoria de vizinhança e conformidade estrutural, atestando a segurança da edificação conforme exigências legais.</p>
+                            <span class="portfolio-tag">Cartório</span>
+                            <h3 class="portfolio-title">Averbação de Matrícula</h3>
+                            <p class="portfolio-desc">Averbação final da área construída e habite-se na matrícula do imóvel no Cartório de Registro de Imóveis, assegurando o valor real da propriedade.</p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Seção Depoimentos -->
-            <section id="depoimentos" class="depoimentos-section reveal">
-                <h2 class="section-heading"><span class="section-heading__num">05</span>Depoimentos</h2>
-                <p class="section-subheading">Veja o que dizem os clientes atendidos pela Vilela Engenharia.</p>
-                
-                <div class="depoimentos-grid">
-                    <div class="depoimento-card">
-                        <div class="depoimento-rating">⭐⭐⭐⭐⭐</div>
-                        <p class="depoimento-text">"Excelente trabalho na regularização da minha casa. O Diego cuidou de toda a papelada na prefeitura e no cartório e foi super atencioso. O portal online facilitou muito para acompanhar cada etapa."</p>
-                        <div class="depoimento-author">
-                            <strong>Carlos Silva</strong>
-                            <span>Cliente Residencial</span>
-                        </div>
+            <!-- Seção Diferenciais (colocada depois dos cases de sucesso) -->
+            <section id="diferenciais" class="diferenciais-section reveal">
+                <div class="diferenciais-grid">
+                    <div class="diferencial-card">
+                        <span class="material-symbols-rounded diferencial-icon">school</span>
+                        <h3 class="diferencial-title">Rigor Técnico</h3>
+                        <p class="diferencial-desc">Formação de excelência pela UFSJ (Universidade Federal de São João Del Rei), com base técnica sólida aplicada a cada projeto.</p>
                     </div>
-                    <div class="depoimento-card">
-                        <div class="depoimento-rating">⭐⭐⭐⭐⭐</div>
-                        <p class="depoimento-text">"Profissional muito sério e capacitado. Fez o projeto estrutural do meu galpão com extrema rapidez e rigor técnico, entregando tudo aprovado com a ART registrada. Recomendo muito!"</p>
-                        <div class="depoimento-author">
-                            <strong>Roberto Souza</strong>
-                            <span>Empresário</span>
-                        </div>
+                    <div class="diferencial-card">
+                        <span class="material-symbols-rounded diferencial-icon">gavel</span>
+                        <h3 class="diferencial-title">Normas Atualizadas</h3>
+                        <p class="diferencial-desc">Domínio completo das últimas revisões de normas técnicas (ABNT) e códigos de obras municipais vigentes na região.</p>
                     </div>
-                    <div class="depoimento-card">
-                        <div class="depoimento-rating">⭐⭐⭐⭐⭐</div>
-                        <p class="depoimento-text">"Contratei para um laudo cautelar de vistoria de reforma. O Diego é extremamente detalhista, explicou tudo o que precisava e nos deu total segurança jurídica e técnica para a obra."</p>
-                        <div class="depoimento-author">
-                            <strong>Mariana Costa</strong>
-                            <span>Proprietária de Imóvel</span>
-                        </div>
+                    <div class="diferencial-card">
+                        <span class="material-symbols-rounded diferencial-icon">devices</span>
+                        <h3 class="diferencial-title">Transparência Digital</h3>
+                        <p class="diferencial-desc">Acompanhamento em tempo real das etapas de regularização do seu imóvel através do nosso Portal do Cliente exclusivo.</p>
+                    </div>
+                    <div class="diferencial-card">
+                        <span class="material-symbols-rounded diferencial-icon">handshake</span>
+                        <h3 class="diferencial-title">Suporte Personalizado</h3>
+                        <p class="diferencial-desc">Atendimento próximo e focado em resolver a sua demanda de forma ágil, sem intermediários ou burocracia excessiva.</p>
                     </div>
                 </div>
             </section>
 
             <!-- Seção FAQ -->
             <section id="faq" class="faq-section reveal">
-                <h2 class="section-heading"><span class="section-heading__num">06</span>Perguntas Frequentes</h2>
+                <h2 class="section-heading"><span class="section-heading__num">05</span>Perguntas Frequentes</h2>
                 <p class="section-subheading">Tire suas dúvidas rápidas sobre a regularização de imóveis e projetos.</p>
                 
                 <div class="faq-list">
@@ -336,20 +321,43 @@
                 </div>
             </section>
 
-            <!-- Seção Sobre -->
+            <!-- Seção Sobre Diego Vilela (Redesenhada) -->
             <section id="sobre" class="sobre-section reveal">
-                <h2 class="section-heading"><span class="section-heading__num">07</span>Sobre Diego Vilela</h2>
-                <div class="sobre-container">
-                    <div class="sobre-photo">
-                        <img src="assets/foto-diego-new.jpg" alt="Diego Vilela, Engenheiro Civil" class="sobre-img" loading="lazy">
+                <h2 class="section-heading"><span class="section-heading__num">06</span>Sobre Diego Vilela</h2>
+                <div class="sobre-card-premium">
+                    <div class="sobre-photo-wrapper">
+                        <div class="sobre-photo-deco" aria-hidden="true"></div>
+                        <img src="assets/foto-diego-new.jpg" alt="Diego Vilela, Engenheiro Civil" class="sobre-photo-modern" loading="lazy">
+                        <div class="sobre-photo-badge">
+                            <span class="material-symbols-rounded">verified</span>
+                            <span>CREA 235.474/D</span>
+                        </div>
                     </div>
-                    <div class="sobre-content">
-                        <p class="sobre-text">Sou Diego Vilela, Engenheiro Civil formado pela Universidade Federal de São João Del Rei (UFSJ), especializado em regularização e aprovação de imóveis.</p>
-                        <p class="sobre-text">Conheço por dentro os trâmites de prefeitura, receita federal e cartório — o que agiliza cada etapa do processo para meus clientes.</p>
-                        <p class="sobre-text">Meu compromisso é levar seu imóvel à regularização completa pelo caminho mais eficiente, evitando atrasos e custos desnecessários. Estou à disposição para cuidar do seu patrimônio.</p>
-                        <div class="credential-badges">
-                            <span class="credential-badge"><span class="material-symbols-rounded" aria-hidden="true">verified</span>CREA 235.474/D</span>
-                            <span class="credential-badge"><span class="material-symbols-rounded" aria-hidden="true">school</span>Eng. Civil · UFSJ</span>
+                    <div class="sobre-info-content">
+                        <span class="sobre-role-label">Engenheiro Responsável</span>
+                        <h3 class="sobre-name">Diego T. N. Vilela</h3>
+                        <blockquote class="sobre-quote">
+                            "Minha missão é descomplicar a burocracia e garantir que a sua propriedade esteja legalizada, valorizada e protegida."
+                        </blockquote>
+                        <div class="sobre-body-text">
+                            <p>Sou Engenheiro Civil graduado pela <strong>Universidade Federal de São João Del Rei (UFSJ)</strong>, atuando de maneira focada na engenharia documental e trâmites de regularização de imóveis.</p>
+                            <p>Especializado no fluxo de conformidade junto à <strong>Prefeitura, Receita Federal e Cartório de Imóveis</strong>, dou andamento ágil a processos de Habite-se, aferição SERO, emissão de CND e averbação de escrituras, convertendo burocracia em valor real para o seu patrimônio.</p>
+                        </div>
+                        <div class="sobre-stats-row">
+                            <div class="sobre-stat-item">
+                                <span class="material-symbols-rounded">school</span>
+                                <div>
+                                    <strong>UFSJ</strong>
+                                    <span>Formação de Excelência</span>
+                                </div>
+                            </div>
+                            <div class="sobre-stat-item">
+                                <span class="material-symbols-rounded">gavel</span>
+                                <div>
+                                    <strong>Normas Técnicas</strong>
+                                    <span>Segurança e Rigor Técnico</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -386,17 +394,9 @@
 
                 <p class="footer-meta">
                     <span class="material-symbols-rounded" aria-hidden="true">place</span>
-                    Atendimento em Oliveira/MG e região
-                </p>
-            </div>
-            <div class="footer-premium__bottom">
-                &copy; <span id="year"></span> Vilela Engenharia &middot; Todos os direitos reservados.
-            </div>
-        </footer>
-
-        <div class="floating-buttons">
-            <a href="area-cliente/" class="floating-btn floating-btn--client" aria-label="Área do Cliente" data-tooltip="Área do Cliente">
-                <span class="material-symbols-rounded" aria-hidden="true">person</span>
+                    Atendimento em Oliveira/MG e regi�        <div class="floating-buttons" id="floatingButtons">
+            <a href="https://wa.me/5535984529577?text=Olá%20Eng.%20Diego!%20Gostaria%20de%20um%20orçamento." class="floating-btn floating-btn--whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp" data-tooltip="Falar no WhatsApp">
+                <span class="material-symbols-rounded" aria-hidden="true">chat</span>
             </a>
             <a href="https://instagram.com/diegovilela.eng" class="floating-btn floating-btn--instagram" target="_blank" rel="noopener" aria-label="Instagram" data-tooltip="Instagram">
                 <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -405,6 +405,9 @@
                     <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
                 </svg>
             </a>
+            <a href="area-cliente/" class="floating-btn floating-btn--client" aria-label="Área do Cliente" data-tooltip="Área do Cliente">
+                <span class="material-symbols-rounded" aria-hidden="true">person</span>
+            </a>
         </div>
     </div>
 
@@ -412,7 +415,7 @@
     <div id="serviceModal" class="modal">
         <div class="modal__overlay" onclick="closeModal()"></div>
         <div class="modal__content">
-            <button class="modal__close" onclick="closeModal()">
+            <button class="modal__close" data-micromodal-close onclick="closeModal()">
                 <span class="material-symbols-rounded">close</span>
             </button>
             <header class="modal__header">
@@ -428,47 +431,9 @@
         </div>
     </div>
 
-    <script>
-        const servicesData = {
-            'Prefeitura': ["Alvará de Construção", "Regularização (Anistia)", "Habite-se", "Desmembramento", "Alvará de Reforma"],
-            'Receita Federal': ["CNO (Cadastro de Obras)", "SERO (Aferição)", "CND de Obra (INSS)"],
-            'Cartório de Imóveis': ["Averbação de Construção", "Retificação de Área", "Registro de Usucapião", "Unificação"],
-            'Projetos de Engenharia': ["Projeto Arquitetônico", "Projeto Estrutural", "Projetos Complementares"],
-            'Consultoria': ["Laudo de Reforma", "Vistoria de Chaves", "Perícia de Engenharia"]
-        };
-
-        const modal = document.getElementById('serviceModal');
-        const serviceListContainer = document.getElementById('serviceListContainer');
-        let currentCategory = '';
-
-        function openModal(category) {
-            currentCategory = category;
-            document.getElementById('modalTitle').textContent = category;
-            serviceListContainer.innerHTML = '';
-            servicesData[category].forEach(s => {
-                const label = document.createElement('label');
-                label.className = 'service-option';
-                label.innerHTML = `<input type="checkbox" value="${s}"> <span>${s}</span>`;
-                serviceListContainer.appendChild(label);
-            });
-            modal.classList.add('is-open');
-        }
-
-        function closeModal() { modal.classList.remove('is-open'); }
-
-        document.getElementById('whatsappSubmit').addEventListener('click', () => {
-            const selected = Array.from(serviceListContainer.querySelectorAll('input:checked')).map(c => c.value);
-            const msg = `Oi Diego! Tenho interesse em ${currentCategory}:\n- ${selected.join('\n- ')}`;
-            window.open(`https://wa.me/5535984529577?text=${encodeURIComponent(msg)}`, '_blank');
-            closeModal();
-        });
-
-        document.getElementById('year').textContent = new Date().getFullYear();
-
-        // Scroll Reveal Logic
-        const revealElements = document.querySelectorAll('.reveal, .footer-premium');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
+    <script src="script.js?v=17"></script>
+</body>
+</html>{
                 if (entry.isIntersecting) {
                     entry.target.classList.add('active');
                 }

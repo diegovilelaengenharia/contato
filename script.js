@@ -145,4 +145,64 @@
             closeModal();
         });
     }
+
+    // ============================================
+    // COMPORTAMENTO DINÂMICO NO SCROLL & REVEAL
+    // ============================================
+    const smartNav = document.getElementById('smartNav');
+    const floatingButtons = document.getElementById('floatingButtons');
+    let lastScrollY = window.scrollY;
+    let scrollTimeout;
+
+    if (smartNav) {
+        window.addEventListener('scroll', () => {
+            const currentScrollY = window.scrollY;
+
+            // 1. Efeito de fundo sólido na Navbar ao rolar
+            if (currentScrollY > 20) {
+                smartNav.classList.add('smart-nav--scrolled');
+            } else {
+                smartNav.classList.remove('smart-nav--scrolled');
+            }
+
+            // 2. Esconder/Mostrar no Scroll (Navbar e FABs)
+            if (currentScrollY > lastScrollY && currentScrollY > 100) {
+                // Rolando para baixo -> Esconde
+                smartNav.classList.add('smart-nav--hidden');
+                if (floatingButtons) {
+                    floatingButtons.classList.add('floating-buttons--hidden');
+                }
+            } else {
+                // Rolando para cima -> Mostra
+                smartNav.classList.remove('smart-nav--hidden');
+                if (floatingButtons) {
+                    floatingButtons.classList.remove('floating-buttons--hidden');
+                }
+            }
+
+            lastScrollY = currentScrollY;
+
+            // 3. Reaparecer botões flutuantes ao parar de rolar
+            if (floatingButtons) {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    floatingButtons.classList.remove('floating-buttons--hidden');
+                }, 1200); // 1.2 segundos de inatividade
+            }
+        }, { passive: true });
+    }
+
+    // Scroll Reveal Observer
+    const revealElements = document.querySelectorAll('.reveal, .footer-premium');
+    if (revealElements.length > 0) {
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.08 });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+    }
 }());
