@@ -92,11 +92,11 @@ a {
     min-height: calc(100vh - 60px);
     position: relative;
     overflow-x: hidden;
-    background-color: #f4f6f8;
+    background-color: var(--bg-app);
     /* App background - Light Gray to match other pages */
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-strong);
     /* Drop shadow to simulate device */
-    border-radius: 20px;
+    border-radius: var(--radius-lg);
     /* Rounded corners for the 'device' */
     overflow: hidden;
     /* Clip header corners */
@@ -1049,15 +1049,15 @@ a {
 }
 
 .client-card {
-    background: white;
-    border-radius: 20px;
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
     padding: 20px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    box-shadow: var(--shadow-sm);
     margin-bottom: 30px;
     display: flex;
     flex-direction: column;
     gap: 15px;
-    border: 1px solid rgba(0, 0, 0, 0.02);
+    border: 1px solid var(--border-color);
 }
 
 .client-header-row {
@@ -1086,10 +1086,10 @@ a {
     flex-direction: column;
     gap: 8px;
     font-size: 0.9rem;
-    color: #555;
-    background: #fdfdfd;
+    color: var(--color-text-subtle);
+    background: var(--color-surface-soft);
     padding: 10px;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
 }
 
 /* --- ACTION GRID RESIZED LIST (v4.2 +20%) --- */
@@ -1103,8 +1103,8 @@ a {
 }
 
 .app-button {
-    background: white;
-    border-radius: 15px;
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
     /* Slightly more rounded */
     padding: 15px 18px;
     /* Increased Padding (+20-25%) */
@@ -1114,10 +1114,10 @@ a {
     /* Increased Gap */
     text-decoration: none;
     color: inherit;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-sm);
     /* Slightly deeper shadow */
     transition: transform 0.2s, box-shadow 0.2s;
-    border: 1px solid rgba(0, 0, 0, 0.03);
+    border: 1px solid var(--border-color);
     border-left-width: 6px !important;
     /* Thicker border */
 }

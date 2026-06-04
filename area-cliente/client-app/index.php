@@ -98,24 +98,24 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
     <style>
         /* HEADER PORTAL STYLE (PREMIUM WHITE) */
         .portal-header {
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            background: var(--color-surface);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
             margin-bottom: 25px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            border: 1px solid rgba(0,0,0,0.05);
+            border: 1px solid var(--color-border);
         }
         .ph-top {
-            background: #146C43 !important; /* Matches Footer Dark Green */
+            background: var(--color-primary-strong) !important; /* Matches Footer Dark Green */
             padding: 30px 32px !important;
             display: flex;
             align-items: center;
             justify-content: flex-start;
             gap: 25px;
             border-bottom: 1px solid rgba(0,0,0,0.1);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-sm);
         }
         .ph-logo {
             padding-right: 0;
@@ -123,37 +123,36 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             border-right: none;
             display: flex;
             align-items: center;
-            background: #ffffff; /* White badge for logo */
+            background: #ffffff; /* White badge for logo remains white for original contrast */
             padding: 8px 12px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-xs);
         }
         .ph-logo img {
-            height: 40px !important; /* Reduced to 40px */
+            height: 40px !important;
             display: block;
             width: auto;
             object-fit: contain;
-            /* Filter removed to show original logo colors */
         }
         .ph-title {
             font-size: 1.8rem;
             font-weight: 800;
             color: #ffffff !important; /* White Text */
-            text-transform: none; /* No uppercase */
+            text-transform: none;
             letter-spacing: -0.5px;
             line-height: 1;
             margin-bottom: 8px;
             text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .ph-subtitle {
-            font-size: 0.7rem; /* Reduced size */
+            font-size: 0.7rem;
             color: rgba(255,255,255,0.85) !important;
             font-weight: 400;
             letter-spacing: 0.5px;
-            font-style: italic; /* Italic */
+            font-style: italic;
             display: block;
-            align-self: flex-end; /* Align to bottom right of container */
-            margin-top: -5px; /* Pull closer to title if needed */
+            align-self: flex-end;
+            margin-top: -5px;
         }
         .ph-subtitle::before {
             content: "“";
@@ -170,12 +169,12 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             align-items: flex-start;
         }
         .ph-user-bar {
-            background: #fff; /* White background */
+            background: var(--color-surface);
             padding: 16px 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            color: #333;
+            color: var(--color-text);
         }
         .ph-user-info {
             display: flex;
@@ -186,7 +185,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background: #f8f9fa;
+            background: var(--color-bg);
             border: 2px solid var(--color-primary);
             object-fit: cover;
             display: flex;
@@ -194,8 +193,8 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             justify-content: center;
             font-size: 1.5rem;
             color: var(--color-primary);
-            position: relative; /* Para o overlay */
-            cursor: pointer; /* Indicar clicável */
+            position: relative;
+            cursor: pointer;
             overflow: hidden;
         }
         .ph-avatar:hover .ph-avatar-overlay {
@@ -229,32 +228,32 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
         }
         .ph-welcome {
             font-size: 0.85rem;
-            color: #6c757d;
+            color: var(--color-text-subtle);
             font-weight: 500;
             display: block;
         }
         .ph-username {
             font-size: 1.1rem;
             font-weight: 700;
-            color: #1a1a1a;
+            color: var(--color-text);
             display: block;
         }
         .ph-logout-btn {
             width: 40px;
             height: 40px;
-            background: #f8f9fa;
+            background: var(--color-surface-soft);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #dc3545; /* Red for logout */
+            color: var(--color-danger);
             text-decoration: none;
             transition: all 0.2s;
-            border: 1px solid #eee;
+            border: 1px solid var(--color-border);
         }
         .ph-logout-btn:hover {
-            background: #ffebe9;
-            border-color: #ffcdd2;
+            background: var(--bg-danger);
+            border-color: var(--color-danger);
             transform: translateY(-2px);
         }
 
