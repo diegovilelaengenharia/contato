@@ -83,7 +83,9 @@ $company_email = $curr_settings['company_email'] ?? 'vilela.eng.mg@gmail.com';
             
             <?php
             // Inclui dinamicamente a view correspondente
-            $view_file = __DIR__ . "/views/{$route}.php";
+            // Converte hifens em underlines para corresponder ao nome físico do arquivo (ex: cliente-detalhes -> cliente_detalhes.php)
+            $route_file = str_replace('-', '_', $route);
+            $view_file = __DIR__ . "/views/{$route_file}.php";
             if (file_exists($view_file)) {
                 require_once $view_file;
             } else {

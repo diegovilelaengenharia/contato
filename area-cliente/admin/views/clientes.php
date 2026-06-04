@@ -128,7 +128,26 @@ try {
                     </td>
                     
                     <td class="cli-tel" style="padding: 16px; font-size: 0.88rem; color: var(--color-text-subtle);">
-                        <?php echo htmlspecialchars($cli['contato_tel'] ?: '--'); ?>
+                        <?php 
+                        $tel_limpo = preg_replace('/\D/', '', $cli['contato_tel']);
+                        $link_whatsapp = '';
+                        if (!empty($tel_limpo)) {
+                            if (strlen($tel_limpo) <= 11) {
+                                $tel_limpo = '55' . $tel_limpo;
+                            }
+                            $link_whatsapp = "https://wa.me/" . $tel_limpo;
+                        }
+                        ?>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span><?php echo htmlspecialchars($cli['contato_tel'] ?: '--'); ?></span>
+                            <?php if (!empty($link_whatsapp)): ?>
+                                <a href="<?php echo $link_whatsapp; ?>" target="_blank" title="Conversar no WhatsApp" style="color: #25d366; display: inline-flex; align-items: center; text-decoration: none; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.003 5.324 5.328 0 11.94 0c3.205.002 6.216 1.252 8.48 3.518 2.262 2.268 3.509 5.282 3.507 8.49-.005 6.618-5.33 11.942-11.94 11.942-2.01-.001-3.987-.507-5.744-1.468L0 24zm6.58-15.602c-.172-.383-.344-.39-.505-.397-.13-.005-.28-.005-.43-.005-.15 0-.396.056-.604.283-.207.227-.79.772-.79 1.885 0 1.112.809 2.187.922 2.338.113.15 1.593 2.43 3.86 3.414.54.234.96.374 1.288.478.543.173 1.037.149 1.429.09.436-.066 1.344-.55 1.533-1.08.188-.528.188-.98.132-1.075-.056-.095-.207-.15-.434-.264-.227-.113-1.344-.664-1.552-.739-.208-.076-.36-.113-.508.113-.15.227-.58.73-.711.88-.13.15-.26.168-.487.055-.227-.113-.96-.353-1.83-1.127-.676-.602-1.133-1.347-1.266-1.573-.13-.227-.014-.35.1-.462.103-.1.227-.264.34-.396.113-.132.15-.226.226-.377.076-.15.038-.283-.019-.396-.057-.113-.505-1.22-.693-1.67z"/>
+                                    </svg>
+                                </a>
+                            <?php endif; ?>
+                        </div>
                     </td>
                     
                     <td style="padding: 16px;">

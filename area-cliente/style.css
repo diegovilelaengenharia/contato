@@ -3,9 +3,6 @@
 :root {
     /* Mapeamento de compatibilidade legado para Área do Cliente */
     --radius-large: var(--radius-md);
-    --color-primary-strong: var(--color-primary-strong);
-    --color-accent-hover: var(--color-accent-hover);
-    --font-base: var(--font-base);
     --shadow-soft: var(--shadow-md);
     --shadow-card: var(--shadow-sm);
 }

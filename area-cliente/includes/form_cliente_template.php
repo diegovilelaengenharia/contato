@@ -98,6 +98,29 @@ $p_tipo_chave = $detalhes['tipo_processo_chave'] ?? '';
         <div class="form-group"><label><?= $is_edit ? 'Nova Senha (Opcional)' : 'Senha Inicial' ?></label><input type="text" name="<?= $is_edit ? 'nova_senha' : 'senha' ?>" placeholder="<?= $is_edit ? 'Preencha se for trocar' : 'Ex: 123456' ?>" <?= $is_edit ? '' : 'required' ?>></div>
     </div>
 
+    <?php if($is_edit): ?>
+        <!-- Caixa de Compartilhamento de Credenciais por WhatsApp -->
+        <div style="background: #eef6f2; border: 1px solid var(--color-primary-soft); border-radius: 12px; padding: 18px; margin-top: 15px; margin-bottom: 25px; box-shadow: var(--shadow-sm);">
+            <h4 style="margin: 0 0 8px 0; color: var(--color-primary-dark); display: flex; align-items: center; gap: 8px; font-size: 0.95rem;">
+                <span class="material-symbols-rounded" style="color: var(--color-primary);">share</span>
+                Enviar Acesso ao Portal (WhatsApp)
+            </h4>
+            <p style="font-size: 0.82rem; color: var(--color-text-subtle); margin: 0 0 12px 0;">
+                Use os botões abaixo para copiar ou enviar os dados de login formatados diretamente ao cliente pelo WhatsApp.
+            </p>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button type="button" onclick="copiarCredenciais()" class="btn-std" style="background: var(--color-surface); border: 1px solid var(--color-primary); color: var(--color-primary); padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.85rem;">
+                    <span class="material-symbols-rounded" style="font-size: 1.1rem;">content_copy</span> Copiar Credenciais
+                </button>
+                <button type="button" onclick="enviarCredenciaisWhatsApp()" class="btn-std" style="background: #25d366; border: none; color: white; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.85rem; box-shadow: 0 2px 6px rgba(37,211,102,0.25);">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.003 5.324 5.328 0 11.94 0c3.205.002 6.216 1.252 8.48 3.518 2.262 2.268 3.509 5.282 3.507 8.49-.005 6.618-5.33 11.942-11.94 11.942-2.01-.001-3.987-.507-5.744-1.468L0 24zm6.58-15.602c-.172-.383-.344-.39-.505-.397-.13-.005-.28-.005-.43-.005-.15 0-.396.056-.604.283-.207.227-.79.772-.79 1.885 0 1.112.809 2.187.922 2.338.113.15 1.593 2.43 3.86 3.414.54.234.96.374 1.288.478.543.173 1.037.149 1.429.09.436-.066 1.344-.55 1.533-1.08.188-.528.188-.98.132-1.075-.056-.095-.207-.15-.434-.264-.227-.113-1.344-.664-1.552-.739-.208-.076-.36-.113-.508.113-.15.227-.58.73-.711.88-.13.15-.26.168-.487.055-.227-.113-.96-.353-1.83-1.127-.676-.602-1.133-1.347-1.266-1.573-.13-.227-.014-.35.1-.462.103-.1.227-.264.34-.396.113-.132.15-.226.226-.377.076-.15.038-.283-.019-.396-.057-.113-.505-1.22-.693-1.67z"/>
+                    </svg> Enviar por WhatsApp
+                </button>
+            </div>
+        </div>
+    <?php endif; ?>
+
     <!-- 2. DADOS PESSOAIS -->
     <h3 style="margin:20px 0 15px 0; color:var(--color-primary); border-bottom:1px solid #eee; padding-bottom:5px;">2. Dados Pessoais</h3>
     <div class="form-grid">
@@ -132,6 +155,16 @@ $p_tipo_chave = $detalhes['tipo_processo_chave'] ?? '';
     <!-- 3. ENDEREÇO RESIDENCIAL -->
     <h3 style="margin:20px 0 15px 0; color:var(--color-primary); border-bottom:1px solid #eee; padding-bottom:5px;">3. Endereço Residencial</h3>
     <div class="form-grid">
+        <div class="form-group" style="grid-column: span 2;">
+            <label>CEP Residencial</label>
+            <div style="display:flex; gap:10px;">
+                <input type="text" id="res_cep" name="res_cep_temp" placeholder="00000-000" style="flex:1; padding:10px; border:1px solid #ddd; border-radius:8px;">
+                <button type="button" onclick="buscarCepResidencial()" class="btn-std" style="padding:10px 15px; border-radius:8px; border:1px solid var(--color-primary); background:transparent; color:var(--color-primary); font-weight:600; cursor:pointer; display:flex; align-items:center; gap:5px;">
+                    <span class="material-symbols-rounded" style="font-size:1.1rem;">search</span> Buscar
+                </button>
+            </div>
+        </div>
+        <div class="form-group" style="grid-column: span 2;"></div> <!-- Espaçador no grid -->
         <div class="form-group" style="grid-column: span 2;"><label>Rua / Logradouro</label><input type="text" name="res_rua" value="<?= htmlspecialchars($r_rua) ?>"></div>
         <div class="form-group"><label>Número</label><input type="text" name="res_numero" value="<?= htmlspecialchars($r_num) ?>"></div>
         <div class="form-group"><label>Bairro</label><input type="text" name="res_bairro" value="<?= htmlspecialchars($r_bairro) ?>"></div>
@@ -155,6 +188,16 @@ $p_tipo_chave = $detalhes['tipo_processo_chave'] ?? '';
                 ?>
             </select>
         </div>
+        <div class="form-group" style="grid-column: span 2;">
+            <label>CEP do Imóvel / Obra</label>
+            <div style="display:flex; gap:10px;">
+                <input type="text" id="imovel_cep" name="imovel_cep_temp" placeholder="00000-000" style="flex:1; padding:10px; border:1px solid #ddd; border-radius:8px;">
+                <button type="button" onclick="buscarCepImovel()" class="btn-std" style="padding:10px 15px; border-radius:8px; border:1px solid var(--color-primary); background:transparent; color:var(--color-primary); font-weight:600; cursor:pointer; display:flex; align-items:center; gap:5px;">
+                    <span class="material-symbols-rounded" style="font-size:1.1rem;">search</span> Buscar
+                </button>
+            </div>
+        </div>
+        <div class="form-group"></div> <!-- Espaçador no grid -->
         <div class="form-group" style="grid-column: span 2;"><label>Rua / Logradouro (Obra)</label><input type="text" name="imovel_rua" value="<?= htmlspecialchars($i_rua) ?>"></div>
         <div class="form-group"><label>Número</label><input type="text" name="imovel_numero" value="<?= htmlspecialchars($i_num) ?>"></div>
         <div class="form-group"><label>Bairro</label><input type="text" name="imovel_bairro" value="<?= htmlspecialchars($i_bairro) ?>"></div>
@@ -243,7 +286,7 @@ $p_tipo_chave = $detalhes['tipo_processo_chave'] ?? '';
         </button>
     </div>
 
-    <!-- Scripts de Máscara (JS) -->
+    <!-- Scripts de Máscara e CEP (JS) -->
     <script>
         // LOGIN AUTOMÁTICO (UI)
         function atualizarLoginAuto() {
@@ -263,6 +306,62 @@ $p_tipo_chave = $detalhes['tipo_processo_chave'] ?? '';
             }
         }
 
+        // BUSCA DE CEP RESIDENCIAL (API ViaCEP)
+        async function buscarCepResidencial() {
+            const cepInput = document.getElementById('res_cep');
+            const cep = cepInput.value.replace(/\D/g, '');
+            if (cep.length !== 8) {
+                alert('Por favor, digite um CEP válido de 8 dígitos.');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+                const data = await response.json();
+                if (data.erro) {
+                    alert('CEP Residencial não encontrado.');
+                    return;
+                }
+                
+                document.querySelector('input[name="res_rua"]').value = data.logradouro || '';
+                document.querySelector('input[name="res_bairro"]').value = data.bairro || '';
+                document.querySelector('input[name="res_cidade"]').value = data.localidade || '';
+                document.querySelector('input[name="res_uf"]').value = data.uf || '';
+                
+                document.querySelector('input[name="res_numero"]').focus();
+            } catch (err) {
+                alert('Erro ao buscar o CEP. Verifique a conexão.');
+            }
+        }
+
+        // BUSCA DE CEP IMÓVEL / OBRA (API ViaCEP)
+        async function buscarCepImovel() {
+            const cepInput = document.getElementById('imovel_cep');
+            const cep = cepInput.value.replace(/\D/g, '');
+            if (cep.length !== 8) {
+                alert('Por favor, digite um CEP válido de 8 dígitos.');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+                const data = await response.json();
+                if (data.erro) {
+                    alert('CEP do Imóvel não encontrado.');
+                    return;
+                }
+                
+                document.querySelector('input[name="imovel_rua"]').value = data.logradouro || '';
+                document.querySelector('input[name="imovel_bairro"]').value = data.bairro || '';
+                document.querySelector('input[name="imovel_cidade"]').value = data.localidade || '';
+                document.querySelector('input[name="imovel_uf"]').value = data.uf || '';
+                
+                document.querySelector('input[name="imovel_numero"]').focus();
+            } catch (err) {
+                alert('Erro ao buscar o CEP. Verifique a conexão.');
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const maskPhone = (v) => v.replace(/\D/g, "").replace(/^(\d{2})(\d)/g, "($1) $2").replace(/(\d)(\d{4})$/, "$1-$2").substring(0, 15);
             const maskCpfCnpj = (v) => {
@@ -270,11 +369,14 @@ $p_tipo_chave = $detalhes['tipo_processo_chave'] ?? '';
                 if (v.length <= 11) return v.replace(/(\d{3})(\d)/, "$1.$2").replace(/(\d{3})(\d)/, "$1.$2").replace(/(\d{3})(\d{1,2})$/, "$1-$2");
                 return v.replace(/^(\d{2})(\d)/, "$1.$2").replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3").replace(/\.(\d{3})(\d)/, ".$1/$2").replace(/(\d{4})(\d)/, "$1-$2");
             };
+            const maskCep = (v) => v.replace(/\D/g, "").replace(/^(\d{5})(\d)/, "$1-$2").substring(0, 9);
 
             const inputs = {
                 'contato_tel': maskPhone,
                 'cpf_cnpj': maskCpfCnpj,
-                'cpf_conjuge': maskCpfCnpj
+                'cpf_conjuge': maskCpfCnpj,
+                'res_cep_temp': maskCep,
+                'imovel_cep_temp': maskCep
             };
 
             for (const [name, fn] of Object.entries(inputs)) {
@@ -282,6 +384,14 @@ $p_tipo_chave = $detalhes['tipo_processo_chave'] ?? '';
                     input.addEventListener('input', (e) => {
                         e.target.value = fn(e.target.value);
                         atualizarLoginAuto();
+                        
+                        // Executa busca automática ao completar os 8 dígitos limpos do CEP
+                        if (name === 'res_cep_temp' && e.target.value.replace(/\D/g, '').length === 8) {
+                            buscarCepResidencial();
+                        }
+                        if (name === 'imovel_cep_temp' && e.target.value.replace(/\D/g, '').length === 8) {
+                            buscarCepImovel();
+                        }
                     });
                 });
             }
@@ -306,5 +416,59 @@ $p_tipo_chave = $detalhes['tipo_processo_chave'] ?? '';
             `;
             document.getElementById('container-campos-extras').appendChild(div);
         }
+
+        // GERADOR E COMPARTILHADOR DE CREDENCIAIS DE ACESSO
+        function obterTextoCredenciais() {
+            const nomeInput = document.querySelector('input[name="nome"]').value;
+            const nome = nomeInput.trim().split(' ')[0];
+            const usuario = document.querySelector('input[name="usuario"]').value;
+            const senhaNova = document.querySelector('input[name="nova_senha"]') ? document.querySelector('input[name="nova_senha"]').value : '';
+            
+            let msgSenha = "a mesma cadastrada anteriormente";
+            if (senhaNova.trim() !== '') {
+                msgSenha = senhaNova.trim();
+            }
+            
+            return `Olá ${nome}! Seu acesso exclusivo ao Portal do Cliente da Vilela Engenharia está disponível. Por lá você pode acompanhar o andamento dos seus projetos e baixar todos os documentos da sua obra em tempo real.\n\n` +
+                   `🔗 Acesse: https://vilela.eng.br/area-cliente/\n` +
+                   `👤 Usuário: *${usuario}*\n` +
+                   `🔑 Senha: *${msgSenha}*\n\n` +
+                   `Qualquer dúvida com o acesso, estou à disposição!`;
+        }
+
+        function copiarCredenciais() {
+            const texto = obterTextoCredenciais();
+            navigator.clipboard.writeText(texto).then(() => {
+                Toastify({
+                    text: "Mensagem de acesso copiada para a área de transferência!",
+                    duration: 4000,
+                    gravity: "top",
+                    position: "right",
+                    style: {
+                        background: "var(--color-primary)",
+                        borderRadius: "10px",
+                        fontWeight: "600",
+                        boxShadow: "var(--shadow)"
+                    }
+                }).showToast();
+            }).catch(err => {
+                alert("Erro ao copiar credenciais: " + err);
+            });
+        }
+
+        function enviarCredenciaisWhatsApp() {
+            const texto = obterTextoCredenciais();
+            const telInput = document.querySelector('input[name="contato_tel"]').value;
+            const telLimpo = telInput.replace(/\D/g, '');
+            
+            let dddTel = telLimpo;
+            if (telLimpo !== '' && telLimpo.length <= 11) {
+                dddTel = '55' + telLimpo;
+            }
+            
+            const url = `https://wa.me/${dddTel}?text=${encodeURIComponent(texto)}`;
+            window.open(url, '_blank');
+        }
     </script>
 </form>
+

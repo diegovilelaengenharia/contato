@@ -84,13 +84,13 @@ try {
         LIMIT 5
     ")->fetchAll();
 
-    // Prazos da prefeitura ativos/vencidos ou vencendo nos próximos 7 dias
+    // Prazos da prefeitura ativos/vencidos ou vencendo nos próximos 15 dias
     $alertas_prazos = $pdo->query("
         SELECT pd.cliente_id, pd.prazo_prefeitura_data, pd.prazo_prefeitura_descricao, c.nome as cliente_nome 
         FROM processo_detalhes pd
         INNER JOIN clientes c ON c.id = pd.cliente_id
         WHERE pd.prazo_prefeitura_data IS NOT NULL 
-          AND pd.prazo_prefeitura_data <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)
+          AND pd.prazo_prefeitura_data <= DATE_ADD(CURDATE(), INTERVAL 15 DAY)
         ORDER BY pd.prazo_prefeitura_data ASC 
         LIMIT 5
     ")->fetchAll();
@@ -318,7 +318,7 @@ try {
         <div class="config-title" style="border: none; padding: 0; margin-bottom: 12px; color: #dc7a0d; font-size: 1.1rem;">
             <span class="material-symbols-rounded">calendar_month</span> Prazos da Prefeitura (<?php echo count($alertas_prazos); ?>)
         </div>
-        <p style="font-size: 0.85rem; color: var(--color-text-subtle); margin-bottom: 12px;">Prazos limites de processos na prefeitura vencidos ou próximos (7 dias).</p>
+        <p style="font-size: 0.85rem; color: var(--color-text-subtle); margin-bottom: 12px;">Prazos limites de processos na prefeitura vencidos ou próximos (15 dias).</p>
         
         <?php if (!empty($alertas_prazos)): ?>
             <div class="admin-table-container" style="border: none; border-radius: 0;">
