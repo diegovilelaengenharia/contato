@@ -1,4 +1,4 @@
-<?php // deploy retry v2.3.1
+<?php // deploy retry v2.3.2
 /**
  * index.php — Front Controller e Roteador Central do Painel Admin.
  *
