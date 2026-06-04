@@ -795,7 +795,7 @@ body {
     .sobre-card-premium {
         flex-direction: row;
         padding: 40px;
-        align-items: center;
+        align-items: flex-start;
         gap: 40px;
     }
 }
@@ -820,8 +820,8 @@ body {
 }
 
 .sobre-photo-modern {
-    width: 180px;
-    height: 180px;
+    width: 200px;
+    height: 200px;
     border-radius: var(--radius-large);
     object-fit: cover;
     display: block;
@@ -833,8 +833,8 @@ body {
 
 @media (min-width: 640px) {
     .sobre-photo-modern {
-        width: 220px;
-        height: 220px;
+        width: 250px;
+        height: 310px;
     }
 }
 
