@@ -82,7 +82,7 @@
                 <a href="https://wa.me/5535984529577?text=Olá%20Eng.%20Diego!%20Gostaria%20de%20um%20orçamento." class="nav-link nav-link--primary" target="_blank" rel="noopener">
                     <span class="material-symbols-rounded">chat</span> <span>Orçamento</span>
                 </a>
-                <a href="area-cliente/" class="nav-link nav-link--secondary">
+                <a href="area-cliente/index.php" class="nav-link nav-link--secondary">
                     <span class="material-symbols-rounded">person</span> <span>Portal do Cliente</span>
                 </a>
             </div>
@@ -394,7 +394,12 @@
 
                 <p class="footer-meta">
                     <span class="material-symbols-rounded" aria-hidden="true">place</span>
-                    Atendimento em Oliveira/MG e regi�        <div class="floating-buttons" id="floatingButtons">
+                    Atendimento em Oliveira/MG e região
+                </p>
+            </div>
+        </footer>
+
+        <div class="floating-buttons" id="floatingButtons">
             <a href="https://wa.me/5535984529577?text=Olá%20Eng.%20Diego!%20Gostaria%20de%20um%20orçamento." class="floating-btn floating-btn--whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp" data-tooltip="Falar no WhatsApp">
                 <span class="material-symbols-rounded" aria-hidden="true">chat</span>
             </a>
@@ -405,7 +410,7 @@
                     <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
                 </svg>
             </a>
-            <a href="area-cliente/" class="floating-btn floating-btn--client" aria-label="Área do Cliente" data-tooltip="Área do Cliente">
+            <a href="area-cliente/index.php" class="floating-btn floating-btn--client" aria-label="Área do Cliente" data-tooltip="Área do Cliente">
                 <span class="material-symbols-rounded" aria-hidden="true">person</span>
             </a>
         </div>
@@ -432,15 +437,19 @@
     </div>
 
     <script src="script.js?v=17"></script>
-</body>
-</html>{
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                }
-            });
-        }, { threshold: 0.1 });
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const revealElements = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
 
-        revealElements.forEach(el => observer.observe(el));
+            revealElements.forEach(el => observer.observe(el));
+        });
     </script>
 </body>
 </html>
