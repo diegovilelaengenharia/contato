@@ -879,3 +879,303 @@ body {
     font-size: 14px;
     line-height: 1;
 }
+
+/* ============================================
+   FASE 1 (v2.1) — Seção Diferenciais
+   ============================================ */
+.diferenciais-section {
+    margin-top: 48px;
+    margin-bottom: 24px;
+}
+
+.diferenciais-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.diferencial-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-soft);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid var(--color-border);
+}
+
+.diferencial-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-strong);
+}
+
+.diferencial-icon {
+    font-size: 40px;
+    color: var(--color-primary);
+    margin-bottom: 16px;
+    background: rgba(19, 111, 92, 0.08);
+    padding: 12px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+}
+
+.diferencial-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0 0 8px 0;
+}
+
+.diferencial-desc {
+    font-size: 0.95rem;
+    color: var(--color-text-subtle);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* ============================================
+   FASE 1 (v2.1) — Seção Portfólio / Cases
+   ============================================ */
+.portfolio-section {
+    margin-top: 56px;
+    margin-bottom: 48px;
+}
+
+.section-subheading {
+    text-align: center;
+    color: var(--color-text-subtle);
+    margin: -16px 0 32px 0;
+    font-size: 1rem;
+}
+
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.portfolio-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-soft);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+}
+
+.portfolio-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-strong);
+}
+
+.portfolio-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    background: var(--color-bg);
+}
+
+.portfolio-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.portfolio-card:hover .portfolio-img {
+    transform: scale(1.05);
+}
+
+.portfolio-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.portfolio-tag {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+}
+
+.portfolio-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0 0 8px 0;
+}
+
+.portfolio-desc {
+    font-size: 0.95rem;
+    color: var(--color-text-subtle);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* ============================================
+   FASE 1 (v2.1) — Seção Depoimentos
+   ============================================ */
+.depoimentos-section {
+    margin-top: 56px;
+    margin-bottom: 48px;
+}
+
+.depoimentos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.depoimento-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-soft);
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease;
+    border: 1px solid var(--color-border);
+    position: relative;
+}
+
+.depoimento-card:hover {
+    transform: translateY(-2px);
+}
+
+.depoimento-rating {
+    font-size: 1.1rem;
+    margin-bottom: 16px;
+}
+
+.depoimento-text {
+    font-size: 0.98rem;
+    color: var(--color-text);
+    line-height: 1.6;
+    font-style: italic;
+    margin: 0 0 20px 0;
+}
+
+.depoimento-author {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--color-border);
+    padding-top: 12px;
+}
+
+.depoimento-author strong {
+    font-size: 0.95rem;
+    color: var(--color-text);
+    font-weight: 700;
+}
+
+.depoimento-author span {
+    font-size: 0.8rem;
+    color: var(--color-text-subtle);
+}
+
+/* ============================================
+   FASE 1 (v2.1) — Seção FAQ Accordion
+   ============================================ */
+.faq-section {
+    margin-top: 56px;
+    margin-bottom: 48px;
+}
+
+.faq-list {
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.faq-item {
+    background: var(--color-surface);
+    border-radius: var(--radius-medium);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-soft);
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
+}
+
+.faq-item[open] {
+    box-shadow: var(--shadow-medium);
+}
+
+.faq-question {
+    padding: 18px 24px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--color-text);
+    cursor: pointer;
+    user-select: none;
+    outline: none;
+    transition: color 0.2s;
+    list-style: none; /* remove default arrow */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.faq-question::-webkit-details-marker {
+    display: none; /* remove chrome default arrow */
+}
+
+.faq-question::after {
+    content: '\e5cf'; /* material symbol chevron_right */
+    font-family: 'Material Symbols Rounded';
+    font-size: 22px;
+    color: var(--color-text-subtle);
+    transition: transform 0.3s ease;
+}
+
+.faq-item[open] .faq-question::after {
+    transform: rotate(180deg);
+    color: var(--color-primary);
+}
+
+.faq-question:hover {
+    color: var(--color-primary);
+}
+
+.faq-answer {
+    padding: 0 24px 20px 24px;
+    border-top: 1px solid transparent;
+}
+
+.faq-answer p {
+    margin: 0;
+    font-size: 0.98rem;
+    color: var(--color-text-subtle);
+    line-height: 1.6;
+}
+
+/* ============================================
+   DARK MODE ADAPTATIONS
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+    .diferencial-card, .portfolio-card, .depoimento-card, .faq-item {
+        background: #18221f;
+        border-color: rgba(255, 255, 255, 0.08);
+    }
+    
+    .diferencial-icon {
+        background: rgba(25, 126, 99, 0.15);
+    }
+    
+    .depoimento-author {
+        border-top-color: rgba(255, 255, 255, 0.08);
+    }
+}
