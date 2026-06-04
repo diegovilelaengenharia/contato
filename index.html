@@ -159,73 +159,107 @@
         </section>
 
         <main class="content">
-            <!-- 1. Regularizações -->
-            <section id="regularizacao" class="links reveal">
-                <h2 class="section-heading"><span class="section-heading__num">02</span>Regularização de Imóveis</h2>
-                <ul class="links-grid">
-                    <li>
-                        <button class="link-card" onclick="openModal('Prefeitura')">
-                            <span class="icon"><span class="material-symbols-rounded">location_city</span></span>
-                            <span class="text">
-                                <span class="title">Prefeitura</span>
-                                <span class="subtitle">Aprovações e Habite-se</span>
-                                <p class="card-description">Alvará, habite-se, anistia e desmembramento — toda a burocracia municipal resolvida.</p>
-                            </span>
+            <!-- 2. Nossos Serviços (Unificado) -->
+            <section id="servicos" class="links reveal">
+                <h2 class="section-heading"><span class="section-heading__num">02</span>Nossos Serviços</h2>
+                <p class="section-subheading">Processos ágeis da aprovação de projetos à regularização final da sua propriedade.</p>
+                <div class="servicos-container">
+                    <div class="servico-card-wrapper">
+                        <button class="servico-card" onclick="openModal('Prefeitura')">
+                            <div class="servico-card__header">
+                                <span class="servico-card__icon">
+                                    <span class="material-symbols-rounded">location_city</span>
+                                </span>
+                                <div class="servico-card__titles">
+                                    <span class="servico-card__title">Prefeitura</span>
+                                    <span class="servico-card__subtitle">Aprovações e Habite-se</span>
+                                </div>
+                            </div>
+                            <p class="servico-card__desc">Alvará, habite-se, anistia e desmembramento — toda a burocracia municipal resolvida.</p>
+                            <div class="servico-card__action">
+                                <span>Solicitar Orçamento</span>
+                                <span class="material-symbols-rounded">arrow_forward</span>
+                            </div>
                         </button>
-                    </li>
-                    <li>
-                        <button class="link-card" onclick="openModal('Receita Federal')">
-                            <span class="icon"><span class="material-symbols-rounded">assignment_turned_in</span></span>
-                            <span class="text">
-                                <span class="title">Receita Federal</span>
-                                <span class="subtitle">CND de Obra e SERO</span>
-                                <p class="card-description">CNO, SERO e CND de obra para regularizar o INSS da construção.</p>
-                            </span>
+                    </div>
+                    <div class="servico-card-wrapper">
+                        <button class="servico-card" onclick="openModal('Receita Federal')">
+                            <div class="servico-card__header">
+                                <span class="servico-card__icon">
+                                    <span class="material-symbols-rounded">assignment_turned_in</span>
+                                </span>
+                                <div class="servico-card__titles">
+                                    <span class="servico-card__title">Receita Federal</span>
+                                    <span class="servico-card__subtitle">CND de Obra e SERO</span>
+                                </div>
+                            </div>
+                            <p class="servico-card__desc">CNO, SERO e CND de obra para regularizar o INSS da construção de forma ágil e segura.</p>
+                            <div class="servico-card__action">
+                                <span>Solicitar Orçamento</span>
+                                <span class="material-symbols-rounded">arrow_forward</span>
+                            </div>
                         </button>
-                    </li>
-                    <li>
-                        <button class="link-card" onclick="openModal('Cartório de Imóveis')">
-                            <span class="icon"><span class="material-symbols-rounded">edit_document</span></span>
-                            <span class="text">
-                                <span class="title">Cartório de Imóveis</span>
-                                <span class="subtitle">Averbação e Escritura</span>
-                                <p class="card-description">Averbação, retificação de área e registro — seu imóvel atualizado no cartório.</p>
-                            </span>
+                    </div>
+                    <div class="servico-card-wrapper">
+                        <button class="servico-card" onclick="openModal('Cartório de Imóveis')">
+                            <div class="servico-card__header">
+                                <span class="servico-card__icon">
+                                    <span class="material-symbols-rounded">edit_document</span>
+                                </span>
+                                <div class="servico-card__titles">
+                                    <span class="servico-card__title">Cartório de Imóveis</span>
+                                    <span class="servico-card__subtitle">Averbação e Escritura</span>
+                                </div>
+                            </div>
+                            <p class="servico-card__desc">Averbação, retificação de área e registro — seu imóvel 100% atualizado e regularizado no cartório.</p>
+                            <div class="servico-card__action">
+                                <span>Solicitar Orçamento</span>
+                                <span class="material-symbols-rounded">arrow_forward</span>
+                            </div>
                         </button>
-                    </li>
-                </ul>
-            </section>
-
-            <!-- 2. Projetos e Consultoria -->
-            <section id="projetos-consultoria" class="links reveal">
-                <h2 class="section-heading"><span class="section-heading__num">03</span>Projetos e Consultoria</h2>
-                <ul class="links-grid">
-                    <li>
-                        <button class="link-card" onclick="openModal('Projetos de Engenharia')">
-                            <span class="icon"><span class="material-symbols-rounded">architecture</span></span>
-                            <span class="text">
-                                <span class="title">Projetos Técnicos</span>
-                                <span class="subtitle">Estrutural e Arquitetônico</span>
-                                <p class="card-description">Projetos arquitetônico, estrutural e complementares com ART registrada.</p>
-                            </span>
+                    </div>
+                    <div class="servico-card-wrapper">
+                        <button class="servico-card" onclick="openModal('Projetos de Engenharia')">
+                            <div class="servico-card__header">
+                                <span class="servico-card__icon">
+                                    <span class="material-symbols-rounded">architecture</span>
+                                </span>
+                                <div class="servico-card__titles">
+                                    <span class="servico-card__title">Projetos Técnicos</span>
+                                    <span class="servico-card__subtitle">Estrutural e Arquitetônico</span>
+                                </div>
+                            </div>
+                            <p class="servico-card__desc">Elaboração de projetos arquitetônico, estrutural, elétrico e hidráulico completos com emissão de ART.</p>
+                            <div class="servico-card__action">
+                                <span>Solicitar Orçamento</span>
+                                <span class="material-symbols-rounded">arrow_forward</span>
+                            </div>
                         </button>
-                    </li>
-                    <li>
-                        <button class="link-card" onclick="openModal('Consultoria')">
-                            <span class="icon"><span class="material-symbols-rounded">engineering</span></span>
-                            <span class="text">
-                                <span class="title">Laudos e Vistorias</span>
-                                <span class="subtitle">Perícia e Consultoria</span>
-                                <p class="card-description">Laudos técnicos, vistorias e perícia para qualquer fase da obra.</p>
-                            </span>
+                    </div>
+                    <div class="servico-card-wrapper">
+                        <button class="servico-card" onclick="openModal('Consultoria')">
+                            <div class="servico-card__header">
+                                <span class="servico-card__icon">
+                                    <span class="material-symbols-rounded">engineering</span>
+                                </span>
+                                <div class="servico-card__titles">
+                                    <span class="servico-card__title">Laudos e Vistorias</span>
+                                    <span class="servico-card__subtitle">Perícia e Consultoria</span>
+                                </div>
+                            </div>
+                            <p class="servico-card__desc">Laudos de vistoria de vizinhança, cautelar, perícias técnicas e consultorias para todas as fases da sua obra.</p>
+                            <div class="servico-card__action">
+                                <span>Solicitar Orçamento</span>
+                                <span class="material-symbols-rounded">arrow_forward</span>
+                            </div>
                         </button>
-                    </li>
-                </ul>
+                    </div>
+                </div>
             </section>
 
             <!-- Seção Portfólio / Cases -->
             <section id="portfolio" class="portfolio-section reveal">
-                <h2 class="section-heading"><span class="section-heading__num">04</span>Cases de Sucesso</h2>
+                <h2 class="section-heading"><span class="section-heading__num">03</span>Cases de Sucesso</h2>
                 <p class="section-subheading">Exemplos práticos de regularizações documentais e trâmites concluídos.</p>
                 
                 <div class="portfolio-grid">
@@ -262,35 +296,9 @@
                 </div>
             </section>
 
-            <!-- Seção Diferenciais (colocada depois dos cases de sucesso) -->
-            <section id="diferenciais" class="diferenciais-section reveal">
-                <div class="diferenciais-grid">
-                    <div class="diferencial-card">
-                        <span class="material-symbols-rounded diferencial-icon">school</span>
-                        <h3 class="diferencial-title">Rigor Técnico</h3>
-                        <p class="diferencial-desc">Formação de excelência pela UFSJ (Universidade Federal de São João Del Rei), com base técnica sólida aplicada a cada projeto.</p>
-                    </div>
-                    <div class="diferencial-card">
-                        <span class="material-symbols-rounded diferencial-icon">gavel</span>
-                        <h3 class="diferencial-title">Normas Atualizadas</h3>
-                        <p class="diferencial-desc">Domínio completo das últimas revisões de normas técnicas (ABNT) e códigos de obras municipais vigentes na região.</p>
-                    </div>
-                    <div class="diferencial-card">
-                        <span class="material-symbols-rounded diferencial-icon">devices</span>
-                        <h3 class="diferencial-title">Transparência Digital</h3>
-                        <p class="diferencial-desc">Acompanhamento em tempo real das etapas de regularização do seu imóvel através do nosso Portal do Cliente exclusivo.</p>
-                    </div>
-                    <div class="diferencial-card">
-                        <span class="material-symbols-rounded diferencial-icon">handshake</span>
-                        <h3 class="diferencial-title">Suporte Personalizado</h3>
-                        <p class="diferencial-desc">Atendimento próximo e focado em resolver a sua demanda de forma ágil, sem intermediários ou burocracia excessiva.</p>
-                    </div>
-                </div>
-            </section>
-
             <!-- Seção FAQ -->
             <section id="faq" class="faq-section reveal">
-                <h2 class="section-heading"><span class="section-heading__num">05</span>Perguntas Frequentes</h2>
+                <h2 class="section-heading"><span class="section-heading__num">04</span>Perguntas Frequentes</h2>
                 <p class="section-subheading">Tire suas dúvidas rápidas sobre a regularização de imóveis e projetos.</p>
                 
                 <div class="faq-list">
@@ -321,9 +329,9 @@
                 </div>
             </section>
 
-            <!-- Seção Sobre Diego Vilela (Redesenhada) -->
+            <!-- Seção Sobre Diego Vilela (Redesenhada com expansor) -->
             <section id="sobre" class="sobre-section reveal">
-                <h2 class="section-heading"><span class="section-heading__num">06</span>Sobre Diego Vilela</h2>
+                <h2 class="section-heading"><span class="section-heading__num">05</span>Sobre Diego Vilela</h2>
                 <div class="sobre-card-premium">
                     <div class="sobre-photo-wrapper">
                         <div class="sobre-photo-deco" aria-hidden="true"></div>
@@ -339,10 +347,21 @@
                         <blockquote class="sobre-quote">
                             "Minha missão é descomplicar a burocracia e garantir que a sua propriedade esteja legalizada, valorizada e protegida."
                         </blockquote>
-                        <div class="sobre-body-text">
-                            <p>Sou Engenheiro Civil graduado pela <strong>Universidade Federal de São João Del Rei (UFSJ)</strong>, atuando de maneira focada na engenharia documental e trâmites de regularização de imóveis.</p>
-                            <p>Especializado no fluxo de conformidade junto à <strong>Prefeitura, Receita Federal e Cartório de Imóveis</strong>, dou andamento ágil a processos de Habite-se, aferição SERO, emissão de CND e averbação de escrituras, convertendo burocracia em valor real para o seu patrimônio.</p>
+                        
+                        <!-- Conteúdo Expandido (Oculto de início) -->
+                        <div class="sobre-expanded-content" id="sobreExpanded">
+                            <div class="sobre-body-text">
+                                <p>Sou Engenheiro Civil graduado pela <strong>Universidade Federal de São João Del Rei (UFSJ)</strong>, atuando de maneira focada na engenharia documental e trâmites de regularização de imóveis.</p>
+                                <p>Especializado no fluxo de conformidade junto à <strong>Prefeitura, Receita Federal e Cartório de Imóveis</strong>, dou andamento ágil a processos de Habite-se, aferição SERO, emissão de CND e averbação de escrituras, convertendo burocracia em valor real para o seu patrimônio.</p>
+                            </div>
                         </div>
+
+                        <!-- Botão de Ação para Expandir -->
+                        <button class="sobre-toggle-btn" id="sobreToggleBtn" aria-expanded="false" aria-controls="sobreExpanded">
+                            <span>Ler biografia completa</span>
+                            <span class="material-symbols-rounded">expand_more</span>
+                        </button>
+
                         <div class="sobre-stats-row">
                             <div class="sobre-stat-item">
                                 <span class="material-symbols-rounded">school</span>
@@ -362,7 +381,7 @@
                     </div>
                 </div>
             </section>
-        </main>
+</main>
 
         <footer class="footer-premium">
             <div class="footer-premium__content">
@@ -424,6 +443,7 @@
     <script src="script.js?v=17"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Scroll Reveal Observer
             const revealElements = document.querySelectorAll('.reveal');
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -434,6 +454,27 @@
             }, { threshold: 0.1 });
 
             revealElements.forEach(el => observer.observe(el));
+
+            // Expandir/Recolher Biografia
+            const sobreToggleBtn = document.getElementById('sobreToggleBtn');
+            const sobreExpanded = document.getElementById('sobreExpanded');
+
+            if (sobreToggleBtn && sobreExpanded) {
+                sobreToggleBtn.addEventListener('click', () => {
+                    const isExpanded = sobreToggleBtn.getAttribute('aria-expanded') === 'true';
+                    sobreToggleBtn.setAttribute('aria-expanded', !isExpanded);
+                    
+                    if (isExpanded) {
+                        sobreExpanded.classList.remove('active');
+                        sobreToggleBtn.querySelector('span').textContent = 'Ler biografia completa';
+                        sobreToggleBtn.querySelector('.material-symbols-rounded').style.transform = 'rotate(0deg)';
+                    } else {
+                        sobreExpanded.classList.add('active');
+                        sobreToggleBtn.querySelector('span').textContent = 'Minimizar biografia';
+                        sobreToggleBtn.querySelector('.material-symbols-rounded').style.transform = 'rotate(180deg)';
+                    }
+                });
+            }
         });
     </script>
 </body>
