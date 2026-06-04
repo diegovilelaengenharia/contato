@@ -1163,19 +1163,85 @@ body {
 }
 
 /* ============================================
-   DARK MODE ADAPTATIONS
+   DARK MODE ADAPTATIONS (v2.1 Unificado)
    ============================================ */
 @media (prefers-color-scheme: dark) {
+    :root {
+        --color-bg: #121815; /* Fundo escuro esverdeado sutil */
+        --color-surface: #1a2421; /* Superfície escura */
+        --color-surface-soft: #23302c; /* Superfície suave */
+        --color-text: #e2e8f0; /* Texto claro */
+        --color-text-subtle: #a0aec0; /* Texto secundário */
+        --glass-bg: rgba(26, 36, 33, 0.75);
+        --glass-border: rgba(255, 255, 255, 0.08);
+        --color-hero-gradient-start: #1b2f27; /* Início do gradiente escuro do hero */
+    }
+    
+    body {
+        background:
+            linear-gradient(to right, rgba(25, 126, 99, 0.09) 1px, transparent 1px) 0 0 / 28px 28px,
+            linear-gradient(to bottom, rgba(25, 126, 99, 0.09) 1px, transparent 1px) 0 0 / 28px 28px,
+            var(--color-bg);
+        color: var(--color-text);
+    }
+
+    /* Cards de Serviços e Links */
+    .link-card {
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        background: var(--color-surface);
+    }
+    
+    .link-card:hover {
+        background: var(--color-surface-soft);
+    }
+    
+    .link-card .icon {
+        background: #23302c;
+    }
+    
+    .link-card .title {
+        color: #ffffff;
+    }
+    
+    .link-card .subtitle {
+        color: var(--color-text-subtle);
+    }
+
+    /* FAQ, Depoimentos, Diferenciais, Portfólio */
     .diferencial-card, .portfolio-card, .depoimento-card, .faq-item {
-        background: #18221f;
-        border-color: rgba(255, 255, 255, 0.08);
+        background: var(--color-surface) !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+        color: var(--color-text) !important;
+    }
+    
+    .diferencial-title, .portfolio-title, .depoimento-author strong, .faq-question {
+        color: #ffffff !important;
+    }
+    
+    .diferencial-desc, .portfolio-desc, .depoimento-text, .depoimento-author span, .faq-answer p {
+        color: var(--color-text-subtle) !important;
     }
     
     .diferencial-icon {
-        background: rgba(25, 126, 99, 0.15);
+        background: rgba(25, 126, 99, 0.15) !important;
+        color: #8ae4c9 !important;
     }
     
     .depoimento-author {
-        border-top-color: rgba(255, 255, 255, 0.08);
+        border-top-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    /* Seção Sobre e badges */
+    .sobre-section {
+        background: var(--color-surface);
+    }
+
+    .credential-badge {
+        background: rgba(25, 126, 99, 0.2) !important;
+        color: #8ae4c9 !important;
+    }
+
+    .footer-premium {
+        background: var(--color-surface) !important;
     }
 }
