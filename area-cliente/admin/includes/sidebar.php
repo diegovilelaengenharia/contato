@@ -43,6 +43,33 @@ try {
         </div>
     </div>
 
+    <?php
+    // Carregar clientes de forma leve para a busca global autocomplete
+    $todos_clientes_busca = [];
+    try {
+        $todos_clientes_busca = $pdo->query("SELECT id, nome FROM clientes ORDER BY nome ASC")->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+        // Silencia erro
+    }
+    ?>
+
+    <!-- BUSCA GLOBAL DE CLIENTES (FEAT-03) -->
+    <div class="sidebar-search" x-data="globalSearch(<?php echo htmlspecialchars(json_encode($todos_clientes_busca), ENT_QUOTES, 'UTF-8'); ?>)" style="padding: 10px 15px; position: relative;">
+        <div style="position: relative;">
+            <input type="text" x-model="query" @input="search()" @focus="open = true" @click.away="open = false" placeholder="🔍 Buscar cliente..." style="padding: 8px 12px 8px 32px; width: 100%; border: 1px solid var(--color-border); border-radius: 8px; font-size: 0.85rem; background: white; color: var(--color-text); outline: none;">
+            <span class="material-symbols-rounded" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 1rem; color: var(--color-muted); pointer-events: none;">search</span>
+        </div>
+        
+        <!-- Dropdown Autocomplete -->
+        <div class="search-autocomplete-dropdown" x-show="open && results.length > 0" style="position: absolute; left: 15px; right: 15px; top: 100%; background: white; border: 1px solid var(--color-border); border-radius: 8px; box-shadow: var(--shadow-lg); z-index: 999; max-height: 200px; overflow-y: auto; margin-top: 5px; border-top: none;">
+            <template x-for="c in results" :key="c.id">
+                <a :href="'?route=cliente-detalhes&id=' + c.id" style="display: block; padding: 8px 12px; text-decoration: none; color: var(--color-text); font-size: 0.82rem; font-weight: 600; border-bottom: 1px solid #f1f3f5; transition: background 0.15s;" @mouseenter="$el.style.background = '#f8fafc'" @mouseleave="$el.style.background = 'none'">
+                    <span x-text="c.nome"></span>
+                </a>
+            </template>
+        </div>
+    </div>
+
     <!-- Navegação Scrollável -->
     <div class="nav-scroll">
         <!-- SEÇÃO: PRINCIPAL -->
@@ -105,4 +132,24 @@ try {
         <span class="name">Diego T. N. Vilela</span>
         <span class="crea"><?php echo htmlspecialchars($company_crea); ?></span>
     </div>
+    
+    <script>
+    function globalSearch(clientes) {
+        return {
+            clientes: clientes || [],
+            query: '',
+            results: [],
+            open: false,
+            
+            search() {
+                if (this.query.trim() === '') {
+                    this.results = [];
+                    return;
+                }
+                const q = this.query.toLowerCase();
+                this.results = this.clientes.filter(c => c.nome.toLowerCase().includes(q)).slice(0, 5);
+            }
+        }
+    }
+    </script>
 </aside>

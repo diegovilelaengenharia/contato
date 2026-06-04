@@ -9,13 +9,25 @@ require_once __DIR__ . '/../../core/Auth.php';
 require_once __DIR__ . '/../../core/Csrf.php';
 require_once __DIR__ . '/../../core/Database.php';
 
-// 1. Validar CSRF
-if (isset($_POST['csrf_token']) && !Csrf::validateToken($_POST['csrf_token'])) {
-    die("Erro de validação CSRF.");
-}
-
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header("Location: ../../admin.php");
+    exit;
+}
+
+$is_ajax = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
+    || (isset($_POST['format']) && $_POST['format'] === 'json')
+    || (isset($_GET['format']) && $_GET['format'] === 'json');
+
+// 1. Validar CSRF
+if (!isset($_POST['csrf_token']) || !Csrf::validateToken($_POST['csrf_token'])) {
+    if ($is_ajax) {
+        header('Content-Type: application/json');
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Erro de segurança (CSRF). Recarregue a página.']);
+        exit;
+    }
+    $_SESSION['flash_message'] = ['text' => 'Erro de segurança (CSRF). Recarregue a página.', 'type' => 'error'];
+    header("Location: ../../admin/index.php");
     exit;
 }
 
@@ -44,9 +56,25 @@ try {
         $referencia_legal
     ]);
 
-    header("Location: ../../admin.php?cliente_id=$cid&tab=financeiro&msg=fin_added");
+    if ($is_ajax) {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true, 'message' => 'Novo lançamento financeiro adicionado com sucesso!']);
+        exit;
+    }
+
+    $_SESSION['flash_message'] = ['text' => 'Novo lançamento financeiro adicionado com sucesso!', 'type' => 'success'];
+    header("Location: ../../admin/index.php?route=cliente-detalhes&id=$cid&tab=financeiro");
     exit;
 
 } catch(PDOException $e) {
-    die("Erro ao adicionar lançamento financeiro: " . $e->getMessage());
+    if ($is_ajax) {
+        header('Content-Type: application/json');
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Erro ao adicionar lançamento financeiro: ' . $e->getMessage()]);
+        exit;
+    }
+
+    $_SESSION['flash_message'] = ['text' => 'Erro ao adicionar lançamento financeiro: ' . $e->getMessage(), 'type' => 'error'];
+    header("Location: ../../admin/index.php?route=cliente-detalhes&id=$cid&tab=financeiro");
+    exit;
 }

@@ -90,7 +90,9 @@ class Migrations {
                     // New Personal Fields
                     'data_nascimento', 'nome_conjuge', 'cpf_conjuge', 'nacionalidade', 'eh_procurador',
                     // Campo de Serviço
-                    'tipo_servico'
+                    'tipo_servico',
+                    // Novas colunas da Fase 5: Features de Valor
+                    'prazo_prefeitura_data', 'prazo_prefeitura_descricao', 'notas_internas'
                 ];
 
                 foreach($cols_needed as $col) {
@@ -98,7 +100,13 @@ class Migrations {
                         $pdo->query("SELECT $col FROM processo_detalhes LIMIT 1");
                     } catch (Exception $e) {
                         // Column doesn't exist, add it
-                        $type = ($col == 'processo_objeto') ? 'TEXT' : 'VARCHAR(255)';
+                        if ($col == 'processo_objeto' || $col == 'notas_internas') {
+                            $type = 'TEXT';
+                        } elseif ($col == 'prazo_prefeitura_data') {
+                            $type = 'DATE';
+                        } else {
+                            $type = 'VARCHAR(255)';
+                        }
                         $pdo->exec("ALTER TABLE processo_detalhes ADD COLUMN $col $type DEFAULT NULL");
                     }
                 }

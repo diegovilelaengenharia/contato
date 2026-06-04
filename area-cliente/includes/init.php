@@ -61,9 +61,6 @@ if (!isset($_SESSION['welcome_shown'])) {
     $_SESSION['welcome_shown'] = true;
 }
 
-// Logout
 if (isset($_GET['sair'])) {
-    session_destroy();
-    header("Location: index.php");
-    exit;
+    Auth::logout(); // Limpa $_SESSION, invalida cookie, destrói sessão, redireciona
 }

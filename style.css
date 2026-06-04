@@ -1,32 +1,14 @@
+@import url('area-cliente/css/tokens.css');
+
 :root {
-    /* --- VILELA PROFESSIONAL PALETTE (v2.0) --- */
-    --color-bg: #f8f9fa;            /* Grey Gelo - Limpeza */
-    --color-surface: #ffffff;       /* Pure White */
-    --color-surface-soft: #f1f3f5;
-    
-    /* Brand Colors */
-    --color-primary: #197e63;       /* Verde Vilela - Confiança */
-    --color-primary-strong: #146c43;
-    --color-accent: #e8960f;        /* Âmbar - Ação (Call to Action) */
-    
-    /* Typography & Depth */
-    --color-text: #1a1a1a;          /* Quase Preto - Leitura Pro */
-    --color-text-subtle: #4a5568;    /* Cinza Grafite - Secundário */
-    
-    /* Glassmorphism & UI */
+    /* Glassmorphism & UI específicos da Landing Page */
     --glass-bg: rgba(255, 255, 255, 0.7);
     --glass-border: rgba(255, 255, 255, 0.3);
-    --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.05);
-    --shadow-strong: 0 15px 45px rgba(0, 0, 0, 0.1);
     
-    /* Shapes */
-    --radius-large: 20px;
-    --radius-small: 12px;
-    --font-base: "Outfit", "Segoe UI", system-ui, sans-serif;
-
-    /* New in Phase 2 */
+    /* Mapeamento legado para compatibilidade */
+    --radius-large: var(--radius-lg);
+    --radius-small: var(--radius-md);
     --color-hero-gradient-start: #e8f5f0;
-    --color-primary-light: #4fb09b;
 }
 
 /* --- BASE STYLES --- */

@@ -24,8 +24,8 @@ try {
     // Pré-cadastros de novos clientes pendentes de aprovação
     $kpi_pre_cadastros = (int) ($pdo->query("SELECT COUNT(*) FROM pre_cadastros WHERE status='pendente'")->fetchColumn() ?: 0);
     
-    // Financeiro: Faturamento Pago no ano corrente
-    $kpi_fin_pago = (float) ($pdo->query("SELECT SUM(valor) FROM processo_financeiro WHERE status='pago' AND YEAR(vencimento) = YEAR(CURDATE())")->fetchColumn() ?: 0.0);
+    // Financeiro: Faturamento Pago no ano corrente (usando data_vencimento correta)
+    $kpi_fin_pago = (float) ($pdo->query("SELECT SUM(valor) FROM processo_financeiro WHERE status='pago' AND YEAR(data_vencimento) = YEAR(CURDATE())")->fetchColumn() ?: 0.0);
     
     // Financeiro: Total a receber (pendente)
     $kpi_fin_pendente = (float) ($pdo->query("SELECT SUM(valor) FROM processo_financeiro WHERE status='pendente'")->fetchColumn() ?: 0.0);
@@ -41,6 +41,8 @@ try {
 $alertas_docs = [];
 $alertas_pendencias = [];
 $pre_cadastros_lista = [];
+$alertas_financeiro = [];
+$alertas_prazos = [];
 
 try {
     // Documentos aguardando análise
@@ -72,6 +74,27 @@ try {
         LIMIT 5
     ")->fetchAll();
 
+    // Faturas financeiras atrasadas
+    $alertas_financeiro = $pdo->query("
+        SELECT pf.id, pf.cliente_id, pf.descricao, pf.valor, pf.data_vencimento, c.nome as cliente_nome 
+        FROM processo_financeiro pf
+        INNER JOIN clientes c ON c.id = pf.cliente_id
+        WHERE pf.status = 'atrasado'
+        ORDER BY pf.data_vencimento ASC 
+        LIMIT 5
+    ")->fetchAll();
+
+    // Prazos da prefeitura ativos/vencidos ou vencendo nos próximos 7 dias
+    $alertas_prazos = $pdo->query("
+        SELECT pd.cliente_id, pd.prazo_prefeitura_data, pd.prazo_prefeitura_descricao, c.nome as cliente_nome 
+        FROM processo_detalhes pd
+        INNER JOIN clientes c ON c.id = pd.cliente_id
+        WHERE pd.prazo_prefeitura_data IS NOT NULL 
+          AND pd.prazo_prefeitura_data <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)
+        ORDER BY pd.prazo_prefeitura_data ASC 
+        LIMIT 5
+    ")->fetchAll();
+
 } catch (Exception $e) {
     error_log("Erro ao carregar Alertas do Dashboard: " . $e->getMessage());
 }
@@ -96,14 +119,14 @@ try {
 </div>
 
 <!-- GRID DE INDICADORES FINANCEIROS E OPERACIONAIS (KPIs) -->
-<div class="kpi-grid-compact">
+<div class="kpi-grid-compact" x-data="dashboardKpis()" x-init="fetchKpis()">
     <!-- Card 1: Clientes -->
     <div class="kpi-card-compact" style="cursor: pointer;" onclick="window.location.href='?route=clientes'">
         <div class="kpi-icon-box blue">
             <span class="material-symbols-rounded">groups</span>
         </div>
         <div class="kpi-content">
-            <div class="kpi-value"><?php echo $kpi_total_clientes; ?></div>
+            <div class="kpi-value" x-text="kpis.total_clientes"><?php echo $kpi_total_clientes; ?></div>
             <div class="kpi-label">Clientes Ativos</div>
         </div>
     </div>
@@ -114,7 +137,7 @@ try {
             <span class="material-symbols-rounded">engineering</span>
         </div>
         <div class="kpi-content">
-            <div class="kpi-value"><?php echo $kpi_obras_ativas; ?></div>
+            <div class="kpi-value" x-text="kpis.obras_ativas"><?php echo $kpi_obras_ativas; ?></div>
             <div class="kpi-label">Processos / Obras</div>
         </div>
     </div>
@@ -125,7 +148,7 @@ try {
             <span class="material-symbols-rounded">payments</span>
         </div>
         <div class="kpi-content">
-            <div class="kpi-value">R$ <?php echo number_format($kpi_fin_pago, 2, ',', '.'); ?></div>
+            <div class="kpi-value" x-text="kpis.fin_pago_formatted">R$ <?php echo number_format($kpi_fin_pago, 2, ',', '.'); ?></div>
             <div class="kpi-label">Faturado (<?php echo date('Y'); ?>)</div>
         </div>
     </div>
@@ -136,23 +159,21 @@ try {
             <span class="material-symbols-rounded">savings</span>
         </div>
         <div class="kpi-content">
-            <div class="kpi-value">R$ <?php echo number_format($kpi_fin_pendente, 2, ',', '.'); ?></div>
+            <div class="kpi-value" x-text="kpis.fin_pendente_formatted">R$ <?php echo number_format($kpi_fin_pendente, 2, ',', '.'); ?></div>
             <div class="kpi-label">A Receber Futuro</div>
         </div>
     </div>
 
     <!-- Card 5: Em Atraso (Opcional - Só exibe se houver saldo devedor) -->
-    <?php if ($kpi_fin_atrasado > 0): ?>
-    <div class="kpi-card-compact alert" style="background: rgba(220, 53, 69, 0.05); border-color: rgba(220, 53, 69, 0.3);">
+    <div class="kpi-card-compact alert" style="background: rgba(220, 53, 69, 0.05); border-color: rgba(220, 53, 69, 0.3); display: <?php echo $kpi_fin_atrasado > 0 ? 'flex' : 'none'; ?>;" x-show="kpis.fin_atrasado > 0">
         <div class="kpi-icon-box red">
             <span class="material-symbols-rounded">warning_amber</span>
         </div>
         <div class="kpi-content">
-            <div class="kpi-value" style="color: var(--color-danger);">R$ <?php echo number_format($kpi_fin_atrasado, 2, ',', '.'); ?></div>
+            <div class="kpi-value" style="color: var(--color-danger);" x-text="kpis.fin_atrasado_formatted">R$ <?php echo number_format($kpi_fin_atrasado, 2, ',', '.'); ?></div>
             <div class="kpi-label" style="font-weight: 700;">Valores em Atraso</div>
         </div>
     </div>
-    <?php endif; ?>
 </div>
 
 <!-- SEÇÃO DE ALERTAS DE OPERAÇÃO RÁPIDA -->
@@ -260,6 +281,78 @@ try {
             <p style="font-style: italic; color: var(--color-muted); font-size: 0.85rem; padding: 10px 0;">✅ Nenhuma pendência em aberto cadastrada!</p>
         <?php endif; ?>
     </div>
+
+    <!-- Alerta D: Pagamentos Atrasados -->
+    <div class="form-card" style="border-left: 5px solid var(--color-danger);">
+        <div class="config-title" style="border: none; padding: 0; margin-bottom: 12px; color: var(--color-danger); font-size: 1.1rem;">
+            <span class="material-symbols-rounded">money_off</span> Pagamentos Atrasados (<?php echo count($alertas_financeiro); ?>)
+        </div>
+        <p style="font-size: 0.85rem; color: var(--color-text-subtle); margin-bottom: 12px;">Faturas de clientes com pagamento pendente após o vencimento.</p>
+        
+        <?php if (!empty($alertas_financeiro)): ?>
+            <div class="admin-table-container" style="border: none; border-radius: 0;">
+                <table class="admin-table" style="font-size: 0.85rem;">
+                    <tbody>
+                        <?php foreach ($alertas_financeiro as $fin): ?>
+                        <tr>
+                            <td style="padding: 10px 0; font-weight: 700; color: var(--color-danger);"><?php echo htmlspecialchars($fin['cliente_nome']); ?></td>
+                            <td style="padding: 10px 0; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; max-width: 120px;" title="<?php echo htmlspecialchars($fin['descricao']); ?>"><?php echo htmlspecialchars($fin['descricao']); ?></td>
+                            <td style="padding: 10px 0; white-space: nowrap;">R$ <?php echo number_format($fin['valor'], 2, ',', '.'); ?></td>
+                            <td style="padding: 10px 0; text-align: right;">
+                                <a href="?route=cliente-detalhes&id=<?php echo $fin['cliente_id']; ?>&tab=financeiro" class="btn-act" style="width: 28px; height: 28px;" title="Ver Financeiro">
+                                    <span class="material-symbols-rounded" style="font-size: 1.1rem;">payments</span>
+                                </a>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php else: ?>
+            <p style="font-style: italic; color: var(--color-muted); font-size: 0.85rem; padding: 10px 0;">🎉 Nenhuma fatura em atraso pendente!</p>
+        <?php endif; ?>
+    </div>
+
+    <!-- Alerta E: Prazos da Prefeitura -->
+    <div class="form-card" style="border-left: 5px solid #dc7a0d;">
+        <div class="config-title" style="border: none; padding: 0; margin-bottom: 12px; color: #dc7a0d; font-size: 1.1rem;">
+            <span class="material-symbols-rounded">calendar_month</span> Prazos da Prefeitura (<?php echo count($alertas_prazos); ?>)
+        </div>
+        <p style="font-size: 0.85rem; color: var(--color-text-subtle); margin-bottom: 12px;">Prazos limites de processos na prefeitura vencidos ou próximos (7 dias).</p>
+        
+        <?php if (!empty($alertas_prazos)): ?>
+            <div class="admin-table-container" style="border: none; border-radius: 0;">
+                <table class="admin-table" style="font-size: 0.85rem;">
+                    <tbody>
+                        <?php foreach ($alertas_prazos as $prz): 
+                            $vencido = strtotime($prz['prazo_prefeitura_data']) < strtotime(date('Y-m-d'));
+                            $badge_class = $vencido ? 'status-badge danger' : 'status-badge warning';
+                            $data_formatada = date('d/m/Y', strtotime($prz['prazo_prefeitura_data']));
+                        ?>
+                        <tr>
+                            <td style="padding: 10px 0; font-weight: 700; color: var(--color-text);"><?php echo htmlspecialchars($prz['cliente_nome']); ?></td>
+                            <td style="padding: 10px 0; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; max-width: 120px;" title="<?php echo htmlspecialchars($prz['prazo_prefeitura_descricao'] ?: 'Sem descrição'); ?>">
+                                <?php echo htmlspecialchars($prz['prazo_prefeitura_descricao'] ?: 'Sem descrição'); ?>
+                            </td>
+                            <td style="padding: 10px 0; white-space: nowrap;">
+                                <span class="<?php echo $badge_class; ?>" style="font-size: 0.72rem; padding: 2px 6px;">
+                                    <?php echo $data_formatada; ?>
+                                </span>
+                            </td>
+                            <td style="padding: 10px 0; text-align: right;">
+                                <a href="?route=cliente-detalhes&id=<?php echo $prz['cliente_id']; ?>&tab=timeline" class="btn-act" style="width: 28px; height: 28px;" title="Ver Linha do Tempo">
+                                    <span class="material-symbols-rounded" style="font-size: 1.1rem;">schedule</span>
+                                </a>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php else: ?>
+            <p style="font-style: italic; color: var(--color-muted); font-size: 0.85rem; padding: 10px 0;">✅ Nenhum prazo crítico da prefeitura pendente!</p>
+        <?php endif; ?>
+    </div>
 </div>
 
 <!-- CARTEIRA COMPLETA DE CLIENTES -->
@@ -332,5 +425,36 @@ function filterClientTable() {
             }
         }
     });
+}
+
+function dashboardKpis() {
+    return {
+        kpis: {
+            total_clientes: <?php echo $kpi_total_clientes; ?>,
+            obras_ativas: <?php echo $kpi_obras_ativas; ?>,
+            pre_cadastros: <?php echo $kpi_pre_cadastros; ?>,
+            fin_pago: <?php echo $kpi_fin_pago; ?>,
+            fin_pago_formatted: 'R$ <?php echo number_format($kpi_fin_pago, 2, ',', '.'); ?>',
+            fin_pendente: <?php echo $kpi_fin_pendente; ?>,
+            fin_pendente_formatted: 'R$ <?php echo number_format($kpi_fin_pendente, 2, ',', '.'); ?>',
+            fin_atrasado: <?php echo $kpi_fin_atrasado; ?>,
+            fin_atrasado_formatted: 'R$ <?php echo number_format($kpi_fin_atrasado, 2, ',', '.'); ?>'
+        },
+        async fetchKpis() {
+            try {
+                const response = await fetch('../api/admin/get_kpis.php', {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+                const data = await response.json();
+                if (data.success) {
+                    this.kpis = data.kpis;
+                }
+            } catch (err) {
+                console.error('Erro ao buscar KPIs:', err);
+            }
+        }
+    }
 }
 </script>

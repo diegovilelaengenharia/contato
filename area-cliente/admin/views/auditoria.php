@@ -19,6 +19,18 @@ try {
 } catch (Exception $e) {
     error_log("Erro ao carregar logs de auditoria: " . $e->getMessage());
 }
+
+$operacoes_disponiveis = [];
+$entidades_disponiveis = [];
+$operadores_disponiveis = [];
+
+try {
+    $operacoes_disponiveis = $pdo->query("SELECT DISTINCT action FROM audit_log ORDER BY action ASC")->fetchAll(PDO::FETCH_COLUMN) ?: [];
+    $entidades_disponiveis = $pdo->query("SELECT DISTINCT entity FROM audit_log ORDER BY entity ASC")->fetchAll(PDO::FETCH_COLUMN) ?: [];
+    $operadores_disponiveis = $pdo->query("SELECT DISTINCT admin_user FROM audit_log ORDER BY admin_user ASC")->fetchAll(PDO::FETCH_COLUMN) ?: [];
+} catch (Exception $e) {
+    // Silencia se erro
+}
 ?>
 
 <div class="page-head" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 24px;">
@@ -27,12 +39,40 @@ try {
         <p>Acompanhe em tempo real quem realizou cada alteração de andamento, faturas ou dados cadastrais.</p>
     </div>
     
-    <!-- Barra de Pesquisa Local -->
-    <div style="position: relative; width: 100%; max-width: 320px;">
-        <input type="text" id="searchAuditPage" placeholder="Filtrar por ação, usuário ou IP..." 
-               style="padding: 10px 14px 10px 38px; width: 100%; border: 1px solid var(--color-border); border-radius: 10px; font-size: 0.9rem;" 
-               onkeyup="searchAuditLogs()">
-        <span class="material-symbols-rounded" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 1.2rem; color: var(--color-muted);">search</span>
+    <!-- Barra de Pesquisa Local & Filtros Dropdown -->
+    <div style="display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 500px;">
+        <div style="position: relative; width: 100%;">
+            <input type="text" id="searchAuditPage" placeholder="Filtrar por ação, usuário ou IP..." 
+                   style="padding: 10px 14px 10px 38px; width: 100%; border: 1px solid var(--color-border); border-radius: 10px; font-size: 0.9rem; box-sizing: border-box;" 
+                   onkeyup="searchAuditLogs()">
+            <span class="material-symbols-rounded" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 1.2rem; color: var(--color-muted);">search</span>
+        </div>
+        <div style="display: flex; gap: 8px; width: 100%; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 120px;">
+                <select id="filterAuditAction" class="proc-select" onchange="searchAuditLogs()" style="background: white; border: 1px solid var(--color-border); padding: 7px 10px; font-size: 0.8rem; border-radius: 8px; width: 100%; box-sizing: border-box; font-family: inherit; font-weight: 500;">
+                    <option value="">-- Operação --</option>
+                    <?php foreach ($operacoes_disponiveis as $op): ?>
+                        <option value="<?php echo htmlspecialchars($op); ?>"><?php echo htmlspecialchars($op); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div style="flex: 1; min-width: 140px;">
+                <select id="filterAuditEntity" class="proc-select" onchange="searchAuditLogs()" style="background: white; border: 1px solid var(--color-border); padding: 7px 10px; font-size: 0.8rem; border-radius: 8px; width: 100%; box-sizing: border-box; font-family: inherit; font-weight: 500;">
+                    <option value="">-- Entidade --</option>
+                    <?php foreach ($entidades_disponiveis as $ent): ?>
+                        <option value="<?php echo htmlspecialchars($ent); ?>"><?php echo htmlspecialchars($ent); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div style="flex: 1; min-width: 120px;">
+                <select id="filterAuditUser" class="proc-select" onchange="searchAuditLogs()" style="background: white; border: 1px solid var(--color-border); padding: 7px 10px; font-size: 0.8rem; border-radius: 8px; width: 100%; box-sizing: border-box; font-family: inherit; font-weight: 500;">
+                    <option value="">-- Operador --</option>
+                    <?php foreach ($operadores_disponiveis as $user): ?>
+                        <option value="<?php echo htmlspecialchars($user); ?>"><?php echo htmlspecialchars($user); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -144,8 +184,13 @@ try {
 <!-- Scripts de Filtro Local e Modal -->
 <script>
 function searchAuditLogs() {
-    const input = document.getElementById("searchAuditPage");
-    const filter = input.value.toUpperCase();
+    const searchInput = document.getElementById("searchAuditPage");
+    const filterText = searchInput.value.toUpperCase();
+    
+    const filterAction = document.getElementById("filterAuditAction").value.toUpperCase();
+    const filterEntity = document.getElementById("filterAuditEntity").value.toUpperCase();
+    const filterUser = document.getElementById("filterAuditUser").value.toUpperCase();
+    
     const rows = document.querySelectorAll(".audit-row");
     
     rows.forEach(row => {
@@ -155,11 +200,20 @@ function searchAuditLogs() {
         const ipText = row.querySelector(".audit-ip").textContent || row.querySelector(".audit-ip").innerText;
         const timeText = row.querySelector(".audit-time").textContent || row.querySelector(".audit-time").innerText;
         
-        if (userText.toUpperCase().indexOf(filter) > -1 || 
-            actionText.toUpperCase().indexOf(filter) > -1 || 
-            entityText.toUpperCase().indexOf(filter) > -1 || 
-            ipText.toUpperCase().indexOf(filter) > -1 || 
-            timeText.toUpperCase().indexOf(filter) > -1) {
+        // Valida filtros dropdowns
+        const matchesAction = filterAction === "" || actionText.toUpperCase().trim() === filterAction;
+        const matchesEntity = filterEntity === "" || entityText.toUpperCase().indexOf(filterEntity) > -1;
+        const matchesUser = filterUser === "" || userText.toUpperCase().trim() === filterUser;
+        
+        // Valida texto de busca
+        const matchesText = filterText === "" || 
+            userText.toUpperCase().indexOf(filterText) > -1 || 
+            actionText.toUpperCase().indexOf(filterText) > -1 || 
+            entityText.toUpperCase().indexOf(filterText) > -1 || 
+            ipText.toUpperCase().indexOf(filterText) > -1 || 
+            timeText.toUpperCase().indexOf(filterText) > -1;
+            
+        if (matchesAction && matchesEntity && matchesUser && matchesText) {
             row.style.display = "";
         } else {
             row.style.display = "none";

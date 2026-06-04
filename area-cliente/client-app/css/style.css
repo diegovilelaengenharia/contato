@@ -1,38 +1,19 @@
+@import url('../../css/tokens.css');
+
 :root {
-    /* --- BRAND PALETTE (Premium) --- */
-    --color-primary: #197e63;
-    /* Vilela Green (Consistent with Landing Page) */
-    --color-primary-dark: #146c43;
-    --color-primary-light: #d1e7dd;
-    --color-accent: #ffba35;
-    /* Window Yellow (Consistent with Landing Page) */
-    --color-accent-secondary: #25d366;
-    /* WhatsApp Green */
-
-    /* --- STATUS --- */
-    --color-success: #198754;
-    --color-warning: #ffc107;
-    --color-danger: #dc3545;
-
-    /* --- UI BASICS --- */
-    --bg-app: #f4f6f8;
-    /* Darker gray for desktop background contrast */
-    --bg-card: #ffffff;
-    --bg-nav: #ffffff;
-    --text-main: #1a1a1a;
-    /* Darker text for contrast */
-    --text-muted: #666666;
-    --border-color: #e0e0e0;
-
-    /* --- SHAPES --- */
-    --radius-sm: 12px;
-    --radius-md: 20px;
-    --radius-lg: 32px;
-    /* More rounded for modern feel */
-    --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.04);
-    --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.06);
-    --shadow-nav: 0 -4px 20px rgba(0, 0, 0, 0.05);
-
+    /* Mapeamento de compatibilidade legado para App Mobile do Cliente */
+    --color-primary-dark: var(--color-primary-strong);
+    --color-primary-light: var(--color-primary-soft);
+    --color-accent-secondary: var(--color-accent-secondary);
+    
+    --bg-app: var(--color-bg);
+    --bg-card: var(--color-surface);
+    --bg-nav: var(--color-surface);
+    
+    --radius-sm: var(--radius-md);
+    --radius-md: var(--radius-lg);
+    --radius-lg: var(--radius-xl);
+    
     --safe-bottom: env(safe-area-inset-bottom, 20px);
 }
 
@@ -45,6 +26,18 @@ body.dark-mode {
     --text-muted: #aaaaaa;
     --border-color: #333333;
     --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        --bg-app: #121212;
+        --bg-card: #1e1e1e;
+        --bg-nav: #1e1e1e;
+        --text-main: #ffffff;
+        --text-muted: #aaaaaa;
+        --border-color: #333333;
+        --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
 }
 
 /* --- RESET & BASE --- */

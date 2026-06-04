@@ -1,7 +1,7 @@
 <?php
 /**
  * Action: Atualizar Status Financeiro
- * Extratado de includes/processamento.php
+ * Reescrito em SEC-07/ADM-16: Apenas POST + CSRF obrigatório.
  */
 
 require_once __DIR__ . '/../../includes/init.php';
@@ -9,46 +9,64 @@ require_once __DIR__ . '/../../core/Auth.php';
 require_once __DIR__ . '/../../core/Database.php';
 require_once __DIR__ . '/../../core/Csrf.php';
 
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header("Location: ../../admin/index.php");
+    exit;
+}
+
+$is_ajax = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
+    || (isset($_POST['format']) && $_POST['format'] === 'json')
+    || (isset($_GET['format']) && $_GET['format'] === 'json');
+
+if (!isset($_POST['csrf_token']) || !Csrf::validateToken($_POST['csrf_token'])) {
+    if ($is_ajax) {
+        header('Content-Type: application/json');
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Erro de segurança (CSRF). Recarregue a página.']);
+        exit;
+    }
+    $_SESSION['flash_message'] = ['text' => 'Erro de segurança (CSRF). Recarregue a página.', 'type' => 'error'];
+    header("Location: ../../admin/index.php");
+    exit;
+}
+
 $pdo = Database::getInstance();
 
-// 1. Caso POST (Vem do Modal de Status)
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['csrf_token']) && !Csrf::validateToken($_POST['csrf_token'])) {
-        die("Erro de validação CSRF.");
-    }
+$fid = (int)($_POST['financeiro_id'] ?? 0);
+$cid = (int)($_POST['cliente_id'] ?? 0);
+$new_status = $_POST['novo_status'] ?? '';
 
-    $fid = $_POST['financeiro_id'];
-    $cid = $_POST['cliente_id'];
-    $new_status = $_POST['novo_status'];
-
-    try {
-        $pdo->prepare("UPDATE processo_financeiro SET status = ? WHERE id = ? AND cliente_id = ?")
-            ->execute([$new_status, $fid, $cid]);
-        header("Location: ../../admin.php?cliente_id=$cid&tab=financeiro&msg=status_updated");
+if (!$fid || !$cid || empty($new_status)) {
+    if ($is_ajax) {
+        header('Content-Type: application/json');
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Dados inválidos para atualização.']);
         exit;
-    } catch(PDOException $e) {
-        die("Erro ao atualizar status financeiro: " . $e->getMessage());
     }
+    $_SESSION['flash_message'] = ['text' => 'Dados inválidos para atualização.', 'type' => 'error'];
+    header("Location: ../../admin/index.php?route=clientes");
+    exit;
 }
 
-// 2. Caso GET (Toggle rápido na tabela)
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['fid']) && isset($_GET['cid'])) {
-    $fid = (int)$_GET['fid']; // cast int: $fid é interpolado na SELECT abaixo
-    $cid = (int)$_GET['cid'];
-
-    try {
-        $atual = $pdo->query("SELECT status FROM processo_financeiro WHERE id=$fid")->fetchColumn();
-        $novo = ($atual == 'pago') ? 'pendente' : 'pago';
-        
-        $pdo->prepare("UPDATE processo_financeiro SET status=? WHERE id=? AND cliente_id=?")
-            ->execute([$novo, $fid, $cid]);
-            
-        header("Location: ../../admin.php?cliente_id=$cid&tab=financeiro");
+try {
+    $pdo->prepare("UPDATE processo_financeiro SET status = ? WHERE id = ? AND cliente_id = ?")
+        ->execute([$new_status, $fid, $cid]);
+    if ($is_ajax) {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true, 'message' => 'Status financeiro atualizado.']);
         exit;
-    } catch(PDOException $e) {
-        die("Erro ao alternar status financeiro: " . $e->getMessage());
     }
+    $_SESSION['flash_message'] = ['text' => 'Status financeiro atualizado.', 'type' => 'success'];
+    header("Location: ../../admin/index.php?route=cliente-detalhes&id=$cid&tab=financeiro");
+    exit;
+} catch (PDOException $e) {
+    if ($is_ajax) {
+        header('Content-Type: application/json');
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Erro ao atualizar status financeiro: ' . $e->getMessage()]);
+        exit;
+    }
+    $_SESSION['flash_message'] = ['text' => 'Erro ao atualizar status financeiro.', 'type' => 'error'];
+    header("Location: ../../admin/index.php?route=cliente-detalhes&id=$cid&tab=financeiro");
+    exit;
 }
-
-header("Location: ../../admin.php");
-exit;

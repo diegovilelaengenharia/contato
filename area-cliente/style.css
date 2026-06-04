@@ -1,35 +1,13 @@
+@import url('css/tokens.css');
+
 :root {
-    /* --- BRAND STRATEGY: PROFESSIONAL LIGHT (DEFAULT) --- */
-
-    /* Backgrounds */
-    --color-bg: #f8f9fa;
-    /* Clean Light Grey */
-    --color-surface: #ffffff;
-    /* Pure White */
-
-    /* Brand Colors */
-    --color-primary: #197e63;
-    /* VILELA GREEN */
-    --color-primary-strong: #146c43;
-    --color-accent: #d4ac36;
-    /* Soft Champagne Gold */
-    --color-accent-hover: #e0bc4e;
-
-    /* Typography */
-    --color-text: #343a40;
-    /* Charcoal */
-    --color-text-subtle: #6c757d;
-
-    /* Status */
-    --color-danger: #dc3545;
-
-    /* Shapes & Shadows */
-    --radius-large: 16px;
-    --radius-md: 12px;
-    --shadow-soft: 0 10px 40px rgba(0, 0, 0, 0.06);
-    --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.08);
-
-    --font-base: 'Outfit', sans-serif;
+    /* Mapeamento de compatibilidade legado para Área do Cliente */
+    --radius-large: var(--radius-md);
+    --color-primary-strong: var(--color-primary-strong);
+    --color-accent-hover: var(--color-accent-hover);
+    --font-base: var(--font-base);
+    --shadow-soft: var(--shadow-md);
+    --shadow-card: var(--shadow-sm);
 }
 
 * {

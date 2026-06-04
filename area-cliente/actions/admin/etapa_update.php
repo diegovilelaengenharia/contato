@@ -9,10 +9,13 @@ require_once __DIR__ . '/../../core/Auth.php';
 require_once __DIR__ . '/../../core/Csrf.php';
 require_once __DIR__ . '/../../core/Database.php';
 require_once __DIR__ . '/../../core/Logger.php';
+require_once __DIR__ . '/../../core/Upload.php';
 
 // 1. Validar CSRF
-if (isset($_POST['csrf_token']) && !Csrf::validateToken($_POST['csrf_token'])) {
-    die("Erro de validação CSRF.");
+if (!isset($_POST['csrf_token']) || !Csrf::validateToken($_POST['csrf_token'])) {
+    $_SESSION['flash_message'] = ['text' => 'Erro de segurança (CSRF). Recarregue a página.', 'type' => 'error'];
+    header("Location: ../../admin/index.php");
+    exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -21,6 +24,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $pdo = Database::getInstance();
+
+$is_ajax = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
+    || (isset($_POST['format']) && $_POST['format'] === 'json')
+    || (isset($_GET['format']) && $_GET['format'] === 'json');
 
 $cid = $_POST['cliente_id'];
 $nova_etapa = $_POST['nova_etapa'] ?? null; 
@@ -39,19 +46,18 @@ try {
     $sys_desc = $obs_etapa; 
     
     // 3. Handle File Upload if Document (Auto-detect)
-    if (isset($_FILES['arquivo_documento']) && $_FILES['arquivo_documento']['error'] == 0) {
+    if (isset($_FILES['arquivo_documento']) && $_FILES['arquivo_documento']['error'] == UPLOAD_ERR_OK) {
         $tipo_mov = 'documento'; // Auto-set type
         
-        $ext = strtolower(pathinfo($_FILES['arquivo_documento']['name'], PATHINFO_EXTENSION));
-        $new_name = "doc_{$cid}_" . time() . ".$ext";
         $target_dir = __DIR__ . "/../../uploads/entregaveis/";
         
-        if (!is_dir($target_dir)) mkdir($target_dir, 0755, true);
-        
-        if (move_uploaded_file($_FILES['arquivo_documento']['tmp_name'], $target_dir . $new_name)) {
-            $rel_path = "uploads/entregaveis/$new_name";
+        $res = Upload::process($_FILES['arquivo_documento'], $target_dir, "doc_{$cid}");
+        if ($res['success']) {
+            $rel_path = "uploads/entregaveis/" . basename($res['file_path']);
             // Usamos a URL relativa ao root do projeto para o link
             $sys_desc .= "<br><br><a href='$rel_path' target='_blank' class='btn-download-doc'>📥 Baixar Documento</a>";
+        } else {
+            throw new Exception("Erro no upload do documento técnico: " . $res['message']);
         }
     }
     
@@ -66,10 +72,26 @@ try {
         'observacao_etapa' => $obs_etapa
     ]);
 
+    if ($is_ajax) {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true, 'message' => 'Andamento registrado com sucesso na timeline!']);
+        exit;
+    }
+
     // Redirecionamento
-    header("Location: ../../admin.php?cliente_id=$cid&tab=andamento&msg=mov_added");
+    $_SESSION['flash_message'] = ['text' => 'Andamento registrado com sucesso na timeline!', 'type' => 'success'];
+    header("Location: ../../admin/index.php?route=cliente-detalhes&id=$cid&tab=timeline");
     exit;
 
-} catch(PDOException $e) {
-    die("Erro ao registrar movimentação: " . $e->getMessage());
+} catch(Exception $e) {
+    if ($is_ajax) {
+        header('Content-Type: application/json');
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        exit;
+    }
+
+    $_SESSION['flash_message'] = ['text' => 'Erro ao registrar movimentação: ' . $e->getMessage(), 'type' => 'error'];
+    header("Location: ../../admin/index.php?route=cliente-detalhes&id=$cid&tab=timeline");
+    exit;
 }

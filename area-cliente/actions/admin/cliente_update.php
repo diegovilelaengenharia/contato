@@ -8,10 +8,13 @@ require_once __DIR__ . '/../../includes/init.php';
 require_once __DIR__ . '/../../core/Auth.php';
 require_once __DIR__ . '/../../core/Csrf.php';
 require_once __DIR__ . '/../../core/Database.php';
+require_once __DIR__ . '/../../core/Upload.php';
 
 // 1. Validar CSRF
-if (isset($_POST['csrf_token']) && !Csrf::validateToken($_POST['csrf_token'])) {
-    die("Erro de validação CSRF.");
+if (!isset($_POST['csrf_token']) || !Csrf::validateToken($_POST['csrf_token'])) {
+    $_SESSION['flash_message'] = ['text' => 'Erro de segurança (CSRF). Recarregue a página.', 'type' => 'error'];
+    header("Location: ../../admin/index.php");
+    exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -36,33 +39,34 @@ try {
     $pdo->prepare($sqlCli)->execute($paramsCli);
 
     // Upload Avatar
-    if(isset($_FILES['avatar_upload']) && $_FILES['avatar_upload']['error'] == 0) {
-        $ext = strtolower(pathinfo($_FILES['avatar_upload']['name'], PATHINFO_EXTENSION));
-        if(in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
-            $dir = __DIR__ . '/../../uploads/avatars/';
-            if(!is_dir($dir)) mkdir($dir, 0755, true);
-            
-            // Remove antigos
-            array_map('unlink', glob($dir . "avatar_{$cliente_id}.*"));
-            
-            $new_name = "avatar_{$cliente_id}.{$ext}";
-            if(move_uploaded_file($_FILES['avatar_upload']['tmp_name'], $dir . $new_name)) {
-                $pdo->prepare("UPDATE clientes SET foto_perfil=? WHERE id=?")->execute(["uploads/avatars/$new_name", $cliente_id]);
-            }
+    if(isset($_FILES['avatar_upload']) && $_FILES['avatar_upload']['error'] == UPLOAD_ERR_OK) {
+        $dir = __DIR__ . '/../../uploads/avatars/';
+        
+        // Remove antigos
+        array_map('unlink', glob($dir . "avatar_{$cliente_id}*.*"));
+        
+        $res = Upload::process($_FILES['avatar_upload'], $dir, "avatar_{$cliente_id}");
+        if ($res['success']) {
+            $rel_path = "uploads/avatars/" . basename($res['file_path']);
+            $pdo->prepare("UPDATE clientes SET foto_perfil=? WHERE id=?")->execute([$rel_path, $cliente_id]);
+        } else {
+            throw new Exception("Erro no upload do avatar: " . $res['message']);
         }
     }
 
     // Upload Capa Obra
-    if(isset($_FILES['foto_capa_obra']) && $_FILES['foto_capa_obra']['error'] == 0) {
-        $ext = strtolower(pathinfo($_FILES['foto_capa_obra']['name'], PATHINFO_EXTENSION));
-        if(in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
-            $dir = __DIR__ . '/../../uploads/obras/';
-            if(!is_dir($dir)) mkdir($dir, 0755, true);
-            
-            $new_name = "capa_obra_{$cliente_id}_" . time() . ".{$ext}";
-            if(move_uploaded_file($_FILES['foto_capa_obra']['tmp_name'], $dir . $new_name)) {
-                $pdo->prepare("UPDATE processo_detalhes SET foto_capa_obra=? WHERE cliente_id=?")->execute(["uploads/obras/$new_name", $cliente_id]);
-            }
+    if(isset($_FILES['foto_capa_obra']) && $_FILES['foto_capa_obra']['error'] == UPLOAD_ERR_OK) {
+        $dir = __DIR__ . '/../../uploads/obras/';
+        
+        // Remove antigos
+        array_map('unlink', glob($dir . "capa_obra_{$cliente_id}_*.*"));
+        
+        $res = Upload::process($_FILES['foto_capa_obra'], $dir, "capa_obra_{$cliente_id}");
+        if ($res['success']) {
+            $rel_path = "uploads/obras/" . basename($res['file_path']);
+            $pdo->prepare("UPDATE processo_detalhes SET foto_capa_obra=? WHERE cliente_id=?")->execute([$rel_path, $cliente_id]);
+        } else {
+            throw new Exception("Erro no upload da capa da obra: " . $res['message']);
         }
     }
 
@@ -176,10 +180,13 @@ try {
     }
 
     $pdo->commit();
-    header("Location: ../../gerenciar_cliente.php?id=$cliente_id&msg=success_update");
+    $_SESSION['flash_message'] = ['text' => 'Cadastro do cliente atualizado com sucesso!', 'type' => 'success'];
+    header("Location: ../../admin/index.php?route=cliente-detalhes&id=$cliente_id&tab=dados");
     exit;
 
 } catch(Exception $e) {
     if ($pdo->inTransaction()) $pdo->rollBack();
-    die("Erro ao atualizar cliente: " . $e->getMessage());
+    $_SESSION['flash_message'] = ['text' => 'Erro ao atualizar cliente: ' . $e->getMessage(), 'type' => 'error'];
+    header("Location: ../../admin/index.php?route=cliente-detalhes&id=$cliente_id&tab=dados");
+    exit;
 }

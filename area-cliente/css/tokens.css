@@ -1,0 +1,62 @@
+/* ==========================================================================
+   VILELA ENGENHARIA — CORE DESIGN SYSTEM TOKENS
+   --------------------------------------------------------------------------
+   Uma única fonte de verdade para a identidade visual de todas as interfaces:
+   Landing Page (raiz), Área do Cliente (portal), App Mobile e Painel Admin.
+   ========================================================================== */
+
+:root {
+    /* 🎨 PALETA DE CORES INSTITUCIONAL (Outfit Verde + Âmbar) */
+    --color-primary:        #197e63; /* Verde Vilela */
+    --color-primary-strong: #146c43; /* Verde Forte / Escuro */
+    --color-primary-dark:   #14654f; /* Verde Admin / Contraste */
+    --color-primary-hover:  #1c8c6d; /* Verde Claro Hover */
+    --color-primary-soft:   #d1e7dd; /* Verde Sutil (Fundo de Sucesso / Pílulas) */
+    --color-primary-tint:   #eef6f2; /* Tint de Fundo */
+    
+    /* Âmbar de Alta Performance (Call To Action & Status Unificado) */
+    --color-accent:         #e8960f; /* Âmbar Vilela */
+    --color-accent-hover:   #d4880c; /* Âmbar Hover */
+    --color-accent-soft:    #fdf2cf; /* Âmbar Sutil */
+    --color-accent-secondary:#25d366;/* Verde WhatsApp */
+
+    /* Superfícies e Bases */
+    --color-bg:             #f8f9fa; /* Cinza Gelo (Landing/Portal) */
+    --color-bg-admin:       #f1f6f4; /* Cinza Fundo Admin */
+    --color-surface:        #ffffff; /* Branco Puro */
+    --color-surface-soft:   #f1f3f5; /* Superfície Suave */
+    --color-surface-hover:  #e9ecef; /* Hover de Superfície */
+
+    /* Tipografia & Contrastes */
+    --color-text:           #1a1a1a; /* Quase Preto (Leitura Principal) */
+    --color-text-subtle:    #4a5568; /* Grafite Secundário */
+    --color-text-admin:     #243029; /* Texto Principal Admin */
+    --color-text-admin-subtle:#6b8078;/* Texto Secundário Admin */
+    --color-muted:          #9aa8a1; /* Texto Desativado / Muted */
+    --text-main:            #1a1a1a; /* Alias para consistência app */
+    --text-muted:           #666666; /* Alias para consistência app */
+
+    /* Semânticos (Status Badges) */
+    --color-success:        #198754; --bg-success: #d8f0e2; --text-success: #14654f;
+    --color-warning:        #ffc107; --bg-warning: #fdf2cf; --text-warning: #8a6400;
+    --color-danger:         #dc3545; --bg-danger:  #fbe0e2; --text-danger:  #a32530;
+    --color-info:           #0b5e84; --bg-info:    #d7eefb; --text-info:    #0b5e84;
+
+    /* 📐 FORMAS & BORDAS (Border Radius) */
+    --radius-sm:            8px;   /* Pequenos Botões, Inputs, Tags */
+    --radius-md:            12px;  /* Botões Médios, Cards Compactos */
+    --radius-lg:            20px;  /* Cards Principais, Modais, Hero */
+    --radius-xl:            32px;  /* Seções Premium App */
+    --radius-pill:          999px; /* Status, Pílulas de Abas */
+
+    /* 🧼 SOMBRAS ACCENT DE MARCA */
+    --shadow-xs:            0 1px 2px rgba(25, 126, 99, 0.04);
+    --shadow-sm:            0 4px 12px rgba(25, 126, 99, 0.06);
+    --shadow-md:            0 8px 24px rgba(25, 126, 99, 0.08);
+    --shadow-lg:            0 16px 40px rgba(25, 126, 99, 0.12);
+    --shadow-strong:        0 15px 45px rgba(20, 60, 45, 0.15);
+    --shadow-nav:           0 -4px 20px rgba(20, 60, 45, 0.05);
+    
+    /* Font Base */
+    --font-base:            'Outfit', 'Segoe UI', system-ui, sans-serif;
+}

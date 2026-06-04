@@ -102,12 +102,14 @@ if (isset($_POST['update_password_admin'])) {
     } else {
         try {
             // Salva no banco de dados (admin_settings) — sem depender de permissão de arquivo no servidor
+            // A senha é hasheada via bcrypt de forma segura
+            $hashed_pass = password_hash($new_pass, PASSWORD_DEFAULT);
             $chk = $pdo->prepare("SELECT id FROM admin_settings WHERE setting_key = 'admin_password'");
             $chk->execute();
             if ($chk->fetch()) {
-                $pdo->prepare("UPDATE admin_settings SET setting_value = ? WHERE setting_key = 'admin_password'")->execute([$new_pass]);
+                $pdo->prepare("UPDATE admin_settings SET setting_value = ? WHERE setting_key = 'admin_password'")->execute([$hashed_pass]);
             } else {
-                $pdo->prepare("INSERT INTO admin_settings (setting_key, setting_value) VALUES ('admin_password', ?)")->execute([$new_pass]);
+                $pdo->prepare("INSERT INTO admin_settings (setting_key, setting_value) VALUES ('admin_password', ?)")->execute([$hashed_pass]);
             }
 
             // Auditoria

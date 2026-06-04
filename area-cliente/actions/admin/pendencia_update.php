@@ -10,8 +10,10 @@ require_once __DIR__ . '/../../core/Csrf.php';
 require_once __DIR__ . '/../../core/Database.php';
 
 // 1. Validar CSRF
-if (isset($_POST['csrf_token']) && !Csrf::validateToken($_POST['csrf_token'])) {
-    die("Erro de validação CSRF.");
+if (!isset($_POST['csrf_token']) || !Csrf::validateToken($_POST['csrf_token'])) {
+    $_SESSION['flash_message'] = ['text' => 'Erro de segurança (CSRF). Recarregue a página.', 'type' => 'error'];
+    header("Location: ../../admin/index.php");
+    exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -29,9 +31,12 @@ try {
     $pdo->prepare("UPDATE processo_pendencias SET descricao = ? WHERE id = ? AND cliente_id = ?")
         ->execute([$texto, $pid, $cid]);
 
-    header("Location: ../../admin.php?cliente_id=$cid&tab=pendencias&msg=pend_updated");
+    $_SESSION['flash_message'] = ['text' => 'Pendência atualizada com sucesso!', 'type' => 'success'];
+    header("Location: ../../admin/index.php?route=cliente-detalhes&id=$cid&tab=pendencias");
     exit;
 
 } catch(PDOException $e) {
-    die("Erro ao atualizar pendência: " . $e->getMessage());
+    $_SESSION['flash_message'] = ['text' => 'Erro ao atualizar pendência: ' . $e->getMessage(), 'type' => 'error'];
+    header("Location: ../../admin/index.php?route=cliente-detalhes&id=$cid&tab=pendencias");
+    exit;
 }

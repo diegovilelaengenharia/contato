@@ -14,11 +14,10 @@ require_once __DIR__ . '/../../core/Database.php';
 // Por enquanto init.php redireciona se não estiver logado.
 
 // 2. Validar CSRF
-// Nota: Adicionaremos o campo CSRF no formulário em breve. 
-// Para não quebrar o admin atual, vamos validar apenas se o token for enviado, 
-// ou deixar como lembrete para a próxima etapa.
-if (isset($_POST['csrf_token']) && !Csrf::validateToken($_POST['csrf_token'])) {
-    die("Erro de validação CSRF.");
+if (!isset($_POST['csrf_token']) || !Csrf::validateToken($_POST['csrf_token'])) {
+    $_SESSION['flash_message'] = ['text' => 'Erro de segurança (CSRF). Recarregue a página.', 'type' => 'error'];
+    header("Location: ../../admin/index.php");
+    exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -68,8 +67,11 @@ try {
          $pdo->prepare($sql)->execute([$proc_num, $proc_obj, $proc_map, $valor_venal, $area_total, $area_existente, $area_acrescimo, $area_permeavel, $taxa_ocupacao, $fator_aproveitamento, $geo_coords, $cid]);
     }
     
-    header("Location: ../../admin.php?cliente_id=$cid&tab=andamento&msg=header_updated");
+    $_SESSION['flash_message'] = ['text' => 'Dados do processo atualizados com sucesso!', 'type' => 'success'];
+    header("Location: ../../admin/index.php?route=cliente-detalhes&id=$cid&tab=timeline");
     exit;
 } catch(PDOException $e) {
-    die("Erro ao atualizar dados do processo: " . $e->getMessage());
+    $_SESSION['flash_message'] = ['text' => 'Erro ao atualizar dados do processo: ' . $e->getMessage(), 'type' => 'error'];
+    header("Location: ../../admin/index.php?route=cliente-detalhes&id=$cid&tab=timeline");
+    exit;
 }

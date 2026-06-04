@@ -10,44 +10,17 @@
      4. Sidebar       8. Botões e badges      12. Modais / mobile
    ========================================================================== */
 
-/* 1. TOKENS ============================================================== */
+@import url('css/tokens.css');
+
 :root {
-    /* Marca */
-    --color-primary:        #197e63;
-    --color-primary-dark:   #14654f;
-    --color-primary-hover:  #1c8c6d;
-    --color-primary-soft:   #d1e7dd;
-    --color-primary-tint:   #eef6f2;
-
-    /* Superfícies / texto */
-    --color-bg:           #f1f6f4;
-    --color-surface:      #ffffff;
-    --color-text:         #243029;
-    --color-text-subtle:  #6b8078;
-    --color-muted:        #9aa8a1;
-    --color-border:       #e4ede9;
-    --color-border-soft:  #f0f4f2;
-
-    /* Semânticos */
-    --bg-success: #d8f0e2;  --text-success: #14654f;
-    --bg-warning: #fdf2cf;  --text-warning: #8a6400;
-    --bg-danger:  #fbe0e2;  --text-danger:  #a32530;
-    --bg-info:    #d7eefb;  --text-info:    #0b5e84;
-    --color-danger: #dc3545;
-
-    /* Forma */
-    --radius-sm: 8px;
-    --radius:    14px;
-    --radius-lg: 20px;
-    --radius-pill: 999px;
-
-    /* Sombra */
-    --shadow-xs: 0 1px 2px rgba(20, 60, 45, .05);
-    --shadow-sm: 0 2px 8px rgba(20, 60, 45, .06);
-    --shadow:    0 6px 22px rgba(20, 60, 45, .08);
-    --shadow-lg: 0 14px 40px rgba(20, 60, 45, .14);
-
+    /* Mapeamento de compatibilidade e overrides locais do Painel Admin */
+    --color-bg: var(--color-bg-admin);
+    --color-text: var(--color-text-admin);
+    --color-text-subtle: var(--color-text-admin-subtle);
+    
+    /* Variáveis locais do admin */
     --sidebar-w: 268px;
+    --shadow: var(--shadow-md);
 }
 
 /* 2. BASE / RESET ======================================================== */

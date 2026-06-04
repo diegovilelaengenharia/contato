@@ -1,31 +1,69 @@
 <?php
 /**
  * Action: Limpar Todo o Histórico do Cliente
- * Extratado de includes/processamento.php
+ * Reescrito em SEC-07/ADM-16: POST + CSRF obrigatório.
  */
-
 require_once __DIR__ . '/../../includes/init.php';
-require_once __DIR__ . '/../../core/Auth.php';
+require_once __DIR__ . '/../../core/Csrf.php';
 require_once __DIR__ . '/../../core/Database.php';
 
-// 1. Validar Auth Admin
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header("Location: ../../admin/index.php");
+    exit;
+}
 
-if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+$is_ajax = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
+    || (isset($_POST['format']) && $_POST['format'] === 'json')
+    || (isset($_GET['format']) && $_GET['format'] === 'json');
+
+if (!isset($_POST['csrf_token']) || !Csrf::validateToken($_POST['csrf_token'])) {
+    if ($is_ajax) {
+        header('Content-Type: application/json');
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Erro de segurança (CSRF). Recarregue a página.']);
+        exit;
+    }
+    $_SESSION['flash_message'] = ['text' => 'Erro de segurança (CSRF).', 'type' => 'error'];
+    header("Location: ../../admin/index.php");
+    exit;
+}
+
+$cid = (int)($_POST['cliente_id'] ?? 0);
+
+if (!$cid) {
+    if ($is_ajax) {
+        header('Content-Type: application/json');
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Dados inválidos para exclusão.']);
+        exit;
+    }
+    $_SESSION['flash_message'] = ['text' => 'Dados inválidos para exclusão.', 'type' => 'error'];
+    header("Location: ../../admin/index.php?route=clientes");
     exit;
 }
 
 $pdo = Database::getInstance();
-$cid = $_GET['cliente_id'] ?? null;
-
-if ($cid && isset($_GET['del_all_hist'])) {
-    try {
-        $pdo->prepare("DELETE FROM processo_movimentos WHERE cliente_id=?")->execute([$cid]);
-        header("Location: ../../admin.php?cliente_id=$cid&tab=andamento&msg=all_hist_deleted");
+try {
+    $pdo->prepare("DELETE FROM processo_movimentos WHERE cliente_id=?")->execute([$cid]);
+    
+    if ($is_ajax) {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true, 'message' => 'Todo o histórico foi apagado.']);
         exit;
-    } catch(PDOException $e) {
-        die("Erro ao apagar histórico: " . $e->getMessage());
     }
-}
 
-header("Location: ../../admin.php");
-exit;
+    $_SESSION['flash_message'] = ['text' => 'Todo o histórico foi apagado.', 'type' => 'success'];
+    header("Location: ../../admin/index.php?route=cliente-detalhes&id=$cid&tab=timeline");
+    exit;
+} catch (Exception $e) {
+    if ($is_ajax) {
+        header('Content-Type: application/json');
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Erro ao apagar histórico: ' . $e->getMessage()]);
+        exit;
+    }
+
+    $_SESSION['flash_message'] = ['text' => 'Erro ao apagar histórico.', 'type' => 'error'];
+    header("Location: ../../admin/index.php?route=cliente-detalhes&id=$cid&tab=timeline");
+    exit;
+}

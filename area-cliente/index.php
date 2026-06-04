@@ -83,18 +83,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $erro = "Muitas tentativas de login. Aguarde {$lockout_minutes} minutos e tente novamente.";
     } else {
         // 1. Verifica se é ADMIN
-        // Senha mestra definida em db.php a partir de ADMIN_PASSWORD do config.
+        // Senha mestra definida em db.php a partir de ADMIN_PASSWORD do config ou do banco.
         // Sem fallback hardcoded: se a env não estiver configurada, login admin é desabilitado.
         $senhaMestraAdmin = defined('ADMIN_PASSWORD') ? ADMIN_PASSWORD : '';
         $validAdminUsers = defined('ADMIN_USERNAMES') ? ADMIN_USERNAMES : ['admin', 'vilela', 'vilela adm'];
         $isAdminUser = in_array(strtolower($usuario), $validAdminUsers);
 
-        if ($isAdminUser && $senhaMestraAdmin !== '' && hash_equals($senhaMestraAdmin, $senha)) {
-            // Login admin OK — limpa tentativas deste IP
-            $pdo->prepare("DELETE FROM login_attempts WHERE ip_address = ?")->execute([$ip]);
-            $_SESSION['admin_logado'] = true;
-            header("Location: admin.php");
-            exit;
+        if ($isAdminUser && $senhaMestraAdmin !== '') {
+            $is_hashed = (strlen($senhaMestraAdmin) >= 60 && str_starts_with($senhaMestraAdmin, '$2'));
+            $login_ok = false;
+
+            if ($is_hashed) {
+                // Senha já hasheada — verificação normal via bcrypt
+                $login_ok = password_verify($senha, $senhaMestraAdmin);
+            } else {
+                // Senha em texto plano — verificação legacy + migração automática
+                if (hash_equals($senhaMestraAdmin, $senha)) {
+                    $login_ok = true;
+                    // Migrar para bcrypt automaticamente
+                    $hashed = password_hash($senha, PASSWORD_DEFAULT);
+                    try {
+                        $pdo->prepare("UPDATE admin_settings SET setting_value = ? WHERE setting_key = 'admin_password'")
+                            ->execute([$hashed]);
+                        error_log("SEC-08: Senha admin migrada para bcrypt automaticamente.");
+                    } catch (Exception $e) {
+                        error_log("SEC-08: Falha ao migrar senha: " . $e->getMessage());
+                    }
+                }
+            }
+
+            if ($login_ok) {
+                // Login admin OK — limpa tentativas deste IP
+                $pdo->prepare("DELETE FROM login_attempts WHERE ip_address = ?")->execute([$ip]);
+                $_SESSION['admin_logado'] = true;
+                header("Location: admin.php");
+                exit;
+            }
         }
 
         // CHECK MAINTENANCE BLOCK FOR CLIENTS

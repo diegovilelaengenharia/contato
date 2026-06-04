@@ -10,8 +10,10 @@ require_once __DIR__ . '/../../core/Csrf.php';
 require_once __DIR__ . '/../../core/Database.php';
 
 // 1. Validar CSRF
-if (isset($_POST['csrf_token']) && !Csrf::validateToken($_POST['csrf_token'])) {
-    die("Erro de validação CSRF.");
+if (!isset($_POST['csrf_token']) || !Csrf::validateToken($_POST['csrf_token'])) {
+    $_SESSION['flash_message'] = ['text' => 'Erro de segurança (CSRF). Recarregue a página.', 'type' => 'error'];
+    header("Location: ../../admin/index.php");
+    exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -57,7 +59,8 @@ try {
         $pdo->commit();
 
         // Redireciona para gerenciar o novo cliente
-        header("Location: ../../gerenciar_cliente.php?id=$novo_id&new=1");
+        $_SESSION['flash_message'] = ['text' => 'Pré-cadastro aprovado e cliente criado com sucesso!', 'type' => 'success'];
+        header("Location: ../../admin/index.php?route=cliente-detalhes&id=$novo_id");
         exit;
     } else {
         throw new Exception("Solicitação de pré-cadastro não encontrada.");
@@ -65,5 +68,7 @@ try {
 
 } catch (Exception $e) {
     if ($pdo->inTransaction()) $pdo->rollBack();
-    die("Erro ao aprovar cadastro: " . $e->getMessage());
+    $_SESSION['flash_message'] = ['text' => 'Erro ao aprovar cadastro: ' . $e->getMessage(), 'type' => 'error'];
+    header("Location: ../../admin/index.php?route=clientes");
+    exit;
 }

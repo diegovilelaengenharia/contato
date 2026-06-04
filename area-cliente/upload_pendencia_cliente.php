@@ -2,6 +2,7 @@
 session_name('CLIENTE_SESSID');
 session_start();
 require 'db.php';
+require_once __DIR__ . '/core/Upload.php';
 
 if (!isset($_SESSION['cliente_id']) || !isset($_FILES['arquivo']) || !isset($_POST['pendencia_id'])) {
     header("Location: dashboard.php?msg=erro");
@@ -20,25 +21,15 @@ if(!$stmt->fetch()) {
 }
 
 // 2. Upload Logic
-$upload_dir = 'uploads/clientes/' . $cliente_id . '/';
-if (!is_dir($upload_dir)) {
-    mkdir($upload_dir, 0777, true);
-}
+$upload_dir = __DIR__ . '/uploads/clientes/' . $cliente_id . '/';
 
-$ext = pathinfo($file['name'], PATHINFO_EXTENSION);
-$filename = 'pendencia_' . $pendencia_id . '_' . time() . '.' . $ext;
-$target = $upload_dir . $filename;
-
-if (move_uploaded_file($file['tmp_name'], $target)) {
-    // 3. Update DB (Mark as pending review or resolved?)
-    // For now, we update status to 'em_analise' and save file path if column exists, 
-    // OR just create a log note. Assuming simple 'arquivo_retorno' column update or similar.
-    // I'll update the description or a specific field. 
-    // Safest is to update 'observacoes_cliente' or similar if exists.
-    // Let's assume we update status to 'em_analise' so Admin sees it.
+$res = Upload::process($file, $upload_dir, 'pendencia_' . $pendencia_id);
+if ($res['success']) {
+    $db_path = 'uploads/clientes/' . $cliente_id . '/' . basename($res['file_path']);
     
-    $stmt_up = $pdo->prepare("UPDATE processo_pendencias SET status = 'em_analise', data_resolucao = NOW() WHERE id = ?");
-    $stmt_up->execute([$pendencia_id]);
+    // 3. Update DB status and file path
+    $stmt_up = $pdo->prepare("UPDATE processo_pendencias SET status = 'em_analise', arquivo_path = ?, data_resolucao = NOW() WHERE id = ?");
+    $stmt_up->execute([$db_path, $pendencia_id]);
     
     // Redirect back to the new client app pendencies page
     header("Location: client-app/pendencias.php?msg=sucesso_upload");

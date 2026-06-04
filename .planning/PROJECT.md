@@ -63,7 +63,7 @@ Clientes acompanham seu processo sem precisar ligar para Diego, e Diego consegue
 ## Constraints
 
 - **Stack:** PHP + MySQL (Hostinger) — sem mudança de tecnologia de backend
-- **Frontend:** HTML/CSS/JS puro — sem React, Vue ou bundlers (mantém compatibilidade com Hostinger)
+- **Frontend:** HTML/CSS/JS puro, sem bundlers e sem build no CI (mantém compatibilidade com Hostinger, que não roda Node). **Reatividade pontual permitida via Alpine.js (CDN)** onde o estado é complexo (decisão v2.0). React/Vue SPA permanece fora de escopo.
 - **Design:** Verde `#197e63` como cor primária, logo atual como âncora visual
 - **Hospedagem:** Hostinger shared — sem Docker, sem SSH root, sem Node.js em servidor
 - **Domínio:** vilela.eng.br (HTTPS forçado via .htaccess)
@@ -72,11 +72,12 @@ Clientes acompanham seu processo sem precisar ligar para Diego, e Diego consegue
 
 | Decisão | Rationale | Outcome |
 |---------|-----------|---------|
-| Manter PHP + MySQL | Hostinger shared hosting, sem custo extra, stack já conhecida | — Pending |
+| Manter PHP + MySQL | Hostinger shared hosting, sem custo extra, stack já conhecida | ✓ Mantido |
 | Git repo na pasta do projeto | Evitar caminhos longos com espaços, deploy.yml simplificado com `local-dir: ./` | ✓ Implementado |
-| Redesign admin do zero | Código atual com bugs acumulados — mais rápido refazer do que corrigir patch a patch | — Pending |
-| Credenciais para .env | Segurança básica — não expor dados de acesso no repositório público | — Pending |
-| Conceito visual do portal do cliente mantido | Usuário validou a ideia dos botões e proposta — refatorar preservando o UX | — Pending |
+| Redesign admin do zero | Código atual com bugs acumulados — mais rápido refazer do que corrigir patch a patch | ✓ Base entregue na Fase 09 (design system + front-controller) |
+| Credenciais para .env | Segurança básica — não expor dados de acesso no repositório público | ✓ Evoluído p/ `db_credentials.php` gerado pelo CI |
+| Conceito visual do portal do cliente mantido | Usuário validou a ideia dos botões e proposta — refatorar preservando o UX | ✓ Mantido |
+| Admin: Alpine.js, não React (v2.0) | Preserva design system da Fase 09, sem build no CI, manutenível por dev solo | ✓ Decidido 2026-06-04 |
 
 ## Evolution
 
@@ -116,45 +117,28 @@ Este documento evolui a cada fase e marco do projeto.
 
 GitHub Actions FTPS → Hostinger. Secrets injetados em `area-cliente/core/db_credentials.php` a cada deploy. App Louvor usa webhook Hostinger (`git pull` no servidor).
 
-## Current Milestone: v2.0 — Hardening, Auditoria e Features
+## Current Milestone: v2.1 — Landing de Crescimento & Polimento
 
-**Status:** 🟡 Em planejamento (iniciado 2026-05-19)
-**Goal:** Eliminar dívidas técnicas críticas do v1, fortalecer segurança, adicionar features de valor e reescrever camada admin para consolidar arquitetura modular.
+**Status:** 🟡 Em planejamento (iniciado 2026-06-04)
+**Goal:** Expandir a landing page como cartão de visitas para captação de leads, realizar polimento e alinhamento visual do portal do cliente, e sanar pendências operacionais de deploy e organização de repositório git.
 
-**Target features (5 categorias):**
+**Target features (3 categorias):**
 
-- 🔒 **SEC** — Rotacionar credenciais comprometidas, migrar Variables→Secrets no GitHub, 2FA admin, log de auditoria
-- 🧹 **CLEAN** — Corrigir CSRF (D1), refatorar cliente_impersonate (D2), eliminar processamento.php legacy (D3), fix JS redirect (D4), realocar .git da HOME (D6)
-- 🔍 **AUDIT** — Auditar paths absolutos no App Louvor (D7) + outros aplicativos externos
-- ✨ **FEAT** — Portfólio de obras, blog, automação WhatsApp, exportação financeira em Excel
-- 🔨 **ADMIN** — Reescrita: eliminar `includes/processamento.php` de vez, admin 100% modular
+- 📣 **LAND** — Portfólio de obras, Depoimentos, FAQ, Schema de SEO e sinais de confiança.
+- 📱 **CLI** — Integração com tokens de design system, melhorias de UX e desacoplamento do DB.
+- ⚙️ **OPS** — Mover repositório .git, auditoria caminhos App Louvor, homologação e deploy final.
 
-**Key context:** Brownfield, sistema v1.5 em produção. Constraints v1 mantidos (PHP 8 + MySQL + Hostinger + vanilla JS + cache PWA).
+## Next Milestone Goals (v2.1 — esboço inicial, refinado no REQUIREMENTS.md)
 
-## Next Milestone Goals (v2.0 — esboço inicial, refinado no REQUIREMENTS.md)
-
-- **Dívidas técnicas críticas** (D1-D7 registradas em STATE.md)
-  - Corrigir validação CSRF nos actions
-  - Eliminar `processamento.php` legado
-  - Realocar `.git` para pasta de trabalho dedicada
-  - Auditoria de paths absolutos no App Louvor
-- **Segurança**: rotacionar credenciais comprometidas, migrar todos os Variables para Secrets
-- **Features v2 deferred** (ver `milestones/v1.0-REQUIREMENTS.md`):
-  - Portfólio de obras na landing
-  - Blog/artigos técnicos
-  - Automação WhatsApp ao atualizar etapa
-  - Log de auditoria do admin
-  - Exportação financeira (Excel)
-  - 2FA para admin
-- **Codebase mapping** (`/gsd-map-codebase`) para alimentar agentes futuros
-
-Refinamento via `/gsd-new-milestone` e `/gsd-discuss-phase`.
+- **Landing Page**: Implementar seções de engajamento de leads para Diego Vilela (cases, depoimentos e SEO estruturado).
+- **Portal do Cliente**: Atualizar estilos para Outfit/verde Vilela e tokens compartilhados, unificando a identidade visual nas três camadas.
+- **QA/Deploy**: Organização de ambiente local (.git e App Louvor) e automatização de entregas via FTPS na Hostinger.
 
 <details>
-<summary>Estado anterior (v1.0 planning)</summary>
+<summary>Histórico de Milestones anteriores</summary>
 
-*Last updated: 2026-05-16 após inicialização do projeto GSD*
-
-A seção "Requirements" acima foi a base para o planejamento do Milestone v1.0. Versão arquivada em `milestones/v1.0-REQUIREMENTS.md` com checkboxes marcados.
+* **v1.0** — Reescrita completa: Finalizada e arquivada em `milestones/v1.0-REQUIREMENTS.md`.
+* **v2.0** — Hardening & Features Admin: Finalizada e arquivada em [milestones/v2.0-REQUIREMENTS.md](milestones/v2.0-REQUIREMENTS.md) em 2026-06-04.
 
 </details>
+

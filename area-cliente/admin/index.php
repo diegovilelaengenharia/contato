@@ -64,6 +64,9 @@ $company_email = $curr_settings['company_email'] ?? 'vilela.eng.mg@gmail.com';
     
     <!-- CKEditor 5 (Para campos de texto ricos, se usados) -->
     <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
+    
+    <!-- Alpine.js CDN -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body>
 
@@ -115,6 +118,26 @@ $company_email = $curr_settings['company_email'] ?? 'vilela.eng.mg@gmail.com';
             }
         }).showToast();
         <?php endif; ?>
+
+        // Helper de Confirmação SweetAlert2
+        function confirmDelete(event, message) {
+            event.preventDefault();
+            Swal.fire({
+                title: 'Confirmar exclusão',
+                text: message,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Sim, excluir',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    event.target.submit();
+                }
+            });
+            return false;
+        }
     </script>
 </body>
 </html>

@@ -50,9 +50,6 @@ if (!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true) {
 define('ADMIN_PATH', __DIR__);
 define('APP_VERSION', '2.0.0');
 
-// Lógica de logout
 if (isset($_GET['sair'])) {
-    session_destroy();
-    header("Location: ../index.php");
-    exit;
+    Auth::logout(); // Limpa $_SESSION, invalida cookie, destrói sessão, redireciona
 }

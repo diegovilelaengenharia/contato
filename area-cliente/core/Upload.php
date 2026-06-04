@@ -1,14 +1,33 @@
 <?php
 class Upload {
-    private static $allowed_extensions = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx', 'zip'];
+    private static $allowed_extensions = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx', 'zip', 'xls', 'xlsx', 'dwg', 'dxf', 'webp', 'gif'];
     private static $allowed_mimes = [
         'application/pdf',
         'image/jpeg',
         'image/png',
+        'image/webp',
+        'image/gif',
         'application/msword',
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         'application/zip',
-        'application/x-zip-compressed'
+        'application/x-zip-compressed',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'image/vnd.dwg',
+        'image/x-dwg',
+        'application/acad',
+        'application/x-acad',
+        'application/autocad_dwg',
+        'application/dwg',
+        'application/x-dwg',
+        'drawing/dwg',
+        'image/vnd.dxf',
+        'image/x-dxf',
+        'application/dxf',
+        'application/x-dxf',
+        'application/autocad_dxf',
+        'drawing/dxf',
+        'application/octet-stream' // Muitas vezes arquivos CAD binários são lidos como octet-stream
     ];
     private static $max_size = 10485760; // 10MB
 
