@@ -1,10 +1,9 @@
 <?php
 require_once __DIR__ . '/init_client.php';
+require_once __DIR__ . '/../core/Processo.php';
 
 // BUSCAR DADOS DO CLIENTE
-$stmt = $pdo->prepare("SELECT * FROM clientes WHERE id = ?");
-$stmt->execute([$cliente_id]);
-$cliente = $stmt->fetch(PDO::FETCH_ASSOC);
+$cliente = Processo::getCliente($cliente_id);
 
 if (!$cliente) {
     session_destroy();
@@ -13,17 +12,13 @@ if (!$cliente) {
 }
 
 // BUSCAR DETALHES DO PROCESSO
-$stmt_det = $pdo->prepare("SELECT * FROM processo_detalhes WHERE cliente_id = ?");
-$stmt_det->execute([$cliente_id]);
-$detalhes = $stmt_det->fetch(PDO::FETCH_ASSOC);
+$detalhes = Processo::getDetalhes($cliente_id);
 
 // --- NOTIFICATIONS LOGIC ---
 $notificacoes = [];
 
 // 1. Pendências em Aberto
-$stmt_pend = $pdo->prepare("SELECT count(*) as qtd FROM processo_pendencias WHERE cliente_id = ? AND status != 'resolvido'");
-$stmt_pend->execute([$cliente_id]);
-$pend_qtd = $stmt_pend->fetchColumn();
+$pend_qtd = Processo::getQtdPendenciasAbertas($cliente_id);
 if($pend_qtd > 0) {
     $notificacoes[] = [
         'tipo' => 'alerta',
@@ -33,9 +28,7 @@ if($pend_qtd > 0) {
 }
 
 // 2. Pagamentos Pendentes/Atrasados
-$stmt_fin = $pdo->prepare("SELECT count(*) as qtd FROM processo_financeiro WHERE cliente_id = ? AND (status = 'pendente' OR status = 'atrasado')");
-$stmt_fin->execute([$cliente_id]);
-$fin_qtd = $stmt_fin->fetchColumn();
+$fin_qtd = Processo::getQtdFinanceiroPendente($cliente_id);
 if($fin_qtd > 0) {
     $notificacoes[] = [
         'tipo' => 'financeiro',
@@ -45,9 +38,7 @@ if($fin_qtd > 0) {
 }
 
 // 3. Movimentações Recentes (Últimos 15 dias)
-$stmt_mov = $pdo->prepare("SELECT titulo_fase, data_movimento FROM processo_movimentos WHERE cliente_id = ? AND data_movimento >= DATE_SUB(NOW(), INTERVAL 15 DAY) ORDER BY data_movimento DESC LIMIT 3");
-$stmt_mov->execute([$cliente_id]);
-$movs = $stmt_mov->fetchAll(PDO::FETCH_ASSOC);
+$movs = Processo::getMovimentacoesRecentes($cliente_id);
 foreach($movs as $m) {
     $notificacoes[] = [
         'tipo' => 'info',
@@ -60,23 +51,11 @@ $total_notif = count($notificacoes);
 
 
 // DEFINIÇÃO DAS FASES (Para Timeline Card)
-$fases_padrao = [
-    'Abertura de Processo (Guichê)',
-    'Fiscalização (Parecer Fiscal)',
-    'Triagem (Documentos Necessários)',
-    'Comunicado de Pendências (Triagem)',
-    'Análise Técnica (Engenharia)',
-    'Comunicado (Pendências e Taxas)',
-    'Confecção de Documentos',
-    'Avaliação (ITBI/Averbação)',
-    'Processo Finalizado (Documentos Prontos)'
-];
+$fases_padrao = Processo::$fases_padrao;
 
 $etapa_atual = ($detalhes && isset($detalhes['etapa_atual'])) ? $detalhes['etapa_atual'] : 'Levantamento de Dados';
 $etapa_atual = trim($etapa_atual);
-$fase_index = array_search($etapa_atual, $fases_padrao);
-if($fase_index === false) $fase_index = 0; 
-$porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
+$porcentagem = Processo::getProgresso($etapa_atual);
 
 ?>
 <!DOCTYPE html>
@@ -444,9 +423,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                     // 1. Latest Pendency (Safe Fetch - Title + Desc)
                     $last_pend_name = '';
                     try {
-                        $stmt_lp = $pdo->prepare("SELECT titulo, descricao FROM processo_pendencias WHERE cliente_id = ? AND status != 'resolvido' ORDER BY data_criacao DESC LIMIT 1");
-                        $stmt_lp->execute([$cliente_id]);
-                        $row_lp = $stmt_lp->fetch(PDO::FETCH_ASSOC);
+                        $row_lp = Processo::getUltimaPendenciaAberta($cliente_id);
                         if($row_lp) {
                             $last_pend_name = $row_lp['titulo'];
                             if(!empty($row_lp['descricao'])) {
@@ -458,9 +435,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                     // 2. Latest Finance (Safe Fetch - Desc + Val)
                     $last_fin_name = '';
                     try {
-                        $stmt_lf = $pdo->prepare("SELECT descricao, valor FROM processo_financeiro WHERE cliente_id = ? AND (status = 'pendente' OR status = 'atrasado') ORDER BY data_vencimento ASC LIMIT 1");
-                        $stmt_lf->execute([$cliente_id]);
-                        $row_lf = $stmt_lf->fetch(PDO::FETCH_ASSOC);
+                        $row_lf = Processo::getProximoFinanceiroPendente($cliente_id);
                         if($row_lf) {
                             $last_fin_name = $row_lf['descricao'];
                             if(!empty($row_lf['valor'])) {

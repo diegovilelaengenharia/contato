@@ -62,3 +62,8 @@ banco de dados/
 # Client app build cache
 client-app/.vite/
 area-cliente/assets/
+
+# Screenshots e correções visuais temporárias
+correções/
+**/correções/
+

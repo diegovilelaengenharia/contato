@@ -130,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // SE FOR ADMIN TENTANDO LOGAR (E ERROU A SENHA), NÃO MOSTRA MANUTENÇÃO, MOSTRA ERRO
                 if (!in_array(strtolower($usuario), $validAdminUsers)) {
                      // MOSTRAR AVISO DE MANUTENÇÃO (PÁGINA COMPLETA) PARA CLIENTES
-                    require 'maintenance.php';
+                    require 'manutencao.php';
                     exit;
                 }
             }

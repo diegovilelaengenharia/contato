@@ -1,10 +1,9 @@
 <?php
 require_once __DIR__ . '/init_client.php';
+require_once __DIR__ . '/../core/Processo.php';
 
 // 2. FETCH FINANCIAL DATA
-$stmt = $pdo->prepare("SELECT * FROM processo_financeiro WHERE cliente_id = ? ORDER BY data_vencimento ASC");
-$stmt->execute([$cliente_id]);
-$lancamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$lancamentos = Processo::getFinanceiro($cliente_id);
 
 // 3. CALCULATE TOTALS
 $total_pago = 0;

@@ -1,10 +1,9 @@
 <?php
 require_once __DIR__ . '/init_client.php';
+require_once __DIR__ . '/../core/Processo.php';
 
 // Fetch Client Data for Header
-$stmt_cli = $pdo->prepare("SELECT * FROM clientes WHERE id = ?");
-$stmt_cli->execute([$cliente_id]);
-$cliente = $stmt_cli->fetch(PDO::FETCH_ASSOC);
+$cliente = Processo::getCliente($cliente_id);
 
 // 2. LOGIC: HANDLE UPLOAD & DELETION
 
@@ -48,11 +47,9 @@ if(isset($_FILES['arquivo_pendencia']) && isset($_POST['pendencia_id'])) {
              if(move_uploaded_file($file['tmp_name'], $dir . $new_name)) {
                  // Tenta atualizar status para 'em_analise' apenas visualmente ou DB se possível
                  try {
-                    $sql = "UPDATE processo_pendencias SET status='em_analise' WHERE id=? AND cliente_id=? AND status != 'resolvido'";
-                    $stmtUpdate = $pdo->prepare($sql);
-                    $stmtUpdate->execute([$pid, $cliente_id]);
+                    Processo::atualizarStatusPendenciaEmAnalise($pid, $cliente_id);
                     $msg_success = "Arquivo enviado! Pendência em análise.";
-                 } catch(PDOException $e) {
+                 } catch(Exception $e) {
                      $msg_success = "Arquivo enviado com sucesso!";
                  }
              } else {
@@ -67,9 +64,7 @@ if(isset($_FILES['arquivo_pendencia']) && isset($_POST['pendencia_id'])) {
 // 3. FETCH PENDENCIES (SAFE)
 $all_pendencias = [];
 try {
-    $stmt_pend = $pdo->prepare("SELECT * FROM processo_pendencias WHERE cliente_id = ? ORDER BY data_criacao DESC");
-    $stmt_pend->execute([$cliente_id]);
-    $result = $stmt_pend->fetchAll(PDO::FETCH_ASSOC);
+    $result = Processo::getPendencias($cliente_id);
     if($result) $all_pendencias = $result;
 } catch(Exception $e) {
     // Silently fail or log, but don't break page

@@ -1,6 +1,7 @@
 <?php
 $SKIP_CLIENT_AUTH = true;
 require_once __DIR__ . '/init_client.php';
+require_once __DIR__ . '/../core/Processo.php';
 
 // --- LOGICA DE SIMULAÇÃO PELO ADMIN ---
 $is_simulated = isset($_GET['simular_timeline']) && $_GET['simular_timeline'] == 1 && isset($_SESSION['admin_logado']);
@@ -17,9 +18,7 @@ if ($is_simulated && isset($_GET['cliente_id'])) {
 }
 
 // BUSCAR DADOS DO CLIENTE
-$stmt = $pdo->prepare("SELECT * FROM clientes WHERE id = ?");
-$stmt->execute([$cliente_id]);
-$cliente = $stmt->fetch(PDO::FETCH_ASSOC);
+$cliente = Processo::getCliente($cliente_id);
 
 if (!$cliente) {
     session_destroy();
@@ -28,32 +27,18 @@ if (!$cliente) {
 }
 
 // BUSCAR DETALHES DO PROCESSO
-$stmt_det = $pdo->prepare("SELECT * FROM processo_detalhes WHERE cliente_id = ?");
-$stmt_det->execute([$cliente_id]);
-$detalhes = $stmt_det->fetch(PDO::FETCH_ASSOC);
+$detalhes = Processo::getDetalhes($cliente_id);
 
 // DEFINIÇÃO DAS FASES (Mantendo consistência com index.php)
-$fases_padrao = [
-    'Abertura de Processo (Guichê)',
-    'Fiscalização (Parecer Fiscal)',
-    'Triagem (Documentos Necessários)',
-    'Comunicado de Pendências (Triagem)',
-    'Análise Técnica (Engenharia)',
-    'Comunicado (Pendências e Taxas)',
-    'Confecção de Documentos',
-    'Avaliação (ITBI/Averbação)',
-    'Processo Finalizado (Documentos Prontos)'
-];
+$fases_padrao = Processo::$fases_padrao;
 
 $etapa_atual = trim($detalhes['etapa_atual'] ?? 'Abertura de Processo (Guichê)');
 $fase_index = array_search($etapa_atual, $fases_padrao);
 if($fase_index === false) $fase_index = 0; 
-$porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
+$porcentagem = Processo::getProgresso($etapa_atual);
 
 // BUSCAR OBSERVAÇÃO DA ETAPA ATUAL
-$stmt_obs = $pdo->prepare("SELECT descricao FROM processo_movimentos WHERE cliente_id = ? AND titulo_fase = ? ORDER BY data_movimento DESC LIMIT 1");
-$stmt_obs->execute([$cliente_id, $etapa_atual]);
-$obs_atual = $stmt_obs->fetchColumn();
+$obs_atual = Processo::getObservacaoEtapaAtual($cliente_id, $etapa_atual);
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -305,9 +290,7 @@ $obs_atual = $stmt_obs->fetchColumn();
             <h3 style="margin:30px 0 20px 0; font-size:1.1rem; color:#333; border-bottom:1px solid #eee; padding-bottom:10px;">📜 Histórico do Processo</h3>
              <?php
              // Usando a tabela REAL do Admin (processo_movimentos)
-             $stmt_hist = $pdo->prepare("SELECT * FROM processo_movimentos WHERE cliente_id = ? ORDER BY data_movimento DESC");
-             $stmt_hist->execute([$cliente_id]);
-             $historico = $stmt_hist->fetchAll(PDO::FETCH_ASSOC);
+             $historico = Processo::getMovimentosTodos($cliente_id);
 
              if(empty($historico)): ?>
                 <div class="empty-state" style="text-align:center; padding:30px; color:#999; border:2px dashed #eee; border-radius:12px;">

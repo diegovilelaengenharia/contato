@@ -57,6 +57,13 @@ body {
     margin-bottom: 32px;
 }
 
+@media (max-width: 480px) {
+    .hero {
+        padding: 32px 16px;
+    }
+}
+
+
 .hero-tagline-static {
   margin: 4px 0 16px;
   font-size: 1rem;
@@ -737,10 +744,10 @@ body {
 }
 
 .step-connector {
-    align-self: stretch;
+    align-self: center;
     min-height: 24px;
     border-left: 2px dashed rgba(25, 126, 99, 0.35);
-    margin-left: 23px;
+    margin: 0;
 }
 
 @media (min-width: 640px) {
@@ -1479,6 +1486,17 @@ body {
     gap: 16px;
     margin-bottom: 16px;
     width: 100%;
+}
+
+@media (max-width: 480px) {
+    .servico-card {
+        padding: 20px 16px;
+    }
+    .servico-card__header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
 }
 
 .servico-card__icon {

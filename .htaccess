@@ -12,7 +12,11 @@ Options -Indexes
     RewriteCond %{HTTPS} off
     RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-    # 2. Redirecionar área-cliente para o index.php correto
+    # 2. Redirecionar caminho antigo do App Louvor para o subdomínio oficial
+    RewriteRule ^applouvor/(.*)$ https://louvor.vilela.eng.br/$1 [R=301,L]
+    RewriteRule ^applouvor/?$ https://louvor.vilela.eng.br/ [R=301,L]
+
+    # 3. Redirecionar área-cliente para o index.php correto
     RewriteRule ^area-cliente/?$ area-cliente/index.php [L]
 </IfModule>
 

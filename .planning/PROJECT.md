@@ -12,30 +12,33 @@ Clientes acompanham seu processo sem precisar ligar para Diego, e Diego consegue
 
 ### Validated
 
-- ✓ Login separado para admin e cliente — existente
-- ✓ Timeline de 9 etapas do processo imobiliário — existente
-- ✓ Gestão financeira com status pago/pendente/atrasado/isento — existente
-- ✓ Upload de documentos e comprovantes — existente
-- ✓ Botão WhatsApp no hero com link direto — existente
-- ✓ Botão "Área do Cliente" com estilo ghost verde — existente (conceito validado pelo usuário)
-- ✓ Deploy via GitHub Actions → FTP → Hostinger — corrigido e funcional
+- ✓ Login separado para admin e cliente — existente (Fase 01)
+- ✓ Timeline de 9 etapas do processo imobiliário — existente (Fase 02)
+- ✓ Gestão financeira com status pago/pendente/atrasado/isento — existente (Fase 02)
+- ✓ Upload de documentos e comprovantes — existente (Fase 03)
+- ✓ Botão WhatsApp no hero com link direto — existente (Fase 01)
+- ✓ Botão "Área do Cliente" com estilo ghost verde — existente (Fase 01)
+- ✓ Deploy via GitHub Actions → FTP → Hostinger — corrigido e funcional (Fase 04)
+- ✓ Segurança do Admin (CSRF, Senhas Bcrypt, Invalidação de Cookies) — consolidado (v2.0)
+- ✓ Reatividade Admin com Alpine.js & KPIs dinâmicos — concluído (v2.0)
+- ✓ Exportação Excel/CSV, Notas privadas e busca na sidebar — concluído (v2.0)
 
-### Active
+### Active (Foco v2.1)
 
-- [ ] Landing page mobile-first com seções completas (hero, serviços, sobre, contato)
-- [ ] Links para redes sociais e WhatsApp na landing page
-- [ ] Redesign profissional do portal do cliente (mantendo conceito de botões/proposta atual)
-- [ ] Dashboard do cliente com status, pendências, financeiro e documentos numa tela só
-- [ ] Painel admin completamente refeito do zero — UI moderna e intuitiva
-- [ ] Admin: gestão de clientes, etapas, financeiro e documentos sem bugs
-- [ ] Segurança: credenciais do banco em variáveis de ambiente (.env)
-- [ ] Remoção de scripts de debug/reset que não devem estar em produção
-- [ ] .htaccess protegendo arquivos sensíveis (db.php, config/)
+- [ ] Landing page: seção de FAQ estruturado de regularização (estático no HTML)
+- [ ] Landing page: SEO estruturado (Schema.org de LocalBusiness/Engineer, sitemap, meta tags)
+- [ ] Landing page: Sinais de confiança (número de processos, exposição CREA 235.474/D)
+- [ ] Portal do Cliente: polimento visual aplicando `tokens.css` (Outfit + cores unificadas)
+- [ ] Portal do Cliente: unificar accent color e aplicar melhorias de UX/acessibilidade
+- [ ] Portal do Cliente: desacoplar queries de banco das telas do portal, encapsulando no PHP (`Processo::methods()`)
+- [ ] Operacional: limpeza do `.git` fantasma da pasta home (`C:\Users\diego\`) para acelerar Git local
+- [ ] QA: Homologação fim a fim admin-portal com UAT do usuário
+- [ ] Deploy: Ativação final do workflow automático de deploy
 
 ### Out of Scope
 
-- Blog/artigos técnicos — decidir após reestruturação básica
-- Portfólio de obras — decidir após reestruturação básica
+- Blog/artigos técnicos — decidido adiar no Grill-me v2.1
+- Portfólio de obras e Depoimentos de clientes na Landing Page — removidos por simplificação no Grill-me v2.1
 - Migração de stack (PHP → Laravel/Node) — custo-benefício não justifica no Hostinger
 - App mobile nativo — site responsivo cobre o caso de uso
 
@@ -44,17 +47,14 @@ Clientes acompanham seu processo sem precisar ligar para Diego, e Diego consegue
 **Tecnologia atual:** PHP + MySQL (PDO), HTML/CSS vanilla, JavaScript puro, hospedagem compartilhada Hostinger. Sem frameworks JS ou PHP.
 
 **Problemas atuais identificados:**
-- Painel admin (`admin.php`) acumulou bugs ao longo do desenvolvimento — difícil de manter
-- Portal do cliente foi construído de forma não profissional — código funciona mas com muitos patches
-- Credenciais do banco expostas no `db.php` (Diego@159753, host srv1074.hstgr.io)
-- Scripts de debug e reset em produção (probe.php, session_test*, reset_db_diego.php)
-- Senha admin hardcoded em texto plano no index.php ("VilelaAdmin2025")
+- Dívidas técnicas operacionais: presença de `.git` residual na pasta home do usuário
+- Portal do cliente possui código acoplado diretamente com conexões/queries do banco nas views
 
 **Design system existente:**
 - Cor primária: `#197e63` (verde Vilela)
 - Fonte: Outfit (Google Fonts), weights 400/500/600/700
 - Botões: border-radius 999px, estilo ghost para cliente, sólido para ação primária
-- Logo existente é a base da identidade visual — redesign trabalha em cima dele
+- Logo existente é a base da identidade visual
 
 **Banco de dados:** MySQL em `srv1074.hstgr.io`, banco `u884436813_cliente`. Tabelas: clientes, processo_detalhes, processo_financeiro, processo_movimentos, processo_pendencias, processo_docs_entregues, admin_settings, processo_campos_extras.
 
@@ -63,7 +63,7 @@ Clientes acompanham seu processo sem precisar ligar para Diego, e Diego consegue
 ## Constraints
 
 - **Stack:** PHP + MySQL (Hostinger) — sem mudança de tecnologia de backend
-- **Frontend:** HTML/CSS/JS puro, sem bundlers e sem build no CI (mantém compatibilidade com Hostinger, que não roda Node). **Reatividade pontual permitida via Alpine.js (CDN)** onde o estado é complexo (decisão v2.0). React/Vue SPA permanece fora de escopo.
+- **Frontend:** HTML/CSS/JS puro, sem bundlers e sem build no CI. Reatividade pontual permitida via Alpine.js (CDN) onde o estado é complexo.
 - **Design:** Verde `#197e63` como cor primária, logo atual como âncora visual
 - **Hospedagem:** Hostinger shared — sem Docker, sem SSH root, sem Node.js em servidor
 - **Domínio:** vilela.eng.br (HTTPS forçado via .htaccess)
@@ -71,68 +71,39 @@ Clientes acompanham seu processo sem precisar ligar para Diego, e Diego consegue
 ## Key Decisions
 
 | Decisão | Rationale | Outcome |
-|---------|-----------|---------|
+|---|---|---|
 | Manter PHP + MySQL | Hostinger shared hosting, sem custo extra, stack já conhecida | ✓ Mantido |
 | Git repo na pasta do projeto | Evitar caminhos longos com espaços, deploy.yml simplificado com `local-dir: ./` | ✓ Implementado |
 | Redesign admin do zero | Código atual com bugs acumulados — mais rápido refazer do que corrigir patch a patch | ✓ Base entregue na Fase 09 (design system + front-controller) |
 | Credenciais para .env | Segurança básica — não expor dados de acesso no repositório público | ✓ Evoluído p/ `db_credentials.php` gerado pelo CI |
 | Conceito visual do portal do cliente mantido | Usuário validou a ideia dos botões e proposta — refatorar preservando o UX | ✓ Mantido |
 | Admin: Alpine.js, não React (v2.0) | Preserva design system da Fase 09, sem build no CI, manutenível por dev solo | ✓ Decidido 2026-06-04 |
+| Escopo da LP v2.1 | FAQ estático no código, cases e depoimentos descartados | ✓ Decidido no Grill-me 2026-06-05 (velocidade e conversão direta) |
+| App Louvor no v2.1 | Fora de escopo; está em outro subdomínio independente | ✓ Decidido no Grill-me 2026-06-05 |
+| Desacoplamento DB v2.1 | Mover queries para a classe Processo | ✓ Decidido no Grill-me 2026-06-05 |
 
 ## Evolution
 
 Este documento evolui a cada fase e marco do projeto.
 
-**Após cada fase:**
-1. Requirements entregues? → Mover para Validated com referência da fase
-2. Novos requirements? → Adicionar em Active
-3. Decisions a registrar? → Adicionar em Key Decisions
-
-**Após cada milestone:**
-1. Revisar todas as seções
-2. Core Value ainda correto?
-3. Out of Scope ainda válido?
-
 ---
 
-## Current State (2026-05-19)
+## Current State (2026-06-05)
 
-**Sistema:** v1.5 em produção em https://vilela.eng.br
-**Milestone arquivado:** v1.0 (tag `v1.0`)
-**Próximo:** `/gsd-new-milestone` → planejar v2.0
-
-### O que está ao vivo
-
-- Landing page mobile-first (vilela.eng.br/)
-- Cartão de visitas (vilela.eng.br/contato/)
-- Portal do cliente (vilela.eng.br/area-cliente/)
-- Admin (vilela.eng.br/area-cliente/admin.php)
-- App Louvor PIB Oliveira (vilela.eng.br/applouvor/) — projeto separado mas hospedado mesmo domínio
-
-### Arquitetura modular `core/`
-
-`area-cliente/core/` com classes: Auth, Csrf, Database (singleton), Logger, Migrations, Processo, Upload. `actions/admin/*.php` com 17 endpoints POST modulares. Compatibilidade legacy mantida via `area-cliente/db.php` wrapper.
-
-### Deploy CI/CD
-
-GitHub Actions FTPS → Hostinger. Secrets injetados em `area-cliente/core/db_credentials.php` a cada deploy. App Louvor usa webhook Hostinger (`git pull` no servidor).
+**Sistema:** v2.0 em produção em https://vilela.eng.br
+**Milestone arquivado:** v2.0 (tag `v2.0` / auditado)
+**Próximo:** Iniciar execução do v2.1
 
 ## Current Milestone: v2.1 — Landing de Crescimento & Polimento
 
-**Status:** 🟡 Em planejamento (iniciado 2026-06-04)
-**Goal:** Expandir a landing page como cartão de visitas para captação de leads, realizar polimento e alinhamento visual do portal do cliente, e sanar pendências operacionais de deploy e organização de repositório git.
+**Status:** 🟢 Em execução (Formalizado após Grill-me em 2026-06-05)
+**Goal:** Fortalecer a landing page com FAQ estruturado de regularização de imóveis, polir a interface do portal do cliente com o novo design system unificado (`tokens.css`), desacoplar queries de banco das telas do portal e realizar ajustes operacionais de deploy (com limpeza do `.git` na home do usuário).
 
 **Target features (3 categorias):**
 
-- 📣 **LAND** — Portfólio de obras, Depoimentos, FAQ, Schema de SEO e sinais de confiança.
-- 📱 **CLI** — Integração com tokens de design system, melhorias de UX e desacoplamento do DB.
-- ⚙️ **OPS** — Mover repositório .git, auditoria caminhos App Louvor, homologação e deploy final.
-
-## Next Milestone Goals (v2.1 — esboço inicial, refinado no REQUIREMENTS.md)
-
-- **Landing Page**: Implementar seções de engajamento de leads para Diego Vilela (cases, depoimentos e SEO estruturado).
-- **Portal do Cliente**: Atualizar estilos para Outfit/verde Vilela e tokens compartilhados, unificando a identidade visual nas três camadas.
-- **QA/Deploy**: Organização de ambiente local (.git e App Louvor) e automatização de entregas via FTPS na Hostinger.
+- 📣 **LAND** — FAQ estruturado, SEO estruturado (Schema.org), e sinais de confiança (exposição CREA 235.474/D).
+- 📱 **CLI** — Integração com tokens de design system, melhorias de UX e desacoplamento do DB centralizando as consultas na classe Processo.
+- ⚙️ **OPS** — Remoção de `.git` residual na home (~), homologação e deploy final do projeto principal no Drive.
 
 <details>
 <summary>Histórico de Milestones anteriores</summary>
@@ -141,4 +112,3 @@ GitHub Actions FTPS → Hostinger. Secrets injetados em `area-cliente/core/db_cr
 * **v2.0** — Hardening & Features Admin: Finalizada e arquivada em [milestones/v2.0-REQUIREMENTS.md](milestones/v2.0-REQUIREMENTS.md) em 2026-06-04.
 
 </details>
-

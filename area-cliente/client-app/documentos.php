@@ -1,15 +1,13 @@
 <?php
 require_once __DIR__ . '/init_client.php';
+require_once __DIR__ . '/../core/Processo.php';
 
 // 2. FETCH DATA
-$stmt = $pdo->prepare("SELECT link_drive_pasta FROM processo_detalhes WHERE cliente_id = ?");
-$stmt->execute([$cliente_id]);
-$drive_link = $stmt->fetchColumn();
+$detalhes = Processo::getDetalhes($cliente_id);
+$drive_link = $detalhes['link_drive_pasta'] ?? '';
 
 // Buscar arquivos entregáveis locais
-$stmt_ent = $pdo->prepare("SELECT * FROM processo_entregaveis WHERE cliente_id = ? ORDER BY data_upload DESC");
-$stmt_ent->execute([$cliente_id]);
-$entregaveis = $stmt_ent->fetchAll();
+$entregaveis = Processo::getEntregaveis($cliente_id);
 
 // Helper for Embed URL
 $embed_url = "";
