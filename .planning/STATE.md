@@ -11,7 +11,7 @@ See: `.planning/PROJECT.md`
 **Milestone:** v2.1 — Landing de Crescimento & Polimento
 **Status:** 🟢 Em execução (Formalizado após Grill-me em 2026-06-05)
 **Phase:** Fase 1 — Crescimento da Landing Page (Cartão de Visita) 📣
-**Last activity:** 2026-06-05 — Correção de layouts mobile (padding de cards e hero, alinhamento de steps) e limpeza de CSS obsoleto de seções removidas (Cases/Depoimentos).
+**Last activity:** 2026-06-05 — Correção de layouts mobile (padding de cards e hero, alinhamento de steps) e limpeza de CSS obsoleto de seções removidas (Cases/Depoimentos). Organização e segurança: exclusão do script temporário de scan do servidor (scan_hostinger.php), criação dos templates de issues profissionais e integração no quadro Kanban centralizado no GitHub.
 
 **Próximo passo:** Iniciar a Fase 2 (Polimento do Portal do Cliente) ou preparar o fechamento do milestone atual conforme solicitação do usuário.
 
